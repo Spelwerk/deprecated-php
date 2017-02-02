@@ -41,7 +41,7 @@ class Person {
     var $asset, $attribute, $augmentation, $bionic, $characteristic, $expertise, $milestone, $relationship, $protection, $software, $weapon, $weaponmod, $wounds;
 
     public function __construct($id = null, $hash = null) {
-        global $Curl;
+        global $curl;
 
         $get = $hash != null
             ? 'person/hash/'.$hash
@@ -51,7 +51,7 @@ class Person {
             ? true
             : false;
 
-        $data = $Curl->get($get)['data'][0];
+        $data = $curl->get($get)['data'][0];
 
 
         $this->id = intval($data['id']);
@@ -76,15 +76,11 @@ class Person {
         ];
 
 
-        $this->template = intval($data['template']) == 1
-            ? true
-            : false;
+        $this->template = intval($data['template']);
 
         $this->popularity = $data['popularity'];
 
-        $this->cheated = intval($data['cheated']) == 1
-            ? true
-            : false;
+        $this->cheated = intval($data['cheated']);
 
         $this->world = intval($data['world_id']);
 
@@ -116,28 +112,26 @@ class Person {
             'icon_path' => $data['identity_icon_path'],
         ]);
 
-        $this->supernatural = intval($data['supernatural']) == 1
-            ? true
-            : false;
+        $this->supernatural = intval($data['supernatural']);
 
-        if($this->supernatural == true)
+        if($this->supernatural == true) {
             $this->manifestation = new Manifestation([
-            'id' => $data['manifestation_id'],
-            'name' => $data['manifestation_name'],
-            'description' => $data['manifestation_description'],
-            'attributetype_id' => $data['manifestation_attributetype_id'],
-            'attributetype_name' => $data['manifestation_attributetype_name'],
-            'expertisetype_id' => $data['manifestation_expertisetype_id'],
-            'expertisetype_name' => $data['manifestation_expertisetype_name'],
-            'icon_path' => $data['manifestation_icon_path']
-        ]);
+                'id' => $data['manifestation_id'],
+                'name' => $data['manifestation_name'],
+                'description' => $data['manifestation_description'],
+                'attributetype_id' => $data['manifestation_attributetype_id'],
+                'attributetype_name' => $data['manifestation_attributetype_name'],
+                'expertisetype_id' => $data['manifestation_expertisetype_id'],
+                'expertisetype_name' => $data['manifestation_expertisetype_name'],
+                'icon_path' => $data['manifestation_icon_path']
+            ]);
 
-        if($this->supernatural == true)
             $this->focus = new Focus([
-            'id' => $data['focus_id'],
-            'name' => $data['focus_name'],
-            'description' => $data['focus_description'],
-            'icon_path' => $data['focus_icon_path'],
-        ]);
+                'id' => $data['focus_id'],
+                'name' => $data['focus_name'],
+                'description' => $data['focus_description'],
+                'icon_path' => $data['focus_icon_path'],
+            ]);
+        }
     }
 }

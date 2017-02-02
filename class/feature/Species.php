@@ -35,11 +35,11 @@ class Species {
     }
 
     public function setAttribute() {
-        global $Curl;
+        global $curl;
 
         $this->attributeList = [];
 
-        $data = $Curl->get('species-attribute/id/'.$this->id)['data'];
+        $data = $curl->get('species-attribute/id/'.$this->id)['data'];
 
         if($data[0]) {
             foreach ($data as $value) {
@@ -52,11 +52,11 @@ class Species {
     }
 
     public function setWeapon() {
-        global $Curl;
+        global $curl;
 
         $this->weaponList = [];
 
-        $data = $Curl->get('species-weapon/id/'.$this->id)['data'];
+        $data = $curl->get('species-weapon/id/'.$this->id)['data'];
 
         if($data[0]) {
             foreach ($data as $value) {

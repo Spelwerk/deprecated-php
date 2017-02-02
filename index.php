@@ -9,18 +9,23 @@
 
 require_once('class/Curl.php');
 require_once('class/Form.php');
-require_once('class/World.php');
-require_once('class/Person.php');
+require_once('class/Admin.php');
 require_once('class/System.php');
 
-$Curl = new Curl([
-    'url' => 'http://localhost/api',
+require_once('class/World.php');
+require_once('class/Person.php');
+
+$curl = new Curl([
+    'url' => 'http://localhost',
     'port' => 3001,
     'apiKey' => '0732cc50dc8380e6f438a2ba1419d48985d70808'
 ]);
 
-$System = new System();
+$form = new Form();
+$admin = new Admin();
+$system = new System();
 
-require_once('site/play/new.php');
+//require_once('site/play/new.php');
+require_once('site/admin/database.php');
 
 ?>

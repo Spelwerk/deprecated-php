@@ -6,6 +6,7 @@
  * Date: 2016-12-01
  * Time: 18:58
  */
+
 class Attribute
 {
     var $id, $name, $description, $protected;
@@ -38,5 +39,19 @@ class Attribute
         ];
 
         $this->icon = $array['icon_path'];
+    }
+
+    public function makeForm() {
+        global $Form;
+
+        $t = 'attribute';
+
+        $Form->varchar($t, 'name');
+        $Form->text($t, 'description');
+        $Form->bool($t, 'protected');
+        $Form->foreign($t, 'attributetype', 'attributetype');
+        $Form->number($t, 'value');
+        $Form->number($t, 'default');
+        $Form->number($t, 'maximum');
     }
 }

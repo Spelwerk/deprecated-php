@@ -21,7 +21,7 @@ class Story {
     var $npc;
 
     public function __construct($id = null, $hash = null) {
-        global $Curl;
+        global $curl;
 
 
         $this->get = $hash != null ? 'story/hash/'.$hash : 'story/id/'.$id;
@@ -29,7 +29,7 @@ class Story {
         $this->owner = $hash != null ? true : false;
 
 
-        $data = $Curl->get($this->get)['data'][0];
+        $data = $curl->get($this->get)['data'][0];
 
         $this->id = $data['id'];
 

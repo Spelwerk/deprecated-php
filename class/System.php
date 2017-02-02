@@ -78,16 +78,14 @@ class System {
     }
 
     public function setWorldList() {
-        global $Curl;
+        global $curl;
 
         $this->worldList = [];
 
-        $data = $Curl->get('world/template')['data'];
+        $data = $curl->get('world/template')['data'];
 
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->worldList, new World(null,null,$value));
-            }
+        foreach ($data as $value) {
+            array_push($this->worldList, new World(null,null,$value));
         }
     }
 
