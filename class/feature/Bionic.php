@@ -18,7 +18,7 @@ class Bionic
 
     var $augmentationList;
 
-    public function __construct($array, $quality = null) {
+    public function __construct($id = null, $array = null, $quality = null) {
 
         $this->id = $array['id'];
 

@@ -12,60 +12,59 @@ require_once('Weapon.php');
 
 class Species {
 
-    var $id, $name, $description, $playable, $max_age;
+    var $id, $name, $description, $playable, $maxAge, $icon;
 
-    var $attributeList, $weaponList;
+    public function __construct($id = null, $array = null) {
+        global $curl;
 
-    var $icon;
+        $data = isset($id)
+            ? $curl->get('species/id/'.$id)['data'][0]
+            : $array;
 
-    public function __construct($array) {
+        $this->id = $data['id'];
 
-        $this->id = $array['id'];
+        $this->name = $data['name'];
 
-        $this->name = $array['name'];
+        $this->description = $data['description'];
 
-        $this->description = $array['description'];
+        $this->playable = isset($data['playable'])
+            ? $data['playable']
+            : null;
 
-        $this->playable = $array['playable'];
+        $this->maxAge = isset($data['max_age'])
+            ? $data['max_age']
+            : null;
 
-        $this->max_age = $array['max_age'];
-
-        $this->icon = $array['icon_path'];
+        $this->icon = $data['icon_path'];
 
     }
 
-    public function setAttribute() {
+    public function getAttributeList() {
         global $curl;
 
-        $this->attributeList = [];
+        $attributeList = [];
 
         $data = $curl->get('species-attribute/id/'.$this->id)['data'];
 
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->attributeList, new Attribute([
-                    'id' => $value['attribute_id'],
-                    'name' => $value['attribute_name']
-                ]));
-            }
+        foreach ($data as $value) {
+            $attributeList[] = new Attribute($value['id']);
         }
+
+        return $attributeList;
     }
 
-    public function setWeapon() {
+    public function getWeaponList() {
         global $curl;
 
-        $this->weaponList = [];
+        $weaponList = [];
 
         $data = $curl->get('species-weapon/id/'.$this->id)['data'];
 
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->weaponList, new Weapon([
-                    'id' => $value['weapon_id'],
-                    'name' => $value['weapon_name']
-                ]));
-            }
+        foreach ($data as $value) {
+            $weaponList[] = new Weapon($value['id']);
         }
+
+        return $weaponList;
     }
 
 }

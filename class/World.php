@@ -46,60 +46,37 @@ class World {
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
 
-        if(!$array) {
-            $get = $hash != null
-                ? 'world/hash/'.$hash
-                : 'world/id/'.$id;
+        $data = null;
 
-            $this->owner = $hash != null
-                ? true
-                : false;
+        if(isset($hash)) {
+            $data = $curl->get('world/hash/'.$hash)['data'][0];
+        }
 
-            $data = $curl->get($get)['data'][0];
-        } else {
+        if(isset($id)) {
+            $data = $curl->get('world/id/'.$id)['data'][0];
+        }
+
+        if(isset($array)) {
             $data = $array;
         }
 
-        $this->id = intval($data['id']);
+        $this->owner = isset($hash)
+            ? true
+            : false;
 
+        $this->id = $data['id'];
         $this->hash = $data['hash'];
-
         $this->name = $data['name'];
-
         $this->description = $data['description'];
-
-
-        $this->template = intval($data['template']) == 1
-            ? true
-            : false;
-
+        $this->template = $data['template'];
         $this->popularity = $data['popularity'];
-
-        $this->hidden = intval($data['hidden']) == 1
-            ? true
-            : false;
-
-        $bionic = intval($data['bionic']) == 1
-            ? true
-            : false;
-
-        $augmentation = intval($data['augmentation']) == 1
-            ? true
-            : false;
-
-        $software = intval($data['software']) == 1
-            ? true
-            : false;
-
-        $supernatural = intval($data['supernatural']) == 1
-            ? true
-            : false;
+        $this->hidden = $data['hidden'];
 
         $this->exists = [
-            'bionic' => $bionic,
-            'augmentation' => $augmentation,
-            'software' => $software,
-            'supernatural' => $supernatural
+            'bionic' => $data['bionic'],
+            'augmentation' => $data['augmentation'],
+            'software' => $data['software'],
+            'supernatural' => $data['supernatural']
         ];
 
         if($this->exists['supernatural'] == true)
@@ -133,221 +110,4 @@ class World {
             'relationship' => intval($data['max_relationship'])
         ];
     }
-
-    public function setAttribute($type = null, $species = null) {
-        global $curl;
-
-        $this->attributeList = [];
-
-        if(!$type && !$species) {
-            $data = $curl->get('world-attribute/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-attribute/id/'.$this->id.'/type/'.$type.'/species/'.$species)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->attributeList, new Attribute($value));
-            }
-        }
-    }
-
-    public function setAugmentation($bionic = null) {
-        global $curl;
-
-        $this->augmentationList = [];
-
-        if(!$bionic) {
-            $data = $curl->get('world-augmentation/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-augmentation/id/'.$this->id.'/bionic/'.$bionic)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->augmentationList, new Augmentation($value));
-            }
-        }
-    }
-
-    public function setBionic($bodypart = null) {
-        global $curl;
-
-        $this->bionicList = [];
-
-        if(!$bodypart) {
-            $data = $curl->get('world-bionic/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-bionic/id/'.$this->id.'/bodypart/'.$bodypart)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->bionicList, new Bionic($value));
-            }
-        }
-    }
-
-    public function setCaste() {
-        global $curl;
-
-        $this->casteList = [];
-
-        $data = $curl->get('world-caste/id/'.$this->id)['data'];
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->casteList, new Caste($value));
-            }
-        }
-    }
-
-    public function setCharacteristic($gift = null, $species = null, $manifestation = null) {
-        global $curl;
-
-        $this->characteristicList = [];
-
-        if(!$gift && !$species && !$manifestation) {
-            $data = $curl->get('world-characteristic/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-characteristic/id/'.$this->id.'/gift/'.$gift.'/species/'.$species.'/manifestation/'.$manifestation)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->characteristicList, new Characteristic($value));
-            }
-        }
-    }
-
-    public function setExpertise($skill = null, $type = null, $species = null, $manifestation = null) {
-        global $curl;
-
-        $this->expertiseList = [];
-
-        if(!$skill && !$type && !$species && !$manifestation) {
-            $data = $curl->get('world-expertise/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-expertise/id/'.$this->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$species.'/manifestation/'.$manifestation)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->expertiseList, new Expertise($value));
-            }
-        }
-    }
-
-    public function setFocus($manifestation = null) {
-        global $curl;
-
-        $this->focusList = [];
-
-        if(!$manifestation) {
-            $data = $curl->get('world-focus/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-focus/id/'.$this->id.'/manifestation/'.$manifestation)['data'];
-        }
-
-        foreach($data as $value) {
-            array_push($this->focusList, new Focus($value));
-        }
-    }
-
-    public function setIdentity() {
-        global $curl;
-
-        $this->identityList = [];
-
-        $data = $curl->get('world-identity/id/'.$this->id)['data'];
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->identityList, new Identity($value));
-            }
-        }
-    }
-
-    public function setManifestation() {
-        global $curl;
-
-        $this->manifestationList = [];
-
-        $data = $curl->get('world-manifestation/id/'.$this->id)['data'];
-
-        if($data[0]) {
-            foreach($data as $value) {
-                array_push($this->manifestationList, new Manifestation($value));
-            }
-        }
-    }
-
-    public function setMilestone($upbringing = null, $caste = null, $species = null, $manifestation = null) {
-        global $curl;
-
-        $this->milestoneList = [];
-
-        if(!$upbringing && !$caste && !$species && !$manifestation) {
-            $data = $curl->get('world-milestone/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species.'/manifestation/'.$manifestation)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->milestoneList, new Milestone($value));
-            }
-        }
-    }
-
-    public function setNature() {
-        global $curl;
-
-        $this->natureList = [];
-
-        $data = $curl->get('world-nature/id/'.$this->id)['data'];
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->natureList, new Nature($value));
-            }
-        }
-    }
-
-    public function setSpecies($playable = null) {
-        global $curl;
-
-        $this->speciesList = [];
-
-        if(!$playable) {
-            $data = $curl->get('world-species/id/'.$this->id);
-        } else {
-            $data = $curl->get('world-species/id/'.$this->id.'/playable/'.$playable)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->speciesList, new Species($value));
-            }
-        }
-    }
-
-    public function setWeapon($type = null) {
-        global $curl;
-
-        $this->weaponList = [];
-
-        if(!$type) {
-            $data = $curl->get('world-weapon/id/'.$this->id)['data'];
-        } else {
-            $data = $curl->get('world-weapon/id/'.$this->id.'/type/'.$type)['data'];
-        }
-
-        if($data[0]) {
-            foreach ($data as $value) {
-                array_push($this->weaponList, new Weapon($value));
-            }
-        }
-    }
-
 }

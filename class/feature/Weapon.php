@@ -16,7 +16,7 @@ class Weapon {
 
     var $icon;
 
-    public function __construct($array) {
+    public function __construct($id = null, $array = null, $quality = null) {
 
         $this->id = $array['id'];
 

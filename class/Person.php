@@ -21,24 +21,20 @@ require_once('feature/Nature.php');
 require_once('feature/Species.php');
 require_once('feature/Weapon.php');
 
+require_once('World.php');
+
 class Person {
 
-    var $id, $hash, $template, $popularity, $cheated;
+    var $id, $hash, $template, $popularity, $cheated, $supernatural, $owner;
 
-    var $owner;
+    var $nickname, $firstname, $surname, $age, $gender, $occupation;
 
-    var $name;
-
-    var $supernatural;
-
-    var $description;
+    var $description, $behaviour, $appearance, $features, $personality;
 
     var $attributeList, $bionicList, $characteristicList, $expertiseList,
         $milestoneList, $weaponList;
 
-    var $world, $attributetype, $species, $caste, $nature, $identity, $manifestation, $focus;
-
-    var $asset, $attribute, $augmentation, $bionic, $characteristic, $expertise, $milestone, $relationship, $protection, $software, $weapon, $weaponmod, $wounds;
+    var $world, $species, $caste, $nature, $identity, $manifestation, $focus;
 
     public function __construct($id = null, $hash = null) {
         global $curl;
@@ -47,91 +43,104 @@ class Person {
             ? 'person/hash/'.$hash
             : 'person/id/'.$id;
 
-        $this->owner = $hash != null
+        $data = $curl->get($get)['data'][0];
+
+        $this->owner = isset($hash)
             ? true
             : false;
 
-        $data = $curl->get($get)['data'][0];
-
-
-        $this->id = intval($data['id']);
-
+        $this->id = $data['id'];
         $this->hash = $data['hash'];
 
-        $this->name = [
-            'nick' => $data['nickname'],
-            'first' => $data['firstname'],
-            'last' => $data['surname'],
-        ];
+        $this->nickname = $data['nickname'];
+        $this->firstname = $data['firstname'];
+        $this->surname = $data['surname'];
 
-        $this->description = [
-            'age' => $data['age'],
-            'gender' => $data['gender'],
-            'occupation' => $data['occupation'],
-            'description' => $data['description'],
-            'behaviour' => $data['behaviour'],
-            'appearance' => $data['appearance'],
-            'features' => $data['features'],
-            'personality' => $data['personality']
-        ];
+        $this->age = $data['age'];
+        $this->gender = $data['gender'];
+        $this->occupation = $data['occupation'];
 
+        $this->description = $data['description'];
+        $this->behaviour = $data['behaviour'];
+        $this->appearance = $data['appearance'];
+        $this->features = $data['features'];
+        $this->personality = $data['personality'];
 
-        $this->template = intval($data['template']);
-
+        $this->template = $data['template'];
+        $this->cheated = $data['cheated'];
+        $this->supernatural = $data['supernatural'];
         $this->popularity = $data['popularity'];
 
-        $this->cheated = intval($data['cheated']);
+        $this->world = isset($data['world_id'])
+            ? new World($data['world_id'])
+            : null;
 
-        $this->world = intval($data['world_id']);
+        $this->species = isset($data['species_id'])
+            ? new Species($data['species_id'])
+            : null;
 
-        $this->species = new Species([
-            'id' => $data['species_id'],
-            'name' => $data['species_name'],
-            'description' => $data['species_description'],
-            'icon_path' => $data['species_icon_path']
-        ]);
+        $this->caste = isset($data['caste_id'])
+            ? new Caste($data['caste_id'])
+            : null;
 
-        $this->caste = new Caste([
-            'id' => $data['caste_id'],
-            'name' => $data['caste_name'],
-            'description' => $data['caste_description'],
-            'icon_path' => $data['caste_icon_path']
-        ]);
+        $this->nature = isset($data['nature_id'])
+            ? new Nature($data['nature_id'])
+            : null;
 
-        $this->nature = new Nature([
-            'id' => $data['nature_id'],
-            'name' => $data['nature_name'],
-            'description' => $data['nature_description'],
-            'icon_path' => $data['nature_icon_path'],
-        ]);
+        $this->identity = isset($data['identity_id'])
+            ? new Identity($data['identity_id'])
+            : null;
 
-        $this->identity = new Identity([
-            'id' => $data['identity_id'],
-            'name' => $data['identity_name'],
-            'description' => $data['identity_description'],
-            'icon_path' => $data['identity_icon_path'],
-        ]);
+        $this->manifestation = isset($data['manifestation_id'])
+            ? new Manifestation($data['manifestation_id'])
+            : null;
 
-        $this->supernatural = intval($data['supernatural']);
+        $this->focus = isset($data['focus_id'])
+            ? new Focus($data['focus_id'])
+            : null;
+    }
 
-        if($this->supernatural == true) {
-            $this->manifestation = new Manifestation([
-                'id' => $data['manifestation_id'],
-                'name' => $data['manifestation_name'],
-                'description' => $data['manifestation_description'],
-                'attributetype_id' => $data['manifestation_attributetype_id'],
-                'attributetype_name' => $data['manifestation_attributetype_name'],
-                'expertisetype_id' => $data['manifestation_expertisetype_id'],
-                'expertisetype_name' => $data['manifestation_expertisetype_name'],
-                'icon_path' => $data['manifestation_icon_path']
-            ]);
+    public function getCharacteristic($gift) {
+        global $curl;
 
-            $this->focus = new Focus([
-                'id' => $data['focus_id'],
-                'name' => $data['focus_name'],
-                'description' => $data['focus_description'],
-                'icon_path' => $data['focus_icon_path'],
-            ]);
+        $arrayList = [];
+
+        $return = $curl->get('person-characteristic/id/'.$this->id.'/gift/'.$gift);
+
+        $data = isset($return['data'])
+            ? $return['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Characteristic(null, $array);
+            }
+
+            return $arrayList;
+        } else {
+            return null;
+        }
+    }
+
+    public function getMilestone($upbringing) {
+        global $curl;
+
+        $arrayList = [];
+
+        $return = $curl->get('person-milestone/id/'.$this->id.'/upbringing/'.$upbringing);
+
+        $data = isset($return['data'])
+            ? $return['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Milestone(null, $array);
+            }
+
+            return $arrayList;
+        } else {
+            return null;
         }
     }
 }

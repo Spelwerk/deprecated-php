@@ -18,14 +18,14 @@ require_once('class/Person.php');
 $curl = new Curl([
     'url' => 'http://localhost',
     'port' => 3001,
-    'apiKey' => ''
+    'apiKey' => '0732cc50dc8380e6f438a2ba1419d48985d70808'
 ]);
 
 $form = new Form();
 $admin = new Admin();
 $system = new System();
 
-//require_once('site/play/new.php');
-require_once('site/admin/database.php');
+require_once('site/play/new.php');
+//require_once('site/admin/database.php');
 
 ?>

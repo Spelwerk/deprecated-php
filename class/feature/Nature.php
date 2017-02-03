@@ -8,27 +8,28 @@
  */
 class Nature {
 
-    var $id, $name, $description;
+    var $id, $name, $description, $icon;
 
     var $attribute;
 
-    var $icon;
+    public function __construct($id = null, $array = null) {
+        global $curl;
 
-    public function __construct($array) {
+        $data = isset($id)
+            ? $curl->get('nature/id/'.$id)['data'][0]
+            : $array;
 
-        $this->id = $array['id'];
-
-        $this->name = $array['name'];
-
-        $this->description = $array['description'];
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
 
         $this->attribute = [
-            'id' => $array['attribute_id'],
-            'name' => $array['attribute_name'],
-            'value' => $array['attribute_value']
+            'id' => $data['attribute_id'],
+            'name' => $data['attribute_name'],
+            'value' => $data['attribute_value']
         ];
 
-        $this->icon = $array['icon_path'];
+        $this->icon = $data['icon_path'];
 
     }
 

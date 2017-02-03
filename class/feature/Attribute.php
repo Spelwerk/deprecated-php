@@ -17,7 +17,7 @@ class Attribute
 
     var $icon;
 
-    public function __construct($array) {
+    public function __construct($id = null, $array = null) {
 
         $this->id = $array['id'];
 

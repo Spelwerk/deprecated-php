@@ -99,4 +99,26 @@ class Form {
 
         echo('</select><br>');
     }
+
+    public function getHidden($tableName, $name, $value) {
+        echo('<input type="hidden" name="'.$tableName.'--'.$name.'" value="'.$value.'"/>');
+    }
+
+    public function genericSelect($tableName, $name, $array) {
+        foreach($array as $object) {
+            echo(
+                '<label for="'.$name.'--'.$object->id.'">'.$object->name.'</label>'.
+                '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$object->id.'" value="'.$object->id.'"/>'.
+                '<br>'
+            );
+        }
+    }
+
+    public function genericStart() {
+        echo('<form action="/post.php" method="post">');
+    }
+
+    public function genericEnd() {
+        echo('<input type="submit" value="Next &raquo;"/></form>');
+    }
 }

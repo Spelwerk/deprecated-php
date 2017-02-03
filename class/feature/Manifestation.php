@@ -14,25 +14,30 @@ class Manifestation {
 
     var $icon;
 
-    public function __construct($array) {
+    public function __construct($id = null, $array = null) {
+        global $curl;
 
-        $this->id = $array['id'];
+        $data = isset($id)
+            ? $curl->get('manifestation/id/'.$id)['data'][0]
+            : $array;
 
-        $this->name = $array['name'];
+        $this->id = $data['id'];
 
-        $this->description = $array['description'];
+        $this->name = $data['name'];
+
+        $this->description = $data['description'];
 
         $this->attributeType = [
-            'id' => $array['attributetype_id'],
-            'name' => $array['attributetype_name']
+            'id' => $data['attributetype_id'],
+            'name' => $data['attributetype_name']
         ];
 
         $this->expertiseType = [
-            'id' => $array['expertisetype_id'],
-            'name' => $array['expertisetype_name']
+            'id' => $data['expertisetype_id'],
+            'name' => $data['expertisetype_name']
         ];
 
-        $this->icon = $array['icon_path'];
+        $this->icon = $data['icon_path'];
 
     }
 
