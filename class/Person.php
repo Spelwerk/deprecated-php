@@ -31,9 +31,6 @@ class Person {
 
     var $description, $behaviour, $appearance, $features, $personality;
 
-    var $attributeList, $bionicList, $characteristicList, $expertiseList,
-        $milestoneList, $weaponList;
-
     var $world, $species, $caste, $nature, $identity, $manifestation, $focus;
 
     public function __construct($id = null, $hash = null) {
@@ -100,6 +97,7 @@ class Person {
             : null;
     }
 
+
     public function getCharacteristic($gift) {
         global $curl;
 
@@ -141,6 +139,159 @@ class Person {
             return $arrayList;
         } else {
             return null;
+        }
+    }
+
+    public function getAttribute($type) {
+        global $curl;
+
+        $arrayList = [];
+
+        $return = $curl->get('person-attribute/id/'.$this->id.'/type/'.$type);
+
+        $data = isset($return['data'])
+            ? $return['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Attribute(null, $array);
+            }
+
+            return $arrayList;
+        } else {
+            return null;
+        }
+    }
+
+    public function getExpertise() {
+        global $curl;
+
+        $arrayList = [];
+
+        $return = $curl->get('person-expertise/id/'.$this->id);
+
+        $data = isset($return['data'])
+            ? $return['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Expertise(null, $array);
+            }
+
+            return $arrayList;
+        } else {
+            return null;
+        }
+    }
+
+
+    function countAttribute($type) {
+        $list = $this->getAttribute($type);
+
+        $total = 0;
+
+        if(isset($list)) {
+            foreach($list as $attribute) {
+                $total += $attribute->value;
+            }
+        }
+
+        return $total;
+    }
+
+    function countExpertise() {
+        $list = $this->getExpertise();
+
+        $total = 0;
+
+        if(isset($list)) {
+            foreach($list as $expertise) {
+                $total += $expertise->level;
+            }
+        }
+
+        return $total;
+    }
+
+
+    public function canCharacteristic($gift) {
+        $gName = $gift == 1
+            ? 'gift'
+            : 'imperfection';
+
+        $currentCharacteristic = count($this->getCharacteristic($gift));
+        $worldMaximum = $this->world->maximum[$gName];
+
+        return floor($worldMaximum - $currentCharacteristic);
+    }
+
+    public function canMilestone($upbringing) {
+        $uName = $upbringing == 1
+            ? 'upbringing'
+            : 'flexible';
+
+        $currentMilestone = count($this->getMilestone($upbringing));
+        $ageSplit = $this->age / $this->world->split['milestone'];
+        $worldMaximum = $this->world->maximum[$uName];
+
+        if($upbringing == 1) {
+            return floor($worldMaximum - $currentMilestone);
+        } else {
+            if($currentMilestone < $ageSplit && $currentMilestone < $worldMaximum) {
+                return floor($ageSplit - $currentMilestone);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public function canSkill() {
+        $currentSkill = $this->countAttribute($this->world->attributeSkill);
+        $ageSplit = $this->age / $this->world->split['skill'];
+        $worldMaximum = $this->world->maximum['skill'];
+
+        $points = $ageSplit > $worldMaximum
+            ? $worldMaximum
+            : $ageSplit;
+
+        if($currentSkill < $points && $currentSkill < $worldMaximum) {
+            return floor($points - $currentSkill);
+        } else {
+            return 0;
+        }
+    }
+
+    public function canExpertise() {
+        $currentExpertise = $this->countExpertise();
+        $ageSplit = $this->age / $this->world->split['expertise'];
+        $worldMaximum = $this->world->maximum['expertise'];
+
+        $points = $ageSplit > $worldMaximum
+            ? $worldMaximum
+            : $ageSplit;
+
+        if($currentExpertise < $points && $currentExpertise < $worldMaximum) {
+            return floor($points - $currentExpertise);
+        } else {
+            return 0;
+        }
+    }
+
+    public function canSupernatural() {
+        $currentSupernatural = $this->countAttribute($this->manifestation->attributeType);
+        $ageSplit = $this->age / $this->world->split['supernatural'];
+        $worldMaximum = $this->world->maximum['supernatural'];
+
+        $points = $ageSplit > $worldMaximum
+            ? $worldMaximum
+            : $ageSplit;
+
+        if($currentSupernatural < $points && $currentSupernatural < $worldMaximum) {
+            return floor($points - $currentSupernatural);
+        } else {
+            return 0;
         }
     }
 }

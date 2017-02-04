@@ -26,6 +26,46 @@ $POST_HASH = isset($_POST['post--hash'])
     ? $_POST['post--hash']
     : null;
 
+function postAttribute($postData) {
+    global $curl;
+
+    $postArray = [];
+
+    $personId = $postData['person_id'];
+
+    foreach($postData as $skill => $value) {
+        if($skill !== 'person_id') {
+            $v = $value > 0
+                ? $value
+                : 0;
+
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $skill, 'value' => $v];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $result = $curl->post('person-attribute',$post);
+    }
+}
+
+function postExpertise($postData) {
+    global $curl;
+
+    $postArray = [];
+
+    $personId = $postData['person_id'];
+
+    foreach($postData as $skill => $value) {
+        if($skill !== 'person_id' && $value > 0) {
+            $postArray[] = ['person_id' => $personId, 'expertise_id' => $skill, 'level' => $value];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $result = $curl->post('person-expertise',$post);
+    }
+}
+
 if(isset($POST_DO) && isset($POST_RETURN)) {
 
     $postData = [];
@@ -45,26 +85,32 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'person--post':
             $result = $curl->post('person',$postData);
             $POST_HASH = $result['hash'];
-            print_r($result);
             break;
 
         case 'person--put':
             $result = $curl->put('person/hash/'.$POST_HASH,$postData);
-            print_r($result);
             break;
 
         case 'person--characteristic':
             $result = $curl->post('person-characteristic',$postData);
-            print_r($result);
             break;
 
         case 'person--milestone':
             $result = $curl->post('person-milestone',$postData);
-            print_r($result);
+            break;
+
+        case 'person--skill':
+            postAttribute($postData);
+            break;
+
+        case 'person--expertise':
+            postExpertise($postData);
+            break;
+
+        case 'person--supernatural':
+            postAttribute($postData);
             break;
     }
-
-
 }
 
 $r = isset($POST_RETURN)
@@ -75,7 +121,7 @@ $h = isset($POST_HASH)
     ? '?hash='.$POST_HASH
     : null;
 
-//redirect($r.$h);
+redirect($r.$h);
 
 echo '<a href="http://spelwerk.dev'.$r.$h.'">http://spelwerk.dev/'.$h.'</a>';
 

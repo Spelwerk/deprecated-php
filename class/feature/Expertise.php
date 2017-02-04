@@ -8,59 +8,56 @@
  */
 class Expertise {
 
-    var $id, $name, $description, $hidden, $level, $maximum, $weapon;
+    var $id, $name, $description, $hidden, $level, $maximum, $weapon, $icon;
 
     var $type, $skill, $species, $manifestation, $attribute;
 
-    var $icon;
-
     public function __construct($id = null, $array = null) {
+        global $curl;
 
-        $this->id = $array['id'];
+        $data = isset($id)
+            ? $curl->get('expertise/id/'.$id)['data'][0]
+            : $array;
 
-        $this->name = $array['name'];
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->hidden = $data['hidden'];
+        $this->maximum = $data['maximum'];
+        $this->weapon = $data['give_weapon'];
+        $this->icon = $data['icon_path'];
 
-        $this->description = $array['description'];
-
-        $this->hidden = $array['hidden'];
-
-        $this->level = $array['level'];
-
-        $this->maximum = $array['maximum'];
-
-        $this->weapon = $array['give_weapon'];
+        $this->level = isset($data['level'])
+            ? $data['level']
+            : null;
 
         $this->type = [
-            'id' => $array['expertisetype_id'],
-            'name' => $array['expertisetype_name']
+            'id' => $data['expertisetype_id'],
+            'name' => $data['expertisetype_name']
         ];
 
         $this->skill = [
-            'id' => $array['skill_attribute_id'],
-            'name' => $array['skill_attribute_name'],
-            'required' => $array['skill_attribute_required'],
-            'increment' => $array['skill_attribute_increment'],
-            'startsat' => $array['startsat']
+            'id' => $data['skill_attribute_id'],
+            'name' => $data['skill_attribute_name'],
+            'required' => $data['skill_attribute_required'], // when you can get level 1
+            'increment' => $data['skill_attribute_increment'], // when you can get level 2
+            'startsat' => $data['startsat'] // bonus starts at
         ];
 
         $this->species = [
-            'id' => $array['species_id'],
-            'name' => $array['species_name']
+            'id' => $data['species_id'],
+            'name' => $data['species_name']
         ];
 
         $this->manifestation = [
-            'id' => $array['manifestation_id'],
-            'name' => $array['manifestation_name']
+            'id' => $data['manifestation_id'],
+            'name' => $data['manifestation_name']
         ];
 
         $this->attribute = [
-            'id' => $array['give_attribute_id'],
-            'name' => $array['give_attribute_name'],
-            'value' => $array['level']
+            'id' => $data['give_attribute_id'],
+            'name' => $data['give_attribute_name'],
+            'value' => $this->level
         ];
-
-        $this->icon = $array['icon_path'];
-
     }
-
 }

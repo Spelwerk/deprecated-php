@@ -9,9 +9,9 @@
 
 require_once('class/Curl.php');
 require_once('class/Form.php');
+
 require_once('class/Admin.php');
 require_once('class/System.php');
-
 require_once('class/World.php');
 require_once('class/Person.php');
 

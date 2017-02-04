@@ -9,6 +9,7 @@
 class Form {
     public function __construct() {}
 
+
     public function getVarchar($tableName, $name, $required, $value = null) {
         $reqLabel = $required ? '*' : '';
 
@@ -104,21 +105,45 @@ class Form {
         echo('<input type="hidden" name="'.$tableName.'--'.$name.'" value="'.$value.'"/>');
     }
 
+    public function getSelect($tableName, $name, $selectName, $selectId) {
+        echo(
+            '<label for="'.$name.'--'.$selectId.'">'.$selectName.'</label>'.
+            '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$selectId.'" value="'.$selectId.'"/>'.
+            '<br>'
+        );
+    }
+
+    public function getPurchase($skillName, $skillId, $skillMaximum, $value = null) {
+        $min = ' min="0"';
+        $max = isset($skillMaximum) ? ' max="'.$skillMaximum.'"' : '';
+        $val = isset($value) ? ' value="'.$value.'"' : '';
+
+        echo(
+            '<label for="skill--'.$skillId.'">'.$skillName.'</label>'.
+            '<br>'.
+            '<input type="number" name="skill--'.$skillId.'" id="skill--'.$skillId.'"'.$min.$max.$val.'/>'.
+            '<br>'
+        );
+    }
+
+
     public function genericSelect($tableName, $name, $array) {
         foreach($array as $object) {
-            echo(
-                '<label for="'.$name.'--'.$object->id.'">'.$object->name.'</label>'.
-                '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$object->id.'" value="'.$object->id.'"/>'.
-                '<br>'
-            );
+            $this->getSelect($tableName, $name, $object->name, $object->id);
         }
     }
 
-    public function genericStart() {
-        echo('<form action="/post.php" method="post">');
+    public function genericStart($action = null) {
+        $link = isset($action)
+            ? $action
+            : '/post.php';
+
+        echo('<form action="'.$link.'" method="post">');
     }
 
     public function genericEnd() {
         echo('<input type="submit" value="Next &raquo;"/></form>');
     }
+
+
 }

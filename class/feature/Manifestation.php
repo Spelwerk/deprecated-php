@@ -22,23 +22,10 @@ class Manifestation {
             : $array;
 
         $this->id = $data['id'];
-
         $this->name = $data['name'];
-
         $this->description = $data['description'];
-
-        $this->attributeType = [
-            'id' => $data['attributetype_id'],
-            'name' => $data['attributetype_name']
-        ];
-
-        $this->expertiseType = [
-            'id' => $data['expertisetype_id'],
-            'name' => $data['expertisetype_name']
-        ];
-
         $this->icon = $data['icon_path'];
-
+        $this->attributeType = $data['attributetype_id'];
+        $this->expertiseType = $data['expertisetype_id'];
     }
-
 }

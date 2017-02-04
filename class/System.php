@@ -76,6 +76,7 @@ class System {
 
     }
 
+
     public function createPerson($person = null, $world = null, $species = null) {
 
         if(!isset($person) && !isset($world) && !isset($species)) {
@@ -107,28 +108,48 @@ class System {
                 $this->makePersonDescription($person);
 
             } else {
-                if(count($person->getCharacteristic(1)) < $person->world->maximum['gift']) {
+                if($person->canCharacteristic(1) > 0) {
+                    echo 'you have '.$person->canCharacteristic(1).' points left<br><br>';
+
                     $this->makeCharacteristicSelect($person, 1);
 
-                } else if(count($person->getCharacteristic(0)) < $person->world->maximum['imperfection']) {
+                } else if($person->canCharacteristic(0) > 0) {
+                    echo 'you have '.$person->canCharacteristic(0).' points left<br><br>';
+
                     $this->makeCharacteristicSelect($person, 0);
 
-                } else if(count($person->getMilestone(1)) < $person->world->maximum['upbringing']) {
+                } else if($person->canMilestone(1) > 0) {
+                    echo 'you have '.$person->canMilestone(1).' points left<br><br>';
+
                     $this->makeMilestoneSelect($person, 1);
 
-                } else if(count($person->getMilestone(0)) < $person->world->maximum['flexible'] && count($person->getMilestone(0)) < ($person->age / $person->world->split['milestone'])) {
+                } else if($person->canMilestone(0) > 0) {
+                    echo 'you have '.$person->canMilestone(0).' points left<br><br>';
+
                     $this->makeMilestoneSelect($person, 0);
 
+                } else if($person->canSkill() > 0) {
+                    echo 'you have '.$person->canSkill().' points left<br><br>';
+
+                    $this->makeSkillPurchase($person);
+
+                } else if($person->canExpertise() > 0) {
+                    echo 'you have '.$person->canExpertise().' points left<br><br>';
+
+                    $this->makeExpertisePurchase($person);
+
+                } else if($person->supernatural && $person->canSupernatural() > 0) {
+                    echo 'you have '.$person->canSupernatural().' points left<br><br>';
+
+                    $this->makeSupernaturalPurchase($person);
+
                 } else {
-                    // purchase attribute
 
-                    // purchase expertise
-
-                    // purchase supernatural
                 }
             }
         }
     }
+
 
     function getWorldList() {
         global $curl;
@@ -158,12 +179,12 @@ class System {
         return $arrayList;
     }
 
-    function getManifestationList($worldId) {
+    function getManifestationList($person) {
         global $curl;
 
         $arrayList = [];
 
-        $data = $curl->get('world-manifestation/id/'.$worldId)['data'];
+        $data = $curl->get('world-manifestation/id/'.$person->world->id)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Manifestation(null, $array);
@@ -172,12 +193,12 @@ class System {
         return $arrayList;
     }
 
-    function getFocusList($worldId, $manifestationId) {
+    function getFocusList($person) {
         global $curl;
 
         $arrayList = [];
 
-        $data = $curl->get('world-focus/id/'.$worldId.'/manifestation/'.$manifestationId)['data'];
+        $data = $curl->get('world-focus/id/'.$person->world->id.'/manifestation/'.$person->manifestation->id)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Focus(null, $array);
@@ -186,12 +207,12 @@ class System {
         return $arrayList;
     }
 
-    function getCasteList($worldId) {
+    function getCasteList($person) {
         global $curl;
 
         $arrayList = [];
 
-        $data = $curl->get('world-caste/id/'.$worldId)['data'];
+        $data = $curl->get('world-caste/id/'.$person->world->id)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Caste(null, $array);
@@ -200,12 +221,12 @@ class System {
         return $arrayList;
     }
 
-    function getNatureList($worldId) {
+    function getNatureList($person) {
         global $curl;
 
         $arrayList = [];
 
-        $data = $curl->get('world-nature/id/'.$worldId)['data'];
+        $data = $curl->get('world-nature/id/'.$person->world->id)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Nature(null, $array);
@@ -214,12 +235,12 @@ class System {
         return $arrayList;
     }
 
-    function getIdentityList($worldId) {
+    function getIdentityList($person) {
         global $curl;
 
         $arrayList = [];
 
-        $data = $curl->get('world-identity/id/'.$worldId)['data'];
+        $data = $curl->get('world-identity/id/'.$person->world->id)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Identity(null, $array);
@@ -233,7 +254,11 @@ class System {
 
         $arrayList = [];
 
-        $data = $curl->get('world-characteristic/id/'.$person->world->id.'/gift/'.$gift.'/species/'.$person->species->id.'/manifestation/'.$person->manifestation->id)['data'];
+        $get = isset($person->manifestation->id)
+            ? 'world-characteristic/id/'.$person->world->id.'/gift/'.$gift.'/species/'.$person->species->id.'/manifestation/'.$person->manifestation->id
+            : 'world-characteristic/id/'.$person->world->id.'/gift/'.$gift.'/species/'.$person->species->id;
+
+        $data = $curl->get($get)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Characteristic(null, $array);
@@ -247,7 +272,11 @@ class System {
 
         $arrayList = [];
 
-        $data = $curl->get('world-milestone/id/'.$person->world->id.'/upbringing/'.$upbringing.'/caste/'.$person->caste->id.'/species/'.$person->species->id.'/manifestation/'.$person->manifestation->id)['data'];
+        $get = isset($person->manifestation->id)
+            ? 'world-milestone/id/'.$person->world->id.'/upbringing/'.$upbringing.'/caste/'.$person->caste->id.'/species/'.$person->species->id.'/manifestation/'.$person->manifestation->id
+            : 'world-milestone/id/'.$person->world->id.'/upbringing/'.$upbringing.'/caste/'.$person->caste->id.'/species/'.$person->species->id;
+
+        $data = $curl->get($get)['data'];
 
         foreach ($data as $array) {
             $arrayList[] = new Milestone(null, $array);
@@ -256,12 +285,67 @@ class System {
         return $arrayList;
     }
 
+    function getSkillList($person) {
+        global $curl;
+
+        $arrayList = [];
+
+        $data = $curl->get('world-attribute/id/'.$person->world->id.'/type/'.$person->world->attributeSkill.'/species/'.$person->species->id)['data'];
+
+        foreach ($data as $array) {
+            $arrayList[] = new Attribute(null, $array);
+        }
+
+        return $arrayList;
+    }
+
+    function getExpertiseList($person, $skill, $type) {
+        global $curl;
+
+        $arrayList = [];
+
+        $get = isset($person->manifestation->id)
+            ? 'world-expertise/id/'.$person->world->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$person->species->id.'/manifestation/'.$person->manifestation->id
+            : 'world-expertise/id/'.$person->world->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$person->species->id;
+
+        $result = $curl->get($get);
+
+        $data = isset($result['data'])
+            ? $result['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Expertise(null, $array);
+            }
+
+            return $arrayList;
+        } else {
+            return null;
+        }
+    }
+
+    function getSupernaturalList($person) {
+        global $curl;
+
+        $arrayList = [];
+
+        $data = $curl->get('world-attribute/id/'.$person->world->id.'/type/'.$person->manifestation->attributeType.'/species/'.$person->species->id)['data'];
+
+        foreach ($data as $array) {
+            $arrayList[] = new Attribute(null, $array);
+        }
+
+        return $arrayList;
+    }
+
+
     public function makeWorldSelect() {
         global $form;
 
         $list = $this->getWorldList();
 
-        $form->genericStart();
+        $form->genericStart('/index.php');
         $form->genericSelect('person', 'world_id', $list);
         $form->genericEnd();
     }
@@ -271,7 +355,7 @@ class System {
 
         $list = $this->getSpeciesList($world->id);
 
-        $form->genericStart();
+        $form->genericStart('/index.php');
         $form->genericSelect('person', 'species_id', $list);
         $form->getHidden('person', 'world_id', $world->id);
         $form->genericEnd();
@@ -308,7 +392,7 @@ class System {
     public function makeManifestationSelect($person) {
         global $form;
 
-        $list = $this->getManifestationList($person->world->id);
+        $list = $this->getManifestationList($person);
 
         $form->genericStart();
         $form->getHidden('post', 'return', '');
@@ -322,7 +406,7 @@ class System {
     public function makeFocusSelect($person) {
         global $form;
 
-        $list = $this->getFocusList($person->world->id, $person->manifestation->id);
+        $list = $this->getFocusList($person);
 
         $form->genericStart();
         $form->getHidden('post', 'return', '');
@@ -336,7 +420,7 @@ class System {
     public function makeCasteSelect($person) {
         global $form;
 
-        $list = $this->getCasteList($person->world->id);
+        $list = $this->getCasteList($person);
 
         $form->genericStart();
         $form->getHidden('post', 'return', '');
@@ -350,7 +434,7 @@ class System {
     public function makeNatureSelect($person) {
         global $form;
 
-        $list = $this->getNatureList($person->world->id);
+        $list = $this->getNatureList($person);
 
         $form->genericStart();
         $form->getHidden('post', 'return', '');
@@ -364,7 +448,7 @@ class System {
     public function makeIdentitySelect($person) {
         global $form;
 
-        $list = $this->getIdentityList($person->world->id);
+        $list = $this->getIdentityList($person);
 
         $form->genericStart();
         $form->getHidden('post', 'return', '');
@@ -400,12 +484,23 @@ class System {
 
         $list = $this->getCharacteristicList($person, $gift);
 
+        $currentList = $person->getCharacteristic($gift);
+
         $form->genericStart();
         $form->getHidden('post', 'return', '');
         $form->getHidden('post', 'do', 'person--characteristic');
         $form->getHidden('post', 'hash', $person->hash);
 
-        $form->genericSelect('person', 'characteristic_id', $list);
+        foreach($list as $characteristic) {
+            if(count($currentList) != null) {
+                if(!in_array($characteristic, $currentList)) {
+                    $form->getSelect('person', 'characteristic_id', $characteristic->name, $characteristic->id);
+                }
+            } else {
+                $form->getSelect('person', 'characteristic_id', $characteristic->name, $characteristic->id);
+            }
+        }
+
         $form->getHidden('person', 'person_id', $person->id);
         $form->genericEnd();
     }
@@ -415,12 +510,131 @@ class System {
 
         $list = $this->getMilestoneList($person, $upbringing);
 
+        $currentList = $person->getMilestone($upbringing);
+
         $form->genericStart();
         $form->getHidden('post', 'return', '');
         $form->getHidden('post', 'do', 'person--milestone');
         $form->getHidden('post', 'hash', $person->hash);
 
-        $form->genericSelect('person', 'milestone_id', $list);
+        foreach($list as $milestone) {
+            if(count($currentList) != null) {
+                if(!in_array($milestone, $currentList)) {
+                    $form->getSelect('person', 'milestone_id', $milestone->name, $milestone->id);
+                }
+            } else {
+                $form->getSelect('person', 'milestone_id', $milestone->name, $milestone->id);
+            }
+        }
+
+        $form->getHidden('person', 'person_id', $person->id);
+        $form->genericEnd();
+    }
+
+    public function makeSkillPurchase($person) {
+        global $form;
+
+        $skillList = $this->getSkillList($person);
+
+        $currentList = $person->getAttribute($person->world->attributeSkill);
+        $idList = [];
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', '');
+        $form->getHidden('post', 'do', 'person--skill');
+        $form->getHidden('post', 'hash', $person->hash);
+
+        if(count($currentList) != null) {
+            foreach($currentList as $current) {
+                $idList[] = $current->id;
+
+                $form->getPurchase($current->name, $current->id, $current->maximum, $current->value);
+            }
+        }
+
+        foreach($skillList as $skill) {
+            if(!in_array($skill->id, $idList)) {
+                $form->getPurchase($skill->name, $skill->id, $skill->maximum);
+            }
+        }
+
+        $form->getHidden('person', 'person_id', $person->id);
+        $form->genericEnd();
+    }
+
+    public function makeExpertisePurchase($person) {
+        global $form, $curl;
+
+        $typeList = $curl->get('expertisetype')['data'];
+        $skillList = $person->getAttribute($person->world->attributeSkill);
+        $currentList = $person->getExpertise();
+        $idList = [];
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', '');
+        $form->getHidden('post', 'do', 'person--expertise');
+        $form->getHidden('post', 'hash', $person->hash);
+
+        if(count($currentList) != null) {
+            foreach($currentList as $current) {
+                $idList[] = $current->id;
+
+                $form->getPurchase($current->name, $current->id, $current->maximum, $current->level);
+            }
+        }
+
+        foreach($typeList as $type) {
+            foreach($skillList as $skill) {
+                if($skill->value >= $type['skill_attribute_required']) {
+                    $expertiseList = $this->getExpertiseList($person, $skill->id, $type['id']);
+
+                    if(isset($expertiseList)) {
+                        foreach($expertiseList as $expertise) {
+                            if(!in_array($expertise->id, $idList)) {
+                                $form->getPurchase($expertise->name, $expertise->id, $expertise->maximum);
+                            }
+                        }
+                    }
+                }
+            }
+        } // todo expertise maximum level differs from skill. need to use increment information compare to skill
+
+        $form->getHidden('person', 'person_id', $person->id);
+        $form->genericEnd();
+    }
+
+    public function makeSupernaturalPurchase($person) {
+        global $form;
+
+        $supernaturalList = $this->getSupernaturalList($person);
+        $expertiseList = $person->getExpertise();
+        $currentList = $person->getAttribute($person->manifestation->attributeType);
+        $idList = [];
+        $expList = [];
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', '');
+        $form->getHidden('post', 'do', 'person--supernatural');
+        $form->getHidden('post', 'hash', $person->hash);
+
+        if(count($currentList) != null) {
+            foreach($currentList as $current) {
+                $idList[] = $current->id;
+
+                $form->getPurchase($current->name, $current->id, $current->maximum, $current->value);
+            }
+        }
+
+        foreach($expertiseList as $expertise) {
+            $expList[] = $expertise->attribute['id'];
+        }
+
+        foreach($supernaturalList as $supernatural) {
+            if(in_array($supernatural->id, $expList) && !in_array($supernatural->id, $idList)) {
+                $form->getPurchase($supernatural->name, $supernatural->id, $supernatural->maximum);
+            }
+        }
+
         $form->getHidden('person', 'person_id', $person->id);
         $form->genericEnd();
     }

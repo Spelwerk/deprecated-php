@@ -18,40 +18,31 @@ class Attribute
     var $icon;
 
     public function __construct($id = null, $array = null) {
+        global $curl;
 
-        $this->id = $array['id'];
+        $data = isset($id)
+            ? $curl->get('attribute/id/'.$id)['data'][0]
+            : $array;
 
-        $this->name = $array['name'];
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->maximum = $data['maximum'];
+        $this->protected = $data['protected'];
 
-        $this->description = $array['description'];
+        $this->value = isset($data['value'])
+            ? $data['value']
+            : null;
 
-        $this->maximum = $array['maximum'];
-
-        $this->value = isset($array['value']) ? $array['value'] : null;
-
-        $this->default = isset($array['default']) ? $array['default'] : null;
-
-        $this->protected = $array['protected'];
+        $this->default = isset($data['default'])
+            ? $data['default']
+            : null;
 
         $this->type = [
-            'id' => $array['attributetype_id'],
-            'name' => $array['attributetype_name'],
+            'id' => $data['attributetype_id'],
+            'name' => $data['attributetype_name'],
         ];
 
-        $this->icon = $array['icon_path'];
-    }
-
-    public function makeForm() {
-        global $Form;
-
-        $t = 'attribute';
-
-        $Form->varchar($t, 'name');
-        $Form->text($t, 'description');
-        $Form->bool($t, 'protected');
-        $Form->foreign($t, 'attributetype', 'attributetype');
-        $Form->number($t, 'value');
-        $Form->number($t, 'default');
-        $Form->number($t, 'maximum');
+        $this->icon = $data['icon_path'];
     }
 }

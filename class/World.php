@@ -31,17 +31,11 @@ class World {
 
     var $exists; // bool
 
-    var $supernatural; // name of supernatural
+    var $supernaturalName; // name of supernatural
 
-    var $attributeType, $expertiseType;
+    var $attributeSkill, $expertiseAttribute, $expertiseDice;
 
-    var $split;
-
-    var $maximum;
-
-    var $attributeList, $augmentationList, $bionicList, $casteList, $characteristicList, $expertiseList,
-        $focusList, $identityList, $manifestationList, $milestoneList, $natureList, $speciesList,
-        $weaponList;
+    var $split, $maximum;
 
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
@@ -72,6 +66,11 @@ class World {
         $this->popularity = $data['popularity'];
         $this->hidden = $data['hidden'];
 
+        $this->attributeSkill = $data['skill_attributetype_id'];
+
+        $this->expertiseAttribute = $data['attribute_expertisetype_id'];
+        $this->expertiseDice = $data['dice_expertisetype_id'];
+
         $this->exists = [
             'bionic' => $data['bionic'],
             'augmentation' => $data['augmentation'],
@@ -80,16 +79,7 @@ class World {
         ];
 
         if($this->exists['supernatural'] == true)
-            $this->supernatural = $data['supernatural_name'];
-
-        $this->attributetype = [
-            'skill' => intval($data['skill_attributetype_id'])
-        ];
-
-        $this->expertisetype = [
-            'attribute' => intval($data['attribute_expertisetype_id']),
-            'dice' => intval($data['dice_expertisetype_id'])
-        ];
+            $this->supernaturalName = $data['supernatural_name'];
 
         $this->split = [
             'supernatural' => intval($data['split_supernatural']),
