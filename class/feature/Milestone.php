@@ -20,9 +20,7 @@ class Milestone {
             : $array;
 
         $this->id = $data['id'];
-
         $this->name = $data['name'];
-
         $this->description = $data['description'];
 
         $this->attribute = [
@@ -36,7 +34,5 @@ class Milestone {
             'name' => $data['loyalty_name'],
             'occupation' => $data['loyalty_occupation']
         ];
-
     }
-
 }

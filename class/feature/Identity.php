@@ -22,15 +22,12 @@ class Identity {
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
+        $this->icon = $data['icon_path'];
 
         $this->attribute = [
             'id' => $data['attribute_id'],
             'name' => $data['attribute_name'],
             'value' => $data['attribute_value']
         ];
-
-        $this->icon = $data['icon_path'];
-
     }
-
 }

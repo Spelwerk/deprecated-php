@@ -9,13 +9,9 @@
 
 class Attribute
 {
-    var $id, $name, $description, $protected;
+    var $id, $name, $description, $protected, $icon, $value, $default, $maximum;
 
     var $type;
-
-    var $value, $default, $maximum;
-
-    var $icon;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -29,6 +25,7 @@ class Attribute
         $this->description = $data['description'];
         $this->maximum = $data['maximum'];
         $this->protected = $data['protected'];
+        $this->icon = $data['icon_path'];
 
         $this->value = isset($data['value'])
             ? $data['value']
@@ -42,7 +39,5 @@ class Attribute
             'id' => $data['attributetype_id'],
             'name' => $data['attributetype_name'],
         ];
-
-        $this->icon = $data['icon_path'];
     }
 }

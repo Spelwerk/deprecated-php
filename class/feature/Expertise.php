@@ -25,7 +25,6 @@ class Expertise {
         $this->hidden = $data['hidden'];
         $this->weapon = $data['give_weapon'];
         $this->icon = $data['icon_path'];
-
         $this->maximum = $data['maximum'];
 
         $this->level = isset($data['level'])

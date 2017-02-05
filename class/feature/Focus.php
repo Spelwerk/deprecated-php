@@ -8,11 +8,9 @@
  */
 class Focus {
 
-    var $id, $name, $description;
+    var $id, $name, $description, $icon;
 
     var $attribute, $manifestation;
-
-    var $icon;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -22,10 +20,9 @@ class Focus {
             : $array;
 
         $this->id = $data['id'];
-
         $this->name = $data['name'];
-
         $this->description = $data['description'];
+        $this->icon = $data['icon_path'];
 
         $this->attribute = [
             'id' => $data['attribute_id'],
@@ -37,9 +34,5 @@ class Focus {
             'id' => $data['manifestation_id'],
             'name' => $data['manifestation_name']
         ];
-
-        $this->icon = $data['icon_path'];
-
     }
-
 }

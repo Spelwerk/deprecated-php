@@ -8,11 +8,9 @@
  */
 class Manifestation {
 
-    var $id, $name, $description;
+    var $id, $name, $description, $icon;
 
     var $attributeType, $expertiseType;
-
-    var $icon;
 
     public function __construct($id = null, $array = null) {
         global $curl;

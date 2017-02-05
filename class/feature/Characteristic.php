@@ -8,11 +8,9 @@
  */
 class Characteristic {
 
-    var $id, $name, $description, $gift;
+    var $id, $name, $description, $gift, $icon;
 
     var $species, $manifestation, $attribute;
-
-    var $icon;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -22,12 +20,10 @@ class Characteristic {
             : $array;
 
         $this->id = $data['id'];
-
         $this->name = $data['name'];
-
         $this->description = $data['description'];
-
         $this->gift = $data['gift'];
+        $this->icon = $data['icon_path'];
 
         if(isset($data['species_id'])) {
             $this->species = [
@@ -48,9 +44,5 @@ class Characteristic {
             'name' => $data['attribute_name'],
             'value' => $data['attribute_value']
         ];
-
-        $this->icon = $data['icon_path'];
-
     }
-
 }
