@@ -23,19 +23,11 @@ require_once('feature/Weapon.php');
 
 class World {
 
-    var $id, $hash, $template, $popularity, $hidden;
+    var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $exists, $split, $maximum;
 
-    var $owner;
+    var $supernaturalName;
 
-    var $name, $description;
-
-    var $exists; // bool
-
-    var $supernaturalName; // name of supernatural
-
-    var $attributeSkill, $expertiseAttribute, $expertiseDice;
-
-    var $split, $maximum;
+    var $attributeSkill, $expertiseAttribute, $expertiseDice, $unarmedWeapon;
 
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
@@ -67,7 +59,6 @@ class World {
         $this->hidden = $data['hidden'];
 
         $this->attributeSkill = $data['skill_attributetype_id'];
-
         $this->expertiseAttribute = $data['attribute_expertisetype_id'];
         $this->expertiseDice = $data['dice_expertisetype_id'];
 

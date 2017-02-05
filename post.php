@@ -26,6 +26,13 @@ $POST_HASH = isset($_POST['post--hash'])
     ? $_POST['post--hash']
     : null;
 
+function redirect($url) {
+    ob_start();
+    header('Location: /'.$url, true, 303);
+    ob_end_flush();
+    exit;
+}
+
 function postSkill($postData) {
     global $curl;
 
@@ -102,6 +109,32 @@ function postWeapon($postData) {
     }
 }
 
+function postCalculation($postData, $hash) {
+    global $curl;
+
+    $person = $curl->get('person/hash/'.$hash)['data'][0];
+
+    if(!$person['calculated']) {
+        $postArray = [];
+
+        $personId = $postData['person_id'];
+
+        foreach($postData as $key => $value) {
+            if($key !== 'person_id') {
+                $v = $value > 0
+                    ? $value
+                    : 0;
+
+                $postArray[] = ['person_id' => $personId, 'attribute_id' => $key, 'value' => $v];
+            }
+        }
+
+        foreach($postArray as $post) {
+            $result = $curl->post('person-attribute',$post);
+        }
+    }
+}
+
 if(isset($POST_DO) && isset($POST_RETURN)) {
 
     $postData = [];
@@ -150,6 +183,11 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'person--weapon':
             postWeapon($postData);
             break;
+
+        case 'person--calculation':
+            postCalculation($postData, $POST_HASH);
+            $curl->put('person/hash/'.$POST_HASH,['calculated' => 1]);
+            break;
     }
 }
 
@@ -158,16 +196,9 @@ $r = isset($POST_RETURN)
     : null;
 
 $h = isset($POST_HASH)
-    ? '?hash='.$POST_HASH
+    ? '&hash='.$POST_HASH
     : null;
-
-redirect($r.$h);
 
 echo '<a href="http://spelwerk.dev'.$r.$h.'">http://spelwerk.dev/'.$h.'</a>';
 
-function redirect($url) {
-    ob_start();
-    header('Location: /'.$url, true, 303);
-    ob_end_flush();
-    exit;
-}
+redirect($r.$h);

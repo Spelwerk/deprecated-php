@@ -25,11 +25,8 @@ require_once('World.php');
 
 class Person {
 
-    var $id, $hash, $template, $popularity, $cheated, $supernatural, $owner;
-
-    var $nickname, $firstname, $surname, $age, $gender, $occupation;
-
-    var $description, $behaviour, $appearance, $features, $personality;
+    var $id, $hash, $template, $popularity, $cheated, $supernatural, $owner, $calculated, $nickname, $firstname,
+        $surname, $age, $gender, $occupation, $description, $behaviour, $appearance, $features, $personality;
 
     var $world, $species, $caste, $nature, $identity, $manifestation, $focus;
 
@@ -48,25 +45,22 @@ class Person {
 
         $this->id = $data['id'];
         $this->hash = $data['hash'];
-
         $this->nickname = $data['nickname'];
         $this->firstname = $data['firstname'];
         $this->surname = $data['surname'];
-
         $this->age = $data['age'];
         $this->gender = $data['gender'];
         $this->occupation = $data['occupation'];
-
         $this->description = $data['description'];
         $this->behaviour = $data['behaviour'];
         $this->appearance = $data['appearance'];
         $this->features = $data['features'];
         $this->personality = $data['personality'];
-
         $this->template = $data['template'];
         $this->cheated = $data['cheated'];
         $this->supernatural = $data['supernatural'];
         $this->popularity = $data['popularity'];
+        $this->calculated = $data['calculated'];
 
         $this->world = isset($data['world_id'])
             ? new World($data['world_id'])
@@ -230,17 +224,13 @@ class Person {
 
         if(isset($list)) {
             foreach($list as $expertise) {
-                if($expertise->level == 1) {
-                    $total += $expertise->level;
-                } else {
-                    $math = 1;
+                $math = 0;
 
-                    for($i = 2; $i <= $expertise->level; $i++) {
-                        $math += $i * 2;
-                    }
-
-                    $total += $math;
+                for($i = 1; $i <= $expertise->level; $i++) {
+                    $math += $i;
                 }
+
+                $total += $math;
             }
         }
 

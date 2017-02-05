@@ -35,32 +35,28 @@ class Species {
             : null;
     }
 
-    public function getAttributeList() {
+    public function getAttribute() {
         global $curl;
 
-        $attributeList = [];
+        $result = $curl->get('species-attribute/id/'.$this->id)['data'];
 
-        $data = $curl->get('species-attribute/id/'.$this->id)['data'];
+        $data = isset($result)
+            ? $result
+            : null;
 
-        foreach ($data as $value) {
-            $attributeList[] = new Attribute($value['id']);
-        }
-
-        return $attributeList;
+        return $data;
     }
 
-    public function getWeaponList() {
+    public function getWeapon() {
         global $curl;
 
-        $weaponList = [];
+        $result = $curl->get('species-weapon/id/'.$this->id)['data'];
 
-        $data = $curl->get('species-weapon/id/'.$this->id)['data'];
+        $data = isset($result)
+            ? $result
+            : null;
 
-        foreach ($data as $value) {
-            $weaponList[] = new Weapon($value['id']);
-        }
-
-        return $weaponList;
+        return $data;
     }
 
 }
