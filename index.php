@@ -7,6 +7,7 @@
  * Time: 12:05
  */
 
+require_once('class/Sitemap.php');
 require_once('class/Curl.php');
 require_once('class/Form.php');
 
@@ -15,6 +16,7 @@ require_once('class/System.php');
 require_once('class/World.php');
 require_once('class/Person.php');
 
+$sitemap = new Sitemap();
 $curl = new Curl([
     'url' => 'http://localhost',
     'port' => 3001,
@@ -25,7 +27,8 @@ $form = new Form();
 $admin = new Admin();
 $system = new System();
 
-require_once('site/play/new.php');
-//require_once('site/admin/database.php');
+$sitemap->buildMap();
+
+require_once($sitemap->page);
 
 ?>

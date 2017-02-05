@@ -6,10 +6,10 @@
  * Time: 10:55
  */
 
-global $system;
+global $sitemap, $system;
 
-$person = isset($_GET['hash'])
-    ? new Person(null, $_GET['hash'])
+$person = isset($sitemap->unique)
+    ? new Person(null, $sitemap->unique)
     : null;
 
 $world = isset($_POST['person--world_id'])

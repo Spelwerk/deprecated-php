@@ -28,7 +28,7 @@ $POST_HASH = isset($_POST['post--hash'])
 
 function redirect($url) {
     ob_start();
-    header('Location: /'.$url, true, 303);
+    header('Location: http://spelwerk.dev'.$url, true, 303);
     ob_end_flush();
     exit;
 }
@@ -196,7 +196,7 @@ $r = isset($POST_RETURN)
     : null;
 
 $h = isset($POST_HASH)
-    ? '&hash='.$POST_HASH
+    ? $POST_HASH
     : null;
 
 echo '<a href="http://spelwerk.dev'.$r.$h.'">http://spelwerk.dev/'.$h.'</a>';

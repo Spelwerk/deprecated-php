@@ -78,15 +78,14 @@ class System {
 
 
     public function createPerson($person = null, $world = null, $species = null) {
-
-        $return = '?page=new';
-        $final = '?page=view';
+        $return = '/play/new/';
+        $final = '/play/play/';
 
         if(!isset($person) && !isset($world) && !isset($species)) {
-            $this->makeWorldSelect();
+            $this->makeWorldSelect($return);
 
         } else if(!isset($person) && isset($world) && !isset($species)) {
-            $this->makeSpeciesSelect($world);
+            $this->makeSpeciesSelect($world, $return);
 
         } else if(!isset($person) && isset($world) && isset($species)) {
             $this->makePersonBasic($world, $species, $return);
@@ -375,7 +374,7 @@ class System {
     }
 
 
-    function calculatePerson($person) {
+    function calculatePerson($person, $return) {
         global $form, $curl;
 
         $postList = [];
@@ -388,7 +387,10 @@ class System {
         $milestoneList = $person->getMilestone(0);
         $expertiseList = $person->getExpertise();
 
-        $focus = $person->focus->attribute;
+        $focus = isset($person->focus->attribute)
+            ? $person->focus->attribute
+            : null;
+
         $caste = $person->caste->attribute;
         $nature = $person->nature->attribute;
         $identity = $person->identity->attribute;
@@ -445,8 +447,10 @@ class System {
             }
 
             // calculating focus
-            if($array['attribute_id'] == $focus['id']) {
-                $postList[$key]['value'] += $focus['value'];
+            if($focus) {
+                if($array['attribute_id'] == $focus['id']) {
+                    $postList[$key]['value'] += $focus['value'];
+                }
             }
 
             // calculating caste
@@ -487,22 +491,22 @@ class System {
     }
 
 
-    public function makeWorldSelect() {
+    public function makeWorldSelect($return) {
         global $form;
 
         $list = $this->getWorldList();
 
-        $form->genericStart('/index.php');
+        $form->genericStart($return);
         $form->genericSelect('person', 'world_id', $list);
         $form->genericEnd();
     }
 
-    public function makeSpeciesSelect($world) {
+    public function makeSpeciesSelect($world, $return) {
         global $form;
 
         $list = $this->getSpeciesList($world->id);
 
-        $form->genericStart('/index.php');
+        $form->genericStart($return);
         $form->genericSelect('person', 'species_id', $list);
         $form->getHidden('person', 'world_id', $world->id);
         $form->genericEnd();
