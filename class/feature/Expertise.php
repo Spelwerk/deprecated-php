@@ -12,7 +12,7 @@ class Expertise {
 
     var $type, $skill, $species, $manifestation, $attribute;
 
-    public function __construct($id = null, $array = null) {
+    public function __construct($id = null, $array = null, $skill = null) {
         global $curl;
 
         $data = isset($id)
@@ -23,9 +23,10 @@ class Expertise {
         $this->name = $data['name'];
         $this->description = $data['description'];
         $this->hidden = $data['hidden'];
-        $this->maximum = $data['maximum'];
         $this->weapon = $data['give_weapon'];
         $this->icon = $data['icon_path'];
+
+        $this->maximum = $data['maximum'];
 
         $this->level = isset($data['level'])
             ? $data['level']
@@ -40,7 +41,7 @@ class Expertise {
             'id' => $data['skill_attribute_id'],
             'name' => $data['skill_attribute_name'],
             'required' => $data['skill_attribute_required'], // when you can get level 1
-            'increment' => $data['skill_attribute_increment'], // when you can get level 2
+            'increment' => $data['skill_attribute_increment'], // when you can get next levels
             'startsat' => $data['startsat'] // bonus starts at
         ];
 

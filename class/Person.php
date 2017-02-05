@@ -176,8 +176,8 @@ class Person {
             : null;
 
         if($data) {
-            foreach ($data as $array) {
-                $arrayList[] = new Expertise(null, $array);
+            foreach ($data as $expertise) {
+                $arrayList[] = new Expertise(null, $expertise);
             }
 
             return $arrayList;
@@ -208,7 +208,17 @@ class Person {
 
         if(isset($list)) {
             foreach($list as $expertise) {
-                $total += $expertise->level;
+                if($expertise->level == 1) {
+                    $total += $expertise->level;
+                } else {
+                    $math = 1;
+
+                    for($i = 2; $i <= $expertise->level; $i++) {
+                        $math += $i * 2;
+                    }
+
+                    $total += $math;
+                }
             }
         }
 
@@ -222,9 +232,9 @@ class Person {
             : 'imperfection';
 
         $currentCharacteristic = count($this->getCharacteristic($gift));
-        $worldMaximum = $this->world->maximum[$gName];
+        $maximum = $this->world->maximum[$gName];
 
-        return floor($worldMaximum - $currentCharacteristic);
+        return floor($maximum - $currentCharacteristic);
     }
 
     public function canMilestone($upbringing) {
@@ -236,15 +246,11 @@ class Person {
         $ageSplit = $this->age / $this->world->split['milestone'];
         $worldMaximum = $this->world->maximum[$uName];
 
-        if($upbringing == 1) {
-            return floor($worldMaximum - $currentMilestone);
-        } else {
-            if($currentMilestone < $ageSplit && $currentMilestone < $worldMaximum) {
-                return floor($ageSplit - $currentMilestone);
-            } else {
-                return 0;
-            }
-        }
+        $maximum = $ageSplit > $worldMaximum
+            ? $worldMaximum
+            : $ageSplit;
+
+        return floor($maximum - $currentMilestone);
     }
 
     public function canSkill() {
@@ -252,15 +258,11 @@ class Person {
         $ageSplit = $this->age / $this->world->split['skill'];
         $worldMaximum = $this->world->maximum['skill'];
 
-        $points = $ageSplit > $worldMaximum
+        $maximum = $ageSplit > $worldMaximum
             ? $worldMaximum
             : $ageSplit;
 
-        if($currentSkill < $points && $currentSkill < $worldMaximum) {
-            return floor($points - $currentSkill);
-        } else {
-            return 0;
-        }
+        return floor($maximum - $currentSkill);
     }
 
     public function canExpertise() {
@@ -268,15 +270,11 @@ class Person {
         $ageSplit = $this->age / $this->world->split['expertise'];
         $worldMaximum = $this->world->maximum['expertise'];
 
-        $points = $ageSplit > $worldMaximum
+        $maximum = $ageSplit > $worldMaximum
             ? $worldMaximum
             : $ageSplit;
 
-        if($currentExpertise < $points && $currentExpertise < $worldMaximum) {
-            return floor($points - $currentExpertise);
-        } else {
-            return 0;
-        }
+        return floor($maximum - $currentExpertise);
     }
 
     public function canSupernatural() {
@@ -284,14 +282,10 @@ class Person {
         $ageSplit = $this->age / $this->world->split['supernatural'];
         $worldMaximum = $this->world->maximum['supernatural'];
 
-        $points = $ageSplit > $worldMaximum
+        $maximum = $ageSplit > $worldMaximum
             ? $worldMaximum
             : $ageSplit;
 
-        if($currentSupernatural < $points && $currentSupernatural < $worldMaximum) {
-            return floor($points - $currentSupernatural);
-        } else {
-            return 0;
-        }
+        return floor($maximum - $currentSupernatural);
     }
 }

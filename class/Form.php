@@ -105,7 +105,7 @@ class Form {
         echo('<input type="hidden" name="'.$tableName.'--'.$name.'" value="'.$value.'"/>');
     }
 
-    public function getSelect($tableName, $name, $selectName, $selectId) {
+    public function getRadio($tableName, $name, $selectName, $selectId) {
         echo(
             '<label for="'.$name.'--'.$selectId.'">'.$selectName.'</label>'.
             '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$selectId.'" value="'.$selectId.'"/>'.
@@ -119,9 +119,9 @@ class Form {
         $val = isset($value) ? ' value="'.$value.'"' : '';
 
         echo(
-            '<label for="skill--'.$skillId.'">'.$skillName.'</label>'.
+            '<label for="purchase--'.$skillId.'">'.$skillName.'</label>'.
             '<br>'.
-            '<input type="number" name="skill--'.$skillId.'" id="skill--'.$skillId.'"'.$min.$max.$val.'/>'.
+            '<input type="number" name="purchase--'.$skillId.'" id="purchase--'.$skillId.'"'.$min.$max.$val.'/>'.
             '<br>'
         );
     }
@@ -129,7 +129,7 @@ class Form {
 
     public function genericSelect($tableName, $name, $array) {
         foreach($array as $object) {
-            $this->getSelect($tableName, $name, $object->name, $object->id);
+            $this->getRadio($tableName, $name, $object->name, $object->id);
         }
     }
 

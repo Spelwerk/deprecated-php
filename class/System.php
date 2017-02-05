@@ -494,10 +494,10 @@ class System {
         foreach($list as $characteristic) {
             if(count($currentList) != null) {
                 if(!in_array($characteristic, $currentList)) {
-                    $form->getSelect('person', 'characteristic_id', $characteristic->name, $characteristic->id);
+                    $form->getRadio('person', 'characteristic_id', $characteristic->name, $characteristic->id);
                 }
             } else {
-                $form->getSelect('person', 'characteristic_id', $characteristic->name, $characteristic->id);
+                $form->getRadio('person', 'characteristic_id', $characteristic->name, $characteristic->id);
             }
         }
 
@@ -520,10 +520,10 @@ class System {
         foreach($list as $milestone) {
             if(count($currentList) != null) {
                 if(!in_array($milestone, $currentList)) {
-                    $form->getSelect('person', 'milestone_id', $milestone->name, $milestone->id);
+                    $form->getRadio('person', 'milestone_id', $milestone->name, $milestone->id);
                 }
             } else {
-                $form->getSelect('person', 'milestone_id', $milestone->name, $milestone->id);
+                $form->getRadio('person', 'milestone_id', $milestone->name, $milestone->id);
             }
         }
 
@@ -579,7 +579,22 @@ class System {
             foreach($currentList as $current) {
                 $idList[] = $current->id;
 
-                $form->getPurchase($current->name, $current->id, $current->maximum, $current->level);
+                $skillVal = 0;
+
+                foreach($skillList as $skill) {
+                    if($skill->id == $current->skill['id']) {
+                        $skillVal = $skill->value;
+                    }
+                }
+
+                $math1 = $skillVal - $current->skill['required'];
+                $math2 = floor($math1 / $current->skill['increment']);
+
+                $calculatedMax = $current->maximum < $math2
+                    ? $current->maximum
+                    : $math2 + 1;
+
+                $form->getPurchase($current->name, $current->id, $calculatedMax, $current->level);
             }
         }
 
@@ -588,16 +603,23 @@ class System {
                 if($skill->value >= $type['skill_attribute_required']) {
                     $expertiseList = $this->getExpertiseList($person, $skill->id, $type['id']);
 
+                    $math1 = $skill->value - $type['skill_attribute_required'];
+                    $math2 = floor($math1 / $type['skill_attribute_increment']);
+
                     if(isset($expertiseList)) {
                         foreach($expertiseList as $expertise) {
                             if(!in_array($expertise->id, $idList)) {
-                                $form->getPurchase($expertise->name, $expertise->id, $expertise->maximum);
+                                $calculatedMax = $expertise->maximum < $math2
+                                    ? $expertise->maximum
+                                    : $math2 + 1;
+
+                                $form->getPurchase($expertise->name, $expertise->id, $calculatedMax);
                             }
                         }
                     }
                 }
             }
-        } // todo expertise maximum level differs from skill. need to use increment information compare to skill
+        }
 
         $form->getHidden('person', 'person_id', $person->id);
         $form->genericEnd();

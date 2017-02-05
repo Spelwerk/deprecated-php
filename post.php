@@ -26,20 +26,20 @@ $POST_HASH = isset($_POST['post--hash'])
     ? $_POST['post--hash']
     : null;
 
-function postAttribute($postData) {
+function postSkill($postData) {
     global $curl;
 
     $postArray = [];
 
     $personId = $postData['person_id'];
 
-    foreach($postData as $skill => $value) {
-        if($skill !== 'person_id') {
+    foreach($postData as $key => $value) {
+        if($key !== 'person_id') {
             $v = $value > 0
                 ? $value
                 : 0;
 
-            $postArray[] = ['person_id' => $personId, 'attribute_id' => $skill, 'value' => $v];
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $key, 'value' => $v];
         }
     }
 
@@ -55,14 +55,32 @@ function postExpertise($postData) {
 
     $personId = $postData['person_id'];
 
-    foreach($postData as $skill => $value) {
-        if($skill !== 'person_id' && $value > 0) {
-            $postArray[] = ['person_id' => $personId, 'expertise_id' => $skill, 'level' => $value];
+    foreach($postData as $key => $value) {
+        if($key !== 'person_id' && $value > 0) {
+            $postArray[] = ['person_id' => $personId, 'expertise_id' => $key, 'level' => $value];
         }
     }
 
     foreach($postArray as $post) {
         $result = $curl->post('person-expertise',$post);
+    }
+}
+
+function postSupernatural($postData) {
+    global $curl;
+
+    $postArray = [];
+
+    $personId = $postData['person_id'];
+
+    foreach($postData as $key => $value) {
+        if($key !== 'person_id' && $value > 0) {
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $key, 'value' => $value];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $result = $curl->post('person-attribute',$post);
     }
 }
 
@@ -100,7 +118,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--skill':
-            postAttribute($postData);
+            postSkill($postData);
             break;
 
         case 'person--expertise':
@@ -108,7 +126,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--supernatural':
-            postAttribute($postData);
+            postSupernatural($postData);
             break;
     }
 }
