@@ -186,6 +186,28 @@ class Person {
         }
     }
 
+    public function getWeapon() {
+        global $curl;
+
+        $arrayList = [];
+
+        $return = $curl->get('person-weapon/id/'.$this->id);
+
+        $data = isset($return['data'])
+            ? $return['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Weapon(null, $array);
+            }
+
+            return $arrayList;
+        } else {
+            return null;
+        }
+    }
+
 
     function countAttribute($type) {
         $list = $this->getAttribute($type);

@@ -84,6 +84,24 @@ function postSupernatural($postData) {
     }
 }
 
+function postWeapon($postData) {
+    global $curl;
+
+    $postArray = [];
+
+    $personId = $postData['person_id'];
+
+    foreach($postData as $key => $value) {
+        if($key !== 'person_id') {
+            $postArray[] = ['person_id' => $personId, 'weapon_id' => $key, 'weaponquality_id' => 3, 'equipped' => 0];
+        }
+    } // todo quality should not be hardcoded
+
+    foreach($postArray as $post) {
+        $result = $curl->post('person-weapon',$post);
+    }
+}
+
 if(isset($POST_DO) && isset($POST_RETURN)) {
 
     $postData = [];
@@ -127,6 +145,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'person--supernatural':
             postSupernatural($postData);
+            break;
+
+        case 'person--weapon':
+            postWeapon($postData);
             break;
     }
 }

@@ -8,79 +8,89 @@
  */
 class Weapon {
 
-    var $id, $name, $description, $price, $hidden, $legal;
+    var $id, $name, $description, $price, $hidden, $legal, $icon;
 
-    var $equipped;
+    var $damageD12, $damageBonus, $criticalD12, $hand, $initiative, $hit, $distance, $equipped;
 
     var $type, $group, $skill, $quality, $damage, $expertise;
 
-    var $icon;
+    public function __construct($id = null, $array = null) {
+        global $curl;
 
-    public function __construct($id = null, $array = null, $quality = null) {
+        $data = isset($id)
+            ? $curl->get('weapon/id/'.$id)['data'][0]
+            : $array;
 
-        $this->id = $array['id'];
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->hidden = $data['hidden'];
+        $this->legal = $data['legal'];
+        $this->icon = $data['icon_path'];
+        $this->hand = intval($data['hand']);
 
-        $this->name = $array['name'];
+        $this->equipped = isset($data['equipped'])
+            ? $data['equipped']
+            : null;
 
-        $this->description = $array['description'];
+        $this->price = isset($data['quality_price'])
+            ? intval($data['price']) * intval($data['quality_price'])
+            : intval($data['price']);
 
-        $price = intval($array['price']) * intval($array['quality_price']);
+        $this->damageD12 = isset($data['quality_damage_d12'])
+            ? intval($data['damage_d12']) + intval($data['quality_damage_d12'])
+            : intval($data['damage_d12']);
 
-        $this->price = $price;
+        $this->damageBonus = isset($data['quality_damage_bonus'])
+            ? intval($data['damage_bonus']) + intval($data['quality_damage_bonus'])
+            : intval($data['damage_bonus']);
 
-        $this->hidden = $array['hidden'];
+        $this->criticalD12 = isset($data['quality_critical_d12'])
+            ? intval($data['critical_d12']) + intval($data['quality_critical_d12'])
+            : intval($data['critical_d12']);
 
-        $this->legal = $array['legal'];
+        $this->initiative = isset($data['quality_initiative'])
+            ? intval($data['initiative']) + intval($data['quality_initiative'])
+            : intval($data['initiative']);
 
-        $this->equipped = $array['equipped'];
+        $this->hit = isset($data['quality_hit'])
+            ? intval($data['hit']) + intval($data['quality_hit'])
+            : intval($data['hit']);
+
+        $this->distance = isset($data['quality_distance'])
+            ? intval($data['distance']) + intval($data['quality_distance'])
+            : intval($data['distance']);
 
         $this->type = [
-            'id' => $array['weapontype_id'],
-            'name' => $array['weapontype_name']
+            'id' => $data['weapontype_id'],
+            'name' => $data['weapontype_name']
         ];
 
         $this->group = [
-            'id' => $array['weapongroup_id'],
-            'name' => $array['weapongroup_name']
+            'id' => $data['weapongroup_id'],
+            'name' => $data['weapongroup_name']
         ];
 
         $this->skill = [
-            'id' => $array['skill_attribute_id'],
-            'name' => $array['skill_attribute_name']
-        ];
-
-        $this->quality = [
-            'id' => $array['quality_id'],
-            'name' => $array['quality_name']
-        ];
-
-        $damage_d12 = intval($array['damage_d12']) + intval($array['quality_damage_d12']);
-        $damage_bonus = intval($array['damage_bonus']) + intval($array['quality_damage_bonus']);
-        $critical_d12 = intval($array['critical_d12']) + intval($array['quality_critical_d12']);
-        $hand = intval($array['hand']);
-        $initiative = intval($array['initiative']) + intval($array['quality_initiative']);
-        $hit = intval($array['hit']) + intval($array['quality_hit']);
-        $distance = intval($array['distance']) + intval($array['quality_distance']);
-
-        $this->damage = [
-            'id' => $array['damage_attribute_id'],
-            'name' => $array['damage_attribute_name'],
-            'damage_d12' => $damage_d12,
-            'damage_bonus' => $damage_bonus,
-            'critical_d12' => $critical_d12,
-            'hand' => $hand,
-            'initiative' => $initiative,
-            'hit' => $hit,
-            'distance' => $distance
+            'id' => $data['skill_attribute_id'],
+            'name' => $data['skill_attribute_name']
         ];
 
         $this->expertise = [
-            'id' => $array['expertise_id'],
-            'name' => $array['expertise_name']
+            'id' => $data['expertise_id'],
+            'name' => $data['expertise_name']
         ];
 
-        $this->icon = $array['icon_path'];
+        $this->damage = [
+            'id' => $data['damage_attribute_id'],
+            'name' => $data['damage_attribute_name'],
+        ];
 
+        if(isset($data['quality_id'])) {
+            $this->quality = [
+                'id' => $data['quality_id'],
+                'name' => $data['quality_name'],
+            ];
+        }
     }
-
 }

@@ -72,6 +72,27 @@ class Form {
         );
     }
 
+    public function getHidden($tableName, $name, $value) {
+        echo('<input type="hidden" name="'.$tableName.'--'.$name.'" value="'.$value.'"/>');
+    }
+
+    public function getRadio($tableName, $name, $selectName, $selectId) {
+        echo(
+            '<label for="'.$name.'--'.$selectId.'">'.$selectName.'</label>'.
+            '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$selectId.'" value="'.$selectId.'"/>'.
+            '<br>'
+        );
+    }
+
+    public function getCheckbox($tableName, $rowName, $rowId) {
+        echo(
+            '<label for="'.$tableName.'--'.$rowId.'">'.$rowName.'</label>'.
+            '<input type="checkbox" name="'.$tableName.'--'.$rowId.'" id="'.$tableName.'--'.$rowId.'"/>'.
+            '<br>'
+        );
+    }
+
+
     public function getForeignKey($tableName, $name, $foreignTable, $required, $value = null) {
         global $curl;
 
@@ -101,27 +122,15 @@ class Form {
         echo('</select><br>');
     }
 
-    public function getHidden($tableName, $name, $value) {
-        echo('<input type="hidden" name="'.$tableName.'--'.$name.'" value="'.$value.'"/>');
-    }
-
-    public function getRadio($tableName, $name, $selectName, $selectId) {
-        echo(
-            '<label for="'.$name.'--'.$selectId.'">'.$selectName.'</label>'.
-            '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$selectId.'" value="'.$selectId.'"/>'.
-            '<br>'
-        );
-    }
-
-    public function getPurchase($skillName, $skillId, $skillMaximum, $value = null) {
+    public function getPurchase($rowName, $rowId, $rowMax, $value = null) {
         $min = ' min="0"';
-        $max = isset($skillMaximum) ? ' max="'.$skillMaximum.'"' : '';
+        $max = isset($rowMax) ? ' max="'.$rowMax.'"' : '';
         $val = isset($value) ? ' value="'.$value.'"' : '';
 
         echo(
-            '<label for="purchase--'.$skillId.'">'.$skillName.'</label>'.
+            '<label for="purchase--'.$rowId.'">'.$rowName.'</label>'.
             '<br>'.
-            '<input type="number" name="purchase--'.$skillId.'" id="purchase--'.$skillId.'"'.$min.$max.$val.'/>'.
+            '<input type="number" name="purchase--'.$rowId.'" id="purchase--'.$rowId.'"'.$min.$max.$val.'/>'.
             '<br>'
         );
     }

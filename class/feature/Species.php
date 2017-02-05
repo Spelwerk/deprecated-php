@@ -22,10 +22,9 @@ class Species {
             : $array;
 
         $this->id = $data['id'];
-
         $this->name = $data['name'];
-
         $this->description = $data['description'];
+        $this->icon = $data['icon_path'];
 
         $this->playable = isset($data['playable'])
             ? $data['playable']
@@ -34,9 +33,6 @@ class Species {
         $this->maxAge = isset($data['max_age'])
             ? $data['max_age']
             : null;
-
-        $this->icon = $data['icon_path'];
-
     }
 
     public function getAttributeList() {

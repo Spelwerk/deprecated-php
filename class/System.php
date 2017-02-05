@@ -144,6 +144,7 @@ class System {
                     $this->makeSupernaturalPurchase($person);
 
                 } else {
+                    $this->makeWeaponSelect($person);
 
                 }
             }
@@ -303,6 +304,7 @@ class System {
         global $curl;
 
         $arrayList = [];
+        $returnList = null;
 
         $get = isset($person->manifestation->id)
             ? 'world-expertise/id/'.$person->world->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$person->species->id.'/manifestation/'.$person->manifestation->id
@@ -319,10 +321,10 @@ class System {
                 $arrayList[] = new Expertise(null, $array);
             }
 
-            return $arrayList;
-        } else {
-            return null;
+            $returnList = $arrayList;
         }
+
+        return $returnList;
     }
 
     function getSupernaturalList($person) {
@@ -337,6 +339,29 @@ class System {
         }
 
         return $arrayList;
+    }
+
+    function getWeaponList($person, $group) {
+        global $curl;
+
+        $arrayList = [];
+        $returnList = null;
+
+        $result = $curl->get('world-weapon/id/'.$person->world->id.'/group/'.$group);
+
+        $data = isset($result['data'])
+            ? $result['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Weapon(null, $array);
+            }
+
+            $returnList = $arrayList;
+        }
+
+        return $returnList;
     }
 
 
@@ -654,6 +679,40 @@ class System {
         foreach($supernaturalList as $supernatural) {
             if(in_array($supernatural->id, $expList) && !in_array($supernatural->id, $idList)) {
                 $form->getPurchase($supernatural->name, $supernatural->id, $supernatural->maximum);
+            }
+        }
+
+        $form->getHidden('person', 'person_id', $person->id);
+        $form->genericEnd();
+    }
+
+    public function makeWeaponSelect($person) {
+        global $form, $curl;
+
+        $groupList = $curl->get('weapongroup')['data'];
+        $currentList = $person->getWeapon();
+        $idList = [];
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', '');
+        $form->getHidden('post', 'do', 'person--weapon');
+        $form->getHidden('post', 'hash', $person->hash);
+
+        if(count($currentList) != null) {
+            foreach ($currentList as $current) {
+                $idList[] = $current->id;
+            }
+        }
+
+        foreach($groupList as $group) {
+            $weaponList = $this->getWeaponList($person, $group['id']);
+
+            if(isset($weaponList)) {
+                foreach($weaponList as $weapon) {
+                    if(!in_array($weapon->id, $idList)) {
+                        $form->getCheckbox('weapon', $weapon->name, $weapon->id);
+                    }
+                }
             }
         }
 
