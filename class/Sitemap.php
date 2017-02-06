@@ -28,7 +28,12 @@ class Sitemap {
     }
 
     function switchTop() {
-        switch($this->command[0])
+
+        $switch = isset($this->command[0]) && $this->command[0] != null
+            ? $this->command[0]
+            : null;
+
+        switch($switch)
         {
             case 'play':
                 $this->switchPlay();
@@ -58,26 +63,35 @@ class Sitemap {
     }
 
     function switchPlay() {
-        $this->unique = $this->command[2] != null
+
+        $switch = isset($this->command[1]) && $this->command[1] != null
+            ? $this->command[1]
+            : null;
+
+        $unique = isset($this->command[2]) && $this->command[2] != null
             ? $this->command[2]
             : null;
 
-        switch($this->command[1])
+        switch($switch)
         {
             case 'new':
                 $this->page = 'site/play/new.php';
+                $this->unique = $unique;
                 break;
 
             case 'edit':
                 $this->page = 'site/play/edit.php';
+                $this->unique = $unique;
                 break;
 
             case 'play':
                 $this->page = 'site/play/play.php';
+                $this->unique = $unique;
                 break;
 
             case 'view':
                 $this->page = 'site/play/view.php';
+                $this->unique = $unique;
                 break;
 
             default: break;

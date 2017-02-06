@@ -27,7 +27,10 @@ class World {
 
     var $supernaturalName;
 
-    var $attributeSkill, $expertiseAttribute, $expertiseDice, $unarmedWeapon;
+    var $attributeBody, $attributeCombat, $attributeConsumable, $attributeDamage, $attributeExperience,
+        $attributePotential, $attributeProtection, $attributeReputation, $attributeSkill, $attributeWound;
+
+    var $expertiseAttribute, $expertiseDice;
 
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
@@ -50,15 +53,28 @@ class World {
             ? true
             : false;
 
+        $this->hash = isset($hash)
+            ? $hash
+            : null;
+
         $this->id = $data['id'];
-        $this->hash = $data['hash'];
         $this->name = $data['name'];
         $this->description = $data['description'];
         $this->template = $data['template'];
         $this->popularity = $data['popularity'];
         $this->hidden = $data['hidden'];
 
+        $this->attributeBody = 1;
+        $this->attributeCombat = 2;
+        $this->attributeConsumable = 8;
+        $this->attributeDamage = 3;
+        $this->attributeExperience = 9;
+        $this->attributePotential = 7;
+        $this->attributeProtection = 4;
+        $this->attributeReputation = 6;
         $this->attributeSkill = $data['skill_attributetype_id'];
+        $this->attributeWound = 5;
+
         $this->expertiseAttribute = $data['attribute_expertisetype_id'];
         $this->expertiseDice = $data['dice_expertisetype_id'];
 

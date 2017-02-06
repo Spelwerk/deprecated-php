@@ -8,22 +8,9 @@
  */
 class System {
 
-    var $attributetype;
     var $body, $combat, $damage, $protection, $wound, $reputation, $potential, $consumable, $experience;
 
     public function __construct($world = null) {
-
-        $this->attributetype = [
-            'body' => 1,
-            'combat' => 2,
-            'damage' => 3,
-            'protection' => 4,
-            'wound' => 5,
-            'reputation' => 6,
-            'potential' => 7,
-            'consumable' => 8,
-            'experience' => 9
-        ]; // all are protected
 
         $this->body = [
             'tolerance' => 1,
@@ -819,6 +806,7 @@ class System {
         $groupList = $curl->get('weapongroup')['data'];
         $currentList = $person->getWeapon();
         $speciesList = $person->species->getWeapon();
+        $expertiseList = $person->getExpertise();
         $idList = [];
 
         $form->genericStart();
@@ -846,6 +834,12 @@ class System {
 
         foreach($speciesList as $species) {
             $form->getHidden('weapon', $species['weapon_id'], 0);
+        }
+
+        foreach($expertiseList as $expertise) {
+            if($expertise->weapon != 0) {
+                $form->getHidden('weapon', $expertise-$weapon, 0);
+            }
         }
 
         $form->getHidden('person', 'person_id', $person->id);

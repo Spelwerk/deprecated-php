@@ -43,8 +43,11 @@ class Person {
             ? true
             : false;
 
+        $this->hash = isset($hash)
+            ? $hash
+            : null;
+
         $this->id = $data['id'];
-        $this->hash = $data['hash'];
         $this->nickname = $data['nickname'];
         $this->firstname = $data['firstname'];
         $this->surname = $data['surname'];

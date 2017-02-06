@@ -29,6 +29,8 @@ $system = new System();
 
 $sitemap->buildMap();
 
-require_once($sitemap->page);
+if(isset($sitemap->page)) {
+    require_once($sitemap->page);
+}
 
 ?>

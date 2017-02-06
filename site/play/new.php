@@ -5,7 +5,6 @@
  * Date: 2016-12-08
  * Time: 10:55
  */
-
 global $sitemap, $system;
 
 $person = isset($sitemap->unique)
