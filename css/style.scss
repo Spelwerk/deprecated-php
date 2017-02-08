@@ -1,0 +1,278 @@
+// FONT FACE
+@font-face {
+  font-family: Rockwell;
+  src: url('../font/rockwell.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Walkway;
+  src: url('../font/walkway.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('../font/roboto.ttf');
+  font-weight: 400;
+}
+
+// FONT
+$font-logo: Walkway, serif;
+$font-fancy: Rockwell, serif;
+$font-default: Roboto, sans-serif;
+
+// COLOR
+
+// MIXIN
+
+@mixin mix-padding($padding) {
+  padding: $padding $padding $padding $padding;
+}
+
+@mixin mix-margin($margin) {
+  margin: $margin $margin $margin $margin;
+}
+
+@mixin mix-size($size) {
+  height: $size;
+  width: $size;
+}
+
+@mixin mix-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin mix-table {
+  display: table;
+  table-layout: fixed;
+
+  width: 100%;
+}
+
+@mixin mix-table__cell {
+  display: table-cell;
+}
+
+@mixin mix-table__row {
+  display: table-row;
+}
+
+// MIXIN MEDIA
+
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+
+@mixin for-tablet-portait-only {
+  @media (min-width: 600px) and (max-width: 899px) { @content; }
+}
+
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+
+@mixin for-tablet-landscape-only {
+  @media (min-width: 900px) and (max-width: 1199px) { @content; }
+}
+
+@mixin for-desktop-up {
+  @media (min-width: 1200px) { @content; }
+}
+
+@mixin for-desktop-only {
+  @media (min-width: 1200px) and (max-width: 1799px) { @content; }
+}
+
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
+
+// GLOBAL
+
+html {
+  font-size: 10px;
+}
+
+hr {
+  border: 0;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+  background-color: inherit;
+}
+
+div {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background-color: inherit;
+}
+
+// COMPONENT
+
+.sw-c-button {
+
+  &__item {
+    @include mix-padding(0.2rem);
+
+    width: 35rem;
+
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+
+    display: inline-block;
+
+    background-color: white;
+    box-shadow: 0.1rem 0.1rem 0.3rem #555555;
+  }
+
+  &__content {
+    @include mix-table;
+
+    height: 3.4rem;
+  }
+
+  &__icon {
+    @include mix-table__cell;
+
+    width: 3.3rem;
+
+    padding-left: 0.4rem;
+
+    text-align: left;
+    vertical-align: middle;
+
+    img {
+      @include mix-size(2.5rem);
+    }
+  }
+
+  &__title {
+    @include mix-table__cell;
+
+    font-family: $font-default;
+    font-size: 1.8rem;
+
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  &__value {
+    @include mix-table__cell;
+
+    width: 8.5rem;
+
+    font-family: $font-fancy;
+    font-size: 2rem;
+
+    padding-right: 0.6rem;
+
+    text-align: right;
+    vertical-align: middle;
+  }
+}
+
+.sw-c-list {
+
+  &__item {
+    margin-bottom: 2rem;
+  }
+
+  &__header {
+    @include mix-table;
+
+    height: 6rem;
+  }
+
+  &__icon {
+    @include mix-table__cell;
+
+    width: 4rem;
+
+    text-align: left;
+    vertical-align: middle;
+
+    img {
+      @include mix-size(3rem);
+    }
+  }
+
+  &__title {
+    @include mix-table__cell;
+
+    font-family: $font-fancy;
+    font-size: 2.6rem;
+
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  &__description {
+    @include mix-padding(0.5rem);
+
+    margin-top: 1rem;
+
+    font-family: $font-default;
+    font-size: 1.4rem;
+  }
+
+  &__settings {
+    @include mix-padding(0.5rem);
+
+    margin-top: 1rem;
+
+    font-family: $font-default;
+    font-size: 1.6rem;
+  }
+}
+
+.sw-c-card {
+
+  &__item {
+    @include mix-padding(0.8rem);
+
+    width: 8rem;
+
+    display: inline-block;
+  }
+
+  &__title {
+    @include mix-padding(1rem);
+
+    font-family: $font-default;
+    font-size: 1.4rem;
+
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  &__value {
+    @include mix-padding(1rem);
+
+    font-family: $font-fancy;
+    font-size: 3.6rem;
+
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+// STATE
+
+.sw-is-hidden {
+  display: none;
+
+  * {
+    display: none;
+  }
+}

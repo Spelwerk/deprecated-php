@@ -76,10 +76,18 @@ class Weapon {
             'name' => $data['skill_attribute_name']
         ];
 
+        $this->skillValue = isset($data['skill_attribute_value'])
+            ? $data['skill_attribute_value']
+            : null;
+
         $this->expertise = [
             'id' => $data['expertise_id'],
             'name' => $data['expertise_name']
         ];
+
+        $this->expertiseLevel = isset($data['expertise_level'])
+            ? $data['expertise_level']
+            : null;
 
         $this->damage = [
             'id' => $data['damage_attribute_id'],

@@ -161,12 +161,16 @@ class Person {
         }
     }
 
-    public function getExpertise() {
+    public function getExpertise($type = null) {
         global $curl;
 
         $arrayList = [];
 
-        $return = $curl->get('person-expertise/id/'.$this->id);
+        $get = isset($type)
+            ? 'person-expertise/id/'.$this->id
+            : 'person-expertise/id/'.$this->id.'/type/'.$type;
+
+        $return = $curl->get($get);
 
         $data = isset($return['data'])
             ? $return['data']
@@ -302,5 +306,161 @@ class Person {
             : $ageSplit;
 
         return floor($maximum - $currentSupernatural);
+    }
+
+
+    public function buildButton($title, $description, $value, $data, $icon = null) {
+        echo(
+            '<button type="button" class="sw-c-button__item sw-js-button" '.$data.'>'.
+            '<div class="sw-c-button__content">'.
+            '<div class="sw-c-button__icon"><img src="/img/_missing_icon.png"/></div>'.
+            '<div class="sw-c-button__title">'.$title.'</div>'.
+            '<div class="sw-c-button__value">'.$value.'</div></div>'.
+            '<div class="sw-js-information sw-is-hidden">'.$description.'</div></button>'
+        );
+    }
+
+    public function buildList($title, $description, $icon = null) {
+        echo(
+            '<div class="sw-c-list__item"><div class="sw-c-list__header">'.
+            '<div class="sw-c-list__icon"><img src="/img/_missing_icon.png"/></div>'.
+            '<div class="sw-c-list__title">'.$title.'</div></div>'.
+            '<div class="sw-c-list__description sw-js-description sw-is-hidden">'.$description.'</div>'.
+            '<div class="sw-c-list__settings sw-js-settings sw-is-hidden">'.
+            '<div><a href="#"><!--<img class="size-20" src="settings_icon"/>--></a></div></div></div>'
+        );
+    }
+
+    public function buildCard($list) {
+        echo('<div class="sw-c-card">');
+
+        foreach($list as $object) {
+            echo(
+                '<div class="sw-c-card__item">'.
+                '<div class="sw-c-card__title">'.$object->name.'</div>'.
+                '<div class="sw-c-card__value">'.$object->value.'</div></div>'
+            );
+        }
+
+        echo('</div>');
+    }
+
+
+    public function makeConsumable($list) {
+        echo('<div class="sw-c-button">');
+
+        foreach($list as $consumable) {
+            $value = $consumable->value.'d12';
+
+            $data = 'data-rolltype="consumable" data-roll-d12="'.$value.'"';
+
+            $this->buildButton($consumable->name, $consumable->description, $value, $data);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeSkill($list) {
+        echo('<div class="sw-c-button">');
+
+        foreach($list as $skill) {
+            $value = $skill->value > 0
+                ? '2d12+'.$skill->value
+                : '2d12';
+
+            $data = 'data-rolltype="skill" data-roll-d12="2" data-roll-bonus="'.$skill->value.'"';
+
+            $this->buildButton($skill->name, $skill->description, $value, $data);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeExpertise() {
+        echo('<div class="sw-c-button">');
+
+        foreach($this->getExpertise($this->world->expertiseDice) as $expertise) {
+            $rollD12 = 2 + intval($expertise->dice);
+            $rollBonus = $expertise->skillValue;
+
+            $value = $rollD12.'d12+'.$rollBonus;
+
+            $data = 'data-rolltype="expertise" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'"';
+
+            $this->buildButton($expertise->name, $expertise->description, $value, $data);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeSupernatural() {
+        echo('<div class="sw-c-button">');
+
+        foreach($this->getAttribute($this->manifestation->attributeType) as $supernatural) {
+            $rollD12 = 2;
+            $rollBonus = 0;
+
+            foreach($this->getExpertise($this->manifestation->expertiseType) as $expertise) {
+                if($expertise->attribute['id'] == $supernatural->id) {
+                    $rollD12 += intval($expertise->dice);
+                    $rollBonus += intval($expertise->skillValue);
+                }
+            }
+
+            $value = $supernatural->value.'d12';
+
+            $data = 'data-rolltype="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$supernatural->value.'"';
+
+            $this->buildButton($supernatural->name, $supernatural->description, $value, $data);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeWeapon() {
+        echo('<div class="sw-c-button">');
+
+        foreach($this->getWeapon() as $weapon) {
+            $hitD12 = 2 + intval($weapon->expertiseLevel);
+            $hitBonus = intval($weapon->damageBonus) + intval($weapon->hit);
+
+            $value = isset($weapon->damageBonus)
+                ? $weapon->damageD12.'d12+'.$weapon->damageBonus
+                : $weapon->damageD12.'d12';
+
+            $data = 'data-rolltype="weapon" data-roll-d12="'.$hitD12.'" data-roll-bonus="'.$hitBonus.'" data-strike-d12="'.$weapon->damageD12.'" data-strike-bonus="'.$weapon->damageBonus.'" data-strike-critical="'.$weapon->criticalD12.'"';
+
+            $this->buildButton($weapon->name, $weapon->description, $value, $data);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeCharacteristic() {
+        echo('<div class="sw-c-list">');
+
+        foreach($this->getCharacteristic(1) as $gift) {
+            $this->buildList($gift->name, $gift->description);
+        }
+
+        foreach($this->getCharacteristic(0) as $imperfection) {
+            $this->buildList($imperfection->name, $imperfection->description);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeMilestone() {
+        echo('<div class="sw-c-list">');
+
+        foreach($this->getMilestone(1) as $upbringing) {
+            $this->buildList($upbringing->name, $upbringing->description);
+        }
+
+        foreach($this->getMilestone(0) as $flexible) {
+            $this->buildList($flexible->name, $flexible->description);
+        }
+
+        echo('</div>');
     }
 }

@@ -8,7 +8,7 @@
  */
 class Expertise {
 
-    var $id, $name, $description, $hidden, $level, $maximum, $weapon, $icon;
+    var $id, $name, $description, $hidden, $level, $dice, $maximum, $weapon, $icon;
 
     var $type, $skill, $species, $manifestation, $attribute;
 
@@ -26,6 +26,8 @@ class Expertise {
         $this->weapon = $data['give_weapon'];
         $this->icon = $data['icon_path'];
         $this->maximum = $data['maximum'];
+        $this->species = $data['species_id'];
+        $this->manifestation = $data['manifestation_id'];
 
         $this->level = isset($data['level'])
             ? $data['level']
@@ -44,15 +46,11 @@ class Expertise {
             'startsat' => $data['startsat'] // bonus starts at
         ];
 
-        $this->species = [
-            'id' => $data['species_id'],
-            'name' => $data['species_name']
-        ];
+        $this->dice = 1 - intval($data['startsat']) + intval($this->level);
 
-        $this->manifestation = [
-            'id' => $data['manifestation_id'],
-            'name' => $data['manifestation_name']
-        ];
+        $this->skillValue = isset($data['skill_attribute_value'])
+            ? $data['skill_attribute_value']
+            : null;
 
         $this->attribute = [
             'id' => $data['give_attribute_id'],
