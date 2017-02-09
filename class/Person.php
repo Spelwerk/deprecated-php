@@ -54,11 +54,13 @@ class Person {
         $this->age = $data['age'];
         $this->gender = $data['gender'];
         $this->occupation = $data['occupation'];
+
         $this->description = $data['description'];
         $this->behaviour = $data['behaviour'];
         $this->appearance = $data['appearance'];
         $this->features = $data['features'];
         $this->personality = $data['personality'];
+
         $this->template = $data['template'];
         $this->cheated = $data['cheated'];
         $this->supernatural = $data['supernatural'];
@@ -167,8 +169,8 @@ class Person {
         $arrayList = [];
 
         $get = isset($type)
-            ? 'person-expertise/id/'.$this->id
-            : 'person-expertise/id/'.$this->id.'/type/'.$type;
+            ? 'person-expertise/id/'.$this->id.'/type/'.$type
+            : 'person-expertise/id/'.$this->id;
 
         $return = $curl->get($get);
 
@@ -331,12 +333,12 @@ class Person {
         );
     }
 
-    public function buildCard($list) {
+    public function buildCard($list, $modifier = null) {
         echo('<div class="sw-c-card">');
 
         foreach($list as $object) {
             echo(
-                '<div class="sw-c-card__item">'.
+                '<div class="sw-c-card__item'.$modifier.'">'.
                 '<div class="sw-c-card__title">'.$object->name.'</div>'.
                 '<div class="sw-c-card__value">'.$object->value.'</div></div>'
             );
@@ -459,6 +461,26 @@ class Person {
 
         foreach($this->getMilestone(0) as $flexible) {
             $this->buildList($flexible->name, $flexible->description);
+        }
+
+        echo('</div>');
+    }
+
+    public function makeFeatures() {
+        echo('<div class="sw-c-list">');
+
+        $this->buildList($this->species->name, $this->species->description);
+
+        $this->buildList($this->caste->name, $this->caste->description);
+
+        $this->buildList($this->nature->name, $this->nature->description);
+
+        $this->buildList($this->identity->name, $this->identity->description);
+
+        if($this->supernatural) {
+            $this->buildList($this->manifestation->name, $this->manifestation->description);
+
+            $this->buildList($this->focus->name, $this->focus->description);
         }
 
         echo('</div>');

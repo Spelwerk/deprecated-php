@@ -366,7 +366,7 @@ class System {
 
         $postList = [];
 
-        $worldDefaults = $curl->get('world-attribute/id/'.$person->world->id)['data'];
+        $worldDefaults = $curl->get('world-attribute/id/'.$person->world->id.'/species/'.$person->species->id)['data'];
         $skillList = $person->getAttribute($person->world->attributeSkill);
         $speciesList = $person->species->getAttribute();
         $giftList = $person->getCharacteristic(1);
