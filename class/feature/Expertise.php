@@ -46,7 +46,7 @@ class Expertise {
             'startsat' => $data['startsat'] // bonus starts at
         ];
 
-        $this->dice = 1 - intval($data['startsat']) + intval($this->level);
+        $this->dice = intval($data['startsat']) + intval($this->level) - 1;
 
         $this->skillValue = isset($data['skill_attribute_value'])
             ? $data['skill_attribute_value']

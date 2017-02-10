@@ -15,8 +15,10 @@ $person = isset($sitemap->unique)
 
 <?php if($person): ?>
 
-    <div class="sw-l-content__wrapper">
-        <div class="sw-l-content__item">
+    <h2><?php echo($person->firstname.' '.$person->surname); ?></h2>
+
+    <div class="sw-l-content">
+        <div class="sw-l-content__wrap">
 
             <h2>Short</h2>
             <?php echo(
@@ -36,8 +38,8 @@ $person = isset($sitemap->unique)
         !isset($person->personality)
         ): ?>
 
-        <div class="sw-l-content__wrapper">
-            <div class="sw-l-content__item">
+        <div class="sw-l-content">
+            <div class="sw-l-content__wrap">
 
                 <h2>Description</h2>
                 <?php
@@ -53,8 +55,8 @@ $person = isset($sitemap->unique)
 
     <?php endif; ?>
 
-    <div class="sw-l-content__wrapper">
-        <div class="sw-l-content__item">
+    <div class="sw-l-content">
+        <div class="sw-l-content__wrap">
 
             <h2>Features</h2>
             <?php $person->makeFeatures(); ?>
@@ -62,8 +64,8 @@ $person = isset($sitemap->unique)
         </div>
     </div>
 
-    <div class="sw-l-content__wrapper">
-        <div class="sw-l-content__item">
+    <div class="sw-l-content">
+        <div class="sw-l-content__wrap">
 
             <h2>Characteristics</h2>
             <?php $person->makeCharacteristic(); ?>
@@ -74,8 +76,8 @@ $person = isset($sitemap->unique)
         </div>
     </div>
 
-    <div class="sw-l-content__wrapper">
-        <div class="sw-l-content__item">
+    <div class="sw-l-content">
+        <div class="sw-l-content__wrap">
 
             <h2>Combat</h2>
             <?php $person->makeSkill($person->getAttribute($person->world->attributeCombat)); ?>
@@ -105,12 +107,11 @@ $person = isset($sitemap->unique)
         </div>
     </div>
 
-    <div class="sw-l-content__wrapper">
-        <div class="sw-l-content__item">
+    <div class="sw-l-content">
+        <div class="sw-l-content__wrap">
 
             <h2>Body</h2>
             <?php $person->buildCard($person->getAttribute($person->world->attributeBody)); ?>
-
 
             <h2>Damage</h2>
             <?php $person->buildCard($person->getAttribute($person->world->attributeDamage)); ?>

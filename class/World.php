@@ -7,20 +7,6 @@
  * Time: 16:49
  */
 
-require_once('feature/Attribute.php');
-require_once('feature/Augmentation.php');
-require_once('feature/Bionic.php');
-require_once('feature/Caste.php');
-require_once('feature/Characteristic.php');
-require_once('feature/Expertise.php');
-require_once('feature/Focus.php');
-require_once('feature/Identity.php');
-require_once('feature/Manifestation.php');
-require_once('feature/Milestone.php');
-require_once('feature/Nature.php');
-require_once('feature/Species.php');
-require_once('feature/Weapon.php');
-
 class World {
 
     var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $exists, $split, $maximum;
@@ -64,6 +50,7 @@ class World {
         $this->popularity = $data['popularity'];
         $this->hidden = $data['hidden'];
 
+        // Hard Coded values for the System // todo add all these to database?
         $this->attributeBody = 1;
         $this->attributeCombat = 2;
         $this->attributeConsumable = 8;
@@ -72,9 +59,9 @@ class World {
         $this->attributePotential = 7;
         $this->attributeProtection = 4;
         $this->attributeReputation = 6;
-        $this->attributeSkill = $data['skill_attributetype_id'];
         $this->attributeWound = 5;
 
+        $this->attributeSkill = $data['skill_attributetype_id'];
         $this->expertiseAttribute = $data['attribute_expertisetype_id'];
         $this->expertiseDice = $data['dice_expertisetype_id'];
 

@@ -295,7 +295,13 @@ class Person {
             ? $worldMaximum
             : $ageSplit;
 
-        return floor($maximum - $currentExpertise);
+        $value = floor($maximum - $currentExpertise);
+
+        if($this->supernatural) {
+            $value += 1;
+        }
+
+        return $value;
     }
 
     public function canSupernatural() {
@@ -315,7 +321,7 @@ class Person {
         echo(
             '<button type="button" class="sw-c-button__item sw-js-button" '.$data.'>'.
             '<div class="sw-c-button__content">'.
-            '<div class="sw-c-button__icon"><img src="/img/_missing_icon.png"/></div>'.
+            '<div class="sw-c-button__icon"><img src="/img/missing_icon.png"/></div>'.
             '<div class="sw-c-button__title">'.$title.'</div>'.
             '<div class="sw-c-button__value">'.$value.'</div></div>'.
             '<div class="sw-js-information sw-is-hidden">'.$description.'</div></button>'
@@ -323,13 +329,36 @@ class Person {
     }
 
     public function buildList($title, $description, $icon = null) {
+        $icon = isset($icon)
+            ? $icon
+            : '/img/missing_icon.png';
+
+        $chev = $title == 'Orphan'
+            ? 'sw-is-chevron'
+            : '';
+
+        $chv = $title == 'Orphan'
+            ? 'sw-is-hidden'
+            : '';
+
+        $hdn = $title == 'Orphan'
+            ? ''
+            : 'sw-is-hidden';
+
         echo(
-            '<div class="sw-c-list__item"><div class="sw-c-list__header">'.
-            '<div class="sw-c-list__icon"><img src="/img/_missing_icon.png"/></div>'.
-            '<div class="sw-c-list__title">'.$title.'</div></div>'.
-            '<div class="sw-c-list__description sw-js-description sw-is-hidden">'.$description.'</div>'.
-            '<div class="sw-c-list__settings sw-js-settings sw-is-hidden">'.
-            '<div><a href="#"><!--<img class="size-20" src="settings_icon"/>--></a></div></div></div>'
+            '<div class="sw-c-list__item '.$chev.'">'.
+            '<div class="sw-c-list__header">'.
+            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
+            '<div class="sw-c-list__title">'.$title.'</div>'.
+            '<div class="sw-c-list__chevron sw-js-chevron '.$chv.'"><img src="/img/chevron-down.png"/></div>'.
+            '<div class="sw-c-list__chevron sw-js-chevron '.$hdn.'"><img src="/img/chevron-up.png"/></div>'.
+            '</div>'.
+            '<div class="sw-c-list__information sw-js-information '.$hdn.'">'.
+            '<div class="sw-c-list__description">'.$description.'</div>'.
+            '<div class="sw-c-list__settings">'.
+            '<div class="sw-c-list__settings__item sw-js-edit"><img src="/img/edit.png"/></div>'.
+            '<div class="sw-c-list__settings__item sw-js-delete"><img src="/img/delete.png"/></div>'.
+            '</div></div></div>'
         );
     }
 

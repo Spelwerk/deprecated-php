@@ -23,6 +23,21 @@ $font-fancy: Rockwell, serif;
 $font-default: Roboto, sans-serif;
 
 // COLOR
+$color-white-light: #fefefe;
+$color-white-medium: #f8f8f8;
+$color-white-dark: #aaaaaa;
+
+$color-black-light: #333333;
+$color-black-medium: #222222;
+$color-black-dark: #111111;
+
+$color-indigo-primary: #3f51b5;
+$color-indigo-seconday: #3949ab;
+
+$color-amber-primary: #ffd740;
+
+$color-green-light: #8bc34a;
+$color-green-dark: #2e7d32;
 
 // MIXIN
 
@@ -128,14 +143,26 @@ h2 {
   padding-top: 3rem;
   padding-bottom: 1rem;
 
-  font-family: $font-fancy;
-  font-size: 3rem;
+  font-family: $font-logo;
+  font-size: 4rem;
 
   text-align: center;
 }
 
 h3 {
+  padding-top: 3rem;
+  padding-bottom: 1rem;
 
+  font-family: $font-logo;
+  font-size: 3rem;
+
+  text-align: center;
+}
+
+p {
+  font-family: $font-default;
+  font-size: 1.4rem;
+  line-height: 2;
 }
 
 // COMPONENT
@@ -143,21 +170,28 @@ h3 {
 .sw-c-button {
 
   &__item {
+    @include mix-margin(1rem);
     @include mix-padding(0.2rem);
 
     width: 35rem;
 
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-bottom: 2rem;
+    border-radius: 0.6rem;
 
     display: inline-block;
 
-    background-color: white;
-    box-shadow: 0.1rem 0.1rem 0.3rem #555555;
+    background-color: $color-white-light;
+    box-shadow: 0.2rem 0.2rem 0.3rem $color-white-dark;
 
     @include for-phone-only {
-      width: 30rem;
+      width: 28rem;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      background-color: $color-amber-primary;
     }
   }
 
@@ -187,6 +221,7 @@ h3 {
 
     font-family: $font-default;
     font-size: 1.8rem;
+    color: $color-black-medium;
 
     text-align: left;
     vertical-align: middle;
@@ -199,6 +234,7 @@ h3 {
 
     font-family: $font-fancy;
     font-size: 2rem;
+    color: $color-indigo-seconday;
 
     padding-right: 0.6rem;
 
@@ -209,50 +245,26 @@ h3 {
 
 .sw-c-list {
 
-  @include for-tablet-portait-only {
-    @include mix-auto;
-
-    width: 70rem;
-  }
-
-  @include for-tablet-landscape-only {
-    @include mix-auto;
-
-    width: 70rem;
-  }
-
-  @include for-desktop-only {
-    @include mix-auto;
-
-    width: 70rem;
-  }
-
-  @include for-big-desktop-up {
-    @include mix-auto;
-
-    width: 70rem;
-  }
-
   &__item {
-    margin-bottom: 2rem;
+    @include mix-padding(2rem);
   }
 
   &__header {
     @include mix-table;
 
-    height: 6rem;
+    height: 4rem;
   }
 
   &__icon {
     @include mix-table__cell;
 
-    width: 4rem;
+    width: 5rem;
 
     text-align: left;
     vertical-align: middle;
 
     img {
-      @include mix-size(3rem);
+      @include mix-size(2.6rem);
     }
   }
 
@@ -260,28 +272,59 @@ h3 {
     @include mix-table__cell;
 
     font-family: $font-fancy;
-    font-size: 2.6rem;
+    font-size: 2.2rem;
 
     text-align: left;
     vertical-align: middle;
   }
 
-  &__description {
-    @include mix-padding(0.5rem);
+  &__chevron {
+    @include mix-table__cell;
 
-    margin-top: 1rem;
+    width: 3rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    opacity: 0.8;
+
+    img {
+      @include mix-size(2.2rem);
+    }
+  }
+
+  &__information {
+    @include mix-table;
+  }
+
+  &__description {
+    @include mix-table__cell;
+
+    padding-top: 1rem;
+    padding-left: 5rem;
+    padding-right: 3rem;
 
     font-family: $font-default;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
 
   &__settings {
-    @include mix-padding(0.5rem);
+    @include mix-table__cell;
 
-    margin-top: 1rem;
+    width: 3rem;
 
-    font-family: $font-default;
-    font-size: 1.6rem;
+    &__item {
+      display: block;
+
+      padding-top: 1rem;
+
+      text-align: center;
+      vertical-align: middle;
+
+      img {
+        @include mix-size(2.2rem);
+      }
+    }
   }
 }
 
@@ -341,6 +384,7 @@ h3 {
 
     font-family: $font-fancy;
     font-size: 3.8rem;
+    color: $color-indigo-seconday;
 
     text-align: center;
     vertical-align: middle;
@@ -350,18 +394,14 @@ h3 {
 // LAYOUT
 
 .sw-l-content {
+  width: 100%;
 
-  &__wrapper {
-    width: 100%;
+  background: $color-white-light;
 
-    background: #999999;
-  }
-
-  &__item {
-    @include mix-padding(1rem);
+  &__wrap {
     @include mix-auto;
 
-    background: #444444;
+    background: $color-white-medium;
 
     @include for-phone-only {
       width: 30rem;
@@ -376,11 +416,11 @@ h3 {
     }
 
     @include for-desktop-only {
-      width: 111rem;
+      width: 74rem;
     }
 
     @include for-big-desktop-up {
-      width: 111rem;
+      width: 74rem;
     }
   }
 }
@@ -393,4 +433,12 @@ h3 {
   * {
     display: none;
   }
+}
+
+.sw-is-chevron {
+  background-color: $color-green-light;
+}
+
+.sw-is-selected {
+  background-color: $color-green-dark;
 }

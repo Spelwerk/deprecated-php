@@ -24,8 +24,6 @@ $curl = new Curl([
 ]);
 
 $form = new Form();
-$admin = new Admin();
-$system = new System();
 
 $sitemap->buildMap();
 
@@ -39,8 +37,8 @@ $sitemap->buildMap();
     <link rel="stylesheet" type="text/css" media="screen" href="/dependency/reset.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css">
 
-    <script src="dependency/prefixfree.min.js"></script>
-    <script src="dependency/jquery-2.2.4.min.js"></script>
+    <script src="/dependency/prefixfree.min.js"></script>
+    <script src="/dependency/jquery-2.2.4.min.js"></script>
     <!--
     <script src="js/list.js"></script>
     <script src="js/menu.js"></script>
