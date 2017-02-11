@@ -17,10 +17,8 @@ class Form {
         $req = $required ? ' required' : '';
 
         echo(
-            '<label for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
-            '<br>'.
-            '<input type="text" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$val.$req.'/>'.
-            '<br>'
+            '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
+            '<input class="sw-c-input__item sw-js-validation" type="text" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$val.$req.'/>'
         );
     }
 
@@ -31,64 +29,139 @@ class Form {
         $req = $required ? ' required' : '';
 
         echo(
-            '<label for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
-            '<br>'.
-            '<textarea name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'" rows="4" cols="50"'.$val.$req.'></textarea>'.
-            '<br>'
+            '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
+            '<textarea class="sw-c-input__item sw-js-validation" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'" rows="3"'.$val.$req.'></textarea>'
         );
     }
 
     public function getNumber($tableName, $name, $required, $minimum = null, $maximum = null, $value = null) {
         $reqLabel = $required ? '*' : '';
 
-        $min = isset($minimum) ? ' min="'.$minimum.'"' : '';
-        $max = isset($maximum) ? ' max="'.$maximum.'"' : '';
-        $val = isset($value) ? ' value="'.$value.'"' : '';
-        $req = $required ? ' required' : '';
+        $min = isset($minimum)
+            ? ' min="'.$minimum.'"'
+            : '';
+
+        $max = isset($maximum)
+            ? ' max="'.$maximum.'"'
+            : '';
+
+        $val = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $req = $required
+            ? ' required'
+            : '';
 
         echo(
-            '<label for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
-            '<br>'.
-            '<input type="number" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$min.$max.$val.$req.'/>'.
-            '<br>'
+            '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
+            '<input class="sw-c-input__item sw-js-number sw-js-validation" type="number" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$min.$max.$val.$req.'/>'
         );
     }
 
     public function getBool($tableName, $name, $required, $value = null) {
         $reqLabel = $required ? '*' : '';
 
-        $checkedTrue = $value === 1 ? ' checked' : '';
-        $checkedFalse = $value === 0 ? ' checked' : '';
+        $checkedTrue = $value === 1
+            ? ' checked'
+            : '';
 
-        $req = $required ? ' required' : '';
+        $checkedFalse = $value === 0
+            ? ' checked'
+            : '';
+
+        $req = $required
+            ? ' required'
+            : '';
 
         echo(
-            '<label for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
-            '<br>'.
-            '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'" value="1"'.$req.$checkedTrue.'/> True'.
-            '<br>'.
-            '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'" value="0"'.$req.$checkedFalse.'/> False'.
-            '<br>'
+            '<div class="sw-c-input__label">'.$name.$reqLabel.'</div>'.
+            '<div class="sw-c-input__bool">'.
+            '<label for="'.$tableName.'--'.$name.'--1">'.
+            '<div class="sw-c-input__bool__item sw-js-input-item">'.
+            '<img class="sw-js-radio-false" src="/img/radio-false.png"/>'.
+            '<img class="sw-js-radio-true sw-is-hidden" src="/img/radio-true.png"/>'.
+            '<input class="sw-js-input-radio sw-is-hidden" type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'--1" value="1"'.$req.'/>'.
+            '<div>Yes</div>'.
+            '</div>'.
+            '</label>'.
+            '<label for="'.$tableName.'--'.$name.'--0">'.
+            '<div class="sw-c-input__bool__item sw-js-input-item">'.
+            '<img class="sw-js-radio-false" src="/img/radio-false.png"/>'.
+            '<img class="sw-js-radio-true sw-is-hidden" src="/img/radio-true.png"/>'.
+            '<input class="sw-js-input-radio sw-is-hidden" type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'--0" value="0"'.$req.'/>'.
+            '<div>No</div>'.
+            '</div>'.
+            '</label>'.
+            '</div>'
         );
+    }
+
+    public function getDropdown($tableName, $name, $required, $list, $value = null) {
+        $reqLabel = $required
+            ? '*'
+            : '';
+
+        $req = $required
+            ? ' required'
+            : '';
+
+        echo(
+            '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
+            '<select class="sw-c-input__item name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$req.'>'.
+            '<option disabled selected value> -- select an option -- </option>'
+        );
+
+        foreach($list as $option) {
+            echo('<option value="'.$option['value'].'">'.$option['name'].'</option>');
+        }
+
+        echo('</select>');
     }
 
     public function getHidden($tableName, $name, $value) {
         echo('<input type="hidden" name="'.$tableName.'--'.$name.'" value="'.$value.'"/>');
     }
 
-    public function getRadio($tableName, $name, $selectName, $selectId) {
+    public function getRadio($tableName, $name, $selectName, $selectId, $description, $selected = null) {
+        $s = isset($selected)
+            ? ' selected'
+            : '';
+
         echo(
-            '<label for="'.$name.'--'.$selectId.'">'.$selectName.'</label>'.
-            '<input type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$selectId.'" value="'.$selectId.'"/>'.
-            '<br>'
+            '<label for="'.$name.'--'.$selectId.'">'.
+            '<div class="sw-c-radio__item sw-js-radio-item">'.
+            '<div class="sw-c-radio__header">'.
+            '<div class="sw-c-radio__radio">'.
+            '<img class="sw-js-radio-false" src="/img/radio-false.png"/>'.
+            '<img class="sw-js-radio-true sw-is-hidden" src="/img/radio-true.png"/>'.
+            '</div>'.
+            '<div class="sw-c-radio__title sw-js-radio-title">'.$selectName.'</div>'.
+            '</div>'.
+            '<div class="sw-c-radio__info sw-js-radio-info sw-is-hidden">'.$description.'</div>'.
+            '<div class="sw-js-radio-input sw-is-hidden">'.
+            '<input class="sw-js-radio" type="radio" name="'.$tableName.'--'.$name.'" id="'.$name.'--'.$selectId.'" value="'.$selectId.'"'.$s.'/></div></div></label>'
         );
     }
 
-    public function getCheckbox($tableName, $rowName, $rowId) {
+    public function getCheckbox($tableName, $rowName, $rowId, $description, $selected = null) {
+        $s = isset($selected)
+            ? ' checked'
+            : '';
+
         echo(
-            '<label for="'.$tableName.'--'.$rowId.'">'.$rowName.'</label>'.
-            '<input type="checkbox" name="'.$tableName.'--'.$rowId.'" id="'.$tableName.'--'.$rowId.'"/>'.
-            '<br>'
+            '<label for="'.$tableName.'--'.$rowId.'">'.
+            '<div class="sw-c-radio__item sw-js-check-item">'.
+            '<div class="sw-c-radio__header">'.
+            '<div class="sw-c-radio__radio">'.
+            '<img class="sw-js-check-false" src="/img/checkbox-false.png"/>'.
+            '<img class="sw-js-check-true sw-is-hidden" src="/img/checkbox-true.png"/>'.
+            '</div>'.
+            '<div class="sw-c-radio__title sw-js-check-title">'.$rowName.'</div>'.
+            '</div>'.
+            '<div class="sw-c-radio__info sw-js-check-info sw-is-hidden">'.$description.'</div>'.
+            '<div class="sw-js-check-input sw-is-hidden">'.
+            '<input class="sw-js-check" type="checkbox" name="'.$tableName.'--'.$rowId.'" id="'.$tableName.'--'.$rowId.'" value="'.$rowId.'"'.$s.'/></div></div></label>'
         );
     }
 
@@ -122,23 +195,52 @@ class Form {
         echo('</select><br>');
     }
 
-    public function getPurchase($rowName, $rowId, $rowMax, $value = null) {
-        $min = ' min="0"';
-        $max = isset($rowMax) ? ' max="'.$rowMax.'"' : '';
-        $val = isset($value) ? ' value="'.$value.'"' : '';
+    public function getPurchase($rowName, $rowId, $rowDescription, $rowMax, $value = null) {
+        $min = isset($value)
+            ? ' min="'.$value.'"'
+            : ' min="0"';
+
+        $max = isset($rowMax)
+            ? ' max="'.$rowMax.'"'
+            : '';
+
+        $val = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $desc = isset($rowDescription)
+            ? $rowDescription
+            : '';
 
         echo(
-            '<label for="purchase--'.$rowId.'">'.$rowName.'</label>'.
-            '<br>'.
-            '<input type="number" name="purchase--'.$rowId.'" id="purchase--'.$rowId.'"'.$min.$max.$val.'/>'.
-            '<br>'
+            '<div class="sw-c-purchase sw-js-purchase-item">'.
+            '<div class="sw-c-purchase__head">'.
+            '<div class="sw-c-purchase__image">'.
+            '<img src="/img/missing_icon.png"/>'.
+            '</div>'.
+            '<div class="sw-c-purchase__title">'.$rowName.'</div>'.
+            '<div class="sw-c-purchase__button">'.
+            '<button type="button" class="sw-js-purchase-button sw-js-purchase-minus">'.
+            '<img src="/img/minus.png"/>'.
+            '</button>'.
+            '</div>'.
+            '<div class="sw-c-purchase__value sw-js-purchase-value">'.$value.'</div>'.
+            '<div class="sw-c-purchase__button">'.
+            '<button type="button" class="sw-js-purchase-button sw-js-purchase-plus">'.
+            '<img src="/img/plus.png"/>'.
+            '</button>'.
+            '</div>'.
+            '</div>'.
+            '<div class="sw-c-purchase__info">'.$desc.'</div>'.
+            '<input type="number" class="sw-js-purchase-input sw-is-hidden" name="purchase--'.$rowId.'" id="purchase--'.$rowId.'"'.$min.$max.$val.'/>'.
+            '</div>'
         );
     }
 
 
     public function genericSelect($tableName, $name, $array) {
         foreach($array as $object) {
-            $this->getRadio($tableName, $name, $object->name, $object->id);
+            $this->getRadio($tableName, $name, $object->name, $object->id, $object->description);
         }
     }
 
@@ -151,8 +253,76 @@ class Form {
     }
 
     public function genericEnd() {
-        echo('<input type="submit" value="Next &raquo;"/></form>');
+        echo(
+            '<div class="sw-c-submit">'.
+            '<input class="sw-c-submit__button sw-js-submit sw-is-unclickable" type="submit" value="Next &raquo;" disabled/>'.
+            '</div>'.
+            '</form>'
+        );
     }
 
 
+    public function rollNumber($type, $times, $name) {
+        echo(
+            '<div class="sw-c-randomizer sw-js-randomizer">'.
+            '<button type="button" class="sw-c-randomizer__button sw-js-random-number" data-roll-type="'.$type.'" data-rolls="'.$times.'">'.
+            '<div class="sw-c-randomizer__image">'.
+            '<img class="" src="/img/dice.png"/>'.
+            '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
+            '</div>'.
+            '</button>'.
+            '<div class="sw-c-randomizer__value sw-js-random-value">&nbsp;</div>'.
+            '<div class="sw-c-randomizer__rollfor">Rolling for</div>'.
+            '<div class="sw-c-randomizer__attribute">'.$name.'</div>'.
+            '</div>'
+        );
+    }
+
+    public function rollRadio($name) {
+        echo(
+
+            '<div class="sw-c-randomizer sw-js-randomizer">'.
+            '<button type="button" class="sw-c-randomizer__button sw-js-random-radio">'.
+            '<div class="sw-c-randomizer__image">'.
+            '<img class="" src="/img/dice.png"/>'.
+            '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
+            '</div>'.
+            '</button>'.
+            '<div class="sw-c-randomizer__title sw-js-random-title">&nbsp;</div>'.
+            '<div class="sw-c-randomizer__info sw-js-random-info">&nbsp;</div>'.
+            '<div class="sw-c-randomizer__rollfor">Rolling for</div>'.
+            '<div class="sw-c-randomizer__attribute">'.$name.'</div>'.
+            '</div>'
+        );
+    }
+
+
+    public function viewStart() {
+        echo(
+            '<div class="sw-c-viewmore">'.
+            '<button type="button" class="sw-c-viewmore__button sw-js-view-button">'.
+            '<div class="sw-c-viewmore__label">'.
+            '<div class="sw-c-viewmore__text sw-js-view-text">decide yourself</div>'.
+            '<div class="sw-c-viewmore__image">'.
+            '<img class="sw-js-chevron-down" src="/img/chevron-down.png"/>'.
+            '<img class="sw-js-chevron-up sw-is-hidden" src="/img/chevron-up.png"/>'.
+            '</div>'.
+            '</div>'.
+            '</button>'.
+            '</div>'.
+            '<div class="sw-js-view-content sw-is-hidden">'
+        );
+    }
+
+    public function viewEnd() {
+        echo('</div>');
+    }
+
+
+    public function pointsForm($points, $text) {
+        echo(
+            '<h4><span class="sw-js-points-text">'.$points.'</span> '.$text.'</h4>'.
+            '<input type="hidden" class="sw-js-points-input" name="post--points" value="'.$points.'"/>'
+        );
+    }
 }

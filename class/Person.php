@@ -25,8 +25,13 @@ require_once('World.php');
 
 class Person {
 
-    var $id, $hash, $template, $popularity, $cheated, $supernatural, $owner, $calculated, $nickname, $firstname,
-        $surname, $age, $gender, $occupation, $description, $behaviour, $appearance, $features, $personality;
+    var $id, $hash, $popularity, $nickname, $firstname, $surname, $age, $gender, $occupation,
+        $description, $behaviour, $appearance, $features, $personality;
+
+    var $isTemplate, $isCheater, $isSupernatural, $isOwner, $isCalculated;
+
+    var $pointSupernatural, $pointPotential, $pointMoney, $pointSkill, $pointExpertise, $pointUpbringing,
+        $pointMilestone, $pointGift, $pointImperfection, $pointRelationship;
 
     var $world, $species, $caste, $nature, $identity, $manifestation, $focus;
 
@@ -39,7 +44,7 @@ class Person {
 
         $data = $curl->get($get)['data'][0];
 
-        $this->owner = isset($hash)
+        $this->isOwner = isset($hash)
             ? true
             : false;
 
@@ -54,6 +59,7 @@ class Person {
         $this->age = $data['age'];
         $this->gender = $data['gender'];
         $this->occupation = $data['occupation'];
+        $this->popularity = $data['popularity'];
 
         $this->description = $data['description'];
         $this->behaviour = $data['behaviour'];
@@ -61,11 +67,21 @@ class Person {
         $this->features = $data['features'];
         $this->personality = $data['personality'];
 
-        $this->template = $data['template'];
-        $this->cheated = $data['cheated'];
-        $this->supernatural = $data['supernatural'];
-        $this->popularity = $data['popularity'];
-        $this->calculated = $data['calculated'];
+        $this->isTemplate = $data['template'];
+        $this->isCheater = $data['cheated'];
+        $this->isSupernatural = $data['supernatural'];
+        $this->isCalculated = $data['calculated'];
+
+        $this->pointSupernatural = intval($data['point_supernatural']);
+        $this->pointPotential = intval($data['point_potential']);
+        $this->pointMoney = intval($data['point_money']);
+        $this->pointSkill = intval($data['point_skill']);
+        $this->pointExpertise = intval($data['point_expertise']);
+        $this->pointUpbringing = intval($data['point_milestone_upbringing']);
+        $this->pointMilestone = intval($data['point_milestone_flexible']);
+        $this->pointGift = intval($data['point_characteristic_gift']);
+        $this->pointImperfection = intval($data['point_characteristic_imperfection']);
+        $this->pointRelationship = intval($data['point_relationship']);
 
         $this->world = isset($data['world_id'])
             ? new World($data['world_id'])
@@ -247,84 +263,21 @@ class Person {
     }
 
 
-    public function canCharacteristic($gift) {
-        $gName = $gift == 1
-            ? 'gift'
-            : 'imperfection';
+    public function canWeapon() {
+        $currentWeapon = count($this->getWeapon());
 
-        $currentCharacteristic = count($this->getCharacteristic($gift));
-        $maximum = $this->world->maximum[$gName];
-
-        return floor($maximum - $currentCharacteristic);
-    }
-
-    public function canMilestone($upbringing) {
-        $uName = $upbringing == 1
-            ? 'upbringing'
-            : 'flexible';
-
-        $currentMilestone = count($this->getMilestone($upbringing));
-        $ageSplit = $this->age / $this->world->split['milestone'];
-        $worldMaximum = $this->world->maximum[$uName];
-
-        $maximum = $ageSplit > $worldMaximum
-            ? $worldMaximum
-            : $ageSplit;
-
-        return floor($maximum - $currentMilestone);
-    }
-
-    public function canSkill() {
-        $currentSkill = $this->countAttribute($this->world->attributeSkill);
-        $ageSplit = $this->age / $this->world->split['skill'];
-        $worldMaximum = $this->world->maximum['skill'];
-
-        $maximum = $ageSplit > $worldMaximum
-            ? $worldMaximum
-            : $ageSplit;
-
-        return floor($maximum - $currentSkill);
-    }
-
-    public function canExpertise() {
-        $currentExpertise = $this->countExpertise();
-        $ageSplit = $this->age / $this->world->split['expertise'];
-        $worldMaximum = $this->world->maximum['expertise'];
-
-        $maximum = $ageSplit > $worldMaximum
-            ? $worldMaximum
-            : $ageSplit;
-
-        $value = floor($maximum - $currentExpertise);
-
-        if($this->supernatural) {
-            $value += 1;
-        }
-
-        return $value;
-    }
-
-    public function canSupernatural() {
-        $currentSupernatural = $this->countAttribute($this->manifestation->attributeType);
-        $ageSplit = $this->age / $this->world->split['supernatural'];
-        $worldMaximum = $this->world->maximum['supernatural'];
-
-        $maximum = $ageSplit > $worldMaximum
-            ? $worldMaximum
-            : $ageSplit;
-
-        return floor($maximum - $currentSupernatural);
+        return $currentWeapon;
     }
 
 
     public function buildButton($title, $description, $value, $data, $icon = null) {
         echo(
-            '<button type="button" class="sw-c-button__item sw-js-button" '.$data.'>'.
+            '<button type="button" class="sw-c-button__item sw-js-roll-button" '.$data.'>'.
             '<div class="sw-c-button__content">'.
             '<div class="sw-c-button__icon"><img src="/img/missing_icon.png"/></div>'.
-            '<div class="sw-c-button__title">'.$title.'</div>'.
+            '<div class="sw-c-button__title sw-js-button-title">'.$title.'</div>'.
             '<div class="sw-c-button__value">'.$value.'</div></div>'.
-            '<div class="sw-js-information sw-is-hidden">'.$description.'</div></button>'
+            '<div class="sw-js-button-information sw-is-hidden">'.$description.'</div></button>'
         );
     }
 
@@ -333,32 +286,22 @@ class Person {
             ? $icon
             : '/img/missing_icon.png';
 
-        $chev = $title == 'Orphan'
-            ? 'sw-is-chevron'
-            : '';
-
-        $chv = $title == 'Orphan'
-            ? 'sw-is-hidden'
-            : '';
-
-        $hdn = $title == 'Orphan'
-            ? ''
-            : 'sw-is-hidden';
-
         echo(
-            '<div class="sw-c-list__item '.$chev.'">'.
-            '<div class="sw-c-list__header">'.
+            '<div class="sw-c-list__item sw-js-list-item">'.
+            '<div class="sw-c-list__header sw-js-list-header">'.
             '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
             '<div class="sw-c-list__title">'.$title.'</div>'.
-            '<div class="sw-c-list__chevron sw-js-chevron '.$chv.'"><img src="/img/chevron-down.png"/></div>'.
-            '<div class="sw-c-list__chevron sw-js-chevron '.$hdn.'"><img src="/img/chevron-up.png"/></div>'.
+            '<div class="sw-c-list__chevron">'.
+            '<img class="sw-js-chevron-down" src="/img/chevron-down.png"/>'.
+            '<img class="sw-js-chevron-up sw-is-hidden" src="/img/chevron-up.png"/>'.
             '</div>'.
-            '<div class="sw-c-list__information sw-js-information '.$hdn.'">'.
+            '</div>'.
+            '<div class="sw-c-list__information sw-js-list-information sw-is-hidden">'.
             '<div class="sw-c-list__description">'.$description.'</div>'.
             '<div class="sw-c-list__settings">'.
-            '<div class="sw-c-list__settings__item sw-js-edit"><img src="/img/edit.png"/></div>'.
-            '<div class="sw-c-list__settings__item sw-js-delete"><img src="/img/delete.png"/></div>'.
-            '</div></div></div>'
+            '<button type="button" class="sw-c-list__settings__button sw-js-edit">'.
+            '<img src="/img/edit.png"/></button></div>'.
+            '</div></div>'
         );
     }
 
@@ -383,7 +326,7 @@ class Person {
         foreach($list as $consumable) {
             $value = $consumable->value.'d12';
 
-            $data = 'data-rolltype="consumable" data-roll-d12="'.$value.'"';
+            $data = 'data-roll-type="consumable" data-roll-d12="'.$value.'"';
 
             $this->buildButton($consumable->name, $consumable->description, $value, $data);
         }
@@ -399,7 +342,7 @@ class Person {
                 ? '2d12+'.$skill->value
                 : '2d12';
 
-            $data = 'data-rolltype="skill" data-roll-d12="2" data-roll-bonus="'.$skill->value.'"';
+            $data = 'data-roll-type="default" data-roll-d12="2" data-roll-bonus="'.$skill->value.'"';
 
             $this->buildButton($skill->name, $skill->description, $value, $data);
         }
@@ -416,7 +359,7 @@ class Person {
 
             $value = $rollD12.'d12+'.$rollBonus;
 
-            $data = 'data-rolltype="expertise" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'"';
+            $data = 'data-roll-type="default" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'"';
 
             $this->buildButton($expertise->name, $expertise->description, $value, $data);
         }
@@ -440,7 +383,7 @@ class Person {
 
             $value = $supernatural->value.'d12';
 
-            $data = 'data-rolltype="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$supernatural->value.'"';
+            $data = 'data-roll-type="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$supernatural->value.'"';
 
             $this->buildButton($supernatural->name, $supernatural->description, $value, $data);
         }
@@ -459,7 +402,7 @@ class Person {
                 ? $weapon->damageD12.'d12+'.$weapon->damageBonus
                 : $weapon->damageD12.'d12';
 
-            $data = 'data-rolltype="weapon" data-roll-d12="'.$hitD12.'" data-roll-bonus="'.$hitBonus.'" data-strike-d12="'.$weapon->damageD12.'" data-strike-bonus="'.$weapon->damageBonus.'" data-strike-critical="'.$weapon->criticalD12.'"';
+            $data = 'data-roll-type="weapon" data-roll-d12="'.$hitD12.'" data-roll-bonus="'.$hitBonus.'" data-strike-d12="'.$weapon->damageD12.'" data-strike-bonus="'.$weapon->damageBonus.'" data-strike-critical="'.$weapon->criticalD12.'"';
 
             $this->buildButton($weapon->name, $weapon->description, $value, $data);
         }
@@ -506,11 +449,15 @@ class Person {
 
         $this->buildList($this->identity->name, $this->identity->description);
 
-        if($this->supernatural) {
-            $this->buildList($this->manifestation->name, $this->manifestation->description);
+        echo('</div>');
+    }
 
-            $this->buildList($this->focus->name, $this->focus->description);
-        }
+    public function makeSupernaturalInformation() {
+        echo('<div class="sw-c-list">');
+
+        $this->buildList($this->manifestation->name, $this->manifestation->description);
+
+        $this->buildList($this->focus->name, $this->focus->description);
 
         echo('</div>');
     }

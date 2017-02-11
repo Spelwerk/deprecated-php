@@ -27,6 +27,8 @@ $color-white-light: #fefefe;
 $color-white-medium: #f8f8f8;
 $color-white-dark: #aaaaaa;
 
+$color-gray-light: #dddddd;
+
 $color-black-light: #333333;
 $color-black-medium: #222222;
 $color-black-dark: #111111;
@@ -112,6 +114,8 @@ $color-green-dark: #2e7d32;
 
 html {
   font-size: 10px;
+
+  background-color: $color-gray-light;
 }
 
 @media (max-width: 350px) {
@@ -124,12 +128,16 @@ hr {
   border: 0;
 }
 
-button {
+button, input, select {
   padding: 0;
   margin: 0;
   border: 0;
   box-sizing: border-box;
   background-color: inherit;
+}
+
+button:hover, input[type=submit] {
+  cursor: pointer;
 }
 
 div {
@@ -159,6 +167,16 @@ h3 {
   text-align: center;
 }
 
+h4 {
+  padding-top: 2rem;
+  padding-bottom: 0.5rem;
+
+  font-family: $font-logo;
+  font-size: 2.4rem;
+
+  text-align: center;
+}
+
 p {
   font-family: $font-default;
   font-size: 1.4rem;
@@ -173,22 +191,14 @@ p {
     @include mix-margin(1rem);
     @include mix-padding(0.2rem);
 
-    width: 35rem;
+    width: 32rem;
 
     border-radius: 0.6rem;
 
     display: inline-block;
 
     background-color: $color-white-light;
-    box-shadow: 0.2rem 0.2rem 0.3rem $color-white-dark;
-
-    @include for-phone-only {
-      width: 28rem;
-    }
-
-    &:hover {
-      cursor: pointer;
-    }
+    box-shadow: 0.2rem 0.2rem 0.3rem $color-gray-light;
 
     &:active {
       background-color: $color-amber-primary;
@@ -246,7 +256,7 @@ p {
 .sw-c-list {
 
   &__item {
-    @include mix-padding(2rem);
+    @include mix-padding(1rem);
   }
 
   &__header {
@@ -258,9 +268,11 @@ p {
   &__icon {
     @include mix-table__cell;
 
-    width: 5rem;
+    width: 3rem;
 
-    text-align: left;
+    padding-right: 1rem;
+
+    text-align: right;
     vertical-align: middle;
 
     img {
@@ -272,7 +284,7 @@ p {
     @include mix-table__cell;
 
     font-family: $font-fancy;
-    font-size: 2.2rem;
+    font-size: 2rem;
 
     text-align: left;
     vertical-align: middle;
@@ -301,11 +313,11 @@ p {
     @include mix-table__cell;
 
     padding-top: 1rem;
-    padding-left: 5rem;
+    padding-left: 4rem;
     padding-right: 3rem;
 
     font-family: $font-default;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   &__settings {
@@ -313,16 +325,22 @@ p {
 
     width: 3rem;
 
-    &__item {
-      display: block;
+    padding-top: 1rem;
 
-      padding-top: 1rem;
+    text-align: right;
+    vertical-align: middle;
 
-      text-align: center;
-      vertical-align: middle;
+    &__button {
+      @include mix-padding(0.4rem);
+
+      border-radius: 0.6rem;
 
       img {
         @include mix-size(2.2rem);
+      }
+
+      &:active {
+        background-color: $color-amber-primary;
       }
     }
   }
@@ -391,38 +409,456 @@ p {
   }
 }
 
-// LAYOUT
+.sw-c-radio {
 
-.sw-l-content {
-  width: 100%;
+  &__item {
+    @include mix-padding(2rem);
+  }
 
-  background: $color-white-light;
+  &__header {
+    @include mix-table;
 
-  &__wrap {
-    @include mix-auto;
+    height: 3rem;
+  }
 
-    background: $color-white-medium;
+  &__radio {
+    @include mix-table__cell;
 
-    @include for-phone-only {
-      width: 30rem;
-    }
+    width: 4rem;
 
-    @include for-tablet-portait-only {
-      width: 74rem;
-    }
+    text-align: left;
+    vertical-align: middle;
 
-    @include for-tablet-landscape-only {
-      width: 74rem;
-    }
-
-    @include for-desktop-only {
-      width: 74rem;
-    }
-
-    @include for-big-desktop-up {
-      width: 74rem;
+    img {
+      @include mix-size(2.2rem);
     }
   }
+
+  &__title {
+    @include mix-table__cell;
+
+    font-family: $font-fancy;
+    font-size: 2.2rem;
+
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  &__info {
+    padding-top: 1rem;
+    padding-left: 4rem;
+    padding-right: 3rem;
+
+    font-family: $font-default;
+    font-size: 1.7rem;
+  }
+}
+
+.sw-c-input {
+
+  &__label {
+    display: block;
+
+    margin-bottom: 0.6rem;
+    margin-left: 2%;
+
+    font-family: $font-fancy;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  &__item {
+    @include mix-padding(0.5rem);
+    @include mix-auto;
+
+    display: block;
+
+    width: 96%;
+
+    margin-bottom: 2rem;
+
+    background-color: $color-white-light;
+    border: 1px solid $color-gray-light;
+
+    font-family: $font-default;
+    font-size: 1.8rem;
+  }
+
+  &__bool {
+
+    &__item {
+      display: inline-block;
+
+      width: 6rem;
+
+      text-align: center;
+
+      font-family: $font-default;
+      font-size: 1.8rem;
+
+      img {
+        @include mix-size(2.2rem);
+      }
+    }
+  }
+}
+
+.sw-c-submit {
+
+  margin-top: 3rem;
+  text-align: center;
+
+  &__button {
+    @include mix-auto;
+
+    height: 4rem;
+    width: 100%;
+
+    font-family: $font-fancy;
+    font-size: 2rem;
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+  }
+}
+
+.sw-c-randomizer {
+  @include mix-padding(1rem);
+  text-align: center;
+
+  &__button {
+    @include mix-padding(2rem);
+    margin-bottom: 1rem;
+
+    border-radius: 1rem;
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+  }
+
+  &__image {
+    img {
+      @include mix-size(7rem);
+    }
+  }
+
+  &__rolltext {
+    padding-top: 1rem;
+
+    font-family: $font-fancy;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    @include mix-padding(0.4rem);
+
+    font-family: $font-fancy;
+    font-size: 4rem;
+    color: $color-indigo-primary;
+  }
+
+  &__title {
+    padding-top: 3rem;
+
+    border-top: 1px solid $color-gray-light;
+    font-family: $font-fancy;
+    font-size: 2rem;
+    color: $color-indigo-primary;
+  }
+
+  &__info {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+
+    border-bottom: 1px solid $color-gray-light;
+
+    font-family: $font-default;
+    font-size: 1.3rem;
+  }
+
+  &__rollfor {
+    padding-top: 2rem;
+    padding-bottom: 0.4rem;
+
+    font-family: $font-default;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: $color-white-dark;
+  }
+
+  &__attribute {
+    font-family: $font-fancy;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: $color-white-dark;
+  }
+}
+
+.sw-c-viewmore {
+  padding-top: 3rem;
+
+  &__button {
+    @include mix-auto;
+    @include mix-padding(1rem);
+
+    display: block;
+
+    border-radius: 0.6rem;
+
+    width: 90%;
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+  }
+
+  &__label {
+    @include mix-table;
+  }
+
+  &__text {
+    @include mix-table__cell;
+
+    vertical-align: middle;
+    text-align: left;
+
+    font-family: $font-fancy;
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+
+  &__image {
+    @include mix-table__cell;
+
+    vertical-align: middle;
+    text-align: right;
+
+    img {
+      @include mix-size(1.5rem);
+    }
+  }
+}
+
+.sw-c-purchase {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+
+  border-bottom: 1px solid $color-gray-light;
+
+  &__head {
+    @include mix-table;
+
+    height: 4rem;
+  }
+
+  &__button {
+    @include mix-table__cell;
+
+    width: 4rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+
+    img {
+      @include mix-size(2.6rem);
+    }
+  }
+
+  &__image {
+    @include mix-table__cell;
+
+    padding-left: 1rem;
+
+    width: 3rem;
+
+    text-align: left;
+    vertical-align: middle;
+
+    img {
+      @include mix-size(2rem);
+    }
+  }
+
+  &__title {
+    @include mix-table__cell;
+
+    vertical-align: middle;
+
+    font-family: $font-default;
+    font-size: 1.4rem;
+  }
+
+  &__value {
+    @include mix-table__cell;
+
+    width: 3rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    font-family: $font-fancy;
+    font-size: 2.4rem;
+    color: $color-indigo-primary;
+  }
+
+  &__info {
+    @include mix-table;
+
+    padding-left: 1rem;
+
+    font-family: $font-default;
+    font-size: 1.3rem;
+  }
+}
+
+.sw-c-modal {
+  display: block;
+
+  height: 60rem;
+  width: 34rem;
+
+  position: fixed;
+
+  z-index: 99;
+
+  &__title {
+    height: 5rem;
+
+    font-family: $font-logo;
+    font-size: 4rem;
+    text-align: center;
+
+    color: $color-white-light;
+  }
+
+  &__content {
+    @include mix-auto;
+
+    height: 55rem;
+
+    background-color: $color-white-light;
+  }
+
+  &__body {
+    height: 85%;
+
+    text-align: center;
+
+    background-color: $color-white-light;
+
+    &__with {
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+
+      font-family: $font-default;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    &__result {
+      padding-bottom: 4rem;
+
+      font-family: $font-logo;
+      font-size: 12rem;
+    }
+
+    &__critical {
+      padding-top: 1rem;
+      padding-bottom: 4rem;
+
+      font-family: $font-fancy;
+      font-size: 2rem;
+      text-transform: uppercase;
+      color: red;
+    }
+
+    &__count {
+      padding-left: 0.6rem;
+      padding-right: 0.6rem;
+
+      font-family: $font-default;
+      font-size: 1.8rem;
+      color: $color-gray-light;
+    }
+
+    &__description {
+      padding-top: 2rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+      padding-bottom: 2rem;
+
+      font-family: $font-default;
+      font-size: 2.2rem;
+    }
+  }
+
+  &__button {
+    @include mix-table;
+
+    height: 15%;
+
+    background-color: $color-white-medium;
+
+    &__item {
+      @include mix-table__cell;
+
+      text-align: center;
+      vertical-align: middle;
+
+      &:active {
+        background-color: $color-amber-primary;
+      }
+
+      img {
+        @include mix-size(4rem);
+      }
+    }
+  }
+
+
+}
+
+// LAYOUT
+
+.sw-l-menu {  }
+
+.sw-l-content {
+  @include mix-auto;
+
+  width: 68rem;
+
+  background-color: $color-white-medium;
+
+  @include for-phone-only {
+    width: 34rem;
+  }
+
+  @include for-desktop-up {
+    width: 102rem;
+  }
+}
+
+.sw-l-roll {  }
+
+.sw-l-mask {
+  height: 100%;
+  width: 100%;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  background-color: rgba(0, 0, 0, 0.7);
+
+  z-index: 90;
 }
 
 // STATE
@@ -440,5 +876,17 @@ p {
 }
 
 .sw-is-selected {
-  background-color: $color-green-dark;
+  background-color: $color-green-light;
+
+  &--gray {
+    background-color: $color-gray-light;
+  }
+}
+
+.sw-is-unclickable {
+  background-color: $color-white-dark;
+}
+
+.sw-is-clickable {
+  background-color: $color-green-light;
 }

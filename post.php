@@ -6,13 +6,11 @@
  * Time: 11:23
  */
 
+require_once('php/config.php');
+
 require_once('class/Curl.php');
 
-$curl = new Curl([
-    'url' => 'http://localhost',
-    'port' => 3001,
-    'apiKey' => '0732cc50dc8380e6f438a2ba1419d48985d70808'
-]);
+$curl = new Curl($config_curl);
 
 $POST_DO = isset($_POST['post--do'])
     ? $_POST['post--do']
@@ -20,6 +18,10 @@ $POST_DO = isset($_POST['post--do'])
 
 $POST_RETURN = isset($_POST['post--return'])
     ? $_POST['post--return']
+    : null;
+
+$POST_ID = isset($_POST['post--id'])
+    ? $_POST['post--id']
     : null;
 
 $POST_HASH = isset($_POST['post--hash'])
@@ -36,37 +38,102 @@ function redirect($url) {
 function person_postPerson($postData) {
     global $curl;
 
-    $result = $curl->post('person', $postData);
-
-    $postList = [];
+    $age = intval($postData['age']);
 
     $world = $curl->get('world/id/'.$postData['world_id'])['data'][0];
-    $worldDefaults = $curl->get('world-attribute/id/'.$postData['world_id'].'/species/'.$postData['species_id'])['data'];
-    $speciesList = $curl->get('species-attribute/id/'.$postData['species_id'])['data'];
+    $species = $curl->get('species/id/'.$postData['species_id'])['data'][0];
+
+    $split_supernatural = floor($age / $world['split_supernatural']);
+    $split_milestone = floor($age / $world['split_milestone']);
+    $split_skill = floor($age / $world['split_skill']) * intval($species['multiply_skill']);
+    $split_expertise = floor($age / $world['split_expertise']) * intval($species['multiply_expertise']);
+    $split_relationship = floor($age / $world['split_relationship']);
+
+    $point_supernatural = $split_supernatural < $world['max_supernatural']
+        ? $split_supernatural
+        : $world['max_supernatural'];
+
+    $point_money = $split_milestone < $world['max_milestone_flexible']
+        ? $split_milestone
+        : $world['max_milestone_flexible'];
+
+    $point_milestone_upbringing = $split_milestone < $world['max_milestone_upbringing']
+        ? $split_milestone
+        : $world['max_milestone_upbringing'];
+
+    $point_milestone_flexible = $split_milestone < $world['max_milestone_flexible']
+        ? $split_milestone
+        : $world['max_milestone_flexible'];
+
+    $point_skill = $split_skill < $world['max_skill']
+        ? $split_skill
+        : $world['max_skill'];
+
+    $point_expertise = $split_expertise < $world['max_expertise']
+        ? $split_expertise
+        : $world['max_expertise'];
+
+    $point_relationship = $split_relationship < $world['max_relationship']
+        ? $split_relationship
+        : $world['max_relationship'];
+
+    $postData['point_supernatural'] = $point_supernatural;
+    $postData['point_potential'] = 1;
+    $postData['point_money'] = $point_money;
+    $postData['point_skill'] = $point_skill;
+    $postData['point_expertise'] = $point_expertise;
+    $postData['point_milestone_upbringing'] = $point_milestone_upbringing;
+    $postData['point_milestone_flexible'] = $point_milestone_flexible;
+    $postData['point_characteristic_gift'] = intval($world['max_characteristic_gift']);
+    $postData['point_characteristic_imperfection'] = intval($world['max_characteristic_imperfection']);
+    $postData['point_relationship'] = $point_relationship;
+
+    $result = $curl->post('person', $postData);
+
+    return ['id' => $result['id'], 'hash' => $result['hash']];
+}
+
+function person_postDefaults($postData, $hash) {
+    global $curl;
+
+    $postArray = [];
+    $money = [];
+
+    $person = $curl->get('person/hash/'.$hash)['data'][0];
+
+    $personId = $person['id'];
+    $worldId = $person['world_id'];
+    $speciesId = $person['species_id'];
+
+    $world = $curl->get('world/id/'.$worldId)['data'][0];
+    $worldDefaults = $curl->get('world-attribute/id/'.$worldId.'/species/'.$speciesId)['data'];
+    $speciesList = $curl->get('species-attribute/id/'.$speciesId)['data'];
+
+    $money[] = ['person_id' => $personId, 'attribute_id' => 19, 'value' => $postData['money']];
 
     foreach($worldDefaults as $attr) {
         if($attr['protected'] || $attr['attributetype_id'] == $world['skill_attributetype_id']) {
-            $postList[] = ['attribute_id' => $attr['id'], 'value' => $attr['default']];
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attr['id'], 'value' => $attr['default']];
         }
     }
 
-    foreach($postList as $key => $array) {
+    foreach($postArray as $key => $array) {
         foreach($speciesList as $species) {
             if($array['attribute_id'] == $species['attribute_id']) {
-                $postList[$key]['value'] += $species['value'];
+                $postArray[$key]['value'] += $species['value'];
+            }
+        }
+
+        foreach($money as $m) {
+            if($array['attribute_id'] == $m['attribute_id']) {
+                $postArray[$key]['value'] += $m['value'];
             }
         }
     }
 
-    foreach($postList as $key => $value) {
-        $postList[$key]['person_id'] = $result['id'];
-    }
-
-    foreach($postList as $array) {
+    foreach($postArray as $array) {
         $curl->post('person-attribute', $array);
     }
-
-    return $result['hash'];
 }
 
 function person_putPerson($postData, $hash) {
@@ -99,6 +166,18 @@ function person_putTableAttribute($table, $tableId, $hash = null, $id = null) {
     if(isset($post)) {
         $curl->post('person-attribute', $post);
     }
+}
+
+function person_putExperience($experience, $id) {
+    global $curl;
+
+    $currentExperience = $curl->get('person-attribute/id/'.$id.'/type/9')['data'][0];
+
+    $calc = intval($currentExperience['value']) + intval($experience);
+
+    $post = ['person_id' => $id, 'attribute_id' => $currentExperience['id'], 'value' => $calc];
+
+    $curl->post('person-attribute', $post);
 }
 
 function person_postSupernaturalExpertise($postData) {
@@ -215,38 +294,12 @@ function person_postWeapon($postData) {
     }
 }
 
-function postCalculation($postData, $hash) {
-    global $curl;
-
-    $person = $curl->get('person/hash/'.$hash)['data'][0];
-
-    if(!$person['calculated']) {
-        $postArray = [];
-
-        $personId = $postData['person_id'];
-
-        foreach($postData as $key => $value) {
-            if($key !== 'person_id') {
-                $v = $value > 0
-                    ? $value
-                    : 0;
-
-                $postArray[] = ['person_id' => $personId, 'attribute_id' => $key, 'value' => $v];
-            }
-        }
-
-        foreach($postArray as $post) {
-            $result = $curl->post('person-attribute',$post);
-        }
-    }
-}
-
 if(isset($POST_DO) && isset($POST_RETURN)) {
 
     $postData = [];
 
     foreach($_POST as $key => $value) {
-        if($key !== 'post--do' && $key !== 'post--return' && $key !== 'post--hash') {
+        if($key !== 'post--do' && $key !== 'post--return' && $key !== 'post--id' && $key !== 'post--hash' && $key !== 'post--points') {
             $explode = explode('--', $key);
 
             $postData[$explode[1]] = $value;
@@ -258,11 +311,18 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         default: break;
 
         case 'person--post':
-            $POST_HASH = person_postPerson($postData);
+            $result = person_postPerson($postData);
+            $POST_ID = $result['id'];
+            $POST_HASH = $result['hash'];
             break;
 
         case 'person--put':
             person_putPerson($postData, $POST_HASH);
+            break;
+
+        case 'person--defaults':
+            person_postDefaults($postData, $POST_HASH);
+            person_putPerson(['point_money' => 0], $POST_HASH);
             break;
 
         case 'person--manifestation':
@@ -293,41 +353,68 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             person_putTableAttribute('identity', $postData['identity_id'], $POST_HASH);
             break;
 
-        case 'person--characteristic':
+        case 'person--gift':
             person_postCharacteristic($postData);
             person_putTableAttribute('characteristic', $postData['characteristic_id'], null, $postData['person_id']);
+            $calc = intval($_POST['post--points']) - 1;
+            person_putPerson(['point_characteristic_gift' => $calc], $POST_HASH);
             break;
 
-        case 'person--milestone':
+        case 'person--imperfection':
+            person_postCharacteristic($postData);
+            person_putTableAttribute('characteristic', $postData['characteristic_id'], null, $postData['person_id']);
+            $calc = intval($_POST['post--points']) - 1;
+            person_putPerson(['point_characteristic_imperfection' => $calc], $POST_HASH);
+            break;
+
+        case 'person--upbringing':
             person_postMilestone($postData);
             person_putTableAttribute('milestone', $postData['milestone_id'], null, $postData['person_id']);
+            $calc = intval($_POST['post--points']) - 1;
+            person_putPerson(['point_milestone_upbringing' => $calc], $POST_HASH);
+            break;
+
+        case 'person--flexible':
+            person_postMilestone($postData);
+            person_putTableAttribute('milestone', $postData['milestone_id'], null, $postData['person_id']);
+            $calc = intval($_POST['post--points']) - 1;
+            person_putPerson(['point_milestone_flexible' => $calc], $POST_HASH);
             break;
 
         case 'person--skill':
             person_postSkill($postData);
+            $calc = intval($_POST['post--points']);
+            person_putExperience($calc, $POST_ID);
+            person_putPerson(['point_skill' => 0], $POST_HASH);
             break;
 
         case 'person--expertise':
             person_postExpertise($postData);
+            $calc = intval($_POST['post--points']);
+            person_putExperience($calc, $POST_ID);
+            person_putPerson(['point_expertise' => 0], $POST_HASH);
             break;
 
         case 'person--supernatural':
             person_postSupernatural($postData);
+            $calc = intval($_POST['post--points']);
+            person_putExperience($calc, $POST_ID);
+            person_putPerson(['point_supernatural' => 0], $POST_HASH);
             break;
 
         case 'person--weapon':
             person_postWeapon($postData);
-            break;
-
-        case 'person--calculation':
-            postCalculation($postData, $POST_HASH);
-            $curl->put('person/hash/'.$POST_HASH,['calculated' => 1]);
+            person_putPerson(['calculated' => 1], $POST_HASH);
             break;
     }
 }
 
 $r = isset($POST_RETURN)
-    ? $POST_RETURN
+    ? $POST_RETURN.'/'
+    : null;
+
+$i = isset($POST_ID)
+    ? $POST_ID.'/'
     : null;
 
 $h = isset($POST_HASH)

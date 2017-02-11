@@ -58,10 +58,10 @@ $person = isset($sitemap->unique)
     <h2>Experience</h2>
     <?php $person->buildCard($person->getAttribute($person->world->attributeExperience)); ?>
 
-    <?php if($person->supernatural): ?>
+    <?php if($person->isSupernatural): ?>
 
         <h2>Potential</h2>
-        <?php if($person->supernatural) $person->buildCard($person->getAttribute($person->world->attributePotential)); ?>
+        <?php if($person->isSupernatural) $person->buildCard($person->getAttribute($person->world->attributePotential)); ?>
 
     <?php endif; ?>
 
@@ -77,7 +77,7 @@ $person = isset($sitemap->unique)
     <h1>Expertise</h1>
     <?php $person->makeExpertise(); ?>
 
-    <?php if($person->supernatural): ?>
+    <?php if($person->isSupernatural): ?>
 
         <h2>Supernatural</h2>
         <?php $person->makeSupernatural(); ?>

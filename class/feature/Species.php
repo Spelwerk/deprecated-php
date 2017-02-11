@@ -12,7 +12,9 @@ require_once('Weapon.php');
 
 class Species {
 
-    var $id, $name, $description, $playable, $maxAge, $icon;
+    var $id, $name, $description, $isPlayable, $maxAge, $icon;
+
+    var $multiplySkill, $multiplyExpertise;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -26,7 +28,10 @@ class Species {
         $this->description = $data['description'];
         $this->icon = $data['icon_path'];
 
-        $this->playable = isset($data['playable'])
+        $this->multiplySkill = intval($data['multiply_skill']);
+        $this->multiplyExpertise = intval($data['multiply_expertise']);
+
+        $this->isPlayable = isset($data['playable'])
             ? $data['playable']
             : null;
 

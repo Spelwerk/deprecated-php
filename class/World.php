@@ -16,6 +16,13 @@ class World {
     var $attributeBody, $attributeCombat, $attributeConsumable, $attributeDamage, $attributeExperience,
         $attributePotential, $attributeProtection, $attributeReputation, $attributeSkill, $attributeWound;
 
+    var $existsBionic, $existsAugmentation, $existsSoftware, $existsSupernatural;
+
+    var $splitSupernatural, $splitSkill, $splitExpertise, $splitMilestone, $splitRelationship;
+
+    var $maxGift, $maxImperfection, $maxSupernatural, $maxSkill, $maxExpertise, $maxUpbringing, $maxFlexible,
+        $maxRelationship;
+
     var $expertiseAttribute, $expertiseDice;
 
     public function __construct($id = null, $hash = null, $array = null) {
@@ -65,15 +72,34 @@ class World {
         $this->expertiseAttribute = $data['attribute_expertisetype_id'];
         $this->expertiseDice = $data['dice_expertisetype_id'];
 
+        $this->existsBionic = $data['bionic'];
+        $this->existsAugmentation = $data['augmentation'];
+        $this->existsSoftware = $data['software'];
+        $this->existsSupernatural = $data['supernatural'];
+
+        $this->splitSupernatural = intval($data['split_supernatural']);
+        $this->splitSkill = intval($data['split_skill']);
+        $this->splitExpertise = intval($data['split_expertise']);
+        $this->splitMilestone = intval($data['split_milestone']);
+        $this->splitRelationship = intval($data['split_relationship']);
+
+        $this->maxGift = intval($data['max_characteristic_gift']);
+        $this->maxImperfection = intval($data['max_characteristic_imperfection']);
+        $this->maxSupernatural = intval($data['max_supernatural']);
+        $this->maxSkill = intval($data['max_skill']);
+        $this->maxExpertise = intval($data['max_expertise']);
+        $this->maxUpbringing = intval($data['max_milestone_upbringing']);
+        $this->maxFlexible = intval($data['max_milestone_flexible']);
+        $this->maxRelationship = intval($data['max_relationship']);
+
+        $this->supernaturalName = $data['supernatural_name'];
+
         $this->exists = [
             'bionic' => $data['bionic'],
             'augmentation' => $data['augmentation'],
             'software' => $data['software'],
             'supernatural' => $data['supernatural']
         ];
-
-        if($this->exists['supernatural'] == true)
-            $this->supernaturalName = $data['supernatural_name'];
 
         $this->split = [
             'supernatural' => intval($data['split_supernatural']),
