@@ -279,6 +279,12 @@ $(document).ready(function(){
 
 });
 
+$(document).keyup(function(e) {
+    if (e.keyCode == 27) {
+        modalClose();
+    }
+});
+
 function rollNumber(type, times) {
     var dice = parseInt(times);
 

@@ -11,66 +11,63 @@ class System {
 
 
     public function createPerson($person = null, $world = null, $species = null) {
-        $return = '/play/new';
-        $final = '/play/play';
-
         if(!isset($person) && !isset($world) && !isset($species)) {
-            $this->makeWorldSelect($return);
+            $this->makeWorldSelect();
 
         } else if(!isset($person) && isset($world) && !isset($species)) {
-            $this->makeSpeciesSelect($world, $return);
+            $this->makeSpeciesSelect($world);
 
         } else if(!isset($person) && isset($world) && isset($species)) {
-            $this->makePersonBasic($world, $species, $return);
+            $this->makePersonBasic($world, $species);
 
         } else if(isset($person)) {
             if($person->pointMoney > 0) {
-                $this->makeMoney($person, $person->pointMoney, $return);
+                $this->makeMoney($person, $person->pointMoney);
 
             } else if($person->isSupernatural && !isset($person->manifestation)) {
-                $this->makeManifestationSelect($person, $return);
+                $this->makeManifestationSelect($person);
 
             } else if($person->isSupernatural && isset($person->manifestation) && !isset($person->focus)) {
-                $this->makeFocusSelect($person, $return);
+                $this->makeFocusSelect($person);
 
             } else if($person->isSupernatural && isset($person->manifestation) && isset($person->focus) && $person->getExpertise($person->manifestation->expertiseType) == null) {
-                $this->makeSupernaturalExpertiseSelect($person, $return);
+                $this->makeSupernaturalExpertiseSelect($person);
 
             } else if(!isset($person->caste)) {
-                $this->makeCasteSelect($person, $return);
+                $this->makeCasteSelect($person);
 
             } else if(!isset($person->nature)) {
-                $this->makeNatureSelect($person, $return);
+                $this->makeNatureSelect($person);
 
             } else if(!isset($person->identity)) {
-                $this->makeIdentitySelect($person, $return);
+                $this->makeIdentitySelect($person);
 
             } else if($person->pointGift > 0) {
-                $this->makeCharacteristicSelect($person, 1, $person->pointGift, $return);
+                $this->makeCharacteristicSelect($person, 1, $person->pointGift);
 
             } else if($person->pointImperfection > 0) {
-                $this->makeCharacteristicSelect($person, 0, $person->pointImperfection, $return);
+                $this->makeCharacteristicSelect($person, 0, $person->pointImperfection);
 
             } else if($person->pointUpbringing > 0) {
-                $this->makeMilestoneSelect($person, 1, $person->pointUpbringing, $return);
+                $this->makeMilestoneSelect($person, 1, $person->pointUpbringing);
 
             } else if($person->pointMilestone > 0) {
-                $this->makeMilestoneSelect($person, 0, $person->pointMilestone, $return);
+                $this->makeMilestoneSelect($person, 0, $person->pointMilestone);
 
             } else if($person->pointSkill > 0) {
-                $this->makeSkillPurchase($person, $person->pointSkill, $return);
+                $this->makeSkillPurchase($person, $person->pointSkill);
 
             } else if($person->pointExpertise > 0) {
-                $this->makeExpertisePurchase($person, $person->pointExpertise, $return);
+                $this->makeExpertisePurchase($person, $person->pointExpertise);
 
-            } else if($person->pointSupernatural > 0) {
-                $this->makeSupernaturalPurchase($person, $person->pointSupernatural, $return);
+            } else if($person->isSupernatural && $person->pointSupernatural > 0) {
+                $this->makeSupernaturalPurchase($person, $person->pointSupernatural);
 
             } else if(!isset($person->firstname) || !isset($person->surname) || !isset($person->gender)) {
-                $this->makePersonDescription($person, $return);
+                $this->makePersonDescription($person);
 
             } else if($person->canWeapon() == 0) {
-                $this->makeWeaponSelect($person, $final);
+                $this->makeWeaponSelect($person);
 
             }
         }
@@ -299,32 +296,32 @@ class System {
     }
 
 
-    public function makeWorldSelect($return) {
+    public function makeWorldSelect() {
         global $form;
 
         $list = $this->getWorldList();
 
-        $form->genericStart($return);
+        $form->genericStart('play');
         $form->genericSelect('person', 'world_id', $list);
         $form->genericEnd();
     }
 
-    public function makeSpeciesSelect($world, $return) {
+    public function makeSpeciesSelect($world) {
         global $form;
 
         $list = $this->getSpeciesList($world->id);
 
-        $form->genericStart($return);
+        $form->genericStart('play');
         $form->genericSelect('person', 'species_id', $list);
         $form->getHidden('person', 'world_id', $world->id);
         $form->genericEnd();
     }
 
-    public function makePersonBasic($world, $species, $return) {
+    public function makePersonBasic($world, $species) {
         global $form;
 
         $form->genericStart();
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--post');
 
         $form->getVarchar('person', 'nickname', true);
@@ -346,7 +343,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeMoney($person, $points, $return) {
+    public function makeMoney($person, $points) {
         global $form;
 
         $form->genericStart();
@@ -354,7 +351,7 @@ class System {
 
         $form->rollNumber('Money', $points, 'Money');
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--defaults');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -366,13 +363,13 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeManifestationSelect($person, $return) {
+    public function makeManifestationSelect($person) {
         global $form;
 
         $list = $this->getManifestationList($person);
 
         $form->genericStart();
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--manifestation');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -381,7 +378,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeFocusSelect($person, $return) {
+    public function makeFocusSelect($person) {
         global $form;
 
         $list = $this->getFocusList($person);
@@ -390,7 +387,7 @@ class System {
         $form->rollRadio('Focus');
         $form->viewStart();
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--focus');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -401,13 +398,13 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeSupernaturalExpertiseSelect($person, $return) {
+    public function makeSupernaturalExpertiseSelect($person) {
         global $form;
 
         $list = $this->getSupernaturalExpertiseList($person);
 
         $form->genericStart();
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--supernaturalexpertise');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -417,7 +414,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeCasteSelect($person, $return) {
+    public function makeCasteSelect($person) {
         global $form;
 
         $list = $this->getCasteList($person);
@@ -426,7 +423,7 @@ class System {
         $form->rollRadio('Caste');
         $form->viewStart();
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--caste');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -437,7 +434,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeNatureSelect($person, $return) {
+    public function makeNatureSelect($person) {
         global $form;
 
         $list = $this->getNatureList($person);
@@ -446,7 +443,7 @@ class System {
         $form->rollRadio('Nature');
         $form->viewStart();
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--nature');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -457,7 +454,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeIdentitySelect($person, $return) {
+    public function makeIdentitySelect($person) {
         global $form;
 
         $list = $this->getIdentityList($person);
@@ -466,7 +463,7 @@ class System {
         $form->rollRadio('Identity');
         $form->viewStart();
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--identity');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -477,7 +474,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeCharacteristicSelect($person, $gift, $points, $return) {
+    public function makeCharacteristicSelect($person, $gift, $points) {
         global $form;
 
         $list = $this->getCharacteristicList($person, $gift);
@@ -494,7 +491,7 @@ class System {
         $form->rollRadio('Characteristic');
         $form->viewStart();
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--'.$text);
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -515,7 +512,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeMilestoneSelect($person, $upbringing, $points, $return) {
+    public function makeMilestoneSelect($person, $upbringing, $points) {
         global $form;
 
         $list = $this->getMilestoneList($person, $upbringing);
@@ -532,7 +529,7 @@ class System {
         $form->rollRadio('Milestone');
         $form->viewStart();
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--'.$text);
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -553,7 +550,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeSkillPurchase($person, $points, $return) {
+    public function makeSkillPurchase($person, $points) {
         global $form;
 
         $currentList = $person->getAttribute($person->world->attributeSkill);
@@ -561,8 +558,9 @@ class System {
         $form->genericStart();
         $form->pointsForm($points, 'points');
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--skill');
+        $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
 
         if(count($currentList) != null) {
@@ -571,12 +569,10 @@ class System {
             }
         }
 
-        $form->getHidden('person', 'person_id', $person->id);
-
         $form->genericEnd();
     }
 
-    public function makeExpertisePurchase($person, $points, $return) {
+    public function makeExpertisePurchase($person, $points) {
         global $form, $curl;
 
         $typeList = $curl->get('expertisetype')['data'];
@@ -587,7 +583,7 @@ class System {
         $form->genericStart();
         $form->pointsForm($points, 'points');
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--expertise');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -638,11 +634,10 @@ class System {
             }
         }
 
-        $form->getHidden('person', 'person_id', $person->id);
         $form->genericEnd();
     }
 
-    public function makeSupernaturalPurchase($person, $points, $return) {
+    public function makeSupernaturalPurchase($person, $points) {
         global $form;
 
         $supernaturalList = $this->getSupernaturalList($person);
@@ -654,7 +649,7 @@ class System {
         $form->genericStart();
         $form->pointsForm($points, 'points');
 
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--supernatural');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -677,15 +672,14 @@ class System {
             }
         }
 
-        $form->getHidden('person', 'person_id', $person->id);
         $form->genericEnd();
     }
 
-    public function makePersonDescription($person, $return) {
+    public function makePersonDescription($person) {
         global $form;
 
         $form->genericStart();
-        $form->getHidden('post', 'return', $return);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--put');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -702,7 +696,7 @@ class System {
         $form->genericEnd();
     }
 
-    public function makeWeaponSelect($person, $final) {
+    public function makeWeaponSelect($person) {
         global $form, $curl;
 
         $groupList = $curl->get('weapongroup')['data'];
@@ -712,7 +706,7 @@ class System {
         $idList = [];
 
         $form->genericStart();
-        $form->getHidden('post', 'return', $final);
+        $form->getHidden('post', 'return', 'play');
         $form->getHidden('post', 'do', 'person--weapon');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
@@ -745,7 +739,6 @@ class System {
             }
         }
 
-        $form->getHidden('person', 'person_id', $person->id);
         $form->genericEnd();
     }
 }

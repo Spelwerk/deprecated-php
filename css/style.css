@@ -266,15 +266,24 @@ p {
   font-family: Roboto, sans-serif;
   font-size: 1.8rem; }
 
-.sw-c-input__bool__item {
-  display: inline-block;
-  width: 6rem;
-  text-align: center;
-  font-family: Roboto, sans-serif;
-  font-size: 1.8rem; }
-  .sw-c-input__bool__item img {
-    height: 2.2rem;
-    width: 2.2rem; }
+.sw-c-input__bool {
+  display: block;
+  width: 96%;
+  padding-left: 2rem;
+  margin-bottom: 2rem; }
+  .sw-c-input__bool__item {
+    display: inline-block;
+    width: 5rem;
+    text-align: center; }
+    .sw-c-input__bool__item img {
+      height: 2.4rem;
+      width: 2.4rem; }
+    .sw-c-input__bool__item:active {
+      background-color: #ffd740; }
+  .sw-c-input__bool__text {
+    font-family: Roboto, sans-serif;
+    font-size: 1.6rem;
+    text-align: center; }
 
 .sw-c-submit {
   margin-top: 3rem;
@@ -368,7 +377,7 @@ p {
 
 .sw-c-purchase {
   padding-top: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid #dddddd; }
   .sw-c-purchase__head {
     display: table;
@@ -482,9 +491,24 @@ p {
         height: 4rem;
         width: 4rem; }
 
+.sw-c-points {
+  padding: 0.4rem 0.4rem 0.4rem 0.4rem;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #dddddd;
+  font-family: Walkway, serif;
+  font-size: 3rem;
+  text-align: center; }
+  .sw-c-points span {
+    color: #3f51b5; }
+
 .sw-l-content {
   margin-left: auto;
   margin-right: auto;
+  padding-top: 4rem;
+  margin-bottom: 4rem;
   width: 68rem;
   background-color: #f8f8f8; }
   @media (max-width: 599px) {

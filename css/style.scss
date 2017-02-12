@@ -485,20 +485,33 @@ p {
   }
 
   &__bool {
+    display: block;
+
+    width: 96%;
+
+    padding-left: 2rem;
+    margin-bottom: 2rem;
 
     &__item {
       display: inline-block;
 
-      width: 6rem;
+      width: 5rem;
 
       text-align: center;
 
-      font-family: $font-default;
-      font-size: 1.8rem;
-
       img {
-        @include mix-size(2.2rem);
+        @include mix-size(2.4rem);
       }
+
+      &:active {
+        background-color: $color-amber-primary;
+      }
+    }
+
+    &__text {
+      font-family: $font-default;
+      font-size: 1.6rem;
+      text-align: center;
     }
   }
 }
@@ -644,7 +657,7 @@ p {
 
 .sw-c-purchase {
   padding-top: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
 
   border-bottom: 1px solid $color-gray-light;
 
@@ -825,12 +838,35 @@ p {
 
 }
 
+.sw-c-points {
+  @include mix-padding(0.4rem);
+
+  width: 100%;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  background-color: $color-gray-light;
+
+  font-family: $font-logo;
+  font-size: 3rem;
+  text-align: center;
+
+  span {
+    color: $color-indigo-primary;
+  }
+}
+
 // LAYOUT
 
 .sw-l-menu {  }
 
 .sw-l-content {
   @include mix-auto;
+
+  padding-top: 4rem;
+  margin-bottom: 4rem;
 
   width: 68rem;
 

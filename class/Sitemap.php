@@ -8,7 +8,7 @@
  */
 class Sitemap {
 
-    var $requestURI, $scriptName, $command, $protected, $page, $unique;
+    var $requestURI, $scriptName, $command, $protected, $page, $id, $hash, $unique;
 
     public function __construct() {
         $this->requestURI = explode('/', $_SERVER['REQUEST_URI']);
@@ -21,9 +21,7 @@ class Sitemap {
         }
 
         $this->command = array_values($this->requestURI);
-    }
 
-    public function buildMap() {
         $this->switchTop();
     }
 
@@ -35,6 +33,9 @@ class Sitemap {
 
         switch($switch)
         {
+            default:
+                break;
+
             case 'play':
                 $this->switchPlay();
                 break;
@@ -57,129 +58,51 @@ class Sitemap {
 
             case 'world':
                 break;
-
-            default: break;
         }
     }
 
     function switchPlay() {
 
-        $switch = isset($this->command[1]) && $this->command[1] != null
+        $id = isset($this->command[1]) && $this->command[1] != null
             ? $this->command[1]
             : null;
 
-        $unique = isset($this->command[2]) && $this->command[2] != null
+        $hash = isset($this->command[2]) && $this->command[2] != null
             ? $this->command[2]
+            : null;
+
+        $switch = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
             : null;
 
         switch($switch)
         {
-            case 'new':
-                $this->page = 'site/play/new.php';
-                $this->unique = $unique;
+            default:
+                $this->page = 'site/play/default.php';
+                $this->id = $id;
+                $this->hash = $hash;
                 break;
 
             case 'edit':
-                $this->page = 'site/play/edit.php';
-                $this->unique = $unique;
+                $this->switchPlayEdit();
+                break;
+        }
+    }
+
+    function switchPlayEdit() {
+        $switch = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        switch($switch)
+        {
+            default:
+                $this->page = 'site/play/edit/default.php';
                 break;
 
-            case 'play':
-                $this->page = 'site/play/play.php';
-                $this->unique = $unique;
+            case 'wound':
+                $this->page = 'site/play/edit/wound.php';
                 break;
-
-            case 'view':
-                $this->page = 'site/play/view.php';
-                $this->unique = $unique;
-                break;
-
-            default: break;
         }
     }
 }
-
-/*
-
-/play
-/play/new
-/play/new/{hash}
-/play/edit/{hash}
-/play/edit/{hash}/{thing}
-/play/play/{hash}
-/play/play/{hash}/{tab}
-/play/view/{id}
-/play/view/{id}/{tab}
-
-/story
-/story/new
-/story/view/{id}
-/story/view/{hash}
-/story/edit/{hash}
-
-/rule
-/rule/new
-/rule/view/{id}
-/rule/edit/{id}
-
-/admin
-/admin/database
-/admin/database/{table}
-/admin/database/{table}/new
-/admin/database/{table}/view/{id}
-/admin/database/{table}/edit/{id}
-/admin/user
-/admin/user/new
-/admin/user/view/{id}
-/admin/user/edit/{id}
-/admin/usergroup
-/admin/usergroup/new
-/admin/usergroup/view/{id}
-/admin/usergroup/edit/{id}
-/admin/promotion
-/admin/promotion/new
-/admin/promotion/view/{id}
-/admin/promotion/edit/{id}
-/admin/permission
-/admin/permission/new
-/admin/permission/view/{id}
-/admin/permission/edit/{id}
-/admin/rule
-/admin/rule/new
-/admin/rule/view/{id}
-/admin/rule/edit/{id}
-/admin/news
-/admin/news/new
-/admin/news/view/{id}
-/admin/news/edit/{id}
-
-/user
-/user/new
-/user/verify
-/user/verify/send
-/user/verify/{email}/{hash}
-/user/recovery
-/user/recovery/send
-/user/recovery/password
-/user/login
-/user/logout
-/user/view
-/user/view/{id}
-/user/edit
-/user/edit/email
-/user/edit/profile
-/user/edit/password
-
-/news
-/news/{id}
-/news/{id}/comment
-/news/{id}/comment/view/{id}
-/news/{id}/comment/edit/{id}
-
-/world
-/world/new
-/world/view/{id}
-/world/edit/{id}
-
-
-*/

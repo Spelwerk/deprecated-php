@@ -76,23 +76,27 @@ class Form {
 
         echo(
             '<div class="sw-c-input__label">'.$name.$reqLabel.'</div>'.
+
             '<div class="sw-c-input__bool">'.
+
             '<label for="'.$tableName.'--'.$name.'--1">'.
             '<div class="sw-c-input__bool__item sw-js-input-item">'.
             '<img class="sw-js-radio-false" src="/img/radio-false.png"/>'.
             '<img class="sw-js-radio-true sw-is-hidden" src="/img/radio-true.png"/>'.
+            '<div class="sw-c-input__bool__text">Yes</div>'.
             '<input class="sw-js-input-radio sw-is-hidden" type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'--1" value="1"'.$req.'/>'.
-            '<div>Yes</div>'.
             '</div>'.
             '</label>'.
+
             '<label for="'.$tableName.'--'.$name.'--0">'.
             '<div class="sw-c-input__bool__item sw-js-input-item">'.
-            '<img class="sw-js-radio-false" src="/img/radio-false.png"/>'.
-            '<img class="sw-js-radio-true sw-is-hidden" src="/img/radio-true.png"/>'.
-            '<input class="sw-js-input-radio sw-is-hidden" type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'--0" value="0"'.$req.'/>'.
-            '<div>No</div>'.
+            '<img class="sw-js-radio-false sw-is-hidden" src="/img/radio-false.png"/>'.
+            '<img class="sw-js-radio-true" src="/img/radio-true.png"/>'.
+            '<div class="sw-c-input__bool__text">No</div>'.
+            '<input class="sw-js-input-radio sw-is-hidden" type="radio" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'--0" value="0"'.$req.' checked/>'.
             '</div>'.
             '</label>'.
+
             '</div>'
         );
     }
@@ -247,9 +251,9 @@ class Form {
     public function genericStart($action = null) {
         $link = isset($action)
             ? $action
-            : '/post.php';
+            : 'post.php';
 
-        echo('<form action="'.$link.'" method="post">');
+        echo('<form action="/'.$link.'" method="post">');
     }
 
     public function genericEnd() {
@@ -321,7 +325,9 @@ class Form {
 
     public function pointsForm($points, $text) {
         echo(
-            '<h4><span class="sw-js-points-text">'.$points.'</span> '.$text.'</h4>'.
+            '<div class="sw-c-points">'.
+            '<span class="sw-js-points-text">'.$points.'</span> '.$text.
+            '</div>'.
             '<input type="hidden" class="sw-js-points-input" name="post--points" value="'.$points.'"/>'
         );
     }

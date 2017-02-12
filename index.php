@@ -19,12 +19,8 @@ require_once('class/World.php');
 require_once('class/Person.php');
 
 $sitemap = new Sitemap();
-
 $curl = new Curl($config_curl);
-
 $form = new Form();
-
-$sitemap->buildMap();
 
 ?>
 <!DOCTYPE html>
@@ -40,11 +36,7 @@ $sitemap->buildMap();
     <script src="/dependency/jquery-2.2.4.min.js"></script>
 
     <script src="/js/main.js"></script>
-    <!--
-    <script src="js/list.js"></script>
-    <script src="js/view.js"></script>
-    <script src="js/wizard.js"></script>
-    -->
+
     <title>Spelwerk</title>
 </head>
 <body>
