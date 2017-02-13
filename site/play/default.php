@@ -34,6 +34,8 @@ $species = isset($_POST['person--species_id'])
 
 ?>
 
+<script src="/js/play.js"></script>
+
 <?php if(!$calculated): ?>
 
     <?php $system->createPerson($person, $world, $species); ?>

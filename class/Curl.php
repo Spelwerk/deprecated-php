@@ -52,7 +52,7 @@ class Curl {
         $return = null;
 
         if($data) {
-            $data = json_encode($data, JSON_NUMERIC_CHECK);
+            $data = json_encode($data, true);
         }
 
         $curl = curl_init();

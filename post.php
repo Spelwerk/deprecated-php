@@ -7,7 +7,6 @@
  */
 
 require_once('php/config.php');
-
 require_once('class/Curl.php');
 
 $curl = new Curl($config_curl);
@@ -28,12 +27,29 @@ $POST_HASH = isset($_POST['post--hash'])
     ? $_POST['post--hash']
     : null;
 
+$USER_TOKEN = null;
+
 function redirect($url) {
     ob_start();
     header('Location: http://spelwerk.dev/'.$url, true, 303);
     ob_end_flush();
     exit;
 }
+
+function unsetUser() {
+    unset($_COOKIE['sw_user_token']);
+
+    setcookie('sw_user_token', '', time() - 3600, '/');
+
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+}
+
 
 function person_postPerson($postData) {
     global $curl;
@@ -274,6 +290,112 @@ function person_postWeapon($postData, $personId) {
     }
 }
 
+
+function user_postUser($postData) {
+    global $curl;
+
+    $return = null;
+
+    if($postData['password'] == $postData['password2']) {
+        $return = $curl->post('user', $postData);
+    }
+
+    return $return;
+}
+
+function user_verifyUser($postData) {
+    global $curl;
+
+    $return = null;
+
+    if($postData['verification']) {
+        $return = $curl->post('user/verify', $postData);
+    }
+
+    return $return;
+}
+
+function user_resendVerification($postData) {
+    global $curl;
+
+    $return = null;
+
+    if($postData['email']) {
+        $return = $curl->post('user/verify/again', $postData);
+    }
+
+    return $return;
+}
+
+function user_loginPass($postData) {
+    global $curl;
+
+    unsetUser();
+
+    if($postData['username'] && $postData['password']) {
+        $result = $curl->post('user/login/password', $postData);
+    }
+
+    $token = isset($result['token'])
+        ? $result['token']
+        : null;
+
+    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
+}
+
+function user_loginMail($postData) {
+    global $curl;
+
+    $return = null;
+
+    if($postData['email']) {
+        $return = $curl->post('user/login/mail/start', $postData);
+    }
+
+    return $return;
+}
+
+function user_loginMailVerify($postData) {
+    global $curl;
+
+    unsetUser();
+
+    if($postData['verification']) {
+        $result = $curl->post('user/login/mail/verify', $postData);
+    }
+
+    $token = isset($result['token'])
+        ? $result['token']
+        : null;
+
+    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
+}
+
+function user_passMail($postData) {
+    global $curl;
+
+    $return = null;
+
+    if($postData['email']) {
+        $return = $curl->put('user/password/start', $postData);
+    }
+
+    return $return;
+}
+
+function user_passVerify($postData) {
+    global $curl;
+
+    $return = null;
+
+    if($postData['verification'] && $postData['password']) {
+        $return = $curl->put('user/password/set', $postData);
+    }
+
+    return $return;
+}
+
+
 if(isset($POST_DO) && isset($POST_RETURN)) {
 
     $POST_DATA = [];
@@ -400,6 +522,42 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             person_postWeapon($POST_DATA, $POST_ID);
             person_putPerson(['calculated' => 1], $POST_HASH);
             break;
+
+        case 'user--new':
+            user_postUser($POST_DATA);
+            break;
+
+        case 'user--new--verify':
+            user_verifyUser($POST_DATA);
+            break;
+
+        case 'user--new--timeout':
+            user_resendVerification($POST_DATA);
+            break;
+
+        case 'user--login--pass':
+            user_loginPass($POST_DATA);
+            break;
+
+        case 'user--login--mail':
+            print_r(user_loginMail($POST_DATA));
+            break;
+
+        case 'user--login--verify':
+            user_loginMailVerify($POST_DATA);
+            break;
+
+        case 'user--reset':
+            print_r(user_passMail($POST_DATA));
+            break;
+
+        case 'user--password':
+            user_passVerify($POST_DATA);
+            break;
+
+        case 'user--logout':
+            unsetUser();
+            break;
     }
 }
 
@@ -415,6 +573,6 @@ $h = isset($POST_HASH)
     ? $POST_HASH
     : null;
 
-echo '<a href="http://spelwerk.dev/'.$r.$i.$h.'">'.$h.'</a>';
+echo '<a href="http://spelwerk.dev/'.$r.$i.$h.'">'.$r.$i.$h.'</a>';
 
 redirect($r.$i.$h);

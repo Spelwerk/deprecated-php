@@ -12,6 +12,7 @@ require_once('php/config.php');
 require_once('class/Sitemap.php');
 require_once('class/Curl.php');
 require_once('class/Form.php');
+require_once('class/User.php');
 
 require_once('class/Admin.php');
 require_once('class/System.php');
@@ -21,6 +22,10 @@ require_once('class/Person.php');
 $sitemap = new Sitemap();
 $curl = new Curl($config_curl);
 $form = new Form();
+
+$user = isset($_COOKIE['sw_user_token'])
+    ? new User($_COOKIE['sw_user_token'])
+    : null;
 
 ?>
 <!DOCTYPE html>
@@ -34,8 +39,6 @@ $form = new Form();
 
     <script src="/dependency/prefixfree.min.js"></script>
     <script src="/dependency/jquery-2.2.4.min.js"></script>
-
-    <script src="/js/main.js"></script>
 
     <title>Spelwerk</title>
 </head>

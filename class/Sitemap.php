@@ -8,7 +8,11 @@
  */
 class Sitemap {
 
-    var $requestURI, $scriptName, $command, $protected, $page, $id, $hash, $unique;
+    var $requestURI, $scriptName, $command;
+
+    var $page, $id, $hash, $unique;
+
+    var $isAdmin, $isUser;
 
     public function __construct() {
         $this->requestURI = explode('/', $_SERVER['REQUEST_URI']);
@@ -40,29 +44,13 @@ class Sitemap {
                 $this->switchPlay();
                 break;
 
-            case 'story':
-                break;
-
-            case 'rule':
-                break;
-
-            case 'admin':
-                $this->protected = true;
-                break;
-
             case 'user':
-                break;
-
-            case 'news':
-                break;
-
-            case 'world':
+                $this->switchUser();
                 break;
         }
     }
 
     function switchPlay() {
-
         $id = isset($this->command[1]) && $this->command[1] != null
             ? $this->command[1]
             : null;
@@ -102,6 +90,104 @@ class Sitemap {
 
             case 'wound':
                 $this->page = 'site/play/edit/wound.php';
+                break;
+        }
+    }
+
+    function switchUser() {
+        $switch = isset($this->command[1]) && $this->command[1] != null
+            ? $this->command[1]
+            : null;
+
+        $hash = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch($switch)
+        {
+            default:
+                $this->page = 'site/user/default.php';
+                break;
+
+            case 'new':
+                $this->switchUserNew();
+                break;
+
+            case 'login':
+                $this->switchUserLogin();
+                break;
+
+            case 'edit':
+                $this->page = 'site/user/edit.php';
+                break;
+
+            case 'reset':
+                $this->page = 'site/user/reset.php';
+                break;
+
+            case 'password':
+                $this->page = 'site/user/password.php';
+                $this->hash = $hash;
+                break;
+        }
+    }
+
+    function switchUserNew() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        $hash = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
+            : null;
+
+        switch ($switch)
+        {
+            default:
+                $this->page = 'site/user/new/default.php';
+                break;
+
+            case 'verify':
+                $this->page = 'site/user/new/verify.php';
+                $this->hash = $hash;
+                break;
+
+            case 'success':
+                $this->page = 'site/user/new/success.php';
+                break;
+
+            case 'timeout':
+                $this->page = 'site/user/new/timeout.php';
+                break;
+        }
+    }
+
+    function switchUserLogin() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        $hash = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
+            : null;
+
+        switch ($switch)
+        {
+            default:
+                $this->page = 'site/user/login/default.php';
+                break;
+
+            case 'mail':
+                $this->page = 'site/user/login/mail.php';
+                break;
+
+            case 'pass':
+                $this->page = 'site/user/login/pass.php';
+                break;
+
+            case 'verify':
+                $this->page = 'site/user/login/verify.php';
+                $this->hash = $hash;
                 break;
         }
     }

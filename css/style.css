@@ -42,21 +42,21 @@ div {
 
 h2 {
   padding-top: 3rem;
-  padding-bottom: 1rem;
+  padding-bottom: 2rem;
   font-family: Walkway, serif;
   font-size: 4rem;
   text-align: center; }
 
 h3 {
   padding-top: 3rem;
-  padding-bottom: 1rem;
+  padding-bottom: 2rem;
   font-family: Walkway, serif;
   font-size: 3rem;
   text-align: center; }
 
 h4 {
   padding-top: 2rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
   font-family: Walkway, serif;
   font-size: 2.4rem;
   text-align: center; }
@@ -65,6 +65,35 @@ p {
   font-family: Roboto, sans-serif;
   font-size: 1.4rem;
   line-height: 2; }
+
+a {
+  color: #283593; }
+  a:active {
+    color: #ffd740; }
+
+.sw-c-link {
+  padding: 1rem 1rem 1rem 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+  display: block;
+  height: 4rem;
+  width: 60%;
+  background-color: #3f51b5;
+  border-radius: 0.8rem;
+  font-family: Rockwell, serif;
+  font-size: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fefefe;
+  cursor: pointer;
+  box-sizing: border-box; }
+  .sw-c-link:active {
+    background-color: #ffd740;
+    color: #111111; }
+  .sw-c-link--dangerous {
+    background-color: #d50000; }
 
 .sw-c-button__item {
   margin: 1rem 1rem 1rem 1rem;
@@ -106,7 +135,7 @@ p {
   width: 8.5rem;
   font-family: Rockwell, serif;
   font-size: 2rem;
-  color: #3949ab;
+  color: #283593;
   padding-right: 0.6rem;
   text-align: right;
   vertical-align: middle; }
@@ -210,7 +239,7 @@ p {
     padding: 1rem 1rem 1rem 1rem;
     font-family: Rockwell, serif;
     font-size: 3.8rem;
-    color: #3949ab;
+    color: #283593;
     text-align: center;
     vertical-align: middle; }
 
@@ -266,6 +295,21 @@ p {
   font-family: Roboto, sans-serif;
   font-size: 1.8rem; }
 
+.sw-c-input__validation {
+  display: block;
+  margin-bottom: 1.4rem;
+  margin-left: 2%;
+  font-family: Rockwell, serif;
+  font-size: 1.4rem;
+  text-transform: uppercase; }
+
+.sw-c-input__link {
+  display: block;
+  margin-bottom: 2rem;
+  margin-left: 2%;
+  font-family: Roboto, sans-serif;
+  font-size: 1.6rem; }
+
 .sw-c-input__bool {
   display: block;
   width: 96%;
@@ -286,17 +330,16 @@ p {
     text-align: center; }
 
 .sw-c-submit {
-  margin-top: 3rem;
-  text-align: center; }
-  .sw-c-submit__button {
-    margin-left: auto;
-    margin-right: auto;
-    height: 4rem;
-    width: 100%;
-    font-family: Rockwell, serif;
-    font-size: 2rem; }
-    .sw-c-submit__button:active {
-      background-color: #ffd740; }
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4rem;
+  text-align: center;
+  height: 4rem;
+  width: 100%;
+  font-family: Rockwell, serif;
+  font-size: 2rem; }
+  .sw-c-submit:active {
+    background-color: #ffd740; }
 
 .sw-c-randomizer {
   padding: 1rem 1rem 1rem 1rem;
@@ -508,15 +551,14 @@ p {
   margin-left: auto;
   margin-right: auto;
   padding-top: 4rem;
+  padding-bottom: 4rem;
   margin-bottom: 4rem;
   width: 68rem;
+  border-radius: 0 0 1rem 1rem;
   background-color: #f8f8f8; }
   @media (max-width: 599px) {
     .sw-l-content {
       width: 34rem; } }
-  @media (min-width: 1200px) {
-    .sw-l-content {
-      width: 102rem; } }
 
 .sw-l-mask {
   height: 100%;
@@ -533,10 +575,10 @@ p {
     display: none; }
 
 .sw-is-chevron {
-  background-color: #8bc34a; }
+  background-color: #7cb342; }
 
 .sw-is-selected {
-  background-color: #8bc34a; }
+  background-color: #7cb342; }
   .sw-is-selected--gray {
     background-color: #dddddd; }
 
@@ -544,4 +586,10 @@ p {
   background-color: #aaaaaa; }
 
 .sw-is-clickable {
-  background-color: #8bc34a; }
+  background-color: #7cb342; }
+
+.sw-is-valid {
+  color: #33691b; }
+
+.sw-is-invalid {
+  color: #f44336; }
