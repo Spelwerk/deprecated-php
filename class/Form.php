@@ -77,7 +77,7 @@ class Form {
         echo(
             '<div class="sw-c-input__label">'.$name.$reqLabel.'</div>'.
 
-            '<div class="sw-c-input__bool">'.
+            '<div class="sw-c-input__bool sw-js-bool">'.
 
             '<label for="'.$tableName.'--'.$name.'--1">'.
             '<div class="sw-c-input__bool__item sw-js-input-item">'.
@@ -199,10 +199,16 @@ class Form {
         echo('</select><br>');
     }
 
-    public function getPurchase($rowName, $rowId, $rowDescription, $rowMax, $value = null) {
-        $min = isset($value)
-            ? ' min="'.$value.'"'
-            : ' min="0"';
+    public function getPurchase($rowName, $rowId, $rowDescription, $rowMax, $value = null, $noMin = null) {
+
+        if(!$noMin) {
+            $min = isset($value)
+                ? ' min="'.$value.'"'
+                : ' min="0"';
+        } else {
+            $min = null;
+        }
+
 
         $max = isset($rowMax)
             ? ' max="'.$rowMax.'"'
@@ -242,11 +248,12 @@ class Form {
     }
 
 
-    public function genericSelect($tableName, $name, $array) {
+    public function genericSelect($tableName, $name, $array, $value = null) {
         foreach($array as $object) {
             $this->getRadio($tableName, $name, $object->name, $object->id, $object->description);
         }
     }
+
 
     public function genericStart($action = null) {
         $link = isset($action)
@@ -258,18 +265,16 @@ class Form {
 
     public function genericEnd() {
         echo(
-            '<div class="sw-c-submit">'.
-            '<input class="sw-c-submit__button sw-js-submit sw-is-unclickable" type="submit" value="Next &raquo;" disabled/>'.
-            '</div>'.
+            '<input class="sw-c-submit sw-js-submit sw-is-unclickable" type="submit" value="Next &raquo;" disabled/>'.
             '</form>'
         );
     }
 
 
-    public function rollNumber($type, $times, $name) {
+    public function rollNumber($name, $times) {
         echo(
             '<div class="sw-c-randomizer sw-js-randomizer">'.
-            '<button type="button" class="sw-c-randomizer__button sw-js-random-number" data-roll-type="'.$type.'" data-rolls="'.$times.'">'.
+            '<button type="button" class="sw-c-randomizer__button sw-js-random-number" data-roll-type="'.$name.'" data-rolls="'.$times.'">'.
             '<div class="sw-c-randomizer__image">'.
             '<img class="" src="/img/dice.png"/>'.
             '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
@@ -330,5 +335,32 @@ class Form {
             '</div>'.
             '<input type="hidden" class="sw-js-points-input" name="post--points" value="'.$points.'"/>'
         );
+    }
+
+    public function printPerson($tableData, $header) {
+
+        echo('<div class="sw-l-table"><h3>'.$header.'</h3>');
+
+        foreach($tableData as $person) {
+
+            $hash = isset($person['person_hash'])
+                ? '/'.$person['person_hash']
+                : '';
+
+            $owner = isset($person['person_hash'])
+                ? '<div class="sw-l-table__image"><img title="owner" src="/img/user-owner.png"/></div>'
+                : null;
+
+            echo(
+                '<div class="sw-l-table__row">'.
+                '<a class="sw-l-table__link" href="/play/'.$person['person_id'].$hash.'">'.
+                '<div class="sw-l-table__col">'.$person['nickname'].'</div>'.
+                $owner.
+                '</a>'.
+                '</div>'
+            );
+        }
+
+        echo('</div>');
     }
 }

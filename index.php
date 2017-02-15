@@ -9,19 +9,21 @@
 
 require_once('php/config.php');
 
-require_once('class/Sitemap.php');
-require_once('class/Curl.php');
-require_once('class/Form.php');
-require_once('class/User.php');
-
 require_once('class/Admin.php');
-require_once('class/System.php');
-require_once('class/World.php');
+require_once('class/Curl.php');
+require_once('class/SiteError.php');
+require_once('class/Form.php');
 require_once('class/Person.php');
+require_once('class/Sitemap.php');
+
+require_once('class/System.php');
+require_once('class/User.php');
+require_once('class/World.php');
 
 $sitemap = new Sitemap();
 $curl = new Curl($config_curl);
 $form = new Form();
+$error = new SiteError($sitemap->id);
 
 $user = isset($_COOKIE['sw_user_token'])
     ? new User($_COOKIE['sw_user_token'])
@@ -39,10 +41,36 @@ $user = isset($_COOKIE['sw_user_token'])
 
     <script src="/dependency/prefixfree.min.js"></script>
     <script src="/dependency/jquery-2.2.4.min.js"></script>
+    <script src="/js/main.js"></script>
 
     <title>Spelwerk</title>
 </head>
 <body>
+
+<div class="sw-l-header">
+    <div class="sw-l-header__content">
+        <div class="sw-l-header__hamburger sw-js-hamburger"><a href="#"><img src="/img/hamburger--white.png"/></a></div>
+        <a class="sw-l-header__logo" href="/">spelwerk</a>
+        <div class="sw-l-header__menu">
+            <div class="sw-l-header__menu__content">
+                <?php /*<a class="sw-l-header__menu__item sw-js-menu" href="/world">World</a>*/ ?>
+                <a class="sw-l-header__menu__item sw-js-menu">Play</a>
+                <a class="sw-l-header__menu__item sw-js-menu">View</a>
+            </div>
+        </div>
+        <div class="sw-l-header__user sw-js-user"><a href="/user"><img src="/img/user--white.png"/></a></div>
+    </div>
+</div>
+
+<div class="sw-l-submenu">
+    <div class="sw-l-submenu__content sw-js-menu-play sw-is-hidden">
+        <a class="sw-l-submenu__item" href="/play">Create</a>
+        <a class="sw-l-submenu__item" href="/view/person">Saved</a>
+    </div>
+    <div class="sw-l-submenu__content sw-js-menu-view sw-is-hidden">
+        <a class="sw-l-submenu__item" href="/view/person">Person</a>
+    </div>
+</div>
 
 <div class="sw-l-content">
     <?php
@@ -73,7 +101,8 @@ $user = isset($_COOKIE['sw_user_token'])
     </div>
 </div>
 
-<div class="sw-l-mask sw-js-mask sw-is-hidden"></div>
+<div class="sw-l-mask--modal sw-js-modal-mask sw-is-hidden"></div>
+<div class="sw-l-mask--menu sw-js-menu-mask sw-is-hidden"></div>
 <div class="sw-js-saved-critical sw-is-hidden">0</div>
 <div class="sw-js-roll-modifier sw-is-hidden">0</div>
 

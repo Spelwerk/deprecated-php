@@ -8,7 +8,7 @@
  */
 class Milestone {
 
-    var $id, $name, $description, $upbringing;
+    var $id, $name, $description, $upbringing, $icon;
 
     var $attribute, $relationship;
 
@@ -22,6 +22,11 @@ class Milestone {
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
+        $this->upbringing = $data['upbringing'];
+
+        $this->icon = $this->upbringing == 1
+            ? '/img/person/milestone-upbringing.png'
+            : '/img/person/milestone-flexible.png';
 
         $this->attribute = [
             'id' => $data['attribute_id'],

@@ -46,19 +46,31 @@ $species = isset($_POST['person--species_id'])
 
 <?php if($person && $person->isCalculated): ?>
 
+    <div class="sw-l-quicklink">
+        <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level"><img src="/img/arrow-up.png"/></a>
+        <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/wound"><img src="/img/wound.png"/></a>
+        <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/weapon"><img src="/img/weapon.png"/></a>
+        <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/protection"><img src="/img/armor.png"/></a>
+        <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic"><img src="/img/bionic.png"/></a>
+        <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat"><img src="/img/edit.png"/></a>
+    </div>
+
     <h2><?php echo($person->firstname.' '.$person->surname); ?></h2>
 
-    <h2>Short</h2>
-    <?php echo
-    (
-        '<p>Name: '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'</p>'.
-        '<p>Age: '.$person->age.'. Gender: '.$person->gender.'. Occupation: '.$person->occupation.'.</p>'
-    );
-    ?>
+    <h3>Description</h3>
+    <div class="sw-l-content__wrap">
+        <?php echo
+        (
+            '<p>Nickname: '.$person->nickname.'</p>'.
+            '<p>Age: '.$person->age.'</p>'.
+            '<p>Gender: '.$person->gender.'</p>'.
+            '<p>Occupation: '.$person->occupation.'</p>'
+        );
+        ?>
+    </div>
 
     <?php if(!isset($person->description) && !isset($person->behaviour) && !isset($person->appearance) && !isset($person->features) && !isset($person->personality)): ?>
 
-        <h2>Description</h2>
         <?php
         if(isset($person->description)) echo('<p>'.$person->description.'</p>');
         if(isset($person->behaviour)) echo('<p>'.$person->behaviour.'</p>');
@@ -68,32 +80,6 @@ $species = isset($_POST['person--species_id'])
         ?>
 
     <?php endif; ?>
-
-    <h2>Features</h2>
-    <?php $person->makeFeatures(); ?>
-
-    <?php $person->buildCard($person->getAttribute($person->world->attributeExperience)); ?>
-
-    <h2>Characteristics</h2>
-    <?php $person->makeCharacteristic(); ?>
-
-    <h2>Milestone</h2>
-    <?php $person->makeMilestone(); ?>
-
-    <?php if($person->isSupernatural): ?>
-
-        <h2><?php echo $person->world->supernaturalName; ?></h2>
-        <?php $person->makeSupernaturalInformation(); ?>
-
-        <?php $person->buildCard($person->getAttribute($person->world->attributePotential)); ?>
-
-    <?php endif; ?>
-
-    <h2>Consumable</h2>
-    <?php $person->makeConsumable($person->getAttribute($person->world->attributeConsumable)); ?>
-
-    <h2>Reputation</h2>
-    <?php $person->makeSkill($person->getAttribute($person->world->attributeReputation)); ?>
 
     <h2>Skill</h2>
     <?php $person->makeSkill($person->getAttribute($person->world->attributeSkill)); ?>
@@ -108,14 +94,44 @@ $species = isset($_POST['person--species_id'])
 
     <?php endif; ?>
 
+    <h2>Attribute</h2>
+    <?php $person->makeSkill($person->getAttribute($person->world->attributeReputation)); ?>
+    <?php $person->makeSkill($person->getAttribute($person->world->attributeCombat)); ?>
+
+    <h3>Consumable</h3>
+    <?php $person->makeConsumable($person->getAttribute($person->world->attributeConsumable)); ?>
+
+    <h2>Features</h2>
+    <?php $person->makeFeatures(); ?>
+
+    <?php $person->buildCard($person->getAttribute($person->world->attributeExperience)); ?>
+
+    <h3>Characteristic</h3>
+    <?php $person->makeList($person->getCharacteristic()); ?>
+
+    <h3>Milestone</h3>
+    <?php $person->makeList($person->getMilestone()); ?>
+
+    <?php if($person->isSupernatural): ?>
+
+        <h2><?php echo $person->world->supernaturalName; ?></h2>
+        <?php $person->makeSupernaturalInformation(); ?>
+
+        <?php $person->buildCard($person->getAttribute($person->world->attributePower)); ?>
+
+    <?php endif; ?>
+
     <h2>Weapon</h2>
     <?php $person->makeWeapon(); ?>
 
-    <h2>Combat</h2>
-    <?php $person->makeSkill($person->getAttribute($person->world->attributeCombat)); ?>
-    <?php $person->buildCard($person->getAttribute($person->world->attributeBody)); ?>
-    <?php $person->buildCard($person->getAttribute($person->world->attributeDamage)); ?>
-    <?php $person->buildCard($person->getAttribute($person->world->attributeProtection), '--small'); ?>
-    <?php $person->buildCard($person->getAttribute($person->world->attributeWound)); ?>
+    <h2 id="wound">Wound</h2>
+    <?php $person->makeWound(); ?>
+
+    <?php /*$person->buildCard($person->getAttribute($person->world->attributeProtection), '--small');*/ ?>
+    <?php /*$person->buildCard($person->getAttribute($person->world->attributeDamage));*/ ?>
+    <div class="sw-l-content__wrap">
+        <a class="sw-c-link sw-c-link--dangerous" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/wound">Add Wound</a>
+    </div>
+
 
 <?php endif; ?>

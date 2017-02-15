@@ -19,6 +19,6 @@
     <input type="hidden" name="post--do" value="user--new--timeout"/>
     <input type="hidden" name="post--return" value="user/new/verify"/>
 
-    <input class="sw-c-submit__button sw-js-submit sw-is-clickable" type="submit" value="SEND"/>
+    <input class="sw-c-submit sw-js-submit sw-is-clickable" type="submit" value="SEND"/>
 
 </form>

@@ -34,4 +34,14 @@ $(document).ready(function(){
 
     });
 
+    $(".sw-js-input-radio").change(function() {
+        $(this).attr('checked', true);
+
+        $(this).parents('form').find('.sw-js-radio-true').addClass('sw-is-hidden');
+        $(this).parents('form').find('.sw-js-radio-false').removeClass('sw-is-hidden');
+
+        $(this).parents('.sw-js-input-item').find('.sw-js-radio-true').removeClass('sw-is-hidden');
+        $(this).parents('.sw-js-input-item').find('.sw-js-radio-false').addClass('sw-is-hidden');
+    });
+
 });

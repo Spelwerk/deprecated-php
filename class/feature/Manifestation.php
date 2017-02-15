@@ -10,7 +10,7 @@ class Manifestation {
 
     var $id, $name, $description, $icon;
 
-    var $attributeType, $expertiseType;
+    var $attributeType, $expertiseType, $power;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -25,5 +25,6 @@ class Manifestation {
         $this->icon = $data['icon_path'];
         $this->attributeType = $data['attributetype_id'];
         $this->expertiseType = $data['expertisetype_id'];
+        $this->power = $data['power_attribute_id'];
     }
 }

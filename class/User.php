@@ -11,12 +11,16 @@ class User {
 
     var $isAdmin, $isVerified;
 
-    public function __construct($cookie) {
+    public function __construct($cookie = null) {
         global $curl;
 
         $this->token = $_COOKIE['sw_user_token'];
 
-        $data = $curl->get('user/token',$this->token)['user'];
+        $result = $curl->get('user/token', $this->token);
+
+        $data = isset($result['user'])
+            ? $result['user']
+            : null;
 
         $this->id = $data['id'];
         $this->email = $data['email'];
@@ -29,4 +33,17 @@ class User {
 
         $this->permissions = $data['permissions'];
     }
+
+    public function getPerson() {
+        global $curl;
+
+        $result = $curl->get('user-person/id/'.$this->id);
+
+        $data = isset($result['data'])
+            ? $result['data']
+            : null;
+
+        return $data;
+    }
 }
+

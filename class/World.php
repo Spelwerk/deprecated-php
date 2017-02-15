@@ -9,7 +9,7 @@
 
 class World {
 
-    var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $exists, $split, $maximum;
+    var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $money;
 
     var $supernaturalName;
 
@@ -24,6 +24,8 @@ class World {
         $maxRelationship;
 
     var $expertiseAttribute, $expertiseDice;
+
+    var $woundLethal, $woundSerious;
 
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
@@ -56,6 +58,7 @@ class World {
         $this->template = $data['template'];
         $this->popularity = $data['popularity'];
         $this->hidden = $data['hidden'];
+        $this->money = $data['money_attribute_id'];
 
         // Hard Coded values for the System // todo add all these to database?
         $this->attributeBody = 1;
@@ -63,7 +66,7 @@ class World {
         $this->attributeConsumable = 8;
         $this->attributeDamage = 3;
         $this->attributeExperience = 9;
-        $this->attributePotential = 7;
+        $this->attributePower = 7;
         $this->attributeProtection = 4;
         $this->attributeReputation = 6;
         $this->attributeWound = 5;
@@ -94,30 +97,28 @@ class World {
 
         $this->supernaturalName = $data['supernatural_name'];
 
-        $this->exists = [
-            'bionic' => $data['bionic'],
-            'augmentation' => $data['augmentation'],
-            'software' => $data['software'],
-            'supernatural' => $data['supernatural']
-        ];
+        $this->experience = 22;
+        $this->woundLethal = 14;
+        $this->woundSerious = 15;
+    }
 
-        $this->split = [
-            'supernatural' => intval($data['split_supernatural']),
-            'skill' => intval($data['split_skill']),
-            'expertise' => intval($data['split_expertise']),
-            'milestone' => intval($data['split_milestone']),
-            'relationship' => intval($data['split_relationship'])
-        ];
+    public function getAttribute($type) {
+        global $curl;
 
-        $this->maximum = [
-            'gift' => intval($data['max_characteristic_gift']),
-            'imperfection' => intval($data['max_characteristic_imperfection']),
-            'supernatural' => intval($data['max_supernatural']),
-            'skill' => intval($data['max_skill']),
-            'expertise' => intval($data['max_expertise']),
-            'upbringing' => intval($data['max_milestone_upbringing']),
-            'flexible' => intval($data['max_milestone_flexible']),
-            'relationship' => intval($data['max_relationship'])
-        ];
+        $arrayList = null;
+
+        $return = $curl->get('world-attribute/id/'.$this->id.'/type/'.$type);
+
+        $data = isset($return['data'])
+            ? $return['data']
+            : null;
+
+        if($data) {
+            foreach ($data as $array) {
+                $arrayList[] = new Attribute(null, $array);
+            }
+        }
+
+        return $arrayList;
     }
 }

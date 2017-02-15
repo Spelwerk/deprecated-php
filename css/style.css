@@ -16,20 +16,25 @@
 html {
   font-size: 10px;
   background-color: #dddddd; }
-
-@media (max-width: 350px) {
-  html {
-    font-size: 9px; } }
+  @media (max-width: 349px) {
+    html {
+      font-size: 8px; } }
 
 hr {
   border: 0; }
 
-button, input, select {
+button, input, select, textarea {
   padding: 0;
   margin: 0;
   border: 0;
   box-sizing: border-box;
   background-color: inherit; }
+
+input:required:invalid {
+  border: 1px solid #d50000; }
+
+input:required:valid {
+  border: 1px solid #7cb342; }
 
 button:hover, input[type=submit] {
   cursor: pointer; }
@@ -63,7 +68,7 @@ h4 {
 
 p {
   font-family: Roboto, sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 2; }
 
 a {
@@ -77,12 +82,11 @@ a {
   margin-right: auto;
   margin-top: 2rem;
   display: block;
-  height: 4rem;
-  width: 60%;
+  width: 70%;
   background-color: #3f51b5;
   border-radius: 0.8rem;
   font-family: Rockwell, serif;
-  font-size: 2rem;
+  font-size: 1.8rem;
   text-align: center;
   text-transform: uppercase;
   text-decoration: none;
@@ -109,8 +113,8 @@ a {
 .sw-c-button__content {
   display: table;
   table-layout: fixed;
-  width: 100%;
-  height: 3.4rem; }
+  height: 3.4rem;
+  width: 100%; }
 
 .sw-c-button__icon {
   display: table-cell;
@@ -142,12 +146,15 @@ a {
 
 .sw-c-list__item {
   padding: 1rem 1rem 1rem 1rem; }
+  .sw-c-list__item:nth-child(odd) {
+    background-color: #fefefe; }
 
 .sw-c-list__header {
   display: table;
   table-layout: fixed;
+  height: 4rem;
   width: 100%;
-  height: 4rem; }
+  cursor: pointer; }
 
 .sw-c-list__icon {
   display: table-cell;
@@ -204,6 +211,16 @@ a {
     .sw-c-list__settings__button:active {
       background-color: #ffd740; }
 
+.sw-c-list__submit {
+  height: 3rem;
+  width: 3rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.4rem;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 0.6rem; }
+  .sw-c-list__submit:active {
+    background-color: #ffd740; }
+
 .sw-c-card {
   width: 35rem;
   margin-left: auto;
@@ -227,7 +244,6 @@ a {
         .sw-c-card__item--small {
           width: 8.4rem; } }
   .sw-c-card__title {
-    padding: 1rem 1rem 1rem 1rem;
     font-family: Roboto, sans-serif;
     font-size: 1.5rem;
     text-align: center;
@@ -249,8 +265,8 @@ a {
 .sw-c-radio__header {
   display: table;
   table-layout: fixed;
-  width: 100%;
-  height: 3rem; }
+  height: 3rem;
+  width: 100%; }
 
 .sw-c-radio__radio {
   display: table-cell;
@@ -278,7 +294,7 @@ a {
 .sw-c-input__label {
   display: block;
   margin-bottom: 0.6rem;
-  margin-left: 2%;
+  margin-left: 4%;
   font-family: Rockwell, serif;
   font-size: 1.5rem;
   text-transform: uppercase; }
@@ -288,7 +304,7 @@ a {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  width: 96%;
+  width: 94%;
   margin-bottom: 2rem;
   background-color: #fefefe;
   border: 1px solid #dddddd;
@@ -332,10 +348,10 @@ a {
 .sw-c-submit {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 4rem;
   text-align: center;
   height: 4rem;
   width: 100%;
+  border-top: 1px solid #dddddd;
   font-family: Rockwell, serif;
   font-size: 2rem; }
   .sw-c-submit:active {
@@ -425,8 +441,8 @@ a {
   .sw-c-purchase__head {
     display: table;
     table-layout: fixed;
-    width: 100%;
-    height: 4rem; }
+    height: 4rem;
+    width: 100%; }
   .sw-c-purchase__button {
     display: table-cell;
     width: 4rem;
@@ -462,7 +478,6 @@ a {
   .sw-c-purchase__info {
     display: table;
     table-layout: fixed;
-    width: 100%;
     padding-left: 1rem;
     font-family: Roboto, sans-serif;
     font-size: 1.3rem; }
@@ -521,8 +536,8 @@ a {
   .sw-c-modal__button {
     display: table;
     table-layout: fixed;
-    width: 100%;
     height: 15%;
+    width: 100%;
     background-color: #f8f8f8; }
     .sw-c-modal__button__item {
       display: table-cell;
@@ -535,10 +550,11 @@ a {
         width: 4rem; }
 
 .sw-c-points {
-  padding: 0.4rem 0.4rem 0.4rem 0.4rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   width: 100%;
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   background-color: #dddddd;
   font-family: Walkway, serif;
@@ -547,20 +563,149 @@ a {
   .sw-c-points span {
     color: #3f51b5; }
 
+.sw-l-header {
+  display: block;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #3f51b5;
+  box-shadow: 0 0.2rem 0.2rem #aaaaaa;
+  z-index: 80; }
+  .sw-l-header__content {
+    display: table;
+    table-layout: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    height: 6rem;
+    width: 68rem; }
+    @media (max-width: 349px) {
+      .sw-l-header__content {
+        width: 34rem; } }
+    @media (min-width: 350px) and (max-width: 689px) {
+      .sw-l-header__content {
+        width: 34rem; } }
+  .sw-l-header__hamburger {
+    width: 6rem;
+    text-align: center;
+    vertical-align: middle; }
+    .sw-l-header__hamburger img {
+      height: 3rem;
+      width: 3rem; }
+    .sw-l-header__hamburger:active {
+      background-color: #ffd740; }
+    @media (max-width: 349px) {
+      .sw-l-header__hamburger {
+        display: none; } }
+    @media (min-width: 350px) and (max-width: 689px) {
+      .sw-l-header__hamburger {
+        display: none; } }
+    @media (min-width: 690px) {
+      .sw-l-header__hamburger {
+        display: none; } }
+  .sw-l-header__user {
+    display: table-cell;
+    width: 6rem;
+    text-align: center;
+    vertical-align: middle; }
+    .sw-l-header__user img {
+      height: 3rem;
+      width: 3rem; }
+    .sw-l-header__user:active {
+      background-color: #ffd740; }
+  .sw-l-header__logo {
+    display: table-cell;
+    font-family: Walkway, serif;
+    font-size: 3.2rem;
+    color: #fefefe;
+    vertical-align: middle;
+    text-decoration: none; }
+    @media (max-width: 349px) {
+      .sw-l-header__logo {
+        display: none; } }
+    @media (min-width: 350px) and (max-width: 689px) {
+      .sw-l-header__logo {
+        display: none; } }
+    @media (min-width: 690px) {
+      .sw-l-header__logo {
+        width: 12rem;
+        padding-left: 1rem;
+        text-align: left; } }
+  .sw-l-header__menu {
+    display: table-cell;
+    padding-right: 1rem;
+    text-align: right;
+    vertical-align: middle; }
+    .sw-l-header__menu__item {
+      padding-left: 2rem;
+      display: inline-block;
+      font-family: Roboto, sans-serif;
+      font-size: 1.5rem;
+      color: #fefefe;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer; }
+      .sw-l-header__menu__item:hover {
+        color: #ffd740;
+        text-decoration: underline; }
+      .sw-l-header__menu__item:active {
+        color: #ffab00; }
+
+.sw-l-submenu {
+  display: block;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #ffd740;
+  box-shadow: 0 0.2rem 0.2rem #aaaaaa;
+  z-index: 70; }
+  .sw-l-submenu__content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 68rem;
+    padding-right: 2rem;
+    text-align: right; }
+    @media (max-width: 349px) {
+      .sw-l-submenu__content {
+        width: 34rem; } }
+    @media (min-width: 350px) and (max-width: 689px) {
+      .sw-l-submenu__content {
+        width: 34rem; } }
+  .sw-l-submenu__item {
+    padding-top: 7.5rem;
+    padding-left: 2rem;
+    padding-bottom: 1.5rem;
+    display: inline-block;
+    font-family: Roboto, sans-serif;
+    font-size: 1.5rem;
+    color: #111111;
+    text-transform: uppercase;
+    text-decoration: none; }
+    .sw-l-submenu__item:hover {
+      color: #3f51b5;
+      text-decoration: underline; }
+    .sw-l-submenu__item:active {
+      color: #283593; }
+
 .sw-l-content {
   margin-left: auto;
   margin-right: auto;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  margin-bottom: 4rem;
+  padding-top: 6rem;
+  margin-bottom: 8rem;
   width: 68rem;
-  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0.1rem 0.2rem 0.2rem #aaaaaa;
   background-color: #f8f8f8; }
-  @media (max-width: 599px) {
+  @media (max-width: 349px) {
     .sw-l-content {
       width: 34rem; } }
+  @media (min-width: 350px) and (max-width: 689px) {
+    .sw-l-content {
+      width: 34rem; } }
+  .sw-l-content__wrap {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 4rem; }
 
-.sw-l-mask {
+.sw-l-mask--modal {
   height: 100%;
   width: 100%;
   position: fixed;
@@ -569,18 +714,87 @@ a {
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 90; }
 
+.sw-l-mask--menu {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(250, 250, 250, 0.2);
+  z-index: 60; }
+
+.sw-l-table {
+  display: table;
+  table-layout: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 4rem;
+  width: 70%; }
+  .sw-l-table__row {
+    display: table-row; }
+    .sw-l-table__row:nth-child(even) {
+      background-color: #dddddd; }
+    .sw-l-table__row:hover {
+      background-color: #cccccc; }
+    .sw-l-table__row:active {
+      background-color: #ffd740;
+      color: #111111; }
+  .sw-l-table__col {
+    display: table-cell;
+    padding: 1rem 1rem 1rem 1rem;
+    font-family: Roboto, sans-serif;
+    font-size: 1.8rem;
+    text-transform: capitalize;
+    vertical-align: middle; }
+  .sw-l-table__image {
+    display: table-cell;
+    width: 4rem;
+    text-align: center;
+    vertical-align: middle; }
+    .sw-l-table__image img {
+      height: 2.4rem;
+      width: 2.4rem; }
+  .sw-l-table__link {
+    display: table;
+    table-layout: fixed;
+    height: 3rem;
+    width: 100%;
+    text-decoration: none;
+    vertical-align: middle; }
+
+.sw-l-quicklink {
+  display: table;
+  table-layout: fixed;
+  margin-left: auto;
+  margin-right: auto; }
+  .sw-l-quicklink__item {
+    display: table-cell;
+    height: 5rem;
+    width: 5rem;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 0.8rem;
+    opacity: 0.4; }
+    .sw-l-quicklink__item img {
+      height: 3rem;
+      width: 3rem; }
+    .sw-l-quicklink__item:active {
+      opacity: 1;
+      background-color: #ffd740; }
+    .sw-l-quicklink__item:hover {
+      opacity: 1; }
+
+.sw-is-opacity {
+  opacity: 0.2; }
+
 .sw-is-hidden {
   display: none; }
-  .sw-is-hidden * {
-    display: none; }
 
 .sw-is-chevron {
   background-color: #7cb342; }
 
 .sw-is-selected {
   background-color: #7cb342; }
-  .sw-is-selected--gray {
-    background-color: #dddddd; }
 
 .sw-is-unclickable {
   background-color: #aaaaaa; }

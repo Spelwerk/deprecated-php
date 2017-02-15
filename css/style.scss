@@ -19,6 +19,7 @@
 
 // FONT
 $font-logo: Walkway, serif;
+$font-thin: Walkway, serif;
 $font-fancy: Rockwell, serif;
 $font-default: Roboto, sans-serif;
 
@@ -28,6 +29,7 @@ $color-white-medium: #f8f8f8;
 $color-white-dark: #aaaaaa;
 
 $color-gray-light: #dddddd;
+$color-gray-medium: #cccccc;
 
 $color-black-light: #333333;
 $color-black-medium: #222222;
@@ -44,6 +46,10 @@ $color-red-secondary: #d50000; //A700
 
 $color-green-light: #7cb342; //600
 $color-green-dark: #33691b; //900
+
+// SIZES
+$size-phone: 34rem;
+$size-desktop: 68rem;
 
 // MIXIN
 
@@ -68,8 +74,6 @@ $color-green-dark: #33691b; //900
 @mixin mix-table {
   display: table;
   table-layout: fixed;
-
-  width: 100%;
 }
 
 @mixin mix-table__cell {
@@ -81,6 +85,18 @@ $color-green-dark: #33691b; //900
 }
 
 // MIXIN MEDIA
+
+@mixin sw-for-desktop {
+  @media (min-width: 690px) { @content; }
+}
+
+@mixin sw-for-phone {
+  @media (min-width: 350px) and (max-width: 689px) { @content; }
+}
+
+@mixin sw-for-tiny {
+  @media (max-width: 349px) { @content; }
+}
 
 @mixin for-phone-only {
   @media (max-width: 599px) { @content; }
@@ -120,11 +136,9 @@ html {
   font-size: 10px;
 
   background-color: $color-gray-light;
-}
 
-@media (max-width: 350px) {
-  html {
-    font-size: 9px;
+  @include sw-for-tiny {
+    font-size: 8px;
   }
 }
 
@@ -132,12 +146,24 @@ hr {
   border: 0;
 }
 
-button, input, select {
+button, input, select, textarea {
   padding: 0;
   margin: 0;
   border: 0;
   box-sizing: border-box;
   background-color: inherit;
+}
+
+input {
+  &:required {
+    &:invalid {
+      border: 1px solid $color-red-secondary;
+    }
+
+    &:valid {
+      border: 1px solid $color-green-light;
+    }
+  }
 }
 
 button:hover, input[type=submit] {
@@ -155,7 +181,7 @@ h2 {
   padding-top: 3rem;
   padding-bottom: 2rem;
 
-  font-family: $font-logo;
+  font-family: $font-thin;
   font-size: 4rem;
 
   text-align: center;
@@ -165,7 +191,7 @@ h3 {
   padding-top: 3rem;
   padding-bottom: 2rem;
 
-  font-family: $font-logo;
+  font-family: $font-thin;
   font-size: 3rem;
 
   text-align: center;
@@ -175,7 +201,7 @@ h4 {
   padding-top: 2rem;
   padding-bottom: 1rem;
 
-  font-family: $font-logo;
+  font-family: $font-thin;
   font-size: 2.4rem;
 
   text-align: center;
@@ -183,7 +209,7 @@ h4 {
 
 p {
   font-family: $font-default;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 2;
 }
 
@@ -204,15 +230,13 @@ a {
   margin-top: 2rem;
 
   display: block;
-
-  height: 4rem;
-  width: 60%;
+  width: 70%;
 
   background-color: $color-indigo-primary;
   border-radius: 0.8rem;
 
   font-family: $font-fancy;
-  font-size: 2rem;
+  font-size: 1.8rem;
   text-align: center;
   text-transform: uppercase;
   text-decoration: none;
@@ -256,6 +280,7 @@ a {
     @include mix-table;
 
     height: 3.4rem;
+    width: 100%;
   }
 
   &__icon {
@@ -304,12 +329,19 @@ a {
 
   &__item {
     @include mix-padding(1rem);
+
+    &:nth-child(odd) {
+      background-color: $color-white-light;
+    }
   }
 
   &__header {
     @include mix-table;
 
     height: 4rem;
+    width: 100%;
+
+    cursor: pointer;
   }
 
   &__icon {
@@ -354,6 +386,8 @@ a {
 
   &__information {
     @include mix-table;
+
+    width: 100%;
   }
 
   &__description {
@@ -389,6 +423,20 @@ a {
       &:active {
         background-color: $color-amber-primary;
       }
+    }
+  }
+
+  &__submit {
+    @include mix-size(3rem);
+    @include mix-padding(0.4rem);
+
+    text-align: center;
+    vertical-align: middle;
+
+    border-radius: 0.6rem;
+
+    &:active {
+      background-color: $color-amber-primary;
     }
   }
 }
@@ -431,8 +479,6 @@ a {
   }
 
   &__title {
-    @include mix-padding(1rem);
-
     font-family: $font-default;
     font-size: 1.5rem;
 
@@ -466,6 +512,7 @@ a {
     @include mix-table;
 
     height: 3rem;
+    width: 100%;
   }
 
   &__radio {
@@ -507,7 +554,7 @@ a {
     display: block;
 
     margin-bottom: 0.6rem;
-    margin-left: 2%;
+    margin-left: 4%;
 
     font-family: $font-fancy;
     font-size: 1.5rem;
@@ -520,7 +567,7 @@ a {
 
     display: block;
 
-    width: 96%;
+    width: 94%;
 
     margin-bottom: 2rem;
 
@@ -587,11 +634,12 @@ a {
 .sw-c-submit {
   @include mix-auto;
 
-  margin-top: 4rem;
   text-align: center;
 
   height: 4rem;
   width: 100%;
+
+  border-top: 1px solid $color-gray-light;
 
   font-family: $font-fancy;
   font-size: 2rem;
@@ -695,6 +743,8 @@ a {
 
   &__label {
     @include mix-table;
+
+    width: 100%;
   }
 
   &__text {
@@ -730,6 +780,7 @@ a {
     @include mix-table;
 
     height: 4rem;
+    width: 100%;
   }
 
   &__button {
@@ -809,7 +860,7 @@ a {
   &__title {
     height: 5rem;
 
-    font-family: $font-logo;
+    font-family: $font-thin;
     font-size: 4rem;
     text-align: center;
 
@@ -843,7 +894,7 @@ a {
     &__result {
       padding-bottom: 4rem;
 
-      font-family: $font-logo;
+      font-family: $font-thin;
       font-size: 12rem;
     }
 
@@ -881,6 +932,7 @@ a {
     @include mix-table;
 
     height: 15%;
+    width: 100%;
 
     background-color: $color-white-medium;
 
@@ -904,17 +956,18 @@ a {
 }
 
 .sw-c-points {
-  @include mix-padding(0.4rem);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 
   width: 100%;
 
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
 
   background-color: $color-gray-light;
 
-  font-family: $font-logo;
+  font-family: $font-thin;
   font-size: 3rem;
   text-align: center;
 
@@ -925,50 +978,356 @@ a {
 
 // LAYOUT
 
-.sw-l-menu {  }
+.sw-l-header {
+  display: block;
+  position: fixed;
+
+  top: 0;
+
+  width: 100%;
+
+  background-color: $color-indigo-primary;
+
+  box-shadow: 0 0.2rem 0.2rem $color-white-dark;
+
+  z-index: 80;
+
+  &__content {
+    @include mix-table;
+    @include mix-auto;
+
+    height: 6rem;
+    width: $size-desktop;
+
+    @include sw-for-tiny {
+      width: $size-phone;
+    }
+
+    @include sw-for-phone {
+      width: $size-phone;
+    }
+  }
+
+  &__hamburger {
+    width: 6rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    img {
+      @include mix-size(3rem);
+    }
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+
+    @include sw-for-tiny {
+      //@include mix-table__cell;
+      display: none;
+    }
+
+    @include sw-for-phone {
+      //@include mix-table__cell;
+      display: none;
+    }
+
+    @include sw-for-desktop {
+      display: none;
+    }
+  }
+
+  &__user {
+    @include mix-table__cell;
+
+    width: 6rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    img {
+      @include mix-size(3rem);
+    }
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+  }
+
+  &__logo {
+    @include mix-table__cell;
+
+    font-family: $font-logo;
+    font-size: 3.2rem;
+    color: $color-white-light;
+
+    vertical-align: middle;
+
+    text-decoration: none;
+
+    @include sw-for-tiny {
+      //text-align: center;
+      display: none;
+    }
+
+    @include sw-for-phone {
+      //text-align: center;
+      display: none;
+    }
+
+    @include sw-for-desktop {
+      width: 12rem;
+      padding-left: 1rem;
+      text-align: left;
+    }
+  }
+
+  &__menu {
+    @include mix-table__cell;
+
+    padding-right: 1rem;
+
+    text-align: right;
+    vertical-align: middle;
+
+    &__content {
+
+    }
+
+    &__item {
+      padding-left: 2rem;
+      display: inline-block;
+
+      font-family: $font-default;
+      font-size: 1.5rem;
+      color: $color-white-light;
+      text-transform: uppercase;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      &:hover {
+        color: $color-amber-primary;
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: $color-amber-secondary;
+      }
+    }
+  }
+}
+
+.sw-l-submenu {
+  display: block;
+  position: fixed;
+
+  top: 0;
+
+  width: 100%;
+
+  background-color: $color-amber-primary;
+
+  box-shadow: 0 0.2rem 0.2rem $color-white-dark;
+
+  z-index: 70;
+
+  &__content {
+    @include mix-auto;
+
+    width: $size-desktop;
+    padding-right: 2rem;
+
+    text-align: right;
+
+    @include sw-for-tiny {
+      width: $size-phone;
+    }
+
+    @include sw-for-phone {
+      width: $size-phone;
+    }
+  }
+
+  &__item {
+    padding-top: 7.5rem;
+    padding-left: 2rem;
+    padding-bottom: 1.5rem;
+    display: inline-block;
+
+    font-family: $font-default;
+    font-size: 1.5rem;
+    color: $color-black-dark;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-indigo-primary;
+      text-decoration: underline;
+    }
+
+    &:active {
+      color: $color-indigo-seconday;
+    }
+  }
+}
 
 .sw-l-content {
   @include mix-auto;
 
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  margin-bottom: 4rem;
+  padding-top: 6rem;
+  margin-bottom: 8rem;
 
-  width: 68rem;
+  width: $size-desktop;
 
-  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0.1rem 0.2rem 0.2rem $color-white-dark;
 
   background-color: $color-white-medium;
 
-  @include for-phone-only {
-    width: 34rem;
+  @include sw-for-tiny {
+    width: $size-phone;
+  }
+
+  @include sw-for-phone {
+    width: $size-phone;
+  }
+
+  &__wrap {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 4rem;
   }
 }
 
-.sw-l-roll {  }
-
 .sw-l-mask {
-  height: 100%;
-  width: 100%;
 
-  position: fixed;
+  &--modal {
+    height: 100%;
+    width: 100%;
 
-  top: 0;
-  left: 0;
+    position: fixed;
 
-  background-color: rgba(0, 0, 0, 0.7);
+    top: 0;
+    left: 0;
 
-  z-index: 90;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 90;
+  }
+
+  &--menu {
+    height: 100%;
+    width: 100%;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    background-color: rgba(250, 250, 250, 0.2);
+    z-index: 60;
+  }
+}
+
+.sw-l-table {
+  @include mix-table;
+  @include mix-auto;
+
+  padding-bottom: 4rem;
+
+  width: 70%;
+
+  &__row {
+    @include mix-table__row;
+
+    &:nth-child(even) {
+      background-color: $color-gray-light;
+    }
+
+    &:hover {
+      background-color: $color-gray-medium;
+    }
+
+    &:active {
+      background-color: $color-amber-primary;
+      color: $color-black-dark;
+    }
+  }
+
+  &__col {
+    @include mix-table__cell;
+    @include mix-padding(1rem);
+
+    font-family: $font-default;
+    font-size: 1.8rem;
+    text-transform: capitalize;
+
+    vertical-align: middle;
+  }
+
+  &__image {
+    @include mix-table__cell;
+
+    width: 4rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    img {
+      @include mix-size(2.4rem);
+    }
+  }
+
+  &__link {
+    @include mix-table;
+
+    height: 3rem;
+    width: 100%;
+
+    text-decoration: none;
+    vertical-align: middle;
+  }
+}
+
+.sw-l-quicklink {
+  @include mix-table;
+  @include mix-auto;
+
+  &__item {
+    @include mix-table__cell;
+
+    height: 5rem;
+    width: 5rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    border-radius: 0.8rem;
+
+    opacity: 0.4;
+
+    img {
+      @include mix-size(3rem);
+    }
+
+    &:active {
+      opacity: 1;
+      background-color: $color-amber-primary;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
 
 // STATE
 
+.sw-is-opacity {
+  opacity: 0.2;
+}
+
 .sw-is-hidden {
   display: none;
-
-  * {
-    display: none;
-  }
 }
 
 .sw-is-chevron {
@@ -977,10 +1336,6 @@ a {
 
 .sw-is-selected {
   background-color: $color-green-light;
-
-  &--gray {
-    background-color: $color-gray-light;
-  }
 }
 
 .sw-is-unclickable {

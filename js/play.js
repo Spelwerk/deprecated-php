@@ -273,7 +273,7 @@ $(document).ready(function(){
         modalRollWeapon(strike_d12, strike_bonus, strike_critical);
     });
 
-    $(".sw-js-mask").click(function() {
+    $(".sw-js-modal-mask").click(function() {
         modalClose();
     });
 
@@ -503,14 +503,14 @@ function modalClose() {
     $('.sw-js-modal-count').innerHTML = "&nbsp;";
     $('.sw-js-modal-info').innerHTML = "&nbsp;";
 
-    $('.sw-js-mask').addClass('sw-is-hidden');
+    $('.sw-js-modal-mask').addClass('sw-is-hidden');
     $('.sw-js-modal').addClass('sw-is-hidden');
 
     $('.sw-js-saved-critical').text(0);
 }
 
 function modalOpen() {
-    $('.sw-js-mask').removeClass('sw-is-hidden');
+    $('.sw-js-modal-mask').removeClass('sw-is-hidden');
     $('.sw-js-modal').removeClass('sw-is-hidden');
 
     $('.sw-js-modal').css('top', ($(window).height()/2) - ($('.sw-js-modal').height()/2));
