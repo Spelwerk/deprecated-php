@@ -29,6 +29,10 @@ class Weapon {
         $this->icon = $data['icon_path'];
         $this->hand = intval($data['hand']);
 
+        $this->icon = isset($data['icon_path'])
+            ? $data['icon_path']
+            : '/img/missing_icon.png';
+
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
             : null;

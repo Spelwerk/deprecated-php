@@ -15,7 +15,7 @@ global $user, $form;
         <h2>User</h2>
         <a class="sw-c-link" href="/user/new">Create new account</a>
         <a class="sw-c-link" href="/user/login/pass">Login with user/pass</a>
-        <a class="sw-c-link" href="/user/login/mail">Send me an email</a>
+        <a class="sw-c-link" href="/user/login/mail">Login with email</a>
     </div>
 
 <?php endif; ?>

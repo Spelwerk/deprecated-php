@@ -63,7 +63,7 @@ function unsetUser() {
 }
 
 function cookiePerson($personNickname, $personId, $personHash) {
-    if($_COOKIE['sw_person_list']) {
+    if(isset($_COOKIE['sw_person_list'])) {
         $cookie = unserialize($_COOKIE['sw_person_list']);
     }
 
@@ -589,7 +589,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--upbringing':
-            person_postTo('characteristic', $POST_DATA);
+            person_postTo('milestone', $POST_DATA);
             person_putAttributeFromTable('milestone', $POST_DATA['milestone_id'], $POST_ID);
 
             $calc = intval($_POST['post--points']) - 1;
@@ -598,7 +598,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--flexible':
-            person_postTo('characteristic', $POST_DATA);
+            person_postTo('milestone', $POST_DATA);
             person_putAttributeFromTable('milestone', $POST_DATA['milestone_id'], $POST_ID);
 
             $calc = intval($_POST['post--points']) - 1;
@@ -757,4 +757,4 @@ $a = isset($POST_RETURNAFTER)
 
 echo '<a href="http://spelwerk.dev/'.$r.$i.$h.$a.$d.'">'.$r.$i.$h.$a.$d.'</a>';
 
-//redirect($r.$i.$h.$a.$d);
+redirect($r.$i.$h.$a.$d);

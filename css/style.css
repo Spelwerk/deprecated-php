@@ -784,6 +784,15 @@ a {
     .sw-l-quicklink__item:hover {
       opacity: 1; }
 
+.sw-l-cookiepolicy {
+  width: 100%;
+  position: fixed;
+  padding-bottom: 4rem;
+  top: 0;
+  left: 0;
+  background-color: #ffd740;
+  z-index: 200; }
+
 .sw-is-opacity {
   opacity: 0.2; }
 

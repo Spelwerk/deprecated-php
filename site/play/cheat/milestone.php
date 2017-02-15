@@ -51,8 +51,8 @@ $person = new Person($sitemap->id, $sitemap->hash);
     }
     ?>
     <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/milestone/upbringing">Add Upbringing</a>
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/milestone/flexible">Add Flexible</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/milestone/upbringing">Add Upbringing</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/milestone/flexible">Add Flexible</a>
     </div>
 
 <?php endif; ?>

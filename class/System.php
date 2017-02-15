@@ -25,6 +25,7 @@ class System {
 
         } else if(isset($person)) {
             if($person->pointMoney > 0) {
+                echo '<h2>Money</h2>';
                 $this->makeAttribute(
                     $person,
                     $person->world->money,
@@ -34,6 +35,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && !isset($person->manifestation)) {
+                echo '<h2>Manifestation</h2>';
                 $this->makeSelect(
                     $person,
                     $this->getManifestationList($person),
@@ -41,6 +43,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && isset($person->manifestation) && !isset($person->focus)) {
+                echo '<h2>Focus</h2>';
                 $this->makeSelect(
                     $person,
                     $this->getFocusList($person),
@@ -49,6 +52,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && isset($person->manifestation) && isset($person->focus) && $person->getExpertise($person->manifestation->expertiseType) == null) {
+                echo '<h2>Expertise</h2>';
                 $this->makeSelect(
                     $person,
                     $this->getSupernaturalExpertiseList($person),
@@ -58,6 +62,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && $person->pointPower > 0) {
+                echo '<h2>Potential</h2>';
                 $this->makeAttribute(
                     $person,
                     $person->manifestation->power,
@@ -67,6 +72,7 @@ class System {
                 );
 
             } else if(!isset($person->caste)) {
+                echo '<h2>Caste</h2>';
                 $this->makeSelect(
                     $person,
                     $this->getCasteList($person),
@@ -75,6 +81,7 @@ class System {
                 );
 
             } else if(!isset($person->nature)) {
+                echo '<h2>Nature</h2>';
                 $this->makeSelect(
                     $person,
                     $this->getNatureList($person),
@@ -83,6 +90,7 @@ class System {
                 );
 
             } else if(!isset($person->identity)) {
+                echo '<h2>Identity</h2>';
                 $this->makeSelect(
                     $person,
                     $this->getIdentityList($person),
@@ -91,30 +99,39 @@ class System {
                 );
 
             } else if($person->pointGift > 0) {
+                echo '<h2>Characteristic</h2>';
                 $this->makeCharacteristicSelect($person, 1, $person->pointGift);
 
             } else if($person->pointImperfection > 0) {
+                echo '<h2>Characteristic</h2>';
                 $this->makeCharacteristicSelect($person, 0, $person->pointImperfection);
 
             } else if($person->pointUpbringing > 0) {
+                echo '<h2>Milestone</h2>';
                 $this->makeMilestoneSelect($person, 1, $person->pointUpbringing);
 
             } else if($person->pointMilestone > 0) {
+                echo '<h2>Milestone</h2>';
                 $this->makeMilestoneSelect($person, 0, $person->pointMilestone);
 
             } else if($person->pointSkill > 0) {
+                echo '<h2>Skill</h2>';
                 $this->makeSkillPurchase($person, $person->pointSkill);
 
             } else if($person->pointExpertise > 0) {
+                echo '<h2>Expertise</h2>';
                 $this->makeExpertisePurchase($person, $person->pointExpertise);
 
             } else if($person->isSupernatural && $person->pointSupernatural > 0) {
+                echo '<h2>'.$person->manifestation->name.'</h2>';
                 $this->makeSupernaturalPurchase($person, $person->pointSupernatural);
 
             } else if(!isset($person->firstname) || !isset($person->surname) || !isset($person->gender)) {
+                echo '<h2>Further Information</h2>';
                 $this->makePersonDescription($person);
 
             } else if($person->canWeapon() == 0) {
+                echo '<h2>Weapon</h2>';
                 $this->makeWeaponSelect($person);
 
             }

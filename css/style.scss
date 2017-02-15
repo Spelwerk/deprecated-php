@@ -1320,6 +1320,19 @@ a {
   }
 }
 
+.sw-l-cookiepolicy {
+  width: 100%;
+
+  position: fixed;
+  padding-bottom: 4rem;
+
+  top: 0;
+  left: 0;
+
+  background-color: $color-amber-primary;
+  z-index: 200;
+}
+
 // STATE
 
 .sw-is-opacity {
