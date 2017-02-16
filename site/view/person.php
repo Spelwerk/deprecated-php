@@ -12,15 +12,29 @@ global $user, $form;
 if($user) {
     $userData = $user->getPerson();
 
-    $form->printPerson($userData, 'Your Persons');
-}
-?>
+    $idList = null;
 
-<?php
+    foreach($userData as $p) {
+        $idList[] = $p['person_id'];
+    }
+
+    if(isset($userData)) {
+        $form->printPerson($userData, 'Your Persons');
+    }
+}
+
 if(isset($_COOKIE['sw_person_list'])) {
     $cookieData = unserialize($_COOKIE['sw_person_list']);
 
-    $form->printPerson($cookieData, 'Saved Locally');
+    foreach($cookieData as $key => $c) {
+        if($user && in_array($c['person_id'], $idList)) {
+            unset($cookieData[$key]);
+        }
+    }
+
+    if(count($cookieData) >= 1) {
+        $form->printPerson($cookieData, 'Saved Locally');
+    }
 }
 ?>
 
