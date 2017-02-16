@@ -251,6 +251,10 @@ a {
     color: $color-black-dark;
   }
 
+  &--friendly {
+    background-color: $color-green-light;
+  }
+
   &--dangerous {
     background-color: $color-red-secondary;
   }

@@ -20,7 +20,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     $system = new System();
 
-    $system->makeMilestoneSelect($person, 1, 1);
+    $system->person_selectMilestone($person, 1, 1);
     ?>
 
 <?php endif; ?>
@@ -35,7 +35,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     $system = new System();
 
-    $system->makeMilestoneSelect($person, 0, 1);
+    $system->person_selectMilestone($person, 0, 1);
     ?>
 
 <?php endif; ?>

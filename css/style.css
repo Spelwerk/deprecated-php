@@ -96,6 +96,8 @@ a {
   .sw-c-link:active {
     background-color: #ffd740;
     color: #111111; }
+  .sw-c-link--friendly {
+    background-color: #7cb342; }
   .sw-c-link--dangerous {
     background-color: #d50000; }
 

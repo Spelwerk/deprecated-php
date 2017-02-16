@@ -20,7 +20,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     $system = new System();
 
-    $system->makeCharacteristicSelect($person, 1, 1);
+    $system->person_selectCharacteristic($person, 1, 1);
     ?>
 
 <?php endif; ?>
@@ -35,7 +35,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     $system = new System();
 
-    $system->makeCharacteristicSelect($person, 0, 1);
+    $system->person_selectCharacteristic($person, 0, 1);
     ?>
 
 <?php endif; ?>

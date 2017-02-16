@@ -15,5 +15,5 @@ $system = new System();
 <h2>Purchase Expertise</h2>
 <?php
 $exp = $person->getAttribute(null, $person->world->experience)[0];
-$system->makeExpertisePurchase($person, $exp->value);
+$system->person_purchaseExpertise($person, $exp->value);
 ?>

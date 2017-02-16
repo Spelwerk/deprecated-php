@@ -30,27 +30,21 @@ class World {
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
 
-        $data = null;
-
-        if(isset($hash)) {
-            $data = $curl->get('world/hash/'.$hash)['data'][0];
-        }
-
-        if(isset($id)) {
-            $data = $curl->get('world/id/'.$id)['data'][0];
-        }
+        $data = isset($id)
+            ? $curl->get('world/id/'.$id)['data'][0]
+            : $array;
 
         if(isset($array)) {
             $data = $array;
         }
 
-        $this->owner = isset($hash)
-            ? true
-            : false;
-
         $this->hash = isset($hash)
             ? $hash
             : null;
+
+        $this->owner = isset($this->hash) && $this->hash == $data['hash']
+            ? true
+            : false;
 
         $this->id = $data['id'];
         $this->name = $data['name'];
@@ -103,20 +97,280 @@ class World {
         $this->tolerance = 1;
     }
 
-    public function getAttribute($type) {
+
+    public function getAttribute($type = null, $species = null) {
         global $curl;
 
         $arrayList = null;
 
-        $return = $curl->get('world-attribute/id/'.$this->id.'/type/'.$type);
+        $get = 'world-attribute/id/'.$this->id;
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
+        if(isset($type)) {
+            $get = isset($species)
+                ? 'world-attribute/id/'.$this->id.'/type/'.$type.'/species/'.$species
+                : 'world-attribute/id/'.$this->id.'/type/'.$type;
+        }
 
-        if($data) {
-            foreach ($data as $array) {
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
                 $arrayList[] = new Attribute(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getAugmentation($bionic = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($type)
+            ? 'world-augmentation/id/'.$this->id.'/bionic/'.$bionic
+            : 'world-augmentation/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Augmentation(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getBionic($bodypart = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($bodypart)
+            ? 'world-bionic/id/'.$this->id.'/bodypart/'.$bodypart
+            : 'world-bionic/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Bionic(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getCaste() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('world-caste/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Caste(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getCharacteristic($gift = null, $species = null, $manifestation = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = 'world-characteristic/id/'.$this->id;
+
+        if(isset($gift) && isset($species)) {
+            $get = isset($manifestation)
+                ? 'world-characteristic/id/'.$this->id.'/gift/'.$gift.'/species/'.$species.'/manifestation/'.$manifestation
+                : 'world-characteristic/id/'.$this->id.'/gift/'.$gift.'/species/'.$species;
+        }
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Characteristic(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getExpertise($type = null, $skill = null, $species = null, $manifestation = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = 'world-expertise/id/'.$this->id;
+
+        if(isset($skill) && isset($type) && isset($species)) {
+            $get = isset($manifestation)
+                ? 'world-expertise/id/'.$this->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$species.'/manifestation/'.$manifestation
+                : 'world-expertise/id/'.$this->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$species;
+        } else if(isset($type)) {
+            $get = 'world-expertise/id/'.$this->id.'/type/'.$type;
+        }
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Expertise(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getFocus($manifestation = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($manifestation)
+            ? 'world-focus/id/'.$this->id.'/manifestation/'.$manifestation
+            : 'world-focus/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Focus(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getIdentity() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('world-identity/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Identity(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getManifestation() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('world-manifestation/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Manifestation(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getMilestone($upbringing = null, $caste = null, $species = null, $manifestation = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = 'world-milestone/id/'.$this->id;
+
+        if(isset($caste) && isset($species)) {
+            $get = isset($manifestation)
+                ? 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species.'/manifestation/'.$manifestation
+                : 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species;
+
+        }
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Milestone(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getNature() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('world-nature/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Nature(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getProtection($type = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($type)
+            ? 'world-protection/id/'.$this->id.'/type/'.$type
+            : 'world-protection/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Protection(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getSpecies() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('world-species/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Species(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getWeapon($group = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($group)
+            ? 'world-weapon/id/'.$this->id.'/group/'.$group
+            : 'world-weapon/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Weapon(null, $array);
             }
         }
 

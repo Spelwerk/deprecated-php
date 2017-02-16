@@ -46,7 +46,7 @@ class Person {
             ? $hash
             : null;
 
-        $this->isOwner = isset($this->hash)
+        $this->isOwner = isset($hash) && $hash == $data['hash']
             ? true
             : false;
 
@@ -420,23 +420,27 @@ class Person {
             ? 0
             : 1;
 
+        $change = $this->isOwner
+            ?   '<form action="/post.php" method="post">'.
+                '<input type="hidden" name="post--return" value="play"/>'.
+                '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
+                '<input type="hidden" name="post--do" value="person--equip"/>'.
+                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
+                '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
+                '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
+                '<input type="hidden" name="thing--value" value="'.$flip.'"/>'.
+                '<input class="sw-c-list__submit" type="image" src="'.$i.'" alt="Submit" />'.
+                '</form>'
+            :   null;
+
         echo(
             '<div class="sw-c-list__item'.$e.'">'.
             '<div class="sw-c-list__header">'.
             '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
             '<div class="sw-c-list__title">'.$name.'</div>'.
             '<div class="sw-c-list__icon">'.
-            '<form action="/post.php" method="post">'.
-            '<input type="hidden" name="post--return" value="play"/>'.
-            '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
-            '<input type="hidden" name="post--do" value="person--equip"/>'.
-            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-            '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
-            '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
-            '<input type="hidden" name="thing--value" value="'.$flip.'"/>'.
-            '<input class="sw-c-list__submit" type="image" src="'.$i.'" alt="Submit" />'.
-            '</form>'.
+            $change.
             '</div>'.
             '</div>'.
             '</div>'

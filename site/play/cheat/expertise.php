@@ -14,4 +14,4 @@ $system = new System();
 <script src="/js/play.js"></script>
 
 <h2>Edit Expertise</h2>
-<?php $system->makeExpertisePurchase($person, 999); ?>
+<?php $system->person_purchaseExpertise($person, 999); ?>

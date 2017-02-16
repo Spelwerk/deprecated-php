@@ -550,7 +550,7 @@ function user_passVerify($postData) {
     return $return;
 }
 
-function user_addPerson($userId, $personId, $personHash) {
+function user_savePerson($userId, $personId, $personHash) {
     global $curl;
 
     $post = isset($personHash)
@@ -587,7 +587,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             $POST_HASH = $result['hash'];
 
             if($POST_USER) {
-                user_addPerson($POST_USER, $POST_ID, $POST_HASH);
+                user_savePerson($POST_USER, $POST_ID, $POST_HASH);
             }
 
             cookiePerson($result['nickname'], $POST_ID, $POST_HASH);
@@ -679,8 +679,11 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--flexible':
-            person_postTo('milestone', $POST_DATA);
-            person_putAttributeFromTable('milestone', $POST_DATA['milestone_id'], $POST_ID);
+            $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
+
+            person_postTo('milestone', $post);
+
+            person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
 
             $calc = intval($_POST['post--points']) - 1;
 
@@ -688,8 +691,11 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--gift':
-            person_postTo('characteristic', $POST_DATA);
-            person_putAttributeFromTable('characteristic', $POST_DATA['characteristic_id'], $POST_ID);
+            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
+
+            person_postTo('characteristic', $post);
+
+            person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
 
             $calc = intval($_POST['post--points']) - 1;
 
@@ -697,8 +703,11 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--imperfection':
-            person_postTo('characteristic', $POST_DATA);
-            person_putAttributeFromTable('characteristic', $POST_DATA['characteristic_id'], $POST_ID);
+            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
+
+            person_postTo('characteristic', $post);
+
+            person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
 
             $calc = intval($_POST['post--points']) - 1;
 
@@ -750,8 +759,11 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--upbringing':
-            person_postTo('milestone', $POST_DATA);
-            person_putAttributeFromTable('milestone', $POST_DATA['milestone_id'], $POST_ID);
+            $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
+
+            person_postTo('milestone', $post);
+
+            person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
 
             $calc = intval($_POST['post--points']) - 1;
 
@@ -821,6 +833,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'user--logout':
             unsetUser();
             break;
+
+        case 'user--save':
+            user_savePerson($POST_USER, $POST_ID, $POST_HASH);
+            break;
     }
 }
 
@@ -846,4 +862,4 @@ $a = isset($POST_RETURNAFTER)
 
 echo '<a href="http://spelwerk.dev/'.$r.$i.$h.$a.$d.'">'.$r.$i.$h.$a.$d.'</a>';
 
-redirect($r.$i.$h.$a.$d);
+//redirect($r.$i.$h.$a.$d);

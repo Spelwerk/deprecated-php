@@ -20,7 +20,7 @@ $system = new System();
     <?php
     $system = new System();
 
-    $system->makeAugmentationSelect($person);
+    $system->person_checkAugmentation($person);
     ?>
 
 <?php endif; ?>
@@ -34,7 +34,7 @@ $system = new System();
     <?php
     $system = new System();
 
-    $system->makeBionicSelect($person);
+    $system->person_checkBionic($person);
     ?>
 
 <?php endif; ?>

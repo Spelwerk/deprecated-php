@@ -18,7 +18,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
     <?php
     $system = new System();
 
-    $system->makeWeaponSelect($person);
+    $system->person_checkWeapon($person);
     ?>
 
 <?php else: ?>

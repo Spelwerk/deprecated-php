@@ -14,4 +14,4 @@ $system = new System();
 <script src="/js/play.js"></script>
 
 <h2>Edit Skills</h2>
-<?php $system->makeSkillPurchase($person, 999); ?>
+<?php $system->person_purchaseSkill($person, 999); ?>

@@ -18,7 +18,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
     <?php
     $system = new System();
 
-    $system->makeProtectionSelect($person);
+    $system->person_checkProtection($person);
     ?>
 
 <?php else: ?>
