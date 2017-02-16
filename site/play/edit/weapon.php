@@ -3,9 +3,9 @@
  * Created by PhpStorm.
  * User: jonn
  * Date: 15/02/2017
- * Time: 15:06
+ * Time: 18:51
  */
-global $sitemap, $form;
+global $sitemap;
 $person = new Person($sitemap->id, $sitemap->hash);
 
 ?>
@@ -16,8 +16,6 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     <h2>Add Weapon</h2>
     <?php
-    global $form;
-
     $system = new System();
 
     $system->makeWeaponSelect($person);
@@ -27,14 +25,18 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     <h2>Weapon</h2>
     <?php
+    global $form;
+
     $list = $person->getWeapon();
 
-    foreach($list as $item) {
-        $person->buildRemoval($item->id, $item->name, $item->icon, 'weapon');
+    if(isset($list)) {
+        foreach($list as $item) {
+            $person->buildRemoval($item->id, $item->name, $item->icon, 'weapon');
+        }
     }
     ?>
     <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/weapon/add">Add</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/weapon/add">Add</a>
     </div>
 
 <?php endif; ?>

@@ -110,6 +110,46 @@ class Person {
     }
 
 
+    public function getAugmentation($bionic = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($bionic)
+            ? 'person-augmentation/id/'.$this->id.'/bionic/'.$bionic
+            : 'person-augmentation/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Augmentation(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getBionic($bodypart = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($bodypart)
+            ? 'person-bionic/id/'.$this->id.'/bodypart/'.$bodypart
+            : 'person-bionic/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Bionic(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getCharacteristic($gift = null) {
         global $curl;
 
@@ -119,14 +159,10 @@ class Person {
             ? 'person-characteristic/id/'.$this->id.'/gift/'.$gift
             : 'person-characteristic/id/'.$this->id;
 
-        $return = $curl->get($get);
+        $result = $curl->get($get);
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
-
-        if($data) {
-            foreach ($data as $array) {
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
                 $arrayList[] = new Characteristic(null, $array);
             }
         }
@@ -143,14 +179,10 @@ class Person {
             ? 'person-milestone/id/'.$this->id.'/upbringing/'.$upbringing
             : 'person-milestone/id/'.$this->id;
 
-        $return = $curl->get($get);
+        $result = $curl->get($get);
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
-
-        if($data) {
-            foreach ($data as $array) {
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
                 $arrayList[] = new Milestone(null, $array);
             }
         }
@@ -167,14 +199,10 @@ class Person {
             ? 'person-attribute/id/'.$this->id.'/type/'.$type
             : 'person-attribute/id/'.$this->id.'/attribute/'.$id;
 
-        $return = $curl->get($get);
+        $result = $curl->get($get);
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
-
-        if($data) {
-            foreach ($data as $array) {
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
                 $arrayList[] = new Attribute(null, $array);
             }
         }
@@ -191,34 +219,30 @@ class Person {
             ? 'person-expertise/id/'.$this->id.'/type/'.$type
             : 'person-expertise/id/'.$this->id;
 
-        $return = $curl->get($get);
+        $result = $curl->get($get);
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
-
-        if($data) {
-            foreach ($data as $expertise) {
-                $arrayList[] = new Expertise(null, $expertise);
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Expertise(null, $array);
             }
         }
 
         return $arrayList;
     }
 
-    public function getWeapon() {
+    public function getWeapon($equipped = null) {
         global $curl;
 
         $arrayList = null;
 
-        $return = $curl->get('person-weapon/id/'.$this->id);
+        $get = isset($equipped)
+            ? 'person-weapon/id/'.$this->id.'/equipped/'.$equipped
+            : 'person-weapon/id/'.$this->id;
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
+        $result = $curl->get($get);
 
-        if($data) {
-            foreach ($data as $array) {
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
                 $arrayList[] = new Weapon(null, $array);
             }
         }
@@ -235,14 +259,10 @@ class Person {
             ? 'person-wound/id/'.$this->id.'/lethal/'.$lethal
             : 'person-wound/id/'.$this->id;
 
-        $return = $curl->get($get);
+        $result = $curl->get($get);
 
-        $data = isset($return['data'])
-            ? $return['data']
-            : null;
-
-        if($data) {
-            foreach ($data as $array) {
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
                 $arrayList[] = new Wound(null, $array);
             }
         }
@@ -366,6 +386,42 @@ class Person {
         );
     }
 
+    function buildEquip($id, $name, $icon, $thing, $equipped, $returnId = null) {
+        $e = $equipped == 1
+            ? ''
+            : ' sw-is-opacity';
+
+        $i = $equipped == 1
+            ? '/img/equip-true.png'
+            : '/img/equip-false.png';
+
+        $flip = $equipped == 1
+            ? 0
+            : 1;
+
+        echo(
+            '<div class="sw-c-list__item'.$e.'">'.
+            '<div class="sw-c-list__header">'.
+            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
+            '<div class="sw-c-list__title">'.$name.'</div>'.
+            '<div class="sw-c-list__icon">'.
+            '<form action="/post.php" method="post">'.
+            '<input type="hidden" name="post--return" value="play"/>'.
+            '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
+            '<input type="hidden" name="post--do" value="person--equip"/>'.
+            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
+            '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
+            '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
+            '<input type="hidden" name="thing--value" value="'.$flip.'"/>'.
+            '<input class="sw-c-list__submit" type="image" src="'.$i.'" alt="Submit" />'.
+            '</form>'.
+            '</div>'.
+            '</div>'.
+            '</div>'
+        );
+    }
+
     function buildWound($title, $woundId, $icon, $heal, $aid) {
         $t = $heal == 1 && $aid == 1
             ? ' sw-is-opacity'
@@ -379,20 +435,13 @@ class Person {
             ? ' sw-is-opacity'
             : null;
 
-        $healButton = $aid == 1
-            ?   '<div class="sw-c-list__icon">'.
-                '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play"/>'.
-                '<input type="hidden" name="post--returnid" value="wound"/>'.
-                '<input type="hidden" name="post--do" value="wound--heal"/>'.
-                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.
-                '<input type="hidden" name="wound--heal" value="'.$heal.'"/>'.
-                '<input class="sw-c-list__submit'.$h.'" type="image" src="/img/wound-heal.png"/>'.
-                '</form>'.
-                '</div>'
-            :   null;
+        $flipAid = $aid == 1
+            ? 0
+            : 1;
+
+        $flipHeal = $heal == 1
+            ? 0
+            : 1;
 
         $aidButton = $heal == 0
             ?   '<div class="sw-c-list__icon">'.
@@ -403,11 +452,28 @@ class Person {
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
                 '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.
-                '<input type="hidden" name="wound--aid" value="'.$aid.'"/>'.
+                '<input type="hidden" name="wound--value" value="'.$flipAid.'"/>'.
                 '<input class="sw-c-list__submit'.$a.'" type="image" src="/img/wound-aid.png" alt="Submit" />'.
                 '</form>'.
                 '</div>'
             :   null;
+
+        $healButton = $aid == 1
+            ?   '<div class="sw-c-list__icon">'.
+                '<form action="/post.php" method="post">'.
+                '<input type="hidden" name="post--return" value="play"/>'.
+                '<input type="hidden" name="post--returnid" value="wound"/>'.
+                '<input type="hidden" name="post--do" value="wound--heal"/>'.
+                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
+                '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.
+                '<input type="hidden" name="wound--value" value="'.$flipHeal.'"/>'.
+                '<input class="sw-c-list__submit'.$h.'" type="image" src="/img/wound-heal.png"/>'.
+                '</form>'.
+                '</div>'
+            :   null;
+
+
 
         echo(
             '<div class="sw-c-list__item">'.
@@ -434,6 +500,11 @@ class Person {
         echo('</div>');
     }
 
+
+    public function makeBionic() {
+        print_r($this->getBionic());
+    }
+
     public function makeConsumable($list) {
         echo('<div class="sw-c-button">');
 
@@ -443,22 +514,6 @@ class Person {
             $data = 'data-roll-type="consumable" data-roll-d12="'.$value.'"';
 
             $this->buildButton($consumable->name, $consumable->description, $value, $data, $consumable->icon);
-        }
-
-        echo('</div>');
-    }
-
-    public function makeSkill($list) {
-        echo('<div class="sw-c-button">');
-
-        foreach($list as $skill) {
-            $value = $skill->value > 0
-                ? '2d12+'.$skill->value
-                : '2d12';
-
-            $data = 'data-roll-type="default" data-roll-d12="2" data-roll-bonus="'.$skill->value.'"';
-
-            $this->buildButton($skill->name, $skill->description, $value, $data, $skill->icon);
         }
 
         echo('</div>');
@@ -506,6 +561,36 @@ class Person {
         echo('</div>');
     }
 
+    public function makeFeatures() {
+        echo('<div class="sw-c-list">');
+
+        $this->buildList($this->species->name, $this->species->description, $this->species->icon);
+
+        $this->buildList($this->caste->name, $this->caste->description, $this->caste->icon);
+
+        $this->buildList($this->nature->name, $this->nature->description, $this->nature->icon);
+
+        $this->buildList($this->identity->name, $this->identity->description, $this->identity->icon);
+
+        echo('</div>');
+    }
+
+    public function makeSkill($list) {
+        echo('<div class="sw-c-button">');
+
+        foreach($list as $skill) {
+            $value = $skill->value > 0
+                ? '2d12+'.$skill->value
+                : '2d12';
+
+            $data = 'data-roll-type="default" data-roll-d12="2" data-roll-bonus="'.$skill->value.'"';
+
+            $this->buildButton($skill->name, $skill->description, $value, $data, $skill->icon);
+        }
+
+        echo('</div>');
+    }
+
     public function makeSupernatural() {
         echo('<div class="sw-c-button">');
 
@@ -530,39 +615,6 @@ class Person {
         echo('</div>');
     }
 
-    public function makeWeapon() {
-        echo('<div class="sw-c-button">');
-
-        foreach($this->getWeapon() as $weapon) {
-            $hitD12 = 2 + intval($weapon->expertiseLevel);
-            $hitBonus = intval($weapon->damageBonus) + intval($weapon->hit);
-
-            $value = isset($weapon->damageBonus)
-                ? $weapon->damageD12.'d12+'.$weapon->damageBonus
-                : $weapon->damageD12.'d12';
-
-            $data = 'data-roll-type="weapon" data-roll-d12="'.$hitD12.'" data-roll-bonus="'.$hitBonus.'" data-strike-d12="'.$weapon->damageD12.'" data-strike-bonus="'.$weapon->damageBonus.'" data-strike-critical="'.$weapon->criticalD12.'"';
-
-            $this->buildButton($weapon->name, $weapon->description, $value, $data, $weapon->icon);
-        }
-
-        echo('</div>');
-    }
-
-    public function makeFeatures() {
-        echo('<div class="sw-c-list">');
-
-        $this->buildList($this->species->name, $this->species->description, $this->species->icon);
-
-        $this->buildList($this->caste->name, $this->caste->description, $this->caste->icon);
-
-        $this->buildList($this->nature->name, $this->nature->description, $this->nature->icon);
-
-        $this->buildList($this->identity->name, $this->identity->description, $this->identity->icon);
-
-        echo('</div>');
-    }
-
     public function makeSupernaturalInformation() {
         echo('<div class="sw-c-list">');
 
@@ -571,6 +623,43 @@ class Person {
         $this->buildList($this->focus->name, $this->focus->description, $this->focus->icon);
 
         echo('</div>');
+    }
+
+    public function makeWeapon() {
+        $fullList = $this->getWeapon();
+        $equippedList = $this->getWeapon(1);
+
+        if(isset($equippedList)) {
+            echo('<div class="sw-c-button">');
+
+            foreach($equippedList as $weapon) {
+                $hitD12 = 2 + intval($weapon->expertiseLevel);
+                $hitBonus = intval($weapon->damageBonus) + intval($weapon->hit);
+
+                $value = isset($weapon->damageBonus)
+                    ? $weapon->damageD12.'d12+'.$weapon->damageBonus
+                    : $weapon->damageD12.'d12';
+
+                $data = 'data-roll-type="weapon" data-roll-d12="'.$hitD12.'" data-roll-bonus="'.$hitBonus.'" data-strike-d12="'.$weapon->damageD12.'" data-strike-bonus="'.$weapon->damageBonus.'" data-strike-critical="'.$weapon->criticalD12.'"';
+
+                $this->buildButton($weapon->name, $weapon->description, $value, $data, $weapon->icon);
+            }
+
+            echo('</div>');
+        }
+
+        if(isset($fullList)) {
+            echo(
+                '<h3>Equip</h3>'.
+                '<div class="sw-c-list">'
+            );
+
+            foreach($fullList as $weapon) {
+                $this->buildEquip($weapon->id, $weapon->name, $weapon->icon, 'weapon', $weapon->equipped, 'weapon');
+            }
+
+            echo('</div>'); // todo not hardcode
+        }
     }
 
     public function makeWound() {

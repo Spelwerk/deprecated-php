@@ -8,52 +8,47 @@
  */
 class Bionic
 {
-    var $id, $name, $description, $legal, $price, $energy;
+    var $id, $name, $description, $legal, $price, $energy, $icon;
 
-    var $attribute;
-
-    var $bodypart;
-
-    var $icon;
-
-    var $augmentationList;
+    var $bodypart, $attribute, $quality;
 
     public function __construct($id = null, $array = null, $quality = null) {
+        global $curl;
 
-        $this->id = $array['id'];
+        $data = isset($id)
+            ? $curl->get('bionic/id/'.$id)['data'][0]
+            : $array;
 
-        $this->name = $array['name'];
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->legal = $data['legal'];
+        $this->icon = $data['icon_path'];
 
-        $this->description = $array['description'];
+        $this->price = isset($data['quality_price'])
+            ? intval($data['price']) * intval($data['quality_price'])
+            : intval($data['price']);
 
-        $this->legal = $array['legal'];
-
-        $price = intval($array['price']) * intval($array['quality_price']);
-
-        $this->price = $price;
-
-        $energy = intval($array['energy']) + intval($array['quality_energy']);
-
-        $this->energy = $energy;
-
-        $this->quality = [
-            'id' => $array['quality_id'],
-            'name' => $array['quality_name']
-        ];
+        $this->energy = isset($data['quality_energy'])
+            ? intval($data['energy']) * intval($data['quality_energy'])
+            : intval($data['energy']);
 
         $this->bodypart = [
-            'id' => $array['bodypart_id'],
-            'name' => $array['bodypart_name']
+            'id' => $data['bodypart_id'],
+            'name' => $data['bodypart_name']
         ];
 
         $this->attribute = [
-            'id' => $array['attribute_id'],
-            'name' => $array['attribute_name'],
-            'value' => $array['attribute_value']
+            'id' => $data['attribute_id'],
+            'name' => $data['attribute_name'],
+            'value' => $data['attribute_value']
         ];
 
-        $this->icon = $array['icon_path'];
+        if(isset($data['quality_id'])) {
+            $this->quality = [
+                'id' => $data['quality_id'],
+                'name' => $data['quality_name'],
+            ];
+        }
     }
-
-    //todo function to add augmentation to bionic list
 }

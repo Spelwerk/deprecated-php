@@ -103,6 +103,8 @@ class Sitemap {
 
             case 'wound':
                 $this->page = 'site/play/wound.php';
+                $this->id = $id;
+                $this->hash = $hash;
                 break;
         }
     }
@@ -123,7 +125,8 @@ class Sitemap {
                 break;
 
             case 'bionic':
-                $this->page = 'site/play/level/bionic.php';
+                $this->page = 'site/play/edit/bionic.php';
+                $this->thing = $thing;
                 break;
 
             case 'experience':
@@ -135,7 +138,8 @@ class Sitemap {
                 break;
 
             case 'protection':
-                $this->page = 'site/play/level/protection.php';
+                $this->page = 'site/play/edit/protection.php';
+                $this->thing = $thing;
                 break;
 
             case 'skill':
@@ -147,7 +151,7 @@ class Sitemap {
                 break;
 
             case 'weapon':
-                $this->page = 'site/play/level/weapon.php';
+                $this->page = 'site/play/edit/weapon.php';
                 $this->thing = $thing;
                 break;
         }
@@ -178,7 +182,8 @@ class Sitemap {
                 break;
 
             case 'bionic':
-                $this->page = 'site/play/cheat/bionic.php';
+                $this->page = 'site/play/edit/bionic.php';
+                $this->unique = $thing;
                 break;
 
             case 'characteristic':
@@ -201,7 +206,7 @@ class Sitemap {
                 break;
 
             case 'protection':
-                $this->page = 'site/play/cheat/protection.php';
+                $this->page = 'site/play/edit/protection.php';
                 break;
 
             case 'skill':
@@ -213,7 +218,7 @@ class Sitemap {
                 break;
 
             case 'weapon':
-                $this->page = 'site/play/cheat/weapon.php';
+                $this->page = 'site/play/edit/weapon.php';
                 $this->thing = $thing;
                 break;
         }

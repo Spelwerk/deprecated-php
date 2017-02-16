@@ -8,54 +8,52 @@
  */
 class Augmentation {
 
-    var $id, $name, $description, $legal, $price, $energy;
+    var $id, $name, $description, $legal, $price, $energy, $icon;
 
-    var $attribute, $quality, $weapon;
-
-    var $bionic;
-
-    var $icon;
+    var $bionic, $attribute, $quality, $weapon;
 
     public function __construct($id = null, $array = null) {
+        global $curl;
 
-        $this->id = $array['id'];
+        $data = isset($id)
+            ? $curl->get('bionic/id/'.$id)['data'][0]
+            : $array;
 
-        $this->name = $array['name'];
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->legal = $data['legal'];
+        $this->icon = 'http://cdn.spelwerk.com/file/2caee0a3adc7b135ffdd111fc150fb36442ffaa7.png';
 
-        $this->description = $array['description'];
+        $this->price = isset($data['quality_price'])
+            ? intval($data['price']) * intval($data['quality_price'])
+            : intval($data['price']);
 
-        $this->legal = $array['legal'];
-
-        $price = intval($array['price']) * intval($array['quality_price']);
-
-        $this->price = $price;
-
-        $energy = intval($array['energy']) + intval($array['quality_energy']);
-
-        $this->energy = $energy;
+        $this->energy = isset($data['quality_energy'])
+            ? intval($data['energy']) * intval($data['quality_energy'])
+            : intval($data['energy']);
 
         $this->bionic = [
-            'id' => $array['bionic_id'],
-            'name' => $array['bionic_name']
+            'id' => $data['bionic_id'],
+            'name' => $data['bionic_name']
         ];
 
         $this->attribute = [
-            'id' => $array['attribute_id'],
-            'name' => $array['attribute_name'],
-            'value' => $array['attribute_value']
-        ];
-
-        $this->quality = [
-            'id' => $array['quality_id'],
-            'name' => $array['quality_name']
+            'id' => $data['attribute_id'],
+            'name' => $data['attribute_name'],
+            'value' => $data['attribute_value']
         ];
 
         $this->weapon = [
-            'id' => $array['weapon_id'],
-            'name' => $array['weapon_name']
+            'id' => $data['weapon_id'],
+            'name' => $data['weapon_name']
         ];
 
-        $this->icon = $array['icon_path'];
-
+        if(isset($data['quality_id'])) {
+            $this->quality = [
+                'id' => $data['quality_id'],
+                'name' => $data['quality_name'],
+            ];
+        }
     }
 }

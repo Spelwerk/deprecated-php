@@ -121,7 +121,7 @@ $species = isset($_POST['person--species_id'])
 
     <?php endif; ?>
 
-    <h2>Weapon</h2>
+    <h2 id="weapon">Weapon</h2>
     <?php $person->makeWeapon(); ?>
 
     <h2 id="wound">Wound</h2>
@@ -133,5 +133,15 @@ $species = isset($_POST['person--species_id'])
         <a class="sw-c-link sw-c-link--dangerous" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/wound">Add Wound</a>
     </div>
 
+    <h2 id="bionic">Bionic</h2>
+    <?php $person->makeList($person->getBionic()); ?>
+
+    <h2 id="augmentation">Augmentation</h2>
+    <?php $person->makeList($person->getAugmentation()); ?>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
 <?php endif; ?>
