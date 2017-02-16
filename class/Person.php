@@ -292,49 +292,7 @@ class Person {
     }
 
 
-    function countAttribute($type) {
-        $list = $this->getAttribute($type);
-
-        $total = 0;
-
-        if(isset($list)) {
-            foreach($list as $attribute) {
-                $total += $attribute->value;
-            }
-        }
-
-        return $total;
-    }
-
-    function countExpertise() {
-        $list = $this->getExpertise();
-
-        $total = 0;
-
-        if(isset($list)) {
-            foreach($list as $expertise) {
-                $math = 0;
-
-                for($i = 1; $i <= $expertise->level; $i++) {
-                    $math += $i;
-                }
-
-                $total += $math;
-            }
-        }
-
-        return $total;
-    }
-
-
-    public function canWeapon() {
-        $currentWeapon = count($this->getWeapon());
-
-        return $currentWeapon;
-    }
-
-
-    public function buildButton($title, $description, $value, $data, $icon = null) {
+    function buildButton($title, $description, $value, $data, $icon = null) {
         $icon = isset($icon)
             ? $icon
             : '/img/missing_icon.png';
@@ -349,7 +307,7 @@ class Person {
         );
     }
 
-    public function buildList($title, $description, $icon = null) {
+    function buildList($title, $description, $icon = null) {
         $icon = isset($icon)
             ? $icon
             : '/img/missing_icon.png';
@@ -369,20 +327,6 @@ class Person {
             '</div>'.
             '</div>'
         );
-    }
-
-    public function buildCard($list, $modifier = null) {
-        echo('<div class="sw-c-card">');
-
-        foreach($list as $object) {
-            echo(
-                '<div class="sw-c-card__item'.$modifier.'">'.
-                '<div class="sw-c-card__title">'.$object->name.'</div>'.
-                '<div class="sw-c-card__value">'.$object->value.'</div></div>'
-            );
-        }
-
-        echo('</div>');
     }
 
     function buildRemoval($id, $name, $icon, $thing) {
@@ -513,6 +457,20 @@ class Person {
     }
 
 
+    public function makeCard($list, $modifier = null) {
+        echo('<div class="sw-c-card">');
+
+        foreach($list as $object) {
+            echo(
+                '<div class="sw-c-card__item'.$modifier.'">'.
+                '<div class="sw-c-card__title">'.$object->name.'</div>'.
+                '<div class="sw-c-card__value">'.$object->value.'</div></div>'
+            );
+        }
+
+        echo('</div>');
+    }
+
     public function makeList($list) {
         echo('<div class="sw-c-list">');
 
@@ -525,27 +483,61 @@ class Person {
         echo('</div>');
     }
 
-
-    public function makeConsumable($list) {
+    public function makeButton($list, $type) {
         echo('<div class="sw-c-button">');
 
-        foreach($list as $consumable) {
-            $value = $consumable->value.'d12';
+        foreach($list as $item) {
 
-            $data = 'data-roll-type="consumable" data-roll-d12="'.$value.'"';
+            $value = null;
+            $data = null;
 
-            $this->buildButton($consumable->name, $consumable->description, $value, $data, $consumable->icon);
+            switch($type)
+            {
+                case 'consumable':
+                    $value = $item->value.'d12';
+                    $data = 'data-roll-type="consumable" 
+                             data-roll-d12="'.$value.'"';
+                    break;
+
+                case 'skill':
+                    $value = $item->value > 0
+                        ? '2d12+'.$item->value
+                        : '2d12';
+                    $data = 'data-roll-type="default" 
+                             data-roll-d12="2" 
+                             data-roll-bonus="'.$item->value.'"';
+                    break;
+
+                case 'weapon':
+                    $hitD12 = 2 + intval($item->expertiseLevel);
+                    $hitBonus = intval($item->damageBonus) + intval($item->hit);
+                    $value = isset($item->damageBonus)
+                        ? $item->damageD12.'d12+'.$item->damageBonus
+                        : $item->damageD12.'d12';
+                    $data = 'data-roll-type="weapon" 
+                             data-roll-d12="'.$hitD12.'" 
+                             data-roll-bonus="'.$hitBonus.'" 
+                             data-strike-d12="'.$item->damageD12.'" 
+                             data-strike-bonus="'.$item->damageBonus.'" 
+                             data-strike-critical="'.$item->criticalD12.'"';
+
+            }
+
+            $this->buildButton($item->name, $item->description, $value, $data, $item->icon);
         }
 
         echo('</div>');
     }
 
     public function makeExpertise() {
-        echo('<div class="sw-c-button">');
-
         $list = $this->getExpertise($this->world->expertiseDice);
 
         if($list) {
+            echo(
+                '<h2>Expertise</h2>'.
+                '<div class="sw-c-button">'
+            );
+
             foreach($list as $expertise) {
                 $rollD12 = 2 + intval($expertise->dice);
                 $rollBonus = $expertise->skillValue;
@@ -556,13 +548,16 @@ class Person {
 
                 $this->buildButton($expertise->name, $expertise->description, $value, $data, $expertise->icon);
             }
-        }
 
-        echo('</div>');
+            echo('</div>');
+        }
     }
 
     public function makeExpertiseList() {
-        echo('<div class="sw-c-list">');
+        echo(
+            '<h3>Expertise</h3>'.
+            '<div class="sw-c-list">'
+        );
 
         $list = $this->getExpertise($this->world->expertiseAttribute);
 
@@ -594,6 +589,9 @@ class Person {
     public function makeFeatures() {
         echo('<div class="sw-c-list">');
 
+        $characteristicList = $this->getCharacteristic();
+        $milestoneList = $this->getMilestone();
+
         $this->buildList($this->species->name, $this->species->description, $this->species->icon);
 
         $this->buildList($this->caste->name, $this->caste->description, $this->caste->icon);
@@ -601,6 +599,24 @@ class Person {
         $this->buildList($this->nature->name, $this->nature->description, $this->nature->icon);
 
         $this->buildList($this->identity->name, $this->identity->description, $this->identity->icon);
+
+        if($characteristicList) {
+            foreach($characteristicList as $item) {
+                $this->buildList($item->name, $item->description, $item->icon);
+            }
+        }
+
+        if($milestoneList) {
+            foreach($milestoneList as $item) {
+                $this->buildList($item->name, $item->description, $item->icon);
+            }
+        }
+
+        if($this->isSupernatural) {
+            $this->buildList($this->manifestation->name, $this->manifestation->description);
+
+            $this->buildList($this->focus->name, $this->focus->description, $this->focus->icon);
+        }
 
         echo('</div>');
     }
@@ -630,7 +646,7 @@ class Person {
             }
         }
 
-        $this->buildCard($attributeList, '--small');
+        $this->makeCard($attributeList, '--small');
     }
 
     public function makeProtectionEquip() {
@@ -647,73 +663,29 @@ class Person {
         echo('</div>');
     }
 
-    public function makeSkill($list) {
-        echo('<div class="sw-c-button">');
-
-        foreach($list as $skill) {
-            $value = $skill->value > 0
-                ? '2d12+'.$skill->value
-                : '2d12';
-
-            $data = 'data-roll-type="default" data-roll-d12="2" data-roll-bonus="'.$skill->value.'"';
-
-            $this->buildButton($skill->name, $skill->description, $value, $data, $skill->icon);
-        }
-
-        echo('</div>');
-    }
-
     public function makeSupernatural() {
-        echo('<div class="sw-c-button">');
+        if($this->isSupernatural) {
+            echo(
+                '<h2>'.$this->manifestation->name.'</h2>'.
+                '<div class="sw-c-button">'
+            );
 
-        foreach($this->getAttribute($this->manifestation->attributeType) as $supernatural) {
-            $rollD12 = 2;
-            $rollBonus = 0;
+            foreach($this->getAttribute($this->manifestation->attributeType) as $supernatural) {
+                $rollD12 = 2;
+                $rollBonus = 0;
 
-            foreach($this->getExpertise($this->manifestation->expertiseType) as $expertise) {
-                if($expertise->attribute['id'] == $supernatural->id) {
-                    $rollD12 += intval($expertise->dice);
-                    $rollBonus += intval($expertise->skillValue);
+                foreach($this->getExpertise($this->manifestation->expertiseType) as $expertise) {
+                    if($expertise->attribute['id'] == $supernatural->id) {
+                        $rollD12 += intval($expertise->dice);
+                        $rollBonus += intval($expertise->skillValue);
+                    }
                 }
-            }
 
-            $value = $supernatural->value.'d12';
+                $value = $supernatural->value.'d12';
 
-            $data = 'data-roll-type="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$supernatural->value.'"';
+                $data = 'data-roll-type="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$supernatural->value.'"';
 
-            $this->buildButton($supernatural->name, $supernatural->description, $value, $data, $supernatural->icon);
-        }
-
-        echo('</div>');
-    }
-
-    public function makeSupernaturalInformation() {
-        echo('<div class="sw-c-list">');
-
-        $this->buildList($this->manifestation->name, $this->manifestation->description);
-
-        $this->buildList($this->focus->name, $this->focus->description, $this->focus->icon);
-
-        echo('</div>');
-    }
-
-    public function makeWeapon() {
-        $list = $this->getWeapon(1);
-
-        if(isset($list)) {
-            echo('<div class="sw-c-button">');
-
-            foreach($list as $weapon) {
-                $hitD12 = 2 + intval($weapon->expertiseLevel);
-                $hitBonus = intval($weapon->damageBonus) + intval($weapon->hit);
-
-                $value = isset($weapon->damageBonus)
-                    ? $weapon->damageD12.'d12+'.$weapon->damageBonus
-                    : $weapon->damageD12.'d12';
-
-                $data = 'data-roll-type="weapon" data-roll-d12="'.$hitD12.'" data-roll-bonus="'.$hitBonus.'" data-strike-d12="'.$weapon->damageD12.'" data-strike-bonus="'.$weapon->damageBonus.'" data-strike-critical="'.$weapon->criticalD12.'"';
-
-                $this->buildButton($weapon->name, $weapon->description, $value, $data, $weapon->icon);
+                $this->buildButton($supernatural->name, $supernatural->description, $value, $data, $supernatural->icon);
             }
 
             echo('</div>');

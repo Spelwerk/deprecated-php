@@ -134,6 +134,10 @@ class Sitemap {
                 $this->thing = $thing;
                 break;
 
+            case 'description':
+                $this->page = 'site/play/edit/description.php';
+                break;
+
             case 'experience':
                 $this->page = 'site/play/level/experience.php';
                 break;

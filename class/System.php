@@ -148,7 +148,7 @@ class System {
 
                 $this->person_describe($person);
 
-            } else if($person->canWeapon() == 0) {
+            } else {
                 echo '<h2>Weapon</h2>';
 
                 $this->person_checkWeapon($person);
@@ -343,7 +343,13 @@ class System {
     public function person_selectCharacteristic($person, $gift, $points = null) {
         global $form;
 
-        $list = $person->world->getCharacteristic($gift, $person->species->id, $person->manifestation->id);
+        $list = null;
+
+        if($person->isSupernatural) {
+            $list = $person->world->getCharacteristic($gift, $person->species->id, $person->manifestation->id);
+        } else {
+            $list = $person->world->getCharacteristic($gift, $person->species->id);
+        }
 
         $idList = $this->idList($person->getCharacteristic());
 
@@ -371,7 +377,14 @@ class System {
     public function person_selectMilestone($person, $upbringing, $points) {
         global $form;
 
-        $list = $person->world->getMilestone($upbringing, $person->caste->id, $person->species->id, $person->manifestation->id);
+        $list = null;
+
+        if($person->isSupernatural) {
+            $list = $person->world->getMilestone($upbringing, $person->caste->id, $person->species->id, $person->manifestation->id);
+        } else {
+            $list = $person->world->getMilestone($upbringing, $person->caste->id, $person->species->id);
+        }
+
 
         $idList = $this->idList($person->getMilestone());
 

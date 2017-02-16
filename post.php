@@ -862,4 +862,4 @@ $a = isset($POST_RETURNAFTER)
 
 echo '<a href="http://spelwerk.dev/'.$r.$i.$h.$a.$d.'">'.$r.$i.$h.$a.$d.'</a>';
 
-//redirect($r.$i.$h.$a.$d);
+redirect($r.$i.$h.$a.$d);
