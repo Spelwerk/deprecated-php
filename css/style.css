@@ -1,17 +1,44 @@
 @font-face {
-  font-family: Rockwell;
-  src: url("../font/rockwell.ttf");
-  font-weight: 600; }
+  font-family: 'alegreya_sanslight';
+  src: url("../font/alegreya-webfont.woff2") format("woff2"), url("../font/alegreya-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
 
 @font-face {
-  font-family: Walkway;
-  src: url("../font/walkway.ttf");
-  font-weight: 400; }
+  font-family: 'aleolight';
+  src: url("../font/aleo-webfont.woff2") format("woff2"), url("../font/aleo-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
 
 @font-face {
-  font-family: Roboto;
-  src: url("../font/roboto.ttf");
-  font-weight: 400; }
+  font-family: 'quicksandlight';
+  src: url("../font/quicksand-webfont.woff2") format("woff2"), url("../font/quicksand-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'aleobold';
+  src: url("../font/aleo-bold-webfont.woff2") format("woff2"), url("../font/aleo-bold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'aleoregular';
+  src: url("../font/aleo-regular-webfont.woff2") format("woff2"), url("../font/aleo-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'robotoregular';
+  src: url("../font/roboto-webfont.woff2") format("woff2"), url("../font/roboto-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'walkway_semiboldregular';
+  src: url("../font/walkway-webfont.woff2") format("woff2"), url("../font/walkway-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
 
 html {
   font-size: 10px;
@@ -48,26 +75,26 @@ div {
 h2 {
   padding-top: 3rem;
   padding-bottom: 2rem;
-  font-family: Walkway, serif;
+  font-family: aleolight, sans-serif;
   font-size: 4rem;
   text-align: center; }
 
 h3 {
   padding-top: 3rem;
   padding-bottom: 2rem;
-  font-family: Walkway, serif;
+  font-family: aleolight, sans-serif;
   font-size: 3rem;
   text-align: center; }
 
 h4 {
   padding-top: 2rem;
   padding-bottom: 1rem;
-  font-family: Walkway, serif;
+  font-family: aleolight, sans-serif;
   font-size: 2.4rem;
   text-align: center; }
 
 p {
-  font-family: Roboto, sans-serif;
+  font-family: robotoregular, sans-serif;
   font-size: 1.6rem;
   line-height: 2; }
 
@@ -85,7 +112,7 @@ a {
   width: 70%;
   background-color: #3f51b5;
   border-radius: 0.8rem;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 1.8rem;
   text-align: center;
   text-transform: uppercase;
@@ -108,7 +135,7 @@ a {
   border-radius: 0.6rem;
   display: inline-block;
   background-color: #fefefe;
-  box-shadow: 0.2rem 0.2rem 0.3rem #dddddd; }
+  box-shadow: 0.2rem 0.2rem 0.2rem #aaaaaa; }
   .sw-c-button__item:active {
     background-color: #ffd740; }
 
@@ -130,7 +157,7 @@ a {
 
 .sw-c-button__title {
   display: table-cell;
-  font-family: Roboto, sans-serif;
+  font-family: robotoregular, sans-serif;
   font-size: 1.8rem;
   color: #222222;
   text-align: left;
@@ -139,7 +166,7 @@ a {
 .sw-c-button__value {
   display: table-cell;
   width: 8.5rem;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 2rem;
   color: #283593;
   padding-right: 0.6rem;
@@ -169,7 +196,7 @@ a {
 
 .sw-c-list__title {
   display: table-cell;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 2rem;
   text-align: left;
   vertical-align: middle; }
@@ -194,7 +221,7 @@ a {
   padding-top: 1rem;
   padding-left: 4rem;
   padding-right: 3rem;
-  font-family: Roboto, sans-serif;
+  font-family: robotoregular, sans-serif;
   font-size: 1.6rem; }
 
 .sw-c-list__settings {
@@ -245,7 +272,7 @@ a {
         .sw-c-card__item--small {
           width: 8.4rem; } }
   .sw-c-card__title {
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.5rem;
     text-align: center;
     vertical-align: middle; }
@@ -254,7 +281,7 @@ a {
         font-size: 1.3rem; } }
   .sw-c-card__value {
     padding: 1rem 1rem 1rem 1rem;
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 3.8rem;
     color: #283593;
     text-align: center;
@@ -280,7 +307,7 @@ a {
 
 .sw-c-radio__title {
   display: table-cell;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 2.2rem;
   text-align: left;
   vertical-align: middle; }
@@ -289,14 +316,14 @@ a {
   padding-top: 1rem;
   padding-left: 4rem;
   padding-right: 3rem;
-  font-family: Roboto, sans-serif;
+  font-family: robotoregular, sans-serif;
   font-size: 1.7rem; }
 
 .sw-c-input__label {
   display: block;
   margin-bottom: 0.6rem;
   margin-left: 4%;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 1.5rem;
   text-transform: uppercase; }
 
@@ -309,14 +336,14 @@ a {
   margin-bottom: 2rem;
   background-color: #fefefe;
   border: 1px solid #dddddd;
-  font-family: Roboto, sans-serif;
+  font-family: robotoregular, sans-serif;
   font-size: 1.8rem; }
 
 .sw-c-input__validation {
   display: block;
   margin-bottom: 1.4rem;
   margin-left: 2%;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 1.4rem;
   text-transform: uppercase; }
 
@@ -324,7 +351,7 @@ a {
   display: block;
   margin-bottom: 2rem;
   margin-left: 2%;
-  font-family: Roboto, sans-serif;
+  font-family: robotoregular, sans-serif;
   font-size: 1.6rem; }
 
 .sw-c-input__bool {
@@ -342,7 +369,7 @@ a {
     .sw-c-input__bool__item:active {
       background-color: #ffd740; }
   .sw-c-input__bool__text {
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.6rem;
     text-align: center; }
 
@@ -353,7 +380,7 @@ a {
   height: 5rem;
   width: 100%;
   border-top: 1px solid #dddddd;
-  font-family: Rockwell, serif;
+  font-family: aleobold, serif;
   font-size: 2rem; }
   .sw-c-submit:active {
     background-color: #ffd740; }
@@ -372,38 +399,38 @@ a {
     width: 7rem; }
   .sw-c-randomizer__rolltext {
     padding-top: 1rem;
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 1.4rem;
     text-transform: uppercase; }
   .sw-c-randomizer__value {
     padding: 0.4rem 0.4rem 0.4rem 0.4rem;
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 4rem;
     color: #3f51b5; }
   .sw-c-randomizer__title {
     padding-top: 3rem;
     border-top: 1px solid #dddddd;
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 2rem;
     color: #3f51b5; }
   .sw-c-randomizer__info {
     padding-top: 1rem;
     padding-bottom: 3rem;
     border-bottom: 1px solid #dddddd;
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.3rem; }
   .sw-c-randomizer__rollfor {
     padding-top: 2rem;
     padding-bottom: 0.4rem;
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1rem;
     text-transform: uppercase;
-    color: #aaaaaa; }
+    color: #dddddd; }
   .sw-c-randomizer__attribute {
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 1.5rem;
     text-transform: uppercase;
-    color: #aaaaaa; }
+    color: #dddddd; }
 
 .sw-c-viewmore {
   padding-top: 3rem; }
@@ -424,7 +451,7 @@ a {
     display: table-cell;
     vertical-align: middle;
     text-align: left;
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 1rem;
     text-transform: uppercase; }
   .sw-c-viewmore__image {
@@ -466,21 +493,21 @@ a {
   .sw-c-purchase__title {
     display: table-cell;
     vertical-align: middle;
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.4rem; }
   .sw-c-purchase__value {
     display: table-cell;
     width: 3rem;
     text-align: center;
     vertical-align: middle;
-    font-family: Rockwell, serif;
+    font-family: aleobold, serif;
     font-size: 2.4rem;
     color: #3f51b5; }
   .sw-c-purchase__info {
     display: table;
     table-layout: fixed;
     padding-left: 1rem;
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.3rem; }
 
 .sw-c-modal {
@@ -491,7 +518,7 @@ a {
   z-index: 99; }
   .sw-c-modal__title {
     height: 5rem;
-    font-family: Walkway, serif;
+    font-family: aleolight, sans-serif;
     font-size: 4rem;
     text-align: center;
     color: #fefefe; }
@@ -507,24 +534,24 @@ a {
     .sw-c-modal__body__with {
       padding-top: 2rem;
       padding-bottom: 4rem;
-      font-family: Roboto, sans-serif;
+      font-family: robotoregular, sans-serif;
       font-size: 1.5rem;
       text-transform: uppercase; }
     .sw-c-modal__body__result {
       padding-bottom: 4rem;
-      font-family: Walkway, serif;
+      font-family: aleolight, sans-serif;
       font-size: 12rem; }
     .sw-c-modal__body__critical {
       padding-top: 1rem;
       padding-bottom: 4rem;
-      font-family: Rockwell, serif;
+      font-family: aleobold, serif;
       font-size: 2rem;
       text-transform: uppercase;
       color: red; }
     .sw-c-modal__body__count {
       padding-left: 0.6rem;
       padding-right: 0.6rem;
-      font-family: Roboto, sans-serif;
+      font-family: robotoregular, sans-serif;
       font-size: 1.8rem;
       color: #dddddd; }
     .sw-c-modal__body__description {
@@ -532,7 +559,7 @@ a {
       padding-left: 3rem;
       padding-right: 3rem;
       padding-bottom: 2rem;
-      font-family: Roboto, sans-serif;
+      font-family: robotoregular, sans-serif;
       font-size: 2.2rem; }
   .sw-c-modal__button {
     display: table;
@@ -558,7 +585,7 @@ a {
   bottom: 0;
   left: 0;
   background-color: #dddddd;
-  font-family: Walkway, serif;
+  font-family: aleolight, sans-serif;
   font-size: 3rem;
   text-align: center; }
   .sw-c-points span {
@@ -570,7 +597,7 @@ a {
   top: 0;
   width: 100%;
   background-color: #3f51b5;
-  box-shadow: 0 0.2rem 0.2rem #aaaaaa;
+  box-shadow: 0.2rem 0.2rem 0.2rem #aaaaaa;
   z-index: 80; }
   .sw-l-header__content {
     display: table;
@@ -615,7 +642,7 @@ a {
       background-color: #ffd740; }
   .sw-l-header__logo {
     display: table-cell;
-    font-family: Walkway, serif;
+    font-family: walkway_semiboldregular, sans-serif;
     font-size: 3.2rem;
     color: #fefefe;
     vertical-align: middle;
@@ -639,7 +666,7 @@ a {
     .sw-l-header__menu__item {
       padding-left: 2rem;
       display: inline-block;
-      font-family: Roboto, sans-serif;
+      font-family: robotoregular, sans-serif;
       font-size: 1.5rem;
       color: #fefefe;
       text-transform: uppercase;
@@ -657,7 +684,7 @@ a {
   top: 0;
   width: 100%;
   background-color: #ffd740;
-  box-shadow: 0 0.2rem 0.2rem #aaaaaa;
+  box-shadow: 0.2rem 0.2rem 0.2rem #aaaaaa;
   z-index: 70; }
   .sw-l-submenu__content {
     margin-left: auto;
@@ -676,7 +703,7 @@ a {
     padding-left: 2rem;
     padding-bottom: 1.5rem;
     display: inline-block;
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.5rem;
     color: #111111;
     text-transform: uppercase;
@@ -693,7 +720,7 @@ a {
   padding-top: 6rem;
   margin-bottom: 8rem;
   width: 68rem;
-  box-shadow: 0.1rem 0.2rem 0.2rem #aaaaaa;
+  box-shadow: 0.2rem 0.2rem 0.2rem #aaaaaa;
   background-color: #f8f8f8; }
   @media (max-width: 349px) {
     .sw-l-content {
@@ -736,14 +763,14 @@ a {
     .sw-l-table__row:nth-child(even) {
       background-color: #dddddd; }
     .sw-l-table__row:hover {
-      background-color: #cccccc; }
+      background-color: #aaaaaa; }
     .sw-l-table__row:active {
       background-color: #ffd740;
       color: #111111; }
   .sw-l-table__col {
     display: table-cell;
     padding: 1rem 1rem 1rem 1rem;
-    font-family: Roboto, sans-serif;
+    font-family: robotoregular, sans-serif;
     font-size: 1.8rem;
     text-transform: capitalize;
     vertical-align: middle; }
@@ -807,7 +834,7 @@ a {
   background-color: #7cb342; }
 
 .sw-is-unclickable {
-  background-color: #aaaaaa; }
+  background-color: #dddddd; }
 
 .sw-is-clickable {
   background-color: #7cb342; }

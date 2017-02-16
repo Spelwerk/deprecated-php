@@ -1,35 +1,82 @@
 // FONT FACE
 @font-face {
-  font-family: Rockwell;
-  src: url('../font/rockwell.ttf');
-  font-weight: 600;
+  font-family: 'alegreya_sanslight';
+  src: url('../font/alegreya-webfont.woff2') format('woff2'),
+  url('../font/alegreya-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
 }
 
 @font-face {
-  font-family: Walkway;
-  src: url('../font/walkway.ttf');
-  font-weight: 400;
+  font-family: 'aleolight';
+  src: url('../font/aleo-webfont.woff2') format('woff2'),
+  url('../font/aleo-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
 }
 
 @font-face {
-  font-family: Roboto;
-  src: url('../font/roboto.ttf');
-  font-weight: 400;
+  font-family: 'quicksandlight';
+  src: url('../font/quicksand-webfont.woff2') format('woff2'),
+  url('../font/quicksand-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
 }
+
+@font-face {
+  font-family: 'aleobold';
+  src: url('../font/aleo-bold-webfont.woff2') format('woff2'),
+  url('../font/aleo-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@font-face {
+  font-family: 'aleoregular';
+  src: url('../font/aleo-regular-webfont.woff2') format('woff2'),
+  url('../font/aleo-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@font-face {
+  font-family: 'robotoregular';
+  src: url('../font/roboto-webfont.woff2') format('woff2'),
+  url('../font/roboto-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@font-face {
+  font-family: 'walkway_semiboldregular';
+  src: url('../font/walkway-webfont.woff2') format('woff2'),
+  url('../font/walkway-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
 
 // FONT
-$font-logo: Walkway, serif;
-$font-thin: Walkway, serif;
-$font-fancy: Rockwell, serif;
-$font-default: Roboto, sans-serif;
+$font-logo: walkway_semiboldregular, sans-serif;
+$font-thin: aleolight, sans-serif;
+$font-fancy: aleobold, serif;
+$font-default: robotoregular, sans-serif;
 
 // COLOR
 $color-white-light: #fefefe;
 $color-white-medium: #f8f8f8;
-$color-white-dark: #aaaaaa;
+$color-white-dark: #dddddd;
 
-$color-gray-light: #dddddd;
-$color-gray-medium: #cccccc;
+$color-gray-light: #cccccc;
+$color-gray-medium: #aaaaaa;
+$color-gray-dark: #888888;
 
 $color-black-light: #333333;
 $color-black-medium: #222222;
@@ -46,6 +93,9 @@ $color-red-secondary: #d50000; //A700
 
 $color-green-light: #7cb342; //600
 $color-green-dark: #33691b; //900
+
+// SHADOW
+$box-shadow-standard: 0.2rem 0.2rem 0.2rem $color-gray-medium;
 
 // SIZES
 $size-phone: 34rem;
@@ -135,7 +185,7 @@ $size-desktop: 68rem;
 html {
   font-size: 10px;
 
-  background-color: $color-gray-light;
+  background-color: $color-white-dark;
 
   @include sw-for-tiny {
     font-size: 8px;
@@ -273,7 +323,7 @@ a {
     display: inline-block;
 
     background-color: $color-white-light;
-    box-shadow: 0.2rem 0.2rem 0.3rem $color-gray-light;
+    box-shadow: $box-shadow-standard;
 
     &:active {
       background-color: $color-amber-primary;
@@ -574,7 +624,7 @@ a {
     margin-bottom: 2rem;
 
     background-color: $color-white-light;
-    border: 1px solid $color-gray-light;
+    border: 1px solid $color-white-dark;
 
     font-family: $font-default;
     font-size: 1.8rem;
@@ -641,7 +691,7 @@ a {
   height: 5rem;
   width: 100%;
 
-  border-top: 1px solid $color-gray-light;
+  border-top: 1px solid $color-white-dark;
 
   font-family: $font-fancy;
   font-size: 2rem;
@@ -691,7 +741,7 @@ a {
   &__title {
     padding-top: 3rem;
 
-    border-top: 1px solid $color-gray-light;
+    border-top: 1px solid $color-white-dark;
     font-family: $font-fancy;
     font-size: 2rem;
     color: $color-indigo-primary;
@@ -701,7 +751,7 @@ a {
     padding-top: 1rem;
     padding-bottom: 3rem;
 
-    border-bottom: 1px solid $color-gray-light;
+    border-bottom: 1px solid $color-white-dark;
 
     font-family: $font-default;
     font-size: 1.3rem;
@@ -776,7 +826,7 @@ a {
   padding-top: 1rem;
   padding-bottom: 1rem;
 
-  border-bottom: 1px solid $color-gray-light;
+  border-bottom: 1px solid $color-white-dark;
 
   &__head {
     @include mix-table;
@@ -916,7 +966,7 @@ a {
 
       font-family: $font-default;
       font-size: 1.8rem;
-      color: $color-gray-light;
+      color: $color-white-dark;
     }
 
     &__description {
@@ -967,7 +1017,7 @@ a {
   bottom: 0;
   left: 0;
 
-  background-color: $color-gray-light;
+  background-color: $color-white-dark;
 
   font-family: $font-thin;
   font-size: 3rem;
@@ -990,7 +1040,7 @@ a {
 
   background-color: $color-indigo-primary;
 
-  box-shadow: 0 0.2rem 0.2rem $color-white-dark;
+  box-shadow: $box-shadow-standard;
 
   z-index: 80;
 
@@ -1130,7 +1180,7 @@ a {
 
   background-color: $color-amber-primary;
 
-  box-shadow: 0 0.2rem 0.2rem $color-white-dark;
+  box-shadow: $box-shadow-standard;
 
   z-index: 70;
 
@@ -1182,7 +1232,7 @@ a {
 
   width: $size-desktop;
 
-  box-shadow: 0.1rem 0.2rem 0.2rem $color-white-dark;
+  box-shadow: $box-shadow-standard;
 
   background-color: $color-white-medium;
 
@@ -1242,7 +1292,7 @@ a {
     @include mix-table__row;
 
     &:nth-child(even) {
-      background-color: $color-gray-light;
+      background-color: $color-white-dark;
     }
 
     &:hover {
