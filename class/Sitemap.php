@@ -129,6 +129,11 @@ class Sitemap {
                 $this->thing = $thing;
                 break;
 
+            case 'consumable':
+                $this->page = 'site/play/level/consumable.php';
+                $this->thing = $thing;
+                break;
+
             case 'experience':
                 $this->page = 'site/play/level/experience.php';
                 break;
@@ -164,10 +169,6 @@ class Sitemap {
 
         $thing = isset($this->command[5]) && $this->command[5] != null
             ? $this->command[5]
-            : null;
-
-        $unique = isset($this->command[6]) && $this->command[6] != null
-            ? $this->command[6]
             : null;
 
         switch($switch)
@@ -207,6 +208,7 @@ class Sitemap {
 
             case 'protection':
                 $this->page = 'site/play/edit/protection.php';
+                $this->thing = $thing;
                 break;
 
             case 'skill':

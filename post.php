@@ -396,6 +396,20 @@ function person_postExpertise($postData, $personId) {
     }
 }
 
+function person_postProtection($postData, $personId) {
+    global $curl;
+
+    $postArray = null;
+
+    foreach($postData as $key => $value) {
+        $postArray[] = ['person_id' => $personId, 'protection_id' => $key, 'protectionquality_id' => 3, 'equipped' => 1];
+    } // todo quality should not be hardcoded
+
+    foreach($postArray as $post) {
+        $curl->post('person-protection', $post);
+    }
+}
+
 function person_postWeapon($postData, $personId) {
     global $curl;
 
@@ -645,7 +659,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'person--equip':
             $post = ['equipped' => $POST_DATA['value']];
 
-            person_putTable('weapon', $POST_ID, $POST_DATA['id'], $post);
+            person_putTable($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
             break;
 
         case 'person--experience':
@@ -694,6 +708,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'person--money':
             person_putAttribute($POST_ID, $POST_DATA['attribute_id'], $POST_DATA['value']);
             person_putPerson(['point_money' => 0], $POST_HASH);
+            break;
+
+        case 'person--protection':
+            person_postProtection($POST_DATA, $POST_ID);
             break;
 
         case 'person--skill':

@@ -18,6 +18,7 @@ require_once('feature/Identity.php');
 require_once('feature/Manifestation.php');
 require_once('feature/Milestone.php');
 require_once('feature/Nature.php');
+require_once('feature/Protection.php');
 require_once('feature/Species.php');
 require_once('feature/Weapon.php');
 require_once('feature/Wound.php');
@@ -110,6 +111,26 @@ class Person {
     }
 
 
+    public function getAttribute($type = null, $id = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($type)
+            ? 'person-attribute/id/'.$this->id.'/type/'.$type
+            : 'person-attribute/id/'.$this->id.'/attribute/'.$id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Attribute(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getAugmentation($bionic = null) {
         global $curl;
 
@@ -170,6 +191,26 @@ class Person {
         return $arrayList;
     }
 
+    public function getExpertise($type = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($type)
+            ? 'person-expertise/id/'.$this->id.'/type/'.$type
+            : 'person-expertise/id/'.$this->id;
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Expertise(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getMilestone($upbringing = null) {
         global $curl;
 
@@ -190,40 +231,20 @@ class Person {
         return $arrayList;
     }
 
-    public function getAttribute($type = null, $id = null) {
+    public function getProtection($equipped = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($type)
-            ? 'person-attribute/id/'.$this->id.'/type/'.$type
-            : 'person-attribute/id/'.$this->id.'/attribute/'.$id;
+        $get = isset($equipped)
+            ? 'person-protection/id/'.$this->id.'/equipped/'.$equipped
+            : 'person-protection/id/'.$this->id;
 
         $result = $curl->get($get);
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
-                $arrayList[] = new Attribute(null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
-    public function getExpertise($type = null) {
-        global $curl;
-
-        $arrayList = null;
-
-        $get = isset($type)
-            ? 'person-expertise/id/'.$this->id.'/type/'.$type
-            : 'person-expertise/id/'.$this->id;
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Expertise(null, $array);
+                $arrayList[] = new Protection(null, $array);
             }
         }
 
@@ -501,10 +522,6 @@ class Person {
     }
 
 
-    public function makeBionic() {
-        print_r($this->getBionic());
-    }
-
     public function makeConsumable($list) {
         echo('<div class="sw-c-button">');
 
@@ -522,11 +539,10 @@ class Person {
     public function makeExpertise() {
         echo('<div class="sw-c-button">');
 
-        $diceList = $this->getExpertise($this->world->expertiseDice);
-        $listList = $this->getExpertise($this->world->expertiseAttribute);
+        $list = $this->getExpertise($this->world->expertiseDice);
 
-        if($diceList) {
-            foreach($diceList as $expertise) {
+        if($list) {
+            foreach($list as $expertise) {
                 $rollD12 = 2 + intval($expertise->dice);
                 $rollBonus = $expertise->skillValue;
 
@@ -538,9 +554,19 @@ class Person {
             }
         }
 
-        if($listList) {
-            foreach($listList as $expertise) {
+        echo('</div>');
+    }
+
+    public function makeExpertiseList() {
+        echo('<div class="sw-c-list">');
+
+        $list = $this->getExpertise($this->world->expertiseAttribute);
+
+        if($list) {
+            foreach($list as $expertise) {
                 $info = $expertise->description;
+
+                $lvl = null;
 
                 if($expertise->level == 1) {
                     $lvl = ' I';
@@ -571,6 +597,48 @@ class Person {
         $this->buildList($this->nature->name, $this->nature->description, $this->nature->icon);
 
         $this->buildList($this->identity->name, $this->identity->description, $this->identity->icon);
+
+        echo('</div>');
+    }
+
+    public function makeProtection() {
+        $equippedList = $this->getProtection(1);
+        $attributeList = $this->getAttribute($this->world->attributeProtection);
+        $toleranceList = $this->getAttribute($this->world->attributeBody);
+
+        $tolerance = 0;
+
+        foreach($toleranceList as $attr) {
+            if($attr->id == $this->world->tolerance) {
+                $tolerance = $attr->value;
+            }
+        }
+
+        foreach($attributeList as $attribute) {
+            $attribute->value = intval($attribute->value) + intval($tolerance);
+
+            if($equippedList) {
+                foreach($equippedList as $protection) {
+                    if($protection->attributeId == $attribute->id) {
+                        $attribute->value = intval($attribute->value) + intval($protection->attributeValue);
+                    }
+                }
+            }
+        }
+
+        $this->buildCard($attributeList, '--small');
+    }
+
+    public function makeProtectionEquip() {
+        echo('<div class="sw-c-list">');
+
+        $list = $this->getProtection();
+
+        if(isset($list)) {
+            foreach($list as $protection) {
+                $this->buildEquip($protection->id, $protection->name, $protection->icon, 'protection', $protection->equipped, 'protection');
+            }
+        }
 
         echo('</div>');
     }
@@ -626,13 +694,12 @@ class Person {
     }
 
     public function makeWeapon() {
-        $fullList = $this->getWeapon();
-        $equippedList = $this->getWeapon(1);
+        $list = $this->getWeapon(1);
 
-        if(isset($equippedList)) {
+        if(isset($list)) {
             echo('<div class="sw-c-button">');
 
-            foreach($equippedList as $weapon) {
+            foreach($list as $weapon) {
                 $hitD12 = 2 + intval($weapon->expertiseLevel);
                 $hitBonus = intval($weapon->damageBonus) + intval($weapon->hit);
 
@@ -647,19 +714,20 @@ class Person {
 
             echo('</div>');
         }
+    }
 
-        if(isset($fullList)) {
-            echo(
-                '<h3>Equip</h3>'.
-                '<div class="sw-c-list">'
-            );
+    public function makeWeaponEquip() {
+        echo('<div class="sw-c-list">');
 
-            foreach($fullList as $weapon) {
+        $list = $this->getWeapon();
+
+        if(isset($list)) {
+            foreach($list as $weapon) {
                 $this->buildEquip($weapon->id, $weapon->name, $weapon->icon, 'weapon', $weapon->equipped, 'weapon');
             }
-
-            echo('</div>'); // todo not hardcode
         }
+
+        echo('</div>');
     }
 
     public function makeWound() {
@@ -673,8 +741,6 @@ class Person {
         $all = $this->getWound();
 
         $attributes = $this->getAttribute($this->world->attributeWound);
-
-        $this->buildCard($this->getAttribute($this->world->attributeBody));
 
         if($lethal) {
             foreach($lethal as $object) {

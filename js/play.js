@@ -482,7 +482,7 @@ function modalDisplayInfo() {
     $('.sw-js-modal-critical').addClass('sw-is-hidden');
     $('.sw-js-modal-count').addClass('sw-is-hidden');
 
-    $('.sw-js-modal-info').removeClass('sw-is-hidden');
+    $('.sw-js-modal-description').removeClass('sw-is-hidden');
 }
 
 function modalDisplayRoll() {

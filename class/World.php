@@ -25,7 +25,7 @@ class World {
 
     var $expertiseAttribute, $expertiseDice;
 
-    var $woundLethal, $woundSerious;
+    var $experience, $woundLethal, $woundSerious, $tolerance;
 
     public function __construct($id = null, $hash = null, $array = null) {
         global $curl;
@@ -100,6 +100,7 @@ class World {
         $this->experience = 22;
         $this->woundLethal = 14;
         $this->woundSerious = 15;
+        $this->tolerance = 1;
     }
 
     public function getAttribute($type) {

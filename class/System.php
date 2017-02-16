@@ -334,6 +334,22 @@ class System {
         return $arrayList;
     }
 
+    function getProtectionList($person, $type) {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('world-protection/id/'.$person->world->id.'/type/'.$type);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Protection(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     function getSpeciesList($worldId) {
         global $curl;
 
@@ -775,6 +791,80 @@ class System {
     }
 
 
+    public function makeAugmentationSelect($person) {
+        global $form;
+
+        $bionicList = $person->getBionic();
+        $idList = $this->idList($person->getAugmentation());
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'play');
+        $form->getHidden('post', 'do', 'person--augmentation');
+        $form->getHidden('post', 'id', $person->id);
+        $form->getHidden('post', 'hash', $person->hash);
+
+        if(isset($bionicList)) {
+            foreach($bionicList as $bionic) {
+                $augmentationList = $this->getAugmentationList($person, $bionic->id);
+
+                echo('<h4>'.$bionic->name.'</h4>');
+
+                $this->checkboxList($augmentationList, $idList, 'augmentation');
+            }
+        }
+
+
+        $form->genericEnd();
+    }
+
+    public function makeBionicSelect($person) {
+        global $form, $curl;
+
+        $bodypartList = $curl->get('bodypart')['data'];
+
+        $idList = $this->idList($person->getBionic());
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'play');
+        $form->getHidden('post', 'do', 'person--bionic');
+        $form->getHidden('post', 'id', $person->id);
+        $form->getHidden('post', 'hash', $person->hash);
+
+        foreach($bodypartList as $bodypart) {
+            $bionicList = $this->getBionicList($person, $bodypart['id']);
+
+            echo('<h4>'.$bodypart['name'].'</h4>');
+
+            $this->checkboxList($bionicList, $idList, 'bionic');
+        }
+
+        $form->genericEnd();
+    }
+
+    public function makeProtectionSelect($person) {
+        global $form, $curl;
+
+        $typeList = $curl->get('protectiontype')['data'];
+
+        $idList = $this->idList($person->getProtection());
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'play');
+        $form->getHidden('post', 'do', 'person--protection');
+        $form->getHidden('post', 'id', $person->id);
+        $form->getHidden('post', 'hash', $person->hash);
+
+        foreach($typeList as $type) {
+            $protectionList = $this->getProtectionList($person, $type['id']);
+
+            echo('<h4>'.$type['name'].'</h4>');
+
+            $this->checkboxList($protectionList, $idList, 'bionic');
+        }
+
+        $form->genericEnd();
+    }
+
     public function makeWeaponSelect($person) {
         global $form, $curl;
 
@@ -805,56 +895,6 @@ class System {
                 $form->getHidden('weapon', $expertise-weapon, 0);
             }
         }
-
-        $form->genericEnd();
-    }
-
-    public function makeBionicSelect($person) {
-        global $form, $curl;
-
-        $bodypartList = $curl->get('bodypart')['data'];
-
-        $idList = $this->idList($person->getBionic());
-
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--bionic');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
-
-        foreach($bodypartList as $bodypart) {
-            $bionicList = $this->getBionicList($person, $bodypart['id']);
-
-            echo('<h4>'.$bodypart['name'].'</h4>');
-
-            $this->checkboxList($bionicList, $idList, 'bionic');
-        }
-
-        $form->genericEnd();
-    }
-
-    public function makeAugmentationSelect($person) {
-        global $form;
-
-        $bionicList = $person->getBionic();
-        $idList = $this->idList($person->getAugmentation());
-
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--augmentation');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
-
-        if(isset($bionicList)) {
-            foreach($bionicList as $bionic) {
-                $augmentationList = $this->getAugmentationList($person, $bionic->id);
-
-                echo('<h4>'.$bionic->name.'</h4>');
-
-                $this->checkboxList($augmentationList, $idList, 'augmentation');
-            }
-        }
-
 
         $form->genericEnd();
     }
