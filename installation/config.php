@@ -7,7 +7,9 @@
  */
 
 $config_curl = [
-    'url' => '',
-    'port' => 1,
+    'url' => 'http://localhost',
+    'port' => 3001,
     'apiKey' => ''
 ];
+
+$baseUrl = 'http://spelwerk.dev/';
