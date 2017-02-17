@@ -8,6 +8,7 @@
 global $sitemap, $user;
 
 $person = null;
+$userOwner = null;
 
 if(isset($sitemap->id) && isset($sitemap->hash)) {
     $person = new Person($sitemap->id, $sitemap->hash);
@@ -25,8 +26,6 @@ $species = isset($_POST['person--species_id'])
 
 if(isset($user)) {
     $list = $user->getPerson();
-
-    $userOwner = false;
 
     if($list) {
         foreach($list as $p) {
@@ -81,7 +80,7 @@ if(isset($user)) {
         '</div>'
     ); ?>
 
-    <?php if(!$userOwner && $person->isOwner): ?>
+    <?php if($person->isOwner && isset($user) && isset($userOwner)): ?>
 
         <form action="/post.php" method="post">
             <input type="hidden" name="post--return" value="play"/>
@@ -111,7 +110,7 @@ if(isset($user)) {
     <?php $person->makeButton($person->getAttribute($person->world->attributeConsumable), 'consumable'); ?>
 
     <h2 id="weapon">Weapon</h2>
-    <?php $person->makeButton($person->getWeapon(), 'weapon'); ?>
+    <?php $person->makeButton($person->getWeapon(1), 'weapon'); ?>
 
     <h2 id="wound">Wound</h2>
     <?php $person->makeProtection(); ?>

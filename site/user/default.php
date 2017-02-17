@@ -14,7 +14,7 @@ global $user, $form;
     <div class="sw-l-content__wrap">
         <h2>User</h2>
         <a class="sw-c-link" href="/user/new">Create new account</a>
-        <a class="sw-c-link" href="/user/login/pass">Login with user/pass</a>
+        <a class="sw-c-link" href="/user/login/pass">Login with password</a>
         <a class="sw-c-link" href="/user/login/mail">Login with email</a>
     </div>
 
@@ -27,7 +27,9 @@ global $user, $form;
         <h2><?php echo $user->username ?></h2>
 
         <?php
-        $form->printPerson($user->getPerson(), 'Your Persons');
+        if($user->getPerson() != null) {
+            $form->printPerson($user->getPerson(), 'Your Persons');
+        }
         ?>
 
         <!-- end -->

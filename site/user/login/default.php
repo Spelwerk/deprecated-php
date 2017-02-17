@@ -9,5 +9,7 @@
 
 <h2>Login</h2>
 
-<a class="sw-c-link" href="/user/login/pass">Login with user/pass</a>
-<a class="sw-c-link" href="/user/login/mail">Send me an email</a>
+<div class="sw-l-content__wrap">
+    <a class="sw-c-link" href="/user/login/pass">Login with password</a>
+    <a class="sw-c-link" href="/user/login/mail">Login with email</a>
+</div>
