@@ -9,6 +9,10 @@ global $sitemap, $form;
 $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
 ?>
+<div class="sw-l-quicklink">
+    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+</div>
+
 <h2>Description</h2>
 <form action="/post.php" method="post">
     <?php

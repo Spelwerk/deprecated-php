@@ -9,6 +9,9 @@ global $sitemap, $form;
 $person = new Person($sitemap->id, $sitemap->hash);
 
 ?>
+<div class="sw-l-quicklink">
+    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+</div>
 
 <?php if($sitemap->thing == 'upbringing'): ?>
 

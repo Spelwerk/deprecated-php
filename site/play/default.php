@@ -64,8 +64,21 @@ if(isset($user)) {
             <?php if($person->world->existsBionic): ?>
             <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic"><img src="/img/bionic.png"/></a>
             <?php endif; ?>
-            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat"><img src="/img/edit.png"/></a>
+            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/edit.png"/></a>
         </div>
+
+        <?php if(isset($user) && $userOwner != true): ?>
+
+            <form action="/post.php" method="post">
+                <input type="hidden" name="post--return" value="play"/>
+                <input type="hidden" name="post--do" value="user--save"/>
+                <input type="hidden" name="post--id" value="<?php echo $person->id; ?>"/>
+                <input type="hidden" name="post--hash" value="<?php echo $person->hash; ?>"/>
+                <input type="hidden" name="post--user" value="<?php echo $user->id; ?>"/>
+                <input class="sw-c-link sw-c-link--friendly sw-js-submit" type="submit" value="Save This Person"/>
+            </form>
+
+        <?php endif; ?>
 
     <?php endif; ?>
 
@@ -79,19 +92,6 @@ if(isset($user)) {
         '<p>Occupation: '.$person->occupation.'</p>'.
         '</div>'
     ); ?>
-
-    <?php if($person->isOwner && isset($user) && isset($userOwner)): ?>
-
-        <form action="/post.php" method="post">
-            <input type="hidden" name="post--return" value="play"/>
-            <input type="hidden" name="post--do" value="user--save"/>
-            <input type="hidden" name="post--id" value="<?php echo $person->id; ?>"/>
-            <input type="hidden" name="post--hash" value="<?php echo $person->hash; ?>"/>
-            <input type="hidden" name="post--user" value="<?php echo $user->id; ?>"/>
-            <input class="sw-c-link sw-c-link--friendly sw-js-submit" type="submit" value="Save This Person"/>
-        </form>
-
-    <?php endif; ?>
 
     <h2>Skill</h2>
     <?php

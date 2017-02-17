@@ -9,16 +9,18 @@ global $user, $form;
 ?>
 
 <?php
+$userData = null;
+
 if($user) {
     $userData = $user->getPerson();
 
     $idList = null;
 
-    foreach($userData as $p) {
-        $idList[] = $p['person_id'];
-    }
+    if($userData != null) {
+        foreach($userData as $p) {
+            $idList[] = $p['person_id'];
+        }
 
-    if(isset($userData)) {
         $form->printPerson($userData, 'Your Persons');
     }
 }
@@ -27,7 +29,7 @@ if(isset($_COOKIE['sw_person_list'])) {
     $cookieData = unserialize($_COOKIE['sw_person_list']);
 
     foreach($cookieData as $key => $c) {
-        if($user && in_array($c['person_id'], $idList)) {
+        if($userData != null && in_array($c['person_id'], $idList)) {
             unset($cookieData[$key]);
         }
     }
