@@ -11,3 +11,5 @@ $config_curl = [
     'port' => 3001,
     'apiKey' => '0732cc50dc8380e6f438a2ba1419d48985d70808'
 ];
+
+$baseUrl = 'http://spelwerk.dev/';

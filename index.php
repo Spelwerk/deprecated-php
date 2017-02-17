@@ -3,7 +3,7 @@
 //setcookie('sw_person_list', '', time() -2000);
 
 if(!isset($_COOKIE['sw_cookie_policy'])) {
-    require_once('cookiepolicy.php');
+    require_once('php/cookiepolicy.php');
 }
 
 /**

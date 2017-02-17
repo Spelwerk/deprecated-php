@@ -55,7 +55,9 @@ button, input, select, textarea {
   margin: 0;
   border: 0;
   box-sizing: border-box;
-  background-color: inherit; }
+  background-color: inherit;
+  -webkit-appearance: none;
+  border-radius: 0; }
 
 input:required:invalid {
   border: 1px solid #d50000; }

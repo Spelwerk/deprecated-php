@@ -43,7 +43,7 @@ $USER_TOKEN = null;
 
 function redirect($url) {
     ob_start();
-    header('Location: http://spelwerk.dev/'.$url, true, 303);
+    header('Location: '.$url, true, 303);
     ob_end_flush();
     exit;
 }
@@ -860,6 +860,6 @@ $a = isset($POST_RETURNAFTER)
     ? '/'.$POST_RETURNAFTER
     : null;
 
-echo '<a href="http://spelwerk.dev/'.$r.$i.$h.$a.$d.'">'.$r.$i.$h.$a.$d.'</a>';
+echo '<a href="'.$baseUrl.$r.$i.$h.$a.$d.'">'.$baseUrl.$r.$i.$h.$a.$d.'</a>';
 
-redirect($r.$i.$h.$a.$d);
+redirect($baseUrl.$r.$i.$h.$a.$d);
