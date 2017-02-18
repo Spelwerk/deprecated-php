@@ -7,8 +7,9 @@
  */
 global $form, $sitemap;
 ?>
+
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <a class="sw-l-quicklink__item" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>"><img src="/img/return.png"/></a>
 </div>
 
 <script src="/js/validation.js"></script>
@@ -28,4 +29,3 @@ $form->getBool('wound', 'lethal', true);
 
 $form->genericEnd();
 ?>
-

@@ -184,9 +184,8 @@ class Form {
         $sendZero = $required ? '-- SELECT ONE --' : '';
 
         echo(
-            '<label for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
-            '<br>'.
-            '<select name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$req.'>'.
+            '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
+            '<select class="sw-c-input__item" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$req.'>'.
             '<option value="0"'.$defaultDisabled.$defaultSelected.'>'.$sendZero.'</option>'
         );
 
@@ -263,9 +262,17 @@ class Form {
         echo('<form action="/'.$link.'" method="post">');
     }
 
-    public function genericEnd() {
+    public function genericEnd($disabled = true) {
+        $cls = $disabled
+            ? ' sw-is-unclickable'
+            : ' sw-is-clickable';
+
+        $dsb = $disabled
+            ? ' disabled'
+            : null;
+
         echo(
-            '<input class="sw-c-submit sw-js-submit sw-is-unclickable" type="submit" value="Next &raquo;" disabled/>'.
+            '<input class="sw-c-submit sw-js-submit'.$cls.'" type="submit" value="Save &raquo;"'.$dsb.'/>'.
             '</form>'
         );
     }

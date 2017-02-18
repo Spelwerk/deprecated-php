@@ -6,9 +6,14 @@
  * Time: 15:06
  */
 global $sitemap, $form;
-$person = new Person($sitemap->id, $sitemap->hash);
 
+require_once('./class/Person.php');
+require_once('./class/System.php');
+
+$person = new Person($sitemap->id, $sitemap->hash);
+$system = new System();
 ?>
+
 <div class="sw-l-quicklink">
     <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
 </div>
@@ -18,13 +23,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
     <script src="/js/play.js"></script>
 
     <h2>Upbringing</h2>
-    <?php
-    global $form;
-
-    $system = new System();
-
-    $system->person_selectMilestone($person, 1, 1);
-    ?>
+    <?php $system->person_selectMilestone($person, 1, 1); ?>
 
 <?php endif; ?>
 
@@ -33,13 +32,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
     <script src="/js/play.js"></script>
 
     <h2>Flexible</h2>
-    <?php
-    global $form;
-
-    $system = new System();
-
-    $system->person_selectMilestone($person, 0, 1);
-    ?>
+    <?php $system->person_selectMilestone($person, 0, 1); ?>
 
 <?php endif; ?>
 

@@ -6,6 +6,8 @@ var roll_d12, roll_bonus, strike_d12, strike_bonus, strike_critical;
 
 $(document).ready(function(){
 
+    document.title = "Spelwerk: " + $(".sw-js-person-name").text();
+
     $(".sw-js-radio").change(function() {
         $(this).attr('checked', true);
 

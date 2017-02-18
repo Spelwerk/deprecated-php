@@ -22,14 +22,14 @@ class User {
             ? $result['user']
             : null;
 
-        $this->id = $data['id'];
+        $this->id = intval($data['id']);
         $this->email = $data['email'];
         $this->username = $data['username'];
         $this->firstname = $data['firstname'];
         $this->surname = $data['surname'];
 
-        $this->isAdmin = $data['admin'];
-        $this->isVerified = $data['verified'];
+        $this->isAdmin = intval($data['admin']);
+        $this->isVerified = intval($data['verified']);
 
         $this->permissions = $data['permissions'];
     }

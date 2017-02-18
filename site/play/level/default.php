@@ -6,8 +6,12 @@
  * Time: 18:46
  */
 global $sitemap;
+
+require_once('./class/Person.php');
+
 $person = new Person($sitemap->id, $sitemap->hash);
 ?>
+
 <div class="sw-l-quicklink">
     <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
 </div>

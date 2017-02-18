@@ -7,6 +7,9 @@
  */
 global $sitemap, $user;
 
+require_once('./class/Person.php');
+require_once('./class/System.php');
+
 $person = null;
 $userOwner = null;
 
@@ -17,7 +20,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 }
 
 $world = isset($_POST['person--world_id'])
-    ? $world = new World($_POST['person--world_id'])
+    ? new World($_POST['person--world_id'])
     : null;
 
 $species = isset($_POST['person--species_id'])
@@ -35,8 +38,6 @@ if(isset($user)) {
         }
     }
 }
-
-
 ?>
 
 <script src="/js/play.js"></script>
@@ -82,7 +83,7 @@ if(isset($user)) {
 
     <?php endif; ?>
 
-    <h2><?php echo($person->firstname.' '.$person->surname); ?></h2>
+    <h2 class="sw-js-person-name"><?php echo($person->firstname.' '.$person->surname); ?></h2>
 
     <?php echo(
         '<div class="sw-l-content__wrap">'.

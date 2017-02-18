@@ -660,6 +660,6 @@ class System {
             }
         }
 
-        $form->genericEnd();
+        $form->genericEnd(false);
     }
 }

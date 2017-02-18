@@ -6,6 +6,7 @@
  * Date: 05/02/2017
  * Time: 11:12
  */
+
 class Sitemap {
 
     var $requestURI, $scriptName, $command;
@@ -14,7 +15,7 @@ class Sitemap {
 
     var $isAdmin, $isUser;
 
-    public function __construct() {
+    public function __construct($user) {
         $this->requestURI = explode('/', $_SERVER['REQUEST_URI']);
         $this->scriptName = explode('/',$_SERVER['SCRIPT_NAME']);
 
@@ -27,6 +28,14 @@ class Sitemap {
         $this->command = array_values($this->requestURI);
 
         $this->switchTop();
+
+        if($this->isAdmin && !$user->isAdmin) {
+            $this->page = 'site/error.php';
+        }
+
+        if($this->isUser && !$user->id) {
+            $this->page = 'site/error.php';
+        }
     }
 
     function switchTop() {
@@ -43,6 +52,11 @@ class Sitemap {
         {
             default:
                 $this->page = 'site/default.php';
+                break;
+
+            case 'admin':
+                $this->page = 'site/admin/database.php';
+                $this->isAdmin = true;
                 break;
 
             case 'play':
@@ -63,7 +77,6 @@ class Sitemap {
 
             case 'error':
                 $this->page = 'site/error.php';
-                $this->id = $id;
                 break;
         }
     }
@@ -253,17 +266,20 @@ class Sitemap {
                 $this->switchUserLogin();
                 break;
 
-            case 'cheat':
+            case 'edit':
                 $this->page = 'site/user/edit.php';
+                $this->isUser = true;
                 break;
 
             case 'reset':
                 $this->page = 'site/user/reset.php';
+                $this->isUser = true;
                 break;
 
             case 'password':
                 $this->page = 'site/user/password.php';
                 $this->hash = $hash;
+                $this->isUser = true;
                 break;
         }
     }

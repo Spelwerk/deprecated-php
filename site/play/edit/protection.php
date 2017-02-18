@@ -5,9 +5,13 @@
  * Date: 15/02/2017
  * Time: 19:16
  */
-global $sitemap;
-$person = new Person($sitemap->id, $sitemap->hash);
+global $sitemap, $form;
 
+require_once('./class/Person.php');
+require_once('./class/System.php');
+
+$person = new Person($sitemap->id, $sitemap->hash);
+$system = new System();
 ?>
 
 <div class="sw-l-quicklink">
@@ -19,18 +23,12 @@ $person = new Person($sitemap->id, $sitemap->hash);
     <script src="/js/play.js"></script>
 
     <h2>Add Protection</h2>
-    <?php
-    $system = new System();
-
-    $system->person_checkProtection($person);
-    ?>
+    <?php $system->person_checkProtection($person); ?>
 
 <?php else: ?>
 
     <h2>Protection</h2>
     <?php
-    global $form;
-
     $list = $person->getProtection();
 
     if(isset($list)) {

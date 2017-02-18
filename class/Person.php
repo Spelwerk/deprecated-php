@@ -7,22 +7,6 @@
  * Time: 09:09
  */
 
-require_once('feature/Attribute.php');
-require_once('feature/Augmentation.php');
-require_once('feature/Bionic.php');
-require_once('feature/Caste.php');
-require_once('feature/Characteristic.php');
-require_once('feature/Expertise.php');
-require_once('feature/Focus.php');
-require_once('feature/Identity.php');
-require_once('feature/Manifestation.php');
-require_once('feature/Milestone.php');
-require_once('feature/Nature.php');
-require_once('feature/Protection.php');
-require_once('feature/Species.php');
-require_once('feature/Weapon.php');
-require_once('feature/Wound.php');
-
 require_once('World.php');
 
 class Person {

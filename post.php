@@ -11,6 +11,8 @@ require_once('class/Curl.php');
 
 $curl = new Curl($config_curl);
 
+$POST_ERROR = null;
+
 $POST_DO = isset($_POST['post--do'])
     ? $_POST['post--do']
     : null;
@@ -62,6 +64,10 @@ function unsetUser() {
     }
 }
 
+function setUser($token) {
+    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
+}
+
 function cookiePerson($personNickname, $personId, $personHash) {
     if(isset($_COOKIE['sw_person_list'])) {
         $cookie = unserialize($_COOKIE['sw_person_list']);
@@ -72,9 +78,24 @@ function cookiePerson($personNickname, $personId, $personHash) {
     setcookie('sw_person_list', serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
 }
 
+function checkError($resultArray) {
+    global $POST_ERROR;
+
+    if($resultArray) {
+        foreach($resultArray as $key => $res) {
+            if($res['error']) {
+                $POST_ERROR[] = $res['error'];
+            }
+        }
+    }
+}
+
 
 function person_postPerson($postData) {
     global $curl;
+
+    $postArray = null;
+    $resultArray = null;
 
     $age = intval($postData['age']);
 
@@ -134,8 +155,6 @@ function person_postPerson($postData) {
     $personId = $result['id'];
     $personHash = $result['hash'];
 
-    $postArray = [];
-
     foreach($defaultList as $default) {
         if($default['protected'] || $default['attributetype_id'] == $world['skill_attributetype_id']) {
             $postArray[] = ['person_id' => $personId, 'attribute_id' => $default['id'], 'value' => $default['default']];
@@ -151,40 +170,63 @@ function person_postPerson($postData) {
     }
 
     foreach($postArray as $array) {
-        $curl->post('person-attribute', $array);
+        $resultArray[] = $curl->post('person-attribute', $array);
     }
 
-    return ['id' => $personId, 'hash' => $personHash, 'nickname' => $postData['nickname']];
+    checkError($resultArray);
+
+    return [
+        'id' => $personId,
+        'hash' => $personHash,
+        'nickname' => $postData['nickname']
+    ];
 }
 
 function person_putPerson($postData, $personHash) {
     global $curl;
 
-    $curl->put('person/hash/'.$personHash, $postData);
+    $resultArray = null;
+
+    $resultArray[] = $curl->put('person/hash/'.$personHash, $postData);
+
+    checkError($resultArray);
 }
 
 function person_removeFrom($table, $thingId, $personId) {
     global $curl;
 
-    $curl->delete('person-'.$table.'/id/'.$personId.'/id/'.$thingId);
+    $resultArray = null;
+
+    $resultArray[] = $curl->delete('person-'.$table.'/id/'.$personId.'/id/'.$thingId);
+
+    checkError($resultArray);
 }
 
 function person_postTo($table, $postData) {
     global $curl;
 
-    $curl->post('person-'.$table, $postData);
+    $resultArray = null;
+
+    $resultArray[] = $curl->post('person-'.$table, $postData);
+
+    checkError($resultArray);
 }
 
 function person_putTable($table, $personId, $tableId, $post) {
     global $curl;
 
-    $curl->put('person-'.$table.'/id/'.$personId.'/id/'.$tableId, $post);
+    $resultArray = null;
+
+    $resultArray[] = $curl->put('person-'.$table.'/id/'.$personId.'/id/'.$tableId, $post);
+
+    checkError($resultArray);
 }
 
 function person_postAttribute($postData, $personId, $allowsAll = false) {
     global $curl;
 
-    $postArray = [];
+    $postArray = null;
+    $resultArray = null;
 
     foreach($postData as $key => $value) {
         if($allowsAll || $value > 0) {
@@ -193,13 +235,16 @@ function person_postAttribute($postData, $personId, $allowsAll = false) {
     }
 
     foreach($postArray as $post) {
-        $curl->post('person-attribute',$post);
+        $resultArray[] = $curl->post('person-attribute',$post);
     }
+
+    checkError($resultArray);
 }
 
 function person_putAttribute($personId, $attributeId, $attributeValue) {
     global $curl;
 
+    $resultArray = null;
     $newValue = intval($attributeValue);
 
     $current = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$attributeId);
@@ -212,11 +257,15 @@ function person_putAttribute($personId, $attributeId, $attributeValue) {
 
     $post = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $newValue];
 
-    $curl->post('person-attribute', $post);
+    $resultArray[] = $curl->post('person-attribute', $post);
+
+    checkError($resultArray);
 }
 
 function person_putAttributeFromTable($table, $tableId, $personId, $currentId = null) {
     global $curl;
+
+    $resultArray = null;
 
     // first we do removal
 
@@ -242,7 +291,7 @@ function person_putAttributeFromTable($table, $tableId, $personId, $currentId = 
 
         if(isset($currentPost)) {
             foreach($currentPost as $post) {
-                $curl->post('person-attribute', $post);
+                $resultArray[] = $curl->post('person-attribute', $post);
             }
         }
     }
@@ -271,15 +320,19 @@ function person_putAttributeFromTable($table, $tableId, $personId, $currentId = 
 
     if(isset($changePost)) {
         foreach($changePost as $post) {
-            $curl->post('person-attribute', $post);
+            $resultArray[] = $curl->post('person-attribute', $post);
         }
     }
+
+    checkError($resultArray);
 }
 
 
 function person_postAugmentation($postData, $personId) {
     global $curl;
 
+    $resultArray = null;
+    $returnArray = null;
     $postAugmentation = null;
     $postAttribute = null;
     $postWeapon = null;
@@ -304,26 +357,29 @@ function person_postAugmentation($postData, $personId) {
 
     if(isset($postAugmentation)) {
         foreach($postAugmentation as $post) {
-            $curl->post('person-augmentation', $post);
+            $resultArray[] = $curl->post('person-augmentation', $post);
         }
     }
 
     if(isset($postAttribute)) {
         foreach($postAttribute as $post) {
-            $curl->post('person-attribute', $post);
+            $resultArray[] = $curl->post('person-attribute', $post);
         }
     }
 
     if(isset($postWeapon)) {
         foreach($postWeapon as $post) {
-            $curl->post('person-weapon', $post);
+            $resultArray[] = $curl->post('person-weapon', $post);
         }
     }
+
+    checkError($resultArray);
 }
 
 function person_postBionic($postData, $personId) {
     global $curl;
 
+    $resultArray = null;
     $postBionic = null;
     $postAttribute = null;
 
@@ -343,20 +399,23 @@ function person_postBionic($postData, $personId) {
 
     if(isset($postBionic)) {
         foreach($postBionic as $post) {
-            $curl->post('person-bionic', $post);
+            $resultArray[] = $curl->post('person-bionic', $post);
         }
     }
 
     if(isset($postAttribute)) {
         foreach($postAttribute as $post) {
-            $curl->post('person-attribute', $post);
+            $resultArray[] = $curl->post('person-attribute', $post);
         }
     }
+
+    checkError($resultArray);
 }
 
 function person_postExpertise($postData, $personId) {
     global $curl;
 
+    $resultArray = null;
     $postExpertise = null;
     $postAttribute = null;
 
@@ -385,20 +444,23 @@ function person_postExpertise($postData, $personId) {
 
     if(isset($postExpertise)) {
         foreach($postExpertise as $post) {
-            $curl->post('person-expertise', $post);
+            $resultArray[] = $curl->post('person-expertise', $post);
         }
     }
 
     if(isset($postAttribute)) {
         foreach($postAttribute as $post) {
-            $curl->post('person-attribute', $post);
+            $resultArray[] = $curl->post('person-attribute', $post);
         }
     }
+
+    checkError($resultArray);
 }
 
 function person_postProtection($postData, $personId) {
     global $curl;
 
+    $resultArray = null;
     $postArray = null;
 
     foreach($postData as $key => $value) {
@@ -406,32 +468,40 @@ function person_postProtection($postData, $personId) {
     } // todo quality should not be hardcoded
 
     foreach($postArray as $post) {
-        $curl->post('person-protection', $post);
+        $resultArray[] = $curl->post('person-protection', $post);
     }
+
+    checkError($resultArray);
 }
 
 function person_postWeapon($postData, $personId) {
     global $curl;
 
-    $postArray = [];
+    $resultArray = null;
+    $returnArray = null;
+    $postArray = null;
 
     foreach($postData as $key => $value) {
         $postArray[] = ['person_id' => $personId, 'weapon_id' => $key, 'weaponquality_id' => 3, 'equipped' => 1];
     } // todo quality should not be hardcoded
 
     foreach($postArray as $post) {
-        $curl->post('person-weapon', $post);
+        $resultArray[] = $curl->post('person-weapon', $post);
     }
+
+    checkError($resultArray);
 }
 
 function person_woundAdd($postData, $personId, $woundId) {
     global $curl;
 
+    $resultArray = null;
+
     $post = ['person_id' => $personId, 'wound_id' => $woundId, 'aid' => 0, 'heal' => 0, 'lethal' => $postData['lethal']];
 
-    $return = $curl->post('person-wound', $post);
+    $resultArray[] = $curl->post('person-wound', $post);
 
-    return $return;
+    checkError($resultArray);
 }
 
 
@@ -442,44 +512,46 @@ function world_postWorld($postData) {
 function world_woundAdd($postData) {
     global $curl;
 
+    $resultArray = null;
+
     $post = ['name' => $postData['name'], 'popularity' => 0, 'hidden' => 1];
 
-    $return = $curl->post('wound', $post);
+    $resultArray[] = $curl->post('wound', $post);
 
-    return $return;
+    checkError($resultArray);
 }
 
 
 function user_postUser($postData) {
     global $curl;
 
+    $resultArray = null;
+
     if($postData['password'] == $postData['password2']) {
-        $curl->post('user', $postData);
+        $resultArray[] = $curl->post('user', $postData);
     }
+
+    checkError($resultArray);
 }
 
 function user_verifyUser($postData) {
     global $curl;
 
-    $return = null;
+    $resultArray = null;
 
-    if($postData['verification']) {
-        $return = $curl->post('user/verify', $postData);
-    }
+    $resultArray[] = $curl->post('user/verify', $postData);
 
-    return $return;
+    checkError($resultArray);
 }
 
 function user_resendVerification($postData) {
     global $curl;
 
-    $return = null;
+    $resultArray = null;
 
-    if($postData['email']) {
-        $return = $curl->post('user/verify/again', $postData);
-    }
+    $resultArray[] = $curl->post('user/verify/again', $postData);
 
-    return $return;
+    checkError($resultArray);
 }
 
 function user_loginPass($postData) {
@@ -495,19 +567,19 @@ function user_loginPass($postData) {
         ? $result['token']
         : null;
 
-    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
+    setUser($token);
 }
 
 function user_loginMail($postData) {
     global $curl;
 
-    $return = null;
+    $resultArray[] = null;
 
     if($postData['email']) {
-        $return = $curl->post('user/login/mail/start', $postData);
+        $resultArray[] = $curl->post('user/login/mail/start', $postData);
     }
 
-    return $return;
+    checkError($resultArray);
 }
 
 function user_loginMailVerify($postData) {
@@ -523,46 +595,49 @@ function user_loginMailVerify($postData) {
         ? $result['token']
         : null;
 
-    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
+    setUser($token);
 }
 
 function user_passMail($postData) {
     global $curl;
 
-    $return = null;
+    $resultArray = null;
 
     if($postData['email']) {
-        $return = $curl->put('user/password/start', $postData);
+        $resultArray[] = $curl->put('user/password/start', $postData);
     }
 
-    return $return;
+    checkError($resultArray);
 }
 
 function user_passVerify($postData) {
     global $curl;
 
-    $return = null;
+    $resultArray = null;
 
     if($postData['verification'] && $postData['password']) {
-        $return = $curl->put('user/password/set', $postData);
+        $resultArray[] = $curl->put('user/password/set', $postData);
     }
 
-    return $return;
+    checkError($resultArray);
 }
 
 function user_savePerson($userId, $personId, $personHash) {
     global $curl;
 
+    $resultArray = null;
+
     $post = isset($personHash)
         ? ['user_id' => $userId, 'person_id' => $personId, 'hash' => $personHash]
         : ['user_id' => $userId, 'person_id' => $personId];
 
-    $curl->post('user-person', $post);
+    $resultArray[] = $curl->post('user-person', $post);
+
+    checkError($resultArray);
 }
 
 
 if(isset($POST_DO) && isset($POST_RETURN)) {
-
     $POST_DATA = [];
 
     unset($_POST['x']);
@@ -583,36 +658,39 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'person--post':
             $result = person_postPerson($POST_DATA);
 
-            $POST_ID = $result['id'];
-            $POST_HASH = $result['hash'];
+            if(!$POST_ERROR) {
+                $POST_ID = $result['id'];
+                $POST_HASH = $result['hash'];
+                $resultNickname = $result['nickname'];
 
-            if($POST_USER) {
-                user_savePerson($POST_USER, $POST_ID, $POST_HASH);
+                if($POST_USER) {
+                    user_savePerson($POST_USER, $POST_ID, $POST_HASH);
+                }
+
+                cookiePerson($resultNickname, $POST_ID, $POST_HASH);
             }
-
-            cookiePerson($result['nickname'], $POST_ID, $POST_HASH);
-
             break;
 
         case 'person--put':
             person_putPerson($POST_DATA, $POST_HASH);
 
-            if(isset($POST_DATA['caste_id'])) {
-                person_putAttributeFromTable('caste', $POST_DATA['caste_id'], $POST_ID);
-            }
+            if(!$POST_ERROR) {
+                if(isset($POST_DATA['caste_id'])) {
+                    person_putAttributeFromTable('caste', $POST_DATA['caste_id'], $POST_ID);
+                }
 
-            if(isset($POST_DATA['nature_id'])) {
-                person_putAttributeFromTable('nature', $POST_DATA['nature_id'], $POST_ID);
-            }
+                if(isset($POST_DATA['nature_id'])) {
+                    person_putAttributeFromTable('nature', $POST_DATA['nature_id'], $POST_ID);
+                }
 
-            if(isset($POST_DATA['identity_id'])) {
-                person_putAttributeFromTable('identity', $POST_DATA['identity_id'], $POST_ID);
-            }
+                if(isset($POST_DATA['identity_id'])) {
+                    person_putAttributeFromTable('identity', $POST_DATA['identity_id'], $POST_ID);
+                }
 
-            if(isset($POST_DATA['focus_id'])) {
-                person_putAttributeFromTable('focus', $POST_DATA['focus_id'], $POST_ID);
+                if(isset($POST_DATA['focus_id'])) {
+                    person_putAttributeFromTable('focus', $POST_DATA['focus_id'], $POST_ID);
+                }
             }
-
             break;
 
 
@@ -629,7 +707,6 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'person--edit--feature':
-
             if(isset($POST_DATA['species_id'])) {
                 person_putPerson(['species_id' => $POST_DATA['species_id']], $POST_HASH);
                 person_putAttributeFromTable('species-attribute', $POST_DATA['species_id'], $POST_ID, $POST_DATA['current_id']);
@@ -658,65 +735,74 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'person--equip':
             $post = ['equipped' => $POST_DATA['value']];
-
             person_putTable($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
             break;
 
         case 'person--experience':
-            $curl->post('person-attribute',['person_id' => $POST_ID, 'attribute_id' => 22, 'value' => $POST_DATA['value']]);
+            $post = [22 => $POST_DATA['value']];
+            person_postAttribute($post, $POST_ID, true);
             break;
 
         case 'person--expertise':
             person_postExpertise($POST_DATA, $POST_ID);
 
-            $calc = intval($_POST['post--points']);
+            if(!$POST_ERROR) {
+                person_putPerson(['point_expertise' => 0], $POST_HASH);
 
-            person_putPerson(['point_expertise' => 0], $POST_HASH);
+                if($_POST['post--points'] != 999) {
+                    $calc = intval($_POST['post--points']);
 
-            if($_POST['post--points'] != 999) {
-                person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                    person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                }
             }
             break;
 
         case 'person--flexible':
             $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
-
             person_postTo('milestone', $post);
 
-            person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
+            if(!$POST_ERROR) {
+                person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
 
-            $calc = intval($_POST['post--points']) - 1;
-
-            person_putPerson(['point_milestone_flexible' => $calc], $POST_HASH);
+                $calc = intval($_POST['post--points']) - 1;
+                person_putPerson(['point_milestone_flexible' => $calc], $POST_HASH);
+            }
             break;
 
         case 'person--gift':
             $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
-
             person_postTo('characteristic', $post);
 
-            person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
+            if(!$POST_ERROR) {
+                person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
 
-            $calc = intval($_POST['post--points']) - 1;
-
-            person_putPerson(['point_characteristic_gift' => $calc], $POST_HASH);
+                if(!$POST_ERROR) {
+                    $calc = intval($_POST['post--points']) - 1;
+                    person_putPerson(['point_characteristic_gift' => $calc], $POST_HASH);
+                }
+            }
             break;
 
         case 'person--imperfection':
             $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
-
             person_postTo('characteristic', $post);
 
-            person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
+            if(!$POST_ERROR) {
+                person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
 
-            $calc = intval($_POST['post--points']) - 1;
-
-            person_putPerson(['point_characteristic_imperfection' => $calc], $POST_HASH);
+                if(!$POST_ERROR) {
+                    $calc = intval($_POST['post--points']) - 1;
+                    person_putPerson(['point_characteristic_imperfection' => $calc], $POST_HASH);
+                }
+            }
             break;
 
         case 'person--money':
             person_putAttribute($POST_ID, $POST_DATA['attribute_id'], $POST_DATA['value']);
-            person_putPerson(['point_money' => 0], $POST_HASH);
+
+            if(!$POST_ERROR) {
+                person_putPerson(['point_money' => 0], $POST_HASH);
+            }
             break;
 
         case 'person--protection':
@@ -726,53 +812,67 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         case 'person--skill':
             person_postAttribute($POST_DATA, $POST_ID);
 
-            $calc = intval($_POST['post--points']);
+            if(!$POST_ERROR) {
+                person_putPerson(['point_skill' => 0], $POST_HASH);
 
-            person_putPerson(['point_skill' => 0], $POST_HASH);
-
-            if($_POST['post--points'] != 999) {
-                person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                if(!$POST_ERROR) {
+                    if($_POST['post--points'] != 999) {
+                        $calc = intval($_POST['post--points']);
+                        person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                    }
+                }
             }
             break;
 
         case 'person--supernatural':
             person_postAttribute($POST_DATA, $POST_ID);
 
-            $calc = intval($_POST['post--points']);
+            if(!$POST_ERROR) {
+                person_putPerson(['point_supernatural' => 0], $POST_HASH);
 
-            person_putPerson(['point_supernatural' => 0], $POST_HASH);
-
-            if($_POST['post--points'] != 999) {
-                person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                if(!$POST_ERROR) {
+                    if($_POST['post--points'] != 999) {
+                        $calc = intval($_POST['post--points']);
+                        person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                    }
+                }
             }
             break;
 
         case 'person--supernatural--power':
             person_putAttribute($POST_ID, $POST_DATA['attribute_id'], $POST_DATA['value']);
-            person_putPerson(['point_power' => 0], $POST_HASH);
+
+            if(!$POST_ERROR) {
+                person_putPerson(['point_power' => 0], $POST_HASH);
+            }
             break;
 
         case 'person--supernatural--expertise':
             $post = [$POST_DATA['expertise_id'] => 1];
-
             person_postExpertise($post, $POST_ID);
             break;
 
         case 'person--upbringing':
             $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
-
             person_postTo('milestone', $post);
 
-            person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
+            if(!$POST_ERROR) {
+                person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
 
-            $calc = intval($_POST['post--points']) - 1;
+                if(!$POST_ERROR) {
+                    $calc = intval($_POST['post--points']) - 1;
+                    person_putPerson(['point_milestone_upbringing' => $calc], $POST_HASH);
+                }
+            }
 
-            person_putPerson(['point_milestone_upbringing' => $calc], $POST_HASH);
             break;
 
         case 'person--weapon':
             person_postWeapon($POST_DATA, $POST_ID);
-            person_putPerson(['calculated' => 1], $POST_HASH);
+
+            if(!$POST_ERROR) {
+                person_putPerson(['calculated' => 1], $POST_HASH);
+            }
             break;
 
         case 'person--remove--thing':
@@ -787,13 +887,11 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'wound--aid':
             $post = ['aid' => $POST_DATA['value']];
-
             person_putTable('wound', $POST_ID, $POST_DATA['id'], $post);
             break;
 
         case 'wound--heal':
             $post = ['heal' => $POST_DATA['value']];
-
             person_putTable('wound', $POST_ID, $POST_DATA['id'], $post);
             break;
 
@@ -815,7 +913,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'user--login--mail':
-            print_r(user_loginMail($POST_DATA));
+            user_loginMail($POST_DATA);
             break;
 
         case 'user--login--verify':
@@ -823,7 +921,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             break;
 
         case 'user--reset':
-            print_r(user_passMail($POST_DATA));
+            user_passMail($POST_DATA);
             break;
 
         case 'user--password':
@@ -860,6 +958,10 @@ $a = isset($POST_RETURNAFTER)
     ? '/'.$POST_RETURNAFTER
     : null;
 
-echo '<a href="'.$baseUrl.$r.$i.$h.$a.$d.'">'.$baseUrl.$r.$i.$h.$a.$d.'</a>';
+if(!$POST_ERROR) {
+    redirect($baseUrl.$r.$i.$h.$a.$d);
+} else {
+    print_r($POST_ERROR);
+}
 
-redirect($baseUrl.$r.$i.$h.$a.$d);
+echo '<a href="'.$baseUrl.$r.$i.$h.$a.$d.'">'.$baseUrl.$r.$i.$h.$a.$d.'</a>';

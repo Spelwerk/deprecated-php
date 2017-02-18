@@ -98,30 +98,12 @@ class Curl {
 
         $result = curl_exec($curl);
 
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        //$statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
 
         $result = json_decode($result, true);
 
-        switch($statusCode)
-        {
-            case 200:
-            case 201:
-            case 202:
-                $return = $result;
-                break;
-
-            default:
-                $return = [
-                    'error' => true,
-                    'code' => $statusCode,
-                    'header' => $result['header'],
-                    'message' => $result['message']
-                ];
-                break;
-        }
-
-        return $return;
+        return $result;
     }
 }

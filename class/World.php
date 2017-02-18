@@ -7,6 +7,22 @@
  * Time: 16:49
  */
 
+require_once('feature/Attribute.php');
+require_once('feature/Augmentation.php');
+require_once('feature/Bionic.php');
+require_once('feature/Caste.php');
+require_once('feature/Characteristic.php');
+require_once('feature/Expertise.php');
+require_once('feature/Focus.php');
+require_once('feature/Identity.php');
+require_once('feature/Manifestation.php');
+require_once('feature/Milestone.php');
+require_once('feature/Nature.php');
+require_once('feature/Protection.php');
+require_once('feature/Species.php');
+require_once('feature/Weapon.php');
+require_once('feature/Wound.php');
+
 class World {
 
     var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $money;

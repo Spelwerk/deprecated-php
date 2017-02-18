@@ -6,7 +6,11 @@
  * Time: 18:56
  */
 global $sitemap, $curl, $form;
+
+require_once('./class/Person.php');
+
 $person = new Person($sitemap->id, $sitemap->hash);
+
 $attributeList = $person->getAttribute($person->world->attributeConsumable);
 $idList = null;
 

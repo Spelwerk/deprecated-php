@@ -15,7 +15,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     $world = new World($sitemap->id, $sitemap->hash);
 
 } else if (isset($sitemap->id)) {
-    $world = new Person($sitemap->id);
+    $world = new World($sitemap->id);
 
 }
 

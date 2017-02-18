@@ -6,7 +6,3 @@
  * Time: 09:17
  */
 ?>
-
-<h2><?php echo $error->header; ?></h2>
-
-<h3><?php echo $error->description; ?></h3>

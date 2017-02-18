@@ -5,8 +5,13 @@
  * Date: 15/02/2017
  * Time: 18:51
  */
-global $sitemap;
+global $sitemap, $form;
+
+require_once('./class/Person.php');
+require_once('./class/System.php');
+
 $person = new Person($sitemap->id, $sitemap->hash);
+$system = new System();
 ?>
 
 <div class="sw-l-quicklink">
@@ -18,18 +23,12 @@ $person = new Person($sitemap->id, $sitemap->hash);
     <script src="/js/play.js"></script>
 
     <h2>Add Weapon</h2>
-    <?php
-    $system = new System();
-
-    $system->person_checkWeapon($person);
-    ?>
+    <?php $system->person_checkWeapon($person); ?>
 
 <?php else: ?>
 
     <h2>Weapon</h2>
     <?php
-    global $form;
-
     $list = $person->getWeapon();
 
     if(isset($list)) {
