@@ -382,9 +382,78 @@ class Sitemap {
                 $this->hash = $hash;
                 break;
 
-            case 'cheat':
-                $this->switchPlayEdit();
+            case 'values':
+                $this->page = 'site/world/values.php';
+                $this->id = $id;
+                $this->hash = $hash;
                 break;
+
+            case 'species':
+                $this->page = 'site/world/species.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'caste':
+                $this->page = 'site/world/caste.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'nature':
+                $this->page = 'site/world/nature.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'identity':
+                $this->page = 'site/world/identity.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'defaults':
+                $this->page = 'site/world/defaults.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'skill':
+                $this->page = 'site/world/skill.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'expertise':
+                $this->page = 'site/world/expertise.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'characteristic':
+                $this->page = 'site/world/characteristic.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'milestones':
+                $this->page = 'site/world/milestones.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'weapon':
+                $this->page = 'site/world/weapon.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'protection':
+                $this->page = 'site/world/protection.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
         }
     }
 }

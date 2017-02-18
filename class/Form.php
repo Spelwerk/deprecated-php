@@ -9,12 +9,91 @@
 class Form {
     public function __construct() {}
 
+    // refactored
+    public function varchar($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
 
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        $inputValue = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<label class="sw-c-input__label" for="item--'.$inputUnique.'">'.$labelName.$labelRequired.'</label>'.
+            '<input class="sw-c-input__item sw-js-validation" type="text" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputValue.$inputRequired.'/>'
+        );
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
+    }
+
+    public function number($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $minimum = null, $maximum = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        $inputMinimum = isset($minimum)
+            ? ' min="'.$minimum.'"'
+            : null;
+
+        $inputMaximum = isset($maximum)
+            ? ' max="'.$maximum.'"'
+            : '';
+
+        $inputValue  = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<label class="sw-c-input__label" for="item--'.$inputUnique.'">'.$labelName.$labelRequired.'</label>'.
+            '<input class="sw-c-input__item sw-js-number sw-js-validation" type="number" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.$inputRequired.'/>'
+        );
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
+    }
+
+
+    // needs refactoring
     public function getVarchar($tableName, $name, $required, $value = null) {
-        $reqLabel = $required ? '*' : '';
+        $reqLabel = $required
+            ? '*'
+            : null;
 
-        $val = isset($value) ? ' value="'.$value.'"' : '';
-        $req = $required ? ' required' : '';
+        $val = isset($value)
+            ? ' value="'.$value.'"'
+            : null;
+
+        $req = $required
+            ? ' required'
+            : null;
 
         echo(
             '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
@@ -112,12 +191,16 @@ class Form {
 
         echo(
             '<label class="sw-c-input__label" for="'.$tableName.'--'.$name.'">'.$name.$reqLabel.'</label>'.
-            '<select class="sw-c-input__item name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$req.'>'.
-            '<option disabled selected value> -- select an option -- </option>'
+            '<select class="sw-c-input__item" name="'.$tableName.'--'.$name.'" id="'.$tableName.'--'.$name.'"'.$req.'>'.
+            '<option disabled selected value="jonn"> -- select an option -- </option>'
         );
 
         foreach($list as $option) {
-            echo('<option value="'.$option['value'].'">'.$option['name'].'</option>');
+            $slc = isset($value) && $option['id'] == $value
+                ? ' selected'
+                : null;
+
+            echo('<option value="'.$option['id'].'"'.$slc.'>'.$option['name'].'</option>');
         }
 
         echo('</select>');
@@ -164,11 +247,11 @@ class Form {
             '<div class="sw-c-radio__title sw-js-check-title">'.$rowName.'</div>'.
             '</div>'.
             '<div class="sw-c-radio__info sw-js-check-info sw-is-hidden">'.$description.'</div>'.
-            '<div class="sw-js-check-input sw-is-hidden">'.
-            '<input class="sw-js-check" type="checkbox" name="'.$tableName.'--'.$rowId.'" id="'.$tableName.'--'.$rowId.'" value="'.$rowId.'"'.$s.'/></div></div></label>'
+            '<input class="sw-js-check sw-is-hidden" type="checkbox" name="'.$tableName.'--'.$rowId.'" id="'.$tableName.'--'.$rowId.'" value="'.$rowId.'"'.$s.'/>'.
+            '</div>'.
+            '</label>'
         );
     }
-
 
     public function getForeignKey($tableName, $name, $foreignTable, $required, $value = null) {
         global $curl;
@@ -246,13 +329,11 @@ class Form {
         );
     }
 
-
     public function genericSelect($tableName, $name, $array, $value = null) {
         foreach($array as $object) {
             $this->getRadio($tableName, $name, $object->name, $object->id, $object->description);
         }
     }
-
 
     public function genericStart($action = null) {
         $link = isset($action)
@@ -276,7 +357,6 @@ class Form {
             '</form>'
         );
     }
-
 
     public function rollNumber($name, $times) {
         echo(
@@ -312,7 +392,6 @@ class Form {
         );
     }
 
-
     public function viewStart() {
         echo(
             '<div class="sw-c-viewmore">'.
@@ -333,7 +412,6 @@ class Form {
     public function viewEnd() {
         echo('</div>');
     }
-
 
     public function pointsForm($points, $text) {
         echo(

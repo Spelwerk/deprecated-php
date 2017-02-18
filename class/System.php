@@ -157,6 +157,157 @@ class System {
         }
     }
 
+    public function createWorld($world = null) {
+        if(!isset($world)) {
+            echo('<h2>Create World</h2>');
+            $this->world_make();
+
+        } else {
+            if($world->splitSupernatural == 0 && $world->splitSkill == 0 && $world->splitExpertise == 0 && $world->splitMilestone == 0 && $world->splitRelationship == 0) {
+                echo(
+                    '<h2>Manage Age Split</h2>'.
+                    '<p>When creating a new person, some features are calculated based on: [age/world_modifier]. It is time to set this modifier. We have given you example values from our usual worlds.</p>'
+                );
+                $this->world_makeSplit($world);
+
+            } else if($world->maxGift == 0 && $world->maxImperfection == 0 && $world->maxSupernatural == 0 && $world->maxSkill == 0 && $world->maxExpertise == 0 && $world->maxUpbringing == 0 && $world->maxFlexible == 0 && $world->maxRelationship == 0) {
+                echo(
+                    '<h2>Manage Maximum</h2>'.
+                    '<p>After calculating the agesplit, we also take into account that you may want to set a maximum value. It is time to set this value. We have given you example values from our usual worlds. There are hard limitations here for data weight purposes.</p>'
+                );
+                $this->world_makeMaximum($world);
+
+            } else if(count($world->getSpecies()) == 0) {
+                echo(
+                    '<h2>Species</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'species');
+
+            } else if(count($world->getCaste()) == 0) {
+                echo(
+                    '<h2>Caste</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'caste');
+
+            } else if(count($world->getNature()) == 0) {
+                echo(
+                    '<h2>Nature</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'nature');
+
+            } else if(count($world->getIdentity()) == 0) {
+                echo(
+                    '<h2>Identity</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'identity');
+
+            } else if(count($world->getAttribute()) == 0) {
+                echo(
+                    '<h2>Defaults</h2>'.
+                    '<p></p>'
+                );
+                $this->world_makeDefaultAttribute($world);
+
+            } else if(count($world->getAttribute($world->attributeSkill)) == 0) {
+                echo(
+                    '<h2>Skills</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkSkill($world);
+
+            } else if(count($world->getExpertise($world->expertiseAttribute)) == 0) {
+                echo(
+                    '<h2>Attribute Expertise</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkExpertise($world, $world->expertiseAttribute);
+
+            } else if(count($world->getExpertise($world->expertiseDice)) == 0) {
+                echo(
+                    '<h2>Dice Expertise</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkExpertise($world, $world->expertiseDice);
+
+            } else if($world->existsSupernatural && $world->supernaturalName == null) {
+                echo(
+                    '<h2>Supernatural Name</h2>'.
+                    '<p>What is the formal name of supernatural people in your world?</p>'
+                );
+                $this->world_makeSupernaturalName($world);
+
+            } else if($world->existsSupernatural && count($world->getManifestation()) == 0) {
+                echo(
+                    '<h2>Manifestation</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkManifestation($world, 'manifestation');
+
+            } else if(count($world->getCharacteristic(1)) == 0) {
+                echo(
+                    '<h2>Gift</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkCharacteristic($world, 1);
+
+            } else if(count($world->getCharacteristic(0)) == 0) {
+                echo(
+                    '<h2>Imperfection</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkCharacteristic($world, 0);
+
+            } else if(count($world->getMilestone(1)) == 0) {
+                echo(
+                    '<h2>Upbringing</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkMilestone($world, 1);
+
+            } else if(count($world->getMilestone(0)) == 0) {
+                echo(
+                    '<h2>Flexible</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkMilestone($world, 0);
+
+            } else if(count($world->getWeapon()) == 0) {
+                echo(
+                    '<h2>Weapon</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'weapon');
+
+            } else if(count($world->getProtection()) == 0) {
+                echo(
+                    '<h2>Protection</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'protection');
+
+            } else if($world->existsBionic && count($world->getBionic()) == 0) {
+                echo(
+                    '<h2>Bionic</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checklist($world, 'bionic');
+
+            } else if($world->existsAugmentation && count($world->getAugmentation()) == 0) {
+                echo(
+                    '<h2>Augmentation</h2>'.
+                    '<p></p>'
+                );
+                $this->world_checkAugmentation($world);
+
+            }
+        }
+    }
+
+
     function getWorld() {
         global $curl;
 
@@ -195,6 +346,21 @@ class System {
                     $form->getCheckbox($checkboxName, $item->name, $item->id, $item->description);
                 }
             }
+
+            echo(
+                '<label for="post--checkAll">'.
+                '<div class="sw-c-radio__item sw-js-check-item">'.
+                '<div class="sw-c-radio__header">'.
+                '<div class="sw-c-radio__radio">'.
+                '<img class="sw-js-check-false" src="/img/checkbox-false.png"/>'.
+                '<img class="sw-js-check-true sw-is-hidden" src="/img/checkbox-true.png"/>'.
+                '</div>'.
+                '<div class="sw-c-radio__title sw-js-check-title">Check All</div>'.
+                '</div>'.
+                '<input class="sw-js-check-all sw-is-hidden" type="checkbox" name="post--checkAll" id="post--checkAll" value="0"/>'.
+                '</div>'.
+                '</label>'
+            );
         }
     }
 
@@ -288,7 +454,6 @@ class System {
         $form->genericEnd();
     }
 
-
     public function person_rollAttribute($person, $attributeId, $points, $pointsText, $postDo) {
         global $curl, $form;
 
@@ -312,7 +477,6 @@ class System {
 
         $form->genericEnd();
     }
-
 
     public function person_select($person, $list, $listTableName, $withRoll = null, $do = null, $value = null) {
         global $form;
@@ -408,7 +572,6 @@ class System {
         $form->viewEnd();
         $form->genericEnd();
     }
-
 
     public function person_purchaseExpertise($person, $points) {
         global $form, $curl;
@@ -559,7 +722,6 @@ class System {
         $form->genericEnd();
     }
 
-
     public function person_checkAugmentation($person) {
         global $form;
 
@@ -661,5 +823,400 @@ class System {
         }
 
         $form->genericEnd(false);
+    }
+
+
+    function world_make() {
+        global $form, $curl;
+
+        //$attribute = $curl->get('attribute/type/8')['data'];
+        $attributetype = $curl->get('attributetype')['data'];
+        $expertisetype = $curl->get('expertisetype')['data'];
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--post');
+
+        $form->getVarchar('world', 'name', true);
+        $form->getText('world', 'description', false);
+
+        $form->getBool('world', 'bionic', true);
+        $form->getBool('world', 'augmentation', true);
+        $form->getBool('world', 'software', true);
+        $form->getBool('world', 'supernatural', true);
+
+        $form->getDropdown('world', 'skill_attributetype_id', false, $attributetype, 10);
+        $form->getDropdown('world', 'attribute_expertisetype_id', false, $expertisetype, 1);
+        $form->getDropdown('world', 'dice_expertisetype_id', false, $expertisetype, 2);
+
+        //$form->getDropdown('world', 'money_attribute_id', true, $attribute);
+        $form->getHidden('world', 'money_attribute_id', 19);
+
+        $form->genericEnd();
+    }
+
+    function world_checklist($world, $thing) {
+        global $form, $curl;
+
+        $checkList = null;
+        $list = $curl->get($thing)['data'];
+
+        switch($thing)
+        {
+            case 'species':
+                foreach($list as $item) {
+                    $checkList[] = new Species(null, $item);
+                }
+                break;
+
+            case 'caste':
+                foreach($list as $item) {
+                    $checkList[] = new Caste(null, $item);
+                }
+                break;
+
+            case 'nature':
+                foreach($list as $item) {
+                    $checkList[] = new Nature(null, $item);
+                }
+                break;
+
+            case 'identity':
+                foreach($list as $item) {
+                    $checkList[] = new Identity(null, $item);
+                }
+                break;
+
+            case 'focus':
+                foreach($list as $item) {
+                    $checkList[] = new Focus(null, $item);
+                }
+                break;
+
+            case 'weapon':
+                foreach($list as $item) {
+                    $checkList[] = new Weapon(null, $item);
+                }
+                break;
+
+            case 'protection':
+                foreach($list as $item) {
+                    $checkList[] = new Protection(null, $item);
+                }
+                break;
+
+            case 'bionic':
+                foreach($list as $item) {
+                    $checkList[] = new Bionic(null, $item);
+                }
+                break;
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--has');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+        $form->getHidden('post', 'thing', $thing);
+
+        $this->checkboxList($checkList, null, $thing);
+
+        $form->genericEnd(true);
+    }
+
+    function world_makeSupernaturalName($world) {
+        global $form;
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--put');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        $form->getVarchar('world', 'supernatural_name', true);
+
+        $form->genericEnd();
+    }
+
+    function world_makeSplit($world) {
+        global $form;
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--put');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        if($world->existsSupernatural) {
+            $form->getNumber('world', 'split_supernatural', true, 1, null, 4);
+        } else {
+            $form->getHidden('world', 'split_supernatural', 4);
+        }
+
+        $form->getNumber('world', 'split_supernatural', true, 1, null, 4);
+        $form->getNumber('world', 'split_skill', true, 1, null, 1);
+        $form->getNumber('world', 'split_expertise', true, 1, null, 4);
+        $form->getNumber('world', 'split_milestone', true, 1, null, 8);
+        $form->getNumber('world', 'split_relationship', true, 1, null, 8);
+
+        $form->genericEnd(false);
+    }
+
+    function world_makeMaximum($world) {
+        global $form;
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--put');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        $form->getNumber('world', 'max_characteristic_gift', true, 1, 20, 1);
+        $form->getNumber('world', 'max_characteristic_imperfection', true, 1, 20, 1);
+
+        if($world->existsSupernatural) {
+            $form->getNumber('world', 'max_supernatural', true, 1, 90, 12);
+        } else {
+            $form->getHidden('world', 'max_supernatural', 12);
+        }
+
+        $form->getNumber('world', 'max_skill', true, 1, 90, 32);
+        $form->getNumber('world', 'max_expertise', true, 1, 90, 12);
+        $form->getNumber('world', 'max_milestone_upbringing', true, 1, 20, 1);
+        $form->getNumber('world', 'max_milestone_flexible', true, 1, 20, 8);
+        $form->getNumber('world', 'max_relationship', true, 1, 20, 8);
+        $form->genericEnd(false);
+    }
+
+    public function world_makeDefaultAttribute($world) {
+        global $curl, $form;
+
+        $bodyList = $curl->get('attribute/type/1')['data'];
+        $combatList = $curl->get('attribute/type/2')['data'];
+        $woundList = $curl->get('attribute/type/5')['data'];
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--default');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        foreach($bodyList as $attribute) {
+            $form->number(true, 'attribute_id', $attribute['name'], $attribute['description'], $attribute['id'], null, null, 8);
+        }
+
+        foreach($combatList as $attribute) {
+            $form->number(true, 'attribute_id', $attribute['name'], $attribute['description'], $attribute['id'], null, null, 0);
+        }
+
+        foreach($woundList as $attribute) {
+            $form->number(true, 'attribute_id', $attribute['name'], $attribute['description'], $attribute['id'], null, null, 2);
+        }
+
+        $form->genericEnd(false);
+    }
+
+    public function world_checkSkill($world) {
+        global $curl, $form;
+
+        $idList = null;
+        $speciesList = $world->getSpecies();
+        $skillList = $curl->get('attribute/type/'.$world->attributeSkill)['data'];
+        $list = null;
+
+        foreach($speciesList as $species) {
+            $idList[] = $species->id;
+        }
+
+        foreach($skillList as $skill) {
+            if(in_array($skill['species_id'], $idList) || $skill['species_id'] == null) {
+                $list[] = new Attribute(null, $skill);
+            }
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--skill');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        $this->checkboxList($list, null, 'attribute');
+
+        $form->genericEnd(true);
+    }
+
+    public function world_checkExpertise($world, $type) {
+        global $curl, $form;
+
+        $idList = null;
+        $speciesList = $world->getSpecies();
+        $expertiseList = $curl->get('expertise/type/'.$type)['data'];
+        $list = null;
+
+        foreach($speciesList as $species) {
+            $idList[] = $species->id;
+        }
+
+        foreach($expertiseList as $item) {
+            if(in_array($item['species_id'], $idList) || $item['species_id'] == null) {
+                $list[] = new Expertise(null, $item);
+            }
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--has');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+        $form->getHidden('post', 'thing', 'expertise');
+
+        $this->checkboxList($list, null, 'expertise');
+
+        $form->genericEnd(true);
+    }
+
+    public function world_checkManifestation($world) {
+        global $form, $curl;
+
+        $checkList = null;
+        $list = $curl->get('manifestation')['data'];
+
+        foreach($list as $item) {
+            $checkList[] = new Manifestation(null, $item);
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--manifestation');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        $this->checkboxList($checkList, null, 'manifestation');
+
+        $form->genericEnd(true);
+    }
+
+    public function world_checkCharacteristic($world, $type) {
+        global $curl, $form;
+
+        $speciesIdList = null;
+        $manifestationIdList = null;
+
+        $speciesList = $world->getSpecies();
+        $manifestationList = $world->getManifestation();
+
+        $characteristicList = $curl->get('characteristic/gift/'.$type)['data'];
+        $list = null;
+
+        foreach($speciesList as $item) {
+            $speciesIdList[] = $item->id;
+        }
+
+        foreach($manifestationList as $item) {
+            $manifestationIdList[] = $item->id;
+        }
+
+        foreach($characteristicList as $item) {
+            if(in_array($item['species_id'], $speciesIdList) || $item['species_id'] == null) {
+                if(in_array($item['manifestation_id'], $manifestationIdList) || $item['manifestation_id'] == null) {
+                    $list[] = new Characteristic(null, $item);
+                }
+            }
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--has');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+        $form->getHidden('post', 'thing', 'characteristic');
+
+        $this->checkboxList($list, null, 'characteristic');
+
+        $form->genericEnd(true);
+    }
+
+    public function world_checkMilestone($world, $type) {
+        global $curl, $form;
+
+        $speciesList = $world->getSpecies();
+        $speciesIdList = null;
+
+        $manifestationList = $world->getManifestation();
+        $manifestationIdList = null;
+
+        $attributeList = $world->getAttribute();
+        $attributeIdList = null;
+
+        $milestoneList = $curl->get('milestone/upbringing/'.$type)['data'];
+        $list = null;
+
+        foreach($speciesList as $item) {
+            $speciesIdList[] = $item->id;
+        }
+
+        foreach($manifestationList as $item) {
+            $manifestationIdList[] = $item->id;
+        }
+
+        foreach($attributeList as $item) {
+            $attributeIdList[] = $item->id;
+        }
+
+        foreach($milestoneList as $item) {
+            if(in_array($item['species_id'], $speciesIdList) || in_array($item['manifestation_id'], $manifestationIdList) || in_array($item['attribute_id'], $manifestationIdList) || $item['species_id'] == null || $item['manifestation_id'] == null || $item['attribute_id'] == null) {
+                $milestone = new Milestone(null, $item);
+
+                if(isset($milestone->casteId)) {
+                    $milestone->name = $milestone->name.' ('.$milestone->casteName.')';
+                }
+
+                $list[] = $milestone;
+            }
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--has');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+        $form->getHidden('post', 'thing', 'milestone');
+
+        $this->checkboxList($list, null, 'milestone');
+
+        $form->genericEnd(true);
+    }
+
+    public function world_checkAugmentation($world) {
+        global $curl, $form;
+
+        $idList = null;
+        $bionicList = $world->getBionic();
+        $augmentationList = $curl->get('augmentation')['data'];
+        $list = null;
+
+        foreach($bionicList as $item) {
+            $idList[] = $item->id;
+        }
+
+        foreach($augmentationList as $aug) {
+            if(in_array($aug['bionic_id'], $idList)) {
+                $augmentation = new Augmentation(null, $aug);
+
+                $augmentation->name = $augmentation->name.' ('.$augmentation->bionicName.')';
+
+                $list[] = $augmentation;
+            }
+        }
+
+        $form->genericStart();
+        $form->getHidden('post', 'return', 'world');
+        $form->getHidden('post', 'do', 'world--augmentation');
+        $form->getHidden('post', 'id', $world->id);
+        $form->getHidden('post', 'hash', $world->hash);
+
+        $this->checkboxList($list, null, 'augmentation');
+
+        $form->genericEnd(true);
     }
 }

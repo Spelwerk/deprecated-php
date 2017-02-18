@@ -27,6 +27,8 @@ class World {
 
     var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $money;
 
+    var $isTemplate, $isOwner, $isCalculated;
+
     var $supernaturalName;
 
     var $attributeBody, $attributeCombat, $attributeConsumable, $attributeDamage, $attributeExperience,
@@ -50,25 +52,23 @@ class World {
             ? $curl->get('world/id/'.$id)['data'][0]
             : $array;
 
-        if(isset($array)) {
-            $data = $array;
-        }
-
         $this->hash = isset($hash)
             ? $hash
             : null;
 
-        $this->owner = isset($this->hash) && $this->hash == $data['hash']
+        $this->isOwner = isset($hash) && $hash == $data['hash']
             ? true
             : false;
 
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
-        $this->template = $data['template'];
         $this->popularity = $data['popularity'];
         $this->hidden = $data['hidden'];
         $this->money = $data['money_attribute_id'];
+
+        $this->isTemplate = $data['template'];
+        $this->isCalculated = $data['calculated'];
 
         // Hard Coded values for the System // todo add all these to database?
         $this->attributeBody = 1;
@@ -105,7 +105,9 @@ class World {
         $this->maxFlexible = intval($data['max_milestone_flexible']);
         $this->maxRelationship = intval($data['max_relationship']);
 
-        $this->supernaturalName = $data['supernatural_name'];
+        $this->supernaturalName = isset($data['supernatural_name'])
+            ? $data['supernatural_name']
+            : null;
 
         $this->experience = 22;
         $this->woundLethal = 14;
@@ -205,6 +207,8 @@ class World {
             $get = isset($manifestation)
                 ? 'world-characteristic/id/'.$this->id.'/gift/'.$gift.'/species/'.$species.'/manifestation/'.$manifestation
                 : 'world-characteristic/id/'.$this->id.'/gift/'.$gift.'/species/'.$species;
+        } else if(isset($gift)) {
+            $get = 'world-characteristic/id/'.$this->id.'/gift/'.$gift;
         }
 
         $result = $curl->get($get);
@@ -307,7 +311,8 @@ class World {
             $get = isset($manifestation)
                 ? 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species.'/manifestation/'.$manifestation
                 : 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species;
-
+        } else if(isset($upbringing)) {
+            $get = 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing;
         }
 
         $result = $curl->get($get);

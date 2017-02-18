@@ -260,9 +260,13 @@ h4 {
 }
 
 p {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+
   font-family: $font-default;
   font-size: 1.6rem;
-  line-height: 2;
+  line-height: 1.5;
 }
 
 a {
@@ -607,6 +611,7 @@ a {
   &__label {
     display: block;
 
+    margin-top: 2rem;
     margin-bottom: 0.6rem;
     margin-left: 4%;
 
@@ -623,13 +628,23 @@ a {
 
     width: 94%;
 
-    margin-bottom: 2rem;
-
     background-color: $color-white-light;
     border: 1px solid $color-white-dark;
 
     font-family: $font-default;
     font-size: 1.8rem;
+  }
+
+  &__description {
+    @include mix-padding(0.2rem);
+    @include mix-auto();
+
+    display: block;
+
+    width: 92%;
+
+    font-family: $font-default;
+    font-size: 1.1rem;
   }
 
   &__validation {
@@ -687,6 +702,8 @@ a {
 
 .sw-c-submit {
   @include mix-auto;
+
+  margin-top: 4rem;
 
   text-align: center;
 

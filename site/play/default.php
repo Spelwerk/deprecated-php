@@ -8,7 +8,6 @@
 global $sitemap, $user;
 
 require_once('./class/Person.php');
-require_once('./class/System.php');
 
 $person = null;
 $userOwner = null;
@@ -40,18 +39,15 @@ if(isset($user)) {
 }
 ?>
 
-<script src="/js/play.js"></script>
-
 <?php if(!isset($person) || !$person->isCalculated): ?>
 
     <?php
+    require_once('./class/System.php');
     $system = new System();
     $system->createPerson($person, $world, $species);
     ?>
 
 <?php endif; ?>
-
-
 
 <?php if($person && $person->isCalculated): ?>
 
@@ -204,3 +200,5 @@ if(isset($user)) {
     <?php endif; ?>
 
 <?php endif; ?>
+
+<script src="/js/play.js"></script>

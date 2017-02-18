@@ -22,7 +22,11 @@ $user = isset($_COOKIE['sw_user_token'])
     ? new User($_COOKIE['sw_user_token'])
     : null;
 
-$sitemap = new Sitemap($user->isAdmin);
+$admin = isset($user)
+    ? $user->isAdmin
+    : 0;
+
+$sitemap = new Sitemap($admin);
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +58,7 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
         <a class="sw-l-header__logo" href="/">spelwerk</a>
         <div class="sw-l-header__menu">
             <div class="sw-l-header__menu__content">
-                <?php /*<a class="sw-l-header__menu__item sw-js-menu" href="/world">World</a>*/ ?>
+                <a class="sw-l-header__menu__item sw-js-menu">World</a>
                 <a class="sw-l-header__menu__item sw-js-menu">Play</a>
                 <a class="sw-l-header__menu__item sw-js-menu">View</a>
             </div>
@@ -66,11 +70,15 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
 <div class="sw-l-submenu">
     <div class="sw-l-submenu__content sw-js-menu-play sw-is-hidden">
         <a class="sw-l-submenu__item" href="/play">Create</a>
-        <a class="sw-l-submenu__item" href="/view/person">Saved</a>
+        <a class="sw-l-submenu__item" href="/view/person">Persons</a>
     </div>
     <div class="sw-l-submenu__content sw-js-menu-view sw-is-hidden">
         <a class="sw-l-submenu__item" href="/view/person">Person</a>
         <a class="sw-l-submenu__item" href="/view/person">World</a>
+    </div>
+    <div class="sw-l-submenu__content sw-js-menu-world sw-is-hidden">
+        <a class="sw-l-submenu__item" href="/world">Create</a>
+        <a class="sw-l-submenu__item" href="/view/world">Worlds</a>
     </div>
 </div>
 

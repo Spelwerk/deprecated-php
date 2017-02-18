@@ -24,6 +24,9 @@ class Milestone {
         $this->description = $data['description'];
         $this->upbringing = $data['upbringing'];
 
+        $this->casteId = $data['caste_id'];
+        $this->casteName = $data['caste_name'];
+
         $this->icon = $this->upbringing == 1
             ? '/img/person/milestone-upbringing.png'
             : '/img/person/milestone-flexible.png';

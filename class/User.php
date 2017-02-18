@@ -45,5 +45,17 @@ class User {
 
         return $data;
     }
+
+    public function getWorld() {
+        global $curl;
+
+        $result = $curl->get('user-world/id/'.$this->id);
+
+        $data = isset($result['data'])
+            ? $result['data']
+            : null;
+
+        return $data;
+    }
 }
 

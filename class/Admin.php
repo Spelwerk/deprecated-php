@@ -125,36 +125,4 @@ class Admin {
 
 
     }
-
-    public function createWorld($world = null) {
-        if(!$world) {
-            echo '<h2>Create World</h2>';
-            $this->worldMakeStart();
-        }
-    }
-
-    public function worldMakeStart() {
-        global $form, $curl;
-
-        $attributetype = $curl->get('attributetype')['data'];
-        $expertisetype = $curl->get('expertisetype')['data'];
-
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--post');
-
-        $form->getVarchar('world', 'name', true);
-
-        $form->getBool('world', 'template', true);
-        $form->getBool('world', 'bionic', true);
-        $form->getBool('world', 'augmentation', true);
-        $form->getBool('world', 'software', true);
-        $form->getBool('world', 'supernatural', true);
-
-        $form->getDropdown('world', 'skill_attributetype_id', true, $attributetype);
-        $form->getDropdown('world', 'attribute_expertisetype_id', true, $expertisetype);
-        $form->getDropdown('world', 'dice_expertisetype_id', true, $expertisetype);
-
-        $form->genericEnd();
-    }
 }
