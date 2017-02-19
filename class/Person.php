@@ -401,7 +401,7 @@ class Person {
                 '<form action="/post.php" method="post">'.
                 '<input type="hidden" name="post--return" value="play"/>'.
                 '<input type="hidden" name="post--returnid" value="wound"/>'.
-                '<input type="hidden" name="post--do" value="wound--aid"/>'.
+                '<input type="hidden" name="post--do" value="person--wound--aid"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
                 '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.
@@ -416,7 +416,7 @@ class Person {
                 '<form action="/post.php" method="post">'.
                 '<input type="hidden" name="post--return" value="play"/>'.
                 '<input type="hidden" name="post--returnid" value="wound"/>'.
-                '<input type="hidden" name="post--do" value="wound--heal"/>'.
+                '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
                 '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.

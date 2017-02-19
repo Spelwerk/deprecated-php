@@ -6,7 +6,7 @@
  * Time: 12:05
  */
 
-//setcookie('sw_person_list', '', time() -2000);
+//setcookie('sw_person_list', '', time() -2000);setcookie('sw_world_list', '', time() -2000);
 
 require_once('php/config.php');
 
@@ -26,7 +26,7 @@ $admin = isset($user)
     ? $user->isAdmin
     : 0;
 
-$sitemap = new Sitemap($admin);
+$sitemap = new Sitemap($user);
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +40,7 @@ $sitemap = new Sitemap($admin);
 
     <script src="/dependency/prefixfree.min.js"></script>
     <script src="/dependency/jquery-2.2.4.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/menu.js"></script>
 
     <title>Spelwerk</title>
 </head>
@@ -58,9 +58,12 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
         <a class="sw-l-header__logo" href="/">spelwerk</a>
         <div class="sw-l-header__menu">
             <div class="sw-l-header__menu__content">
-                <a class="sw-l-header__menu__item sw-js-menu">World</a>
-                <a class="sw-l-header__menu__item sw-js-menu">Play</a>
+                <a class="sw-l-header__menu__item" href="/play">Play</a>
+                <a class="sw-l-header__menu__item sw-js-menu">New</a>
                 <a class="sw-l-header__menu__item sw-js-menu">View</a>
+                <?php if(isset($user) && $user->isAdmin): ?>
+                <a class="sw-l-header__menu__item" href="/admin">Admin</a>
+                <?php endif; ?>
             </div>
         </div>
         <div class="sw-l-header__user sw-js-user"><a href="/user"><img src="/img/user--white.png"/></a></div>
@@ -68,16 +71,12 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
 </div>
 
 <div class="sw-l-submenu">
-    <div class="sw-l-submenu__content sw-js-menu-play sw-is-hidden">
-        <a class="sw-l-submenu__item" href="/play">Create</a>
-        <a class="sw-l-submenu__item" href="/view/person">Persons</a>
+    <div class="sw-l-submenu__content sw-js-menu-new sw-is-hidden">
+        <a class="sw-l-submenu__item" href="/play">Person</a>
+        <a class="sw-l-submenu__item" href="/world">World</a>
     </div>
     <div class="sw-l-submenu__content sw-js-menu-view sw-is-hidden">
-        <a class="sw-l-submenu__item" href="/view/person">Person</a>
-        <a class="sw-l-submenu__item" href="/view/person">World</a>
-    </div>
-    <div class="sw-l-submenu__content sw-js-menu-world sw-is-hidden">
-        <a class="sw-l-submenu__item" href="/world">Create</a>
+        <a class="sw-l-submenu__item" href="/view/person">Persons</a>
         <a class="sw-l-submenu__item" href="/view/world">Worlds</a>
     </div>
 </div>

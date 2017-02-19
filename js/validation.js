@@ -84,4 +84,12 @@ $(document).ready(function(){
         }
     });
 
+    $(".sw-js-icon-radio").change(function() {
+        $(this).attr('checked', true);
+
+        $(this).parents('form').find('.sw-js-icon-item').removeClass('sw-is-selected');
+        $(this).parents('label').find('.sw-js-icon-item').addClass('sw-is-selected');
+        console.log();
+    });
+
 });

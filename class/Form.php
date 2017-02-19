@@ -80,6 +80,102 @@ class Form {
         }
     }
 
+    public function text($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        $inputValue = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<label class="sw-c-input__label" for="item--'.$inputUnique.'">'.$labelName.$labelRequired.'</label>'.
+            '<textarea class="sw-c-input__item sw-js-validation" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'" rows="3"'.$inputValue.$inputRequired.'></textarea>'
+        );
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
+    }
+
+    public function select($required, $uniqueName, $list, $label = null, $labelDescription = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        echo(
+            '<label class="sw-c-input__label" for="item--'.$uniqueName.'">'.$labelName.$labelRequired.'</label>'.
+            '<select class="sw-c-input__item" name="item--'.$uniqueName.'" id="item--'.$uniqueName.'"'.$inputRequired.'>'.
+            '<option disabled selected> -- select an option -- </option>'
+        );
+
+        foreach($list as $item) {
+            $optionSelected = isset($value) && $item['id'] == $value
+                ? ' selected'
+                : null;
+
+            echo('<option value="'.$item['id'].'"'.$optionSelected.'>'.$item['name'].'</option>');
+        }
+
+        echo('</select>');
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
+    }
+
+    public function hidden($uniqueName, $value, $type = null) {
+        $inputType = isset($type)
+            ? $type
+            : 'item';
+
+        echo('<input type="hidden" name="'.$inputType.'--'.$uniqueName.'" value="'.$value.'"/>');
+    }
+
+    public function icon() {
+        global $curl;
+
+        $list = $curl->get('icon')['data'];
+
+        echo(
+            '<h3>Select Icon</h3>'.
+            '<div class="sw-l-iconlist">'
+        );
+
+        foreach($list as $icon) {
+            echo(
+                '<label for="item--icon__'.$icon['id'].'">'.
+                '<div class="sw-l-iconlist__item sw-js-icon-item">'.
+                '<img src="'.$icon['path'].'"/>'.
+                '</div>'.
+                '<input class="sw-js-icon-radio sw-is-hidden" type="radio" name="item--icon" id="item--icon__'.$icon['id'].'" value="'.$icon['id'].'"/>'.
+                '</label>'
+            );
+        }
+
+        echo('</div>');
+    }
 
     // needs refactoring
     public function getVarchar($tableName, $name, $required, $value = null) {
@@ -447,5 +543,25 @@ class Form {
         }
 
         echo('</div>');
+    }
+
+    public function printTableRow($title, $link, $id, $hash = null) {
+        $linkHash = isset($hash)
+            ? '/'.$hash
+            : null;
+
+        $owner = isset($hash)
+            ? '<div class="sw-l-table__image"><img title="owner" src="/img/user-owner.png"/></div>'
+            : null;
+
+        echo(
+            '<div class="sw-l-table__row">'.
+            '<a class="sw-l-table__link" href="'.$link.$id.$linkHash.'">'.
+            '<div class="sw-l-table__col">'.$title.'</div>'.
+            $owner.
+            '</a>'.
+            '</div>'.
+            '</div>'
+        );
     }
 }

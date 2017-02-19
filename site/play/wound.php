@@ -20,7 +20,7 @@ global $form, $sitemap;
 $form->genericStart();
 $form->getHidden('post', 'return', 'play');
 $form->getHidden('post', 'returnid', 'wound');
-$form->getHidden('post', 'do', 'wound--add');
+$form->getHidden('post', 'do', 'person--wound--add');
 $form->getHidden('post', 'id', $sitemap->id);
 $form->getHidden('post', 'hash', $sitemap->hash);
 

@@ -827,7 +827,7 @@ class System {
 
 
     function world_make() {
-        global $form, $curl;
+        global $form, $curl, $user;
 
         //$attribute = $curl->get('attribute/type/8')['data'];
         $attributetype = $curl->get('attributetype')['data'];
@@ -837,6 +837,10 @@ class System {
         $form->getHidden('post', 'return', 'world');
         $form->getHidden('post', 'do', 'world--post');
 
+        if(isset($user->id)) {
+            $form->getHidden('post', 'user', $user->id);
+        }
+
         $form->getVarchar('world', 'name', true);
         $form->getText('world', 'description', false);
 
@@ -845,7 +849,9 @@ class System {
         $form->getBool('world', 'software', true);
         $form->getBool('world', 'supernatural', true);
 
-        $form->getDropdown('world', 'skill_attributetype_id', false, $attributetype, 10);
+        //$form->getDropdown('world', 'skill_attributetype_id', false, $attributetype, 10);
+        $form->getHidden('world', 'skill_attributetype_id', 10);
+
         $form->getDropdown('world', 'attribute_expertisetype_id', false, $expertisetype, 1);
         $form->getDropdown('world', 'dice_expertisetype_id', false, $expertisetype, 2);
 

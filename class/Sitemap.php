@@ -30,32 +30,26 @@ class Sitemap {
         $this->switchTop();
 
         if($this->isAdmin && !$user->isAdmin) {
-            $this->page = 'site/error.php';
+            $this->page = 'site/no_admin.php';
         }
 
         if($this->isUser && !$user->id) {
-            $this->page = 'site/error.php';
+            $this->page = 'site/no_user.php';
         }
     }
 
     function switchTop() {
-
         $switch = isset($this->command[0]) && $this->command[0] != null
             ? $this->command[0]
             : null;
 
-        $id = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
-
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 $this->page = 'site/default.php';
                 break;
 
             case 'admin':
-                $this->page = 'site/admin/database.php';
+                $this->switchAdmin();
                 $this->isAdmin = true;
                 break;
 
@@ -73,10 +67,41 @@ class Sitemap {
 
             case 'world':
                 $this->switchWorld();
+                $this->isUser = true;
                 break;
 
             case 'error':
                 $this->page = 'site/error.php';
+                break;
+        }
+    }
+
+    function switchAdmin() {
+        $switch = isset($this->command[1]) && $this->command[1] != null
+            ? $this->command[1]
+            : null;
+
+        $id = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        $thing = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'site/admin/default.php';
+                break;
+
+            case 'manifestation':
+                $this->page = 'site/admin/manifestation.php';
+                $this->id = $id;
+                $this->thing = $thing;
+                break;
+
+            case 'database':
+                $this->page = 'site/admin/database.php';
                 break;
         }
     }
@@ -94,8 +119,7 @@ class Sitemap {
             ? $this->command[3]
             : null;
 
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 $this->page = 'site/play/default.php';
                 $this->id = $id;
@@ -131,8 +155,7 @@ class Sitemap {
             ? $this->command[5]
             : null;
 
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 $this->page = 'site/play/level/default.php';
                 break;
@@ -188,8 +211,7 @@ class Sitemap {
             ? $this->command[5]
             : null;
 
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 $this->page = 'site/play/cheat/default.php';
                 break;
@@ -252,8 +274,7 @@ class Sitemap {
             ? $this->command[2]
             : null;
 
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 $this->page = 'site/user/default.php';
                 break;
@@ -293,8 +314,7 @@ class Sitemap {
             ? $this->command[3]
             : null;
 
-        switch ($switch)
-        {
+        switch ($switch) {
             default:
                 $this->page = 'site/user/new/default.php';
                 break;
@@ -319,8 +339,7 @@ class Sitemap {
             ? $this->command[3]
             : null;
 
-        switch ($switch)
-        {
+        switch ($switch) {
             default:
                 $this->page = 'site/user/login/default.php';
                 break;
@@ -349,14 +368,19 @@ class Sitemap {
             ? $this->command[2]
             : null;
 
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 break;
 
             case 'person':
                 $this->page = 'site/view/person.php';
                 $this->id = $id;
+                break;
+
+            case 'world':
+                $this->page = 'site/view/world.php';
+                $this->id = $id;
+                $this->isUser = true;
                 break;
         }
     }
@@ -374,8 +398,7 @@ class Sitemap {
             ? $this->command[3]
             : null;
 
-        switch($switch)
-        {
+        switch($switch) {
             default:
                 $this->page = 'site/world/default.php';
                 $this->id = $id;

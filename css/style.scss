@@ -148,38 +148,6 @@ $size-desktop: 68rem;
   @media (max-width: 349px) { @content; }
 }
 
-@mixin for-phone-only {
-  @media (max-width: 599px) { @content; }
-}
-
-@mixin for-tablet-portrait-up {
-  @media (min-width: 600px) { @content; }
-}
-
-@mixin for-tablet-portait-only {
-  @media (min-width: 600px) and (max-width: 899px) { @content; }
-}
-
-@mixin for-tablet-landscape-up {
-  @media (min-width: 900px) { @content; }
-}
-
-@mixin for-tablet-landscape-only {
-  @media (min-width: 900px) and (max-width: 1199px) { @content; }
-}
-
-@mixin for-desktop-up {
-  @media (min-width: 1200px) { @content; }
-}
-
-@mixin for-desktop-only {
-  @media (min-width: 1200px) and (max-width: 1799px) { @content; }
-}
-
-@mixin for-big-desktop-up {
-  @media (min-width: 1800px) { @content; }
-}
-
 // GLOBAL
 
 html {
@@ -508,7 +476,7 @@ a {
 
   text-align: center;
 
-  @include for-phone-only {
+  @include sw-for-tiny {
     width: 30rem;
   }
 
@@ -519,7 +487,7 @@ a {
 
     display: inline-block;
 
-    @include for-phone-only {
+    @include sw-for-tiny {
       width: 8.4rem;
     }
 
@@ -528,7 +496,7 @@ a {
 
       width: 7.5rem;
 
-      @include for-phone-only {
+      @include sw-for-tiny {
         width: 8.4rem;
       }
 
@@ -543,7 +511,7 @@ a {
     text-align: center;
     vertical-align: middle;
 
-    @include for-phone-only {
+    @include sw-for-tiny {
       font-size: 1.3rem;
     }
   }
@@ -1315,11 +1283,11 @@ a {
     }
 
     &:hover {
-      background-color: $color-gray-medium;
+      background-color: $color-amber-primary;
     }
 
     &:active {
-      background-color: $color-amber-primary;
+      background-color: $color-amber-secondary;
       color: $color-black-dark;
     }
   }
@@ -1402,6 +1370,27 @@ a {
 
   background-color: $color-amber-primary;
   z-index: 200;
+}
+
+.sw-l-iconlist {
+  @include mix-auto;
+
+  width: 90%;
+
+  &__item {
+    @include mix-padding(0.4rem);
+    display: inline-block;
+
+    border-radius: 0.4rem;
+
+    img {
+      @include mix-size(3rem);
+    }
+
+    &:hover {
+      background-color: $color-amber-primary;
+    }
+  }
 }
 
 // STATE
