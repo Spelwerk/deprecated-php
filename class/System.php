@@ -308,23 +308,6 @@ class System {
     }
 
 
-    function getWorld() {
-        global $curl;
-
-        $arrayList = null;
-
-        $result = $curl->get('world/template');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new World(null, null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
-
     function idList($list) {
         $idList = null;
 
@@ -378,9 +361,25 @@ class System {
 
 
     function person_selectWorld() {
-        global $form;
+        global $form, $curl, $user;
 
-        $list = $this->getWorld();
+        $list = null;
+
+        if($user) {
+            $userList = $curl->get('user-world/id/'.$user->id.'/calculated');
+
+            if(isset($userList['data'])) {
+                foreach($userList['data'] as $item) {
+                    $list[] = new World($item['world_id']);
+                }
+            }
+        }
+
+        $worldList = $curl->get('world/template')['data'];
+
+        foreach($worldList as $item) {
+            $list[] = new World(null, null, $item);
+        }
 
         $form->genericStart('play');
 
