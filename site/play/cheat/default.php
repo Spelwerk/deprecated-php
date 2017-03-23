@@ -20,25 +20,22 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     <div class="sw-l-content__wrap">
         <h2>Cheat</h2>
-        <?php /*<a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/asset">Asset</a> */?>
         <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/attribute">Attribute</a>
-        <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/bionic">Bionic</a>
         <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/characteristic">Characteristic</a>
         <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/expertise">Expertise</a>
         <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/feature">Feature</a>
         <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/milestone">Milestone</a>
-        <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/protection">Protection</a>
         <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/skill">Skill</a>
-        <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/weapon">Weapon</a>
-        <?php if($person->isSupernatural) echo('<a class="sw-c-link" href="/play/'.$sitemap->id.'/'.$sitemap->hash.'/cheat/supernatural">Supernatural</a>'); ?>
+        <?php if($person->isSupernatural): ?>
+            <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/cheat/supernatural">Supernatural</a>
+        <?php endif; ?>
     </div>
 
 <?php else: ?>
 
     <div class="sw-l-content__wrap">
         <h2>Cheat</h2>
-        <p>There are options in this place that will change your person into something that is outside of the normal creation structure. Because of this we will remove your person from all public lists if you choose to move forward and cheat. If you're looking for leveling up with experience, you will be able to find that below</p>
-        <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/level">Level Up</a>
+        <p>There are options in this place that will change your person into something that is outside of the normal creation structure. Because of this we will remove your person from all public lists if you choose to move forward and cheat.</p>
         <form action="/post.php" method="post">
             <?php
             $form->getHidden('post', 'return', 'play');

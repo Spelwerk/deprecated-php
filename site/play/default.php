@@ -54,14 +54,13 @@ if(isset($user)) {
     <?php if($person->isOwner): ?>
 
         <div class="sw-l-quicklink">
-            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level"><img src="/img/arrow-up.png"/></a>
             <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/wound"><img src="/img/wound.png"/></a>
-            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/weapon"><img src="/img/weapon.png"/></a>
-            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/protection"><img src="/img/armor.png"/></a>
+            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/weapon"><img src="/img/weapon.png"/></a>
+            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/protection"><img src="/img/armor.png"/></a>
             <?php if($person->world->existsBionic): ?>
-            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic"><img src="/img/bionic.png"/></a>
+            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/bionic"><img src="/img/bionic.png"/></a>
             <?php endif; ?>
-            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/edit.png"/></a>
+            <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit"><img src="/img/edit.png"/></a>
         </div>
 
         <?php if(isset($user) && $userOwner != true): ?>
@@ -83,10 +82,7 @@ if(isset($user)) {
 
     <?php echo(
         '<div class="sw-l-content__wrap">'.
-        '<p>Nickname: '.$person->nickname.'</p>'.
-        '<p>Age: '.$person->age.'</p>'.
-        '<p>Gender: '.$person->gender.'</p>'.
-        '<p>Occupation: '.$person->occupation.'</p>'.
+        '<p>This is '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'. '.$person->firstname.' is a '.$person->age.' years old '.$person->gender.' '.$person->occupation.'</p>'.
         '</div>'
     ); ?>
 
@@ -129,7 +125,7 @@ if(isset($user)) {
 
     <?php if($person->isOwner): ?>
         <div class="sw-l-content__wrap">
-            <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/weapon">Edit Weapon</a>
+            <a class="sw-c-link__small" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/weapon">Edit Weapon</a>
         </div>
     <?php endif; ?>
 
@@ -138,7 +134,7 @@ if(isset($user)) {
 
     <?php if($person->isOwner): ?>
         <div class="sw-l-content__wrap">
-            <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/protection">Edit Protection</a>
+            <a class="sw-c-link__small" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/protection">Edit Protection</a>
         </div>
     <?php endif; ?>
 
@@ -148,7 +144,7 @@ if(isset($user)) {
 
         <?php if($person->isOwner): ?>
             <div class="sw-l-content__wrap">
-                <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic/bionic">Edit Bionic</a>
+                <a class="sw-c-link__small" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/bionic/bionic">Edit Bionic</a>
             </div>
         <?php endif; ?>
     <?php endif; ?>
@@ -159,7 +155,7 @@ if(isset($user)) {
 
         <?php if($person->isOwner): ?>
             <div class="sw-l-content__wrap">
-                <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic/augmentation">Edit Augmentation</a>
+                <a class="sw-c-link__small" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/bionic/augmentation">Edit Augmentation</a>
             </div>
         <?php endif; ?>
     <?php endif; ?>
@@ -179,7 +175,7 @@ if(isset($user)) {
             echo('<p>Awfully empty here. Perhaps you would like to describe your character now?</p>');
         }
         ?>
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/description">Edit Description</a>
+        <a class="sw-c-link__small" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/description">Edit Description</a>
     </div>
 
 
@@ -195,7 +191,7 @@ if(isset($user)) {
 
     <?php if($person->isOwner): ?>
         <div class="sw-l-content__wrap">
-            <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level">Level Up</a>
+            <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit">Level Up</a>
         </div>
     <?php endif; ?>
 

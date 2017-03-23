@@ -538,14 +538,14 @@ class Person {
     }
 
     public function makeExpertiseList() {
-        echo(
-            '<h3>Expertise</h3>'.
-            '<div class="sw-c-list">'
-        );
-
         $list = $this->getExpertise($this->world->expertiseAttribute);
 
         if($list) {
+            echo(
+                '<h3>Expertise</h3>'.
+                '<div class="sw-c-list">'
+            );
+
             foreach($list as $expertise) {
                 $info = $expertise->description;
 
@@ -565,9 +565,9 @@ class Person {
 
                 $this->buildList($title, $info, $expertise->icon);
             }
-        }
 
-        echo('</div>');
+            echo('</div>');
+        }
     }
 
     public function makeFeatures() {

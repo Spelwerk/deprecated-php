@@ -138,6 +138,15 @@ a {
     background-color: #7cb342; }
   .sw-c-link--dangerous {
     background-color: #d50000; }
+  .sw-c-link__small {
+    margin-top: 1rem;
+    display: block;
+    font-family: aleobold, serif;
+    font-size: 1.3rem;
+    text-align: center;
+    text-transform: uppercase; }
+    .sw-c-link__small:hover {
+      color: #111111; }
 
 .sw-c-button__item {
   margin: 1rem 1rem 1rem 1rem;

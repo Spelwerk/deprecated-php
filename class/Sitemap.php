@@ -132,8 +132,8 @@ class Sitemap {
                 $this->hash = $hash;
                 break;
 
-            case 'level':
-                $this->switchPlayLevel();
+            case 'edit':
+                $this->switchPlayEdit();
                 $this->id = $id;
                 $this->hash = $hash;
                 break;
@@ -142,62 +142,6 @@ class Sitemap {
                 $this->page = 'site/play/wound.php';
                 $this->id = $id;
                 $this->hash = $hash;
-                break;
-        }
-    }
-
-    function switchPlayLevel() {
-        $switch = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
-            : null;
-
-        $thing = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
-            : null;
-
-        switch($switch) {
-            default:
-                $this->page = 'site/play/level/default.php';
-                break;
-
-            case 'bionic':
-                $this->page = 'site/play/edit/bionic.php';
-                $this->thing = $thing;
-                break;
-
-            case 'consumable':
-                $this->page = 'site/play/level/consumable.php';
-                $this->thing = $thing;
-                break;
-
-            case 'description':
-                $this->page = 'site/play/edit/description.php';
-                break;
-
-            case 'experience':
-                $this->page = 'site/play/level/experience.php';
-                break;
-
-            case 'expertise':
-                $this->page = 'site/play/level/expertise.php';
-                break;
-
-            case 'protection':
-                $this->page = 'site/play/edit/protection.php';
-                $this->thing = $thing;
-                break;
-
-            case 'skill':
-                $this->page = 'site/play/level/skill.php';
-                break;
-
-            case 'supernatural':
-                $this->page = 'site/play/level/supernatural.php';
-                break;
-
-            case 'weapon':
-                $this->page = 'site/play/edit/weapon.php';
-                $this->thing = $thing;
                 break;
         }
     }
@@ -256,6 +200,62 @@ class Sitemap {
 
             case 'supernatural':
                 $this->page = 'site/play/cheat/supernatural.php';
+                break;
+
+            case 'weapon':
+                $this->page = 'site/play/edit/weapon.php';
+                $this->thing = $thing;
+                break;
+        }
+    }
+
+    function switchPlayEdit() {
+        $switch = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        $thing = isset($this->command[5]) && $this->command[5] != null
+            ? $this->command[5]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'site/play/edit/default.php';
+                break;
+
+            case 'bionic':
+                $this->page = 'site/play/edit/bionic.php';
+                $this->thing = $thing;
+                break;
+
+            case 'consumable':
+                $this->page = 'site/play/edit/consumable.php';
+                $this->thing = $thing;
+                break;
+
+            case 'description':
+                $this->page = 'site/play/edit/description.php';
+                break;
+
+            case 'experience':
+                $this->page = 'site/play/edit/experience.php';
+                break;
+
+            case 'expertise':
+                $this->page = 'site/play/edit/expertise.php';
+                break;
+
+            case 'protection':
+                $this->page = 'site/play/edit/protection.php';
+                $this->thing = $thing;
+                break;
+
+            case 'skill':
+                $this->page = 'site/play/edit/skill.php';
+                break;
+
+            case 'supernatural':
+                $this->page = 'site/play/edit/supernatural.php';
                 break;
 
             case 'weapon':

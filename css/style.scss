@@ -290,6 +290,21 @@ a {
   &--dangerous {
     background-color: $color-red-secondary;
   }
+
+  &__small {
+    margin-top: 1rem;
+
+    display: block;
+
+    font-family: $font-fancy;
+    font-size: 1.3rem;
+    text-align: center;
+    text-transform: uppercase;
+
+    &:hover {
+      color: $color-black-dark;
+    }
+  }
 }
 
 .sw-c-button {
