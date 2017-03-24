@@ -480,7 +480,7 @@ class Person {
                 case 'consumable':
                     $value = $item->value.'d12';
                     $data = 'data-roll-type="consumable" 
-                             data-roll-d12="'.$value.'"';
+                             data-roll-d12="'.$item->value.'"';
                     break;
 
                 case 'skill':
@@ -654,7 +654,7 @@ class Person {
                 '<div class="sw-c-button">'
             );
 
-            foreach($this->getAttribute($this->manifestation->attributeType) as $supernatural) {
+            foreach($this->getAttribute($this->manifestation->disciplineAttributeType) as $supernatural) {
                 $rollD12 = 2;
                 $rollBonus = 0;
 

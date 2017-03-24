@@ -21,4 +21,4 @@ $system = new System();
 <script src="/js/play.js"></script>
 
 <h2>Edit Supernatural</h2>
-<?php $system->person_purchaseSupernatural($person, 999); ?>
+<?php $system->person_purchaseDiscipline($person, 999); ?>

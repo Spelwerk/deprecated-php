@@ -155,8 +155,11 @@ function person_postAttribute($postData, $personId, $allowsAll = false) {
     $resultArray = null;
 
     foreach($postData as $key => $value) {
+        $explode = explode('__', $key);
+        $attributeId = $explode[1];
+
         if($allowsAll || $value > 0) {
-            $postArray[] = ['person_id' => $personId, 'attribute_id' => $key, 'value' => $value];
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $value];
         }
     }
 
@@ -430,7 +433,7 @@ function person_woundAdd($postData, $personId, $woundId) {
 
 
 function switch_person($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_USER, $POST_ERROR;
 
     switch($do) {
         default: break;
@@ -517,21 +520,17 @@ function switch_person($do) {
             person_putTable($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
             break;
 
-        case 'person--experience':
-            $post = [22 => $POST_DATA['value']];
-            person_postAttribute($post, $POST_ID, true);
-            break;
-
         case 'person--expertise':
             person_postExpertise($POST_DATA, $POST_ID);
 
             if(!$POST_ERROR) {
                 person_putPerson(['point_expertise' => 0], $POST_HASH);
 
-                if($_POST['post--points'] != 999) {
-                    $calc = intval($_POST['post--points']);
+                if(isset($_POST['post--experience'])) {
+                    $key = 'attribute_id__'.$_POST['post--experience'];
+                    $value = intval($_POST['post--points']);
 
-                    person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                    person_postAttribute([$key => $value], $POST_ID, true);
                 }
             }
             break;
@@ -595,9 +594,11 @@ function switch_person($do) {
                 person_putPerson(['point_skill' => 0], $POST_HASH);
 
                 if(!$POST_ERROR) {
-                    if($_POST['post--points'] != 999) {
-                        $calc = intval($_POST['post--points']);
-                        person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                    if(isset($_POST['post--experience'])) {
+                        $key = 'attribute_id__'.$_POST['post--experience'];
+                        $value = intval($_POST['post--points']);
+
+                        person_postAttribute([$key => $value], $POST_ID, true);
                     }
                 }
             }
@@ -610,9 +611,11 @@ function switch_person($do) {
                 person_putPerson(['point_supernatural' => 0], $POST_HASH);
 
                 if(!$POST_ERROR) {
-                    if($_POST['post--points'] != 999) {
-                        $calc = intval($_POST['post--points']);
-                        person_putAttribute($POST_ID, 22, $calc); // todo experience should not be hardcoded?
+                    if(isset($_POST['post--experience'])) {
+                        $key = 'attribute_id__'.$_POST['post--experience'];
+                        $value = intval($_POST['post--points']);
+
+                        person_postAttribute([$key => $value], $POST_ID, true);
                     }
                 }
             }

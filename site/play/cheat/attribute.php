@@ -26,11 +26,12 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
     echo('<h2>'.$attribute->name.'</h2>');
 
-    $form->getPurchase($attribute->name, $attribute->id, $attribute->description, $attribute->maximum, $attribute->value, true);
-    $form->getHidden('post', 'return', 'play');
-    $form->getHidden('post', 'do', 'person--edit--attribute');
-    $form->getHidden('post', 'id', $person->id);
-    $form->getHidden('post', 'hash', $person->hash);
+    $form->hidden('return', 'play', 'post');
+    $form->hidden('do', 'person--edit--attribute', 'post');
+    $form->hidden('id', $person->id, 'post');
+    $form->hidden('hash', $person->hash, 'post');
+
+    $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
     ?>
     <input class="sw-c-submit sw-js-submit sw-is-clickable" type="submit" value="Next &raquo;"/>
     </form>

@@ -38,7 +38,7 @@ $system = new System();
     }
     ?>
     <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/protection/add">Add</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/protection/add">Add</a>
     </div>
 
 <?php endif; ?>

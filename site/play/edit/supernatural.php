@@ -23,5 +23,5 @@ $system = new System();
 <h2>Purchase Supernatural</h2>
 <?php
 $exp = $person->getAttribute(null, $person->world->experience)[0];
-$system->person_purchaseSupernatural($person, $exp->value);
+$system->person_purchaseDiscipline($person, $exp->value);
 ?>

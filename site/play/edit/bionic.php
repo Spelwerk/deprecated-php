@@ -50,8 +50,8 @@ $system = new System();
 
     <h2>Bionic & Augmentation</h2>
     <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic/bionic">Bionic</a>
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/level/bionic/augmentation">Augmentation</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/bionic/bionic">Bionic</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/bionic/augmentation">Augmentation</a>
     </div>
 
 <?php endif; ?>

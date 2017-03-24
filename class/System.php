@@ -136,12 +136,18 @@ class System {
             } else if($person->pointExpertise > 0) {
                 echo '<h2>Expertise</h2>';
 
-                $this->person_purchaseExpertise($person, $person->pointExpertise);
+                $exp = $person->getAttribute(null, $person->world->experience)[0];
+                $pts = $person->pointExpertise;
+
+                $this->person_purchaseExpertise($person, intval($exp->value + $pts));
 
             } else if($person->isSupernatural && $person->pointSupernatural > 0) {
                 echo '<h2>'.$person->manifestation->name.'</h2>';
 
-                $this->person_purchaseSupernatural($person, $person->pointSupernatural);
+                $exp = $person->getAttribute(null, $person->world->experience)[0];
+                $pts = $person->pointSupernatural;
+
+                $this->person_purchaseDiscipline($person, intval($exp->value + $pts));
 
             } else if(!isset($person->firstname) || !isset($person->surname) || !isset($person->gender)) {
                 echo '<h2>Further Information</h2>';
@@ -329,22 +335,24 @@ class System {
                     $form->getCheckbox($checkboxName, $item->name, $item->id, $item->description);
                 }
             }
-
-            echo(
-                '<label for="post--checkAll">'.
-                '<div class="sw-c-radio__item sw-js-check-item">'.
-                '<div class="sw-c-radio__header">'.
-                '<div class="sw-c-radio__radio">'.
-                '<img class="sw-js-check-false" src="/img/checkbox-false.png"/>'.
-                '<img class="sw-js-check-true sw-is-hidden" src="/img/checkbox-true.png"/>'.
-                '</div>'.
-                '<div class="sw-c-radio__title sw-js-check-title">Check All</div>'.
-                '</div>'.
-                '<input class="sw-js-check-all sw-is-hidden" type="checkbox" name="post--checkAll" id="post--checkAll" value="0"/>'.
-                '</div>'.
-                '</label>'
-            );
         }
+    }
+
+    function checkboxAll() {
+        echo(
+            '<label for="post--checkAll">'.
+            '<div class="sw-c-radio__item sw-js-check-item">'.
+            '<div class="sw-c-radio__header">'.
+            '<div class="sw-c-radio__radio">'.
+            '<img class="sw-js-check-false" src="/img/checkbox-false.png"/>'.
+            '<img class="sw-js-check-true sw-is-hidden" src="/img/checkbox-true.png"/>'.
+            '</div>'.
+            '<div class="sw-c-radio__title sw-js-check-title">Check All</div>'.
+            '</div>'.
+            '<input class="sw-js-check-all sw-is-hidden" type="checkbox" name="post--checkAll" id="post--checkAll" value="0"/>'.
+            '</div>'.
+            '</label>'
+        );
     }
 
     function radioList($itemList, $idList = null, $radioName, $radioSelect) {
@@ -588,6 +596,7 @@ class System {
         $form->getHidden('post', 'do', 'person--expertise');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
+        $form->hidden('experience', $person->world->experience, 'post');
 
         if($points == 999) {
             $form->getHidden('post', 'points', 999);
@@ -652,28 +661,29 @@ class System {
         $form->genericStart();
         $form->pointsForm($points, 'points');
 
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--skill');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--skill', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
+        $form->hidden('experience', $person->world->experience, 'post');
 
         if($points == 999) {
             $form->getHidden('post', 'points', 999);
         }
 
         foreach($currentList as $current) {
-            $form->getPurchase($current->name, $current->id, $current->description, $current->maximum, $current->value);
+            $form->purchase('attribute_id', $current->name, $current->description, $current->id, 0, $current->maximum, $current->value);
         }
 
         $form->genericEnd();
     }
 
-    public function person_purchaseSupernatural($person, $points) {
+    public function person_purchaseDiscipline($person, $points) {
         global $curl, $form;
 
-        $supernaturalList = $person->world->getAttribute($person->manifestation->attributeType, $person->species->id);
+        $supernaturalList = $person->world->getAttribute($person->manifestation->disciplineAttributeType, $person->species->id);
         $expertiseList = $person->getExpertise();
-        $currentList = $person->getAttribute($person->manifestation->attributeType);
+        $currentList = $person->getAttribute($person->manifestation->disciplineAttributeType);
         $idList = [];
         $expList = [];
 
@@ -686,6 +696,7 @@ class System {
         $form->getHidden('post', 'do', 'person--supernatural');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
+        $form->hidden('experience', $person->world->experience, 'post');
 
         if($points == 999) {
             $form->getHidden('post', 'points', 999);
@@ -699,7 +710,7 @@ class System {
                     ? $current->maximum
                     : $personPower;
 
-                $form->getPurchase($current->name, $current->id, $current->description, $maximum, $current->value);
+                $form->purchase('attribute_id', $current->name, $current->description, $current->id, 0, $maximum, $current->value);
             }
         }
 
@@ -714,7 +725,7 @@ class System {
                     ? $current->maximum
                     : $personPower;
 
-                $form->getPurchase($supernatural->name, $supernatural->id, $supernatural->description, $maximum);
+                $form->purchase('attribute_id', $supernatural->name, $supernatural->description, $supernatural->id, 0, $maximum);
             }
         }
 
@@ -743,6 +754,7 @@ class System {
             }
         }
 
+        $this->checkboxAll();
 
         $form->genericEnd();
     }
@@ -768,6 +780,8 @@ class System {
             $this->checkboxList($bionicList, $idList, 'bionic');
         }
 
+        $this->checkboxAll();
+
         $form->genericEnd();
     }
 
@@ -791,6 +805,8 @@ class System {
 
             $this->checkboxList($protectionList, $idList, 'bionic');
         }
+
+        $this->checkboxAll();
 
         $form->genericEnd();
     }
@@ -820,6 +836,8 @@ class System {
                 $form->getHidden('weapon', $species['weapon_id'], 0);
             }
         }
+
+        $this->checkboxAll();
 
         $form->genericEnd(false);
     }
@@ -1046,6 +1064,7 @@ class System {
         $form->getHidden('post', 'hash', $world->hash);
 
         $this->checkboxList($list, null, 'attribute');
+        $this->checkboxAll();
 
         $form->genericEnd(true);
     }
@@ -1076,6 +1095,7 @@ class System {
         $form->getHidden('post', 'thing', 'expertise');
 
         $this->checkboxList($list, null, 'expertise');
+        $this->checkboxAll();
 
         $form->genericEnd(true);
     }
@@ -1097,6 +1117,7 @@ class System {
         $form->getHidden('post', 'hash', $world->hash);
 
         $this->checkboxList($checkList, null, 'manifestation');
+        $this->checkboxAll();
 
         $form->genericEnd(true);
     }
@@ -1137,6 +1158,7 @@ class System {
         $form->getHidden('post', 'thing', 'characteristic');
 
         $this->checkboxList($list, null, 'characteristic');
+        $this->checkboxAll();
 
         $form->genericEnd(true);
     }
@@ -1188,6 +1210,7 @@ class System {
         $form->getHidden('post', 'thing', 'milestone');
 
         $this->checkboxList($list, null, 'milestone');
+        $this->checkboxAll();
 
         $form->genericEnd(true);
     }
@@ -1221,6 +1244,7 @@ class System {
         $form->getHidden('post', 'hash', $world->hash);
 
         $this->checkboxList($list, null, 'augmentation');
+        $this->checkboxAll();
 
         $form->genericEnd(true);
     }

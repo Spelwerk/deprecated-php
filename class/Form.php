@@ -177,6 +177,52 @@ class Form {
         echo('</div>');
     }
 
+    public function purchase($uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $minimum = null, $maximum = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $inputMinimum = isset($minimum)
+            ? ' min="'.$minimum.'"'
+            : null;
+
+        $inputMaximum = isset($maximum)
+            ? ' max="'.$maximum.'"'
+            : '';
+
+        $inputValue  = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<div class="sw-c-purchase sw-js-purchase-item">'.
+            '<div class="sw-c-purchase__head">'.
+            '<div class="sw-c-purchase__image">'.
+            '<img src="/img/missing_icon.png"/>'.
+            '</div>'.
+            '<div class="sw-c-purchase__title">'.$labelName.'</div>'.
+            '<div class="sw-c-purchase__button">'.
+            '<button type="button" class="sw-js-purchase-button sw-js-purchase-minus">'.
+            '<img src="/img/minus.png"/>'.
+            '</button>'.
+            '</div>'.
+            '<div class="sw-c-purchase__value sw-js-purchase-value">'.$value.'</div>'.
+            '<div class="sw-c-purchase__button">'.
+            '<button type="button" class="sw-js-purchase-button sw-js-purchase-plus">'.
+            '<img src="/img/plus.png"/>'.
+            '</button>'.
+            '</div>'.
+            '</div>'.
+            '<div class="sw-c-purchase__info">'.$labelDescription.'</div>'.
+            '<input type="number" class="sw-js-purchase-input sw-is-hidden" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.'/>'.
+            '</div>'
+        );
+    }
+
     // needs refactoring
     public function getVarchar($tableName, $name, $required, $value = null) {
         $reqLabel = $required

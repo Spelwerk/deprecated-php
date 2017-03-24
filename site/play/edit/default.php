@@ -18,7 +18,7 @@ $person = new Person($sitemap->id, $sitemap->hash);
 
 <div class="sw-l-content__wrap">
     <h2>Edit</h2>
-    <?php /*<a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/level/asset">Asset</a> */?>
+    <?php /*<a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/edit/asset">Asset</a> */?>
     <?php if($person->world->existsBionic): ?>
     <a class="sw-c-link" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/edit/bionic">Bionic</a>
     <?php endif; ?>

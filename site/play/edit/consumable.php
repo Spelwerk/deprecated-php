@@ -28,7 +28,7 @@ foreach($attributeList as $attribute) {
         <h2>Consumable</h2>
         <?php
         foreach($attributeList as $attribute) {
-            echo('<a class="sw-c-link" href="/play/'.$sitemap->id.'/'.$sitemap->hash.'/level/consumable/'.$attribute->id.'">'.$attribute->name.'</a>');
+            echo('<a class="sw-c-link" href="/play/'.$sitemap->id.'/'.$sitemap->hash.'/edit/consumable/'.$attribute->id.'">'.$attribute->name.'</a>');
         }
         ?>
     </div>
@@ -44,11 +44,12 @@ foreach($attributeList as $attribute) {
 
         echo('<h2>'.$attribute->name.'</h2>');
 
-        $form->getNumber('person', 'value', 0, 0, $attribute->maximum, $attribute->value);
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--edit--attribute');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--edit--attribute', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
+
+        $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
         ?>
         <input class="sw-c-submit sw-js-submit sw-is-clickable" type="submit" value="Next &raquo;"/>
     </form>
