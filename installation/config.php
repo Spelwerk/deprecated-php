@@ -12,4 +12,4 @@ $config_curl = [
     'apiKey' => ''
 ];
 
-$baseUrl = 'http://spelwerk.dev/';
+$baseUrl = 'http://spelwerk.dev';

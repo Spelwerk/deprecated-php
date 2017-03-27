@@ -52,7 +52,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 }
 
 $r = isset($POST_RETURN)
-    ? $POST_RETURN
+    ? '/'.$POST_RETURN
     : null;
 
 $i = isset($POST_ID)

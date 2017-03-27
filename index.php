@@ -6,7 +6,7 @@
  * Time: 12:05
  */
 
-//setcookie('sw_person_list', '', time() -2000);setcookie('sw_world_list', '', time() -2000);
+//setcookie('sw_person_list', '', time() -2000); setcookie('sw_world_list', '', time() -2000); setcookie('sw_cookie_policy', '', time() -2000);
 
 require_once('php/config.php');
 
