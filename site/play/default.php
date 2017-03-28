@@ -165,11 +165,8 @@ if(isset($user)) {
     <h2>Description</h2>
     <div class="sw-l-content__wrap">
         <?php
-        if($person->description != null || $person->behaviour != null || $person->appearance != null || $person->features != null || $person->personality != null) {
+        if($person->description != null || $person->personality != null) {
             if($person->description != null) echo('<p>'.$person->description.'</p>');
-            if($person->behaviour != null) echo('<p>'.$person->behaviour.'</p>');
-            if($person->appearance != null) echo('<p>'.$person->appearance.'</p>');
-            if($person->features != null) echo('<p>'.$person->features.'</p>');
             if($person->personality != null) echo('<p>'.$person->personality.'</p>');
         } else {
             echo('<p>Awfully empty here. Perhaps you would like to describe your character now?</p>');

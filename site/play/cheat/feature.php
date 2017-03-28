@@ -36,9 +36,9 @@ $system = new System();
                 $form->getHidden('person', 'current_id', $person->species->id);
                 break;
 
-            case 'caste':
-                $list = $system->getCasteList($person);
-                $form->getHidden('person', 'current_id', $person->caste->id);
+            case 'background':
+                $list = $system->getBackgroundList($person);
+                $form->getHidden('person', 'current_id', $person->background->id);
                 break;
 
             case 'nature':
@@ -80,7 +80,7 @@ $system = new System();
     <div class="sw-l-content__wrap">
         <h2>Feature</h2>
         <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/feature/species">Species</a>
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/feature/caste">Caste</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/feature/background">Background</a>
         <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/feature/nature">Nature</a>
         <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/feature/identity">Identity</a>
 

@@ -27,8 +27,7 @@ function world_postWorld($postData) {
     $postData['max_supernatural'] = 0;
     $postData['max_skill'] = 0;
     $postData['max_expertise'] = 0;
-    $postData['max_milestone_upbringing'] = 0;
-    $postData['max_milestone_flexible'] = 0;
+    $postData['max_milestone'] = 0;
     $postData['max_relationship'] = 0;
 
     $result = $curl->post('world', $postData);

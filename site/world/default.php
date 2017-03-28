@@ -62,7 +62,7 @@ if(isset($user)) {
     <div class="sw-l-content__wrap">
         <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/values">Edit Values</a>
         <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/species">Edit species</a>
-        <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/caste">Edit caste</a>
+        <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/background">Edit background</a>
         <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/nature">Edit nature</a>
         <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/identity">Edit identity</a>
         <a class="sw-c-link" href="/world/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>/defaults">Edit defaults</a>

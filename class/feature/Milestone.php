@@ -8,7 +8,9 @@
  */
 class Milestone {
 
-    var $id, $name, $description, $upbringing, $icon;
+    var $id, $name, $description, $icon;
+
+    var $backgroundId, $backgroundName, $speciesId, $speciesName, $manifestationId, $manifestationName;
 
     var $attribute, $relationship;
 
@@ -22,14 +24,17 @@ class Milestone {
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
-        $this->upbringing = $data['upbringing'];
 
-        $this->casteId = $data['caste_id'];
-        $this->casteName = $data['caste_name'];
+        $this->backgroundId = $data['background_id'];
+        $this->backgroundName = $data['background_name'];
 
-        $this->icon = $this->upbringing == 1
-            ? '/img/person/milestone-upbringing.png'
-            : '/img/person/milestone-flexible.png';
+        $this->speciesId = $data['species_id'];
+        $this->speciesName = $data['species_name'];
+
+        $this->manifestationId = $data['manifestation_id'];
+        $this->manifestationName = $data['manifestation_name'];
+
+        $this->icon = '/img/person/milestone.png';
 
         $this->attribute = [
             'id' => $data['attribute_id'],

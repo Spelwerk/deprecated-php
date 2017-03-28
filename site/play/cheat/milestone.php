@@ -18,21 +18,12 @@ $system = new System();
     <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
 </div>
 
-<?php if($sitemap->thing == 'upbringing'): ?>
+<?php if($sitemap->thing == 'add'): ?>
 
     <script src="/js/play.js"></script>
 
-    <h2>Upbringing</h2>
-    <?php $system->person_selectMilestone($person, 1, 1); ?>
-
-<?php endif; ?>
-
-<?php if($sitemap->thing == 'flexible'): ?>
-
-    <script src="/js/play.js"></script>
-
-    <h2>Flexible</h2>
-    <?php $system->person_selectMilestone($person, 0, 1); ?>
+    <h2>Milestone</h2>
+    <?php $system->person_selectMilestone($person, 1); ?>
 
 <?php endif; ?>
 
@@ -47,8 +38,7 @@ $system = new System();
     }
     ?>
     <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/milestone/upbringing">Add Upbringing</a>
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/milestone/flexible">Add Flexible</a>
+        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/milestone/add">Add Milestone</a>
     </div>
 
 <?php endif; ?>

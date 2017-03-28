@@ -1,0 +1,33 @@
+@import 'color';
+
+.sw-is-opacity {
+  opacity: 0.2;
+}
+
+.sw-is-hidden {
+  display: none;
+}
+
+.sw-is-chevron {
+  background-color: $color-green-primary;
+}
+
+.sw-is-selected {
+  background-color: $color-green-primary;
+}
+
+.sw-is-unclickable {
+  background-color: $color-white-dark;
+}
+
+.sw-is-clickable {
+  background-color: $color-green-primary;
+}
+
+.sw-is-valid {
+  color: $color-green-secondary;
+}
+
+.sw-is-invalid {
+  color: $color-red-primary;
+}

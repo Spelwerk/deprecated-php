@@ -417,8 +417,8 @@ class Sitemap {
                 $this->hash = $hash;
                 break;
 
-            case 'caste':
-                $this->page = 'site/world/caste.php';
+            case 'background':
+                $this->page = 'site/world/background.php';
                 $this->id = $id;
                 $this->hash = $hash;
                 break;

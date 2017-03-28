@@ -10,23 +10,25 @@
 
 require_once('php/config.php');
 
-require_once('class/Curl.php');
-require_once('class/Form.php');
-require_once('class/Sitemap.php');
-require_once('class/User.php');
+if(!$maintenanceMode) {
+    require_once('class/Curl.php');
+    require_once('class/Form.php');
+    require_once('class/Sitemap.php');
+    require_once('class/User.php');
 
-$curl = new Curl($config_curl);
-$form = new Form();
+    $curl = new Curl($config_curl);
+    $form = new Form();
 
-$user = isset($_COOKIE['sw_user_token'])
-    ? new User($_COOKIE['sw_user_token'])
-    : null;
+    $user = isset($_COOKIE['sw_user_token'])
+        ? new User($_COOKIE['sw_user_token'])
+        : null;
 
-$admin = isset($user)
-    ? $user->isAdmin
-    : 0;
+    $admin = isset($user)
+        ? $user->isAdmin
+        : 0;
 
-$sitemap = new Sitemap($user);
+    $sitemap = new Sitemap($user);
+}
 ?>
 
 <!DOCTYPE html>
@@ -46,55 +48,65 @@ $sitemap = new Sitemap($user);
 </head>
 <body>
 
-<?php
-if(!isset($_COOKIE['sw_cookie_policy'])) {
-    require_once('php/cookiepolicy.php');
-}
-?>
+<?php if(!$maintenanceMode): ?>
 
-<div class="sw-l-header">
-    <div class="sw-l-header__content">
-        <div class="sw-l-header__hamburger sw-js-hamburger"><a href="#"><img src="/img/hamburger--white.png"/></a></div>
-        <a class="sw-l-header__logo" href="/">spelwerk</a>
-        <div class="sw-l-header__menu">
-            <div class="sw-l-header__menu__content">
-                <a class="sw-l-header__menu__item" href="/play">Play</a>
-                <a class="sw-l-header__menu__item sw-js-menu">New</a>
-                <a class="sw-l-header__menu__item sw-js-menu">View</a>
-                <?php if(isset($user) && $user->isAdmin): ?>
-                <a class="sw-l-header__menu__item" href="/admin">Admin</a>
-                <?php endif; ?>
+    <?php
+    if(!isset($_COOKIE['sw_cookie_policy'])) {
+        require_once('php/cookiepolicy.php');
+    }
+    ?>
+
+    <div class="sw-l-header">
+        <div class="sw-l-header__content">
+            <div class="sw-l-header__hamburger sw-js-hamburger"><a href="#"><img src="/img/hamburger--white.png"/></a></div>
+            <a class="sw-l-header__logo" href="/">spelwerk</a>
+            <div class="sw-l-header__menu">
+                <div class="sw-l-header__menu__content">
+                    <a class="sw-l-header__menu__item" href="/play">Play</a>
+                    <a class="sw-l-header__menu__item sw-js-menu">New</a>
+                    <a class="sw-l-header__menu__item sw-js-menu">View</a>
+                    <?php if(isset($user) && $user->isAdmin): ?>
+                    <a class="sw-l-header__menu__item" href="/admin">Admin</a>
+                    <?php endif; ?>
+                </div>
             </div>
+            <div class="sw-l-header__user sw-js-user"><a href="/user"><img src="/img/user--white.png"/></a></div>
         </div>
-        <div class="sw-l-header__user sw-js-user"><a href="/user"><img src="/img/user--white.png"/></a></div>
     </div>
-</div>
 
-<div class="sw-l-submenu">
-    <div class="sw-l-submenu__content sw-js-menu-new sw-is-hidden">
-        <a class="sw-l-submenu__item" href="/play">Person</a>
-        <a class="sw-l-submenu__item" href="/world">World</a>
+    <div class="sw-l-submenu">
+        <div class="sw-l-submenu__content sw-js-menu-new sw-is-hidden">
+            <a class="sw-l-submenu__item" href="/play">Person</a>
+            <a class="sw-l-submenu__item" href="/world">World</a>
+        </div>
+        <div class="sw-l-submenu__content sw-js-menu-view sw-is-hidden">
+            <a class="sw-l-submenu__item" href="/view/person">Persons</a>
+            <a class="sw-l-submenu__item" href="/view/world">Worlds</a>
+        </div>
     </div>
-    <div class="sw-l-submenu__content sw-js-menu-view sw-is-hidden">
-        <a class="sw-l-submenu__item" href="/view/person">Persons</a>
-        <a class="sw-l-submenu__item" href="/view/world">Worlds</a>
+
+    <div class="sw-l-content">
+    <?php
+    if(isset($sitemap->page)) {
+        require_once($sitemap->page);
+    }
+    ?>
     </div>
-</div>
 
-<div class="sw-l-content">
-<?php
-if(isset($sitemap->page)) {
-    require_once($sitemap->page);
-}
-?>
-</div>
+    <?php require_once('php/modal.php'); ?>
 
-<?php require_once('php/modal.php'); ?>
+    <div class="sw-l-mask--modal sw-js-modal-mask sw-is-hidden"></div>
+    <div class="sw-l-mask--menu sw-js-menu-mask sw-is-hidden"></div>
+    <div class="sw-js-saved-critical sw-is-hidden">0</div>
+    <div class="sw-js-roll-modifier sw-is-hidden">0</div>
 
-<div class="sw-l-mask--modal sw-js-modal-mask sw-is-hidden"></div>
-<div class="sw-l-mask--menu sw-js-menu-mask sw-is-hidden"></div>
-<div class="sw-js-saved-critical sw-is-hidden">0</div>
-<div class="sw-js-roll-modifier sw-is-hidden">0</div>
+
+<?php else: ?>
+
+    <?php require('site/maintenance.php'); ?>
+
+<?php endif; ?>
+
 
 </body>
 </html>

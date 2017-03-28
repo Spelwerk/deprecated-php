@@ -10,7 +10,7 @@
 require_once('feature/Attribute.php');
 require_once('feature/Augmentation.php');
 require_once('feature/Bionic.php');
-require_once('feature/Caste.php');
+require_once('feature/Background.php');
 require_once('feature/Characteristic.php');
 require_once('feature/Expertise.php');
 require_once('feature/Focus.php');
@@ -38,7 +38,7 @@ class World {
 
     var $splitSupernatural, $splitSkill, $splitExpertise, $splitMilestone, $splitRelationship;
 
-    var $maxGift, $maxImperfection, $maxSupernatural, $maxSkill, $maxExpertise, $maxUpbringing, $maxFlexible,
+    var $maxGift, $maxImperfection, $maxSupernatural, $maxSkill, $maxExpertise, $maxMilestone,
         $maxRelationship;
 
     var $expertiseAttribute, $expertiseDice;
@@ -101,8 +101,7 @@ class World {
         $this->maxSupernatural = intval($data['max_supernatural']);
         $this->maxSkill = intval($data['max_skill']);
         $this->maxExpertise = intval($data['max_expertise']);
-        $this->maxUpbringing = intval($data['max_milestone_upbringing']);
-        $this->maxFlexible = intval($data['max_milestone_flexible']);
+        $this->maxMilestone = intval($data['max_milestone']);
         $this->maxRelationship = intval($data['max_relationship']);
 
         $this->supernaturalName = isset($data['supernatural_name'])
@@ -180,16 +179,16 @@ class World {
         return $arrayList;
     }
 
-    public function getCaste() {
+    public function getBackground() {
         global $curl;
 
         $arrayList = null;
 
-        $result = $curl->get('world-caste/id/'.$this->id);
+        $result = $curl->get('world-background/id/'.$this->id);
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
-                $arrayList[] = new Caste(null, $array);
+                $arrayList[] = new Background(null, $array);
             }
         }
 
@@ -300,19 +299,17 @@ class World {
         return $arrayList;
     }
 
-    public function getMilestone($upbringing = null, $caste = null, $species = null, $manifestation = null) {
+    public function getMilestone($background = null, $species = null, $manifestation = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = 'world-milestone/id/'.$this->id;
 
-        if(isset($caste) && isset($species)) {
+        if(isset($background) && isset($species)) {
             $get = isset($manifestation)
-                ? 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species.'/manifestation/'.$manifestation
-                : 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing.'/caste/'.$caste.'/species/'.$species;
-        } else if(isset($upbringing)) {
-            $get = 'world-milestone/id/'.$this->id.'/upbringing/'.$upbringing;
+                ? 'world-milestone/id/'.$this->id.'/background/'.$background.'/species/'.$species.'/manifestation/'.$manifestation
+                : 'world-milestone/id/'.$this->id.'/background/'.$background.'/species/'.$species;
         }
 
         $result = $curl->get($get);

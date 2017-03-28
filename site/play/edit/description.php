@@ -35,9 +35,6 @@ $system = new System();
     $form->getNumber('person', 'age', false, 0, $person->species->maxAge, $person->age);
 
     $form->getText('person', 'description', false, $person->description);
-    $form->getText('person', 'behaviour', false, $person->behaviour);
-    $form->getText('person', 'appearance', false, $person->appearance);
-    $form->getText('person', 'features', false, $person->features);
     $form->getText('person', 'personality', false, $person->personality);
     ?>
     <input class="sw-c-submit sw-js-submit sw-is-clickable" type="submit" value="Next &raquo;"/>

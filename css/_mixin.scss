@@ -1,0 +1,51 @@
+// SIZE
+
+$size-phone: 34rem;
+$size-desktop: 68rem;
+
+// MIXIN
+
+@mixin margin($margin) {
+  margin: $margin $margin $margin $margin;
+}
+
+@mixin margin--auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin padding($padding) {
+  padding: $padding $padding $padding $padding;
+}
+
+@mixin size($size) {
+  height: $size;
+  width: $size;
+}
+
+@mixin table {
+  display: table;
+  table-layout: fixed;
+}
+
+@mixin table__row {
+  display: table-row;
+}
+
+@mixin table__cell {
+  display: table-cell;
+}
+
+// MEDIA
+
+@mixin sw-for-desktop {
+  @media (min-width: 690px) { @content; }
+}
+
+@mixin sw-for-phone {
+  @media (min-width: 350px) and (max-width: 689px) { @content; }
+}
+
+@mixin sw-for-tiny {
+  @media (max-width: 349px) { @content; }
+}

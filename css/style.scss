@@ -168,20 +168,6 @@ html {
   }
 }
 
-hr {
-  border: 0;
-}
-
-button, input, select, textarea {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  box-sizing: border-box;
-  background-color: inherit;
-  -webkit-appearance: none;
-  border-radius: 0;
-}
-
 input {
   &:required {
     &:invalid {
@@ -199,10 +185,19 @@ button:hover, input[type=submit] {
 }
 
 div {
-  padding: 0;
-  margin: 0;
-  border: 0;
   background-color: inherit;
+}
+
+h1 {
+  @include mix-auto;
+
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+
+  font-family: $font-thin;
+  font-size: 4rem;
+
+  text-align: center;
 }
 
 h2 {

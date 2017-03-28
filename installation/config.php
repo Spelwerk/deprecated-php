@@ -13,3 +13,5 @@ $config_curl = [
 ];
 
 $baseUrl = 'http://spelwerk.dev';
+
+$maintenanceMode = false;

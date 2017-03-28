@@ -78,14 +78,14 @@ class System {
                     'supernatural--power'
                 );
 
-            } else if(!isset($person->caste)) {
-                echo '<h2>Caste</h2>';
+            } else if(!isset($person->background)) {
+                echo '<h2>Background</h2>';
 
                 $this->person_select(
                     $person,
-                    $person->world->getCaste(),
-                    'caste_id',
-                    'Caste'
+                    $person->world->getBackground(),
+                    'background_id',
+                    'Background'
                 );
 
             } else if(!isset($person->nature)) {
@@ -118,15 +118,10 @@ class System {
 
                 $this->person_selectCharacteristic($person, 0, $person->pointImperfection);
 
-            } else if($person->pointUpbringing > 0) {
-                echo '<h2>Milestone</h2>';
-
-                $this->person_selectMilestone($person, 1, $person->pointUpbringing);
-
             } else if($person->pointMilestone > 0) {
                 echo '<h2>Milestone</h2>';
 
-                $this->person_selectMilestone($person, 0, $person->pointMilestone);
+                $this->person_selectMilestone($person, $person->pointMilestone);
 
             } else if($person->pointSkill > 0) {
                 echo '<h2>Skill</h2>';
@@ -176,7 +171,7 @@ class System {
                 );
                 $this->world_makeSplit($world);
 
-            } else if($world->maxGift == 0 && $world->maxImperfection == 0 && $world->maxSupernatural == 0 && $world->maxSkill == 0 && $world->maxExpertise == 0 && $world->maxUpbringing == 0 && $world->maxFlexible == 0 && $world->maxRelationship == 0) {
+            } else if($world->maxGift == 0 && $world->maxImperfection == 0 && $world->maxSupernatural == 0 && $world->maxSkill == 0 && $world->maxExpertise == 0 && $world->maxMilestone == 0 && $world->maxRelationship == 0) {
                 echo(
                     '<h2>Manage Maximum</h2>'.
                     '<p>After calculating the agesplit, we also take into account that you may want to set a maximum value. It is time to set this value. We have given you example values from our usual worlds. There are hard limitations here for data weight purposes.</p>'
@@ -190,12 +185,12 @@ class System {
                 );
                 $this->world_checklist($world, 'species');
 
-            } else if(count($world->getCaste()) == 0) {
+            } else if(count($world->getBackground()) == 0) {
                 echo(
-                    '<h2>Caste</h2>'.
+                    '<h2>Background</h2>'.
                     '<p></p>'
                 );
-                $this->world_checklist($world, 'caste');
+                $this->world_checklist($world, 'background');
 
             } else if(count($world->getNature()) == 0) {
                 echo(
@@ -267,19 +262,12 @@ class System {
                 );
                 $this->world_checkCharacteristic($world, 0);
 
-            } else if(count($world->getMilestone(1)) == 0) {
+            } else if(count($world->getMilestone()) == 0) {
                 echo(
-                    '<h2>Upbringing</h2>'.
+                    '<h2>Milestone</h2>'.
                     '<p></p>'
                 );
-                $this->world_checkMilestone($world, 1);
-
-            } else if(count($world->getMilestone(0)) == 0) {
-                echo(
-                    '<h2>Flexible</h2>'.
-                    '<p></p>'
-                );
-                $this->world_checkMilestone($world, 0);
+                $this->world_checkMilestone($world);
 
             } else if(count($world->getWeapon()) == 0) {
                 echo(
@@ -454,9 +442,6 @@ class System {
         $form->getVarchar('person', 'gender', true);
 
         $form->getText('person', 'description', false);
-        $form->getText('person', 'behaviour', false);
-        $form->getText('person', 'appearance', false);
-        $form->getText('person', 'features', false);
         $form->getText('person', 'personality', false);
         $form->genericEnd();
     }
@@ -545,27 +530,23 @@ class System {
         $form->genericEnd();
     }
 
-    public function person_selectMilestone($person, $upbringing, $points) {
+    public function person_selectMilestone($person, $points) {
         global $form;
 
         $list = null;
 
         if($person->isSupernatural) {
-            $list = $person->world->getMilestone($upbringing, $person->caste->id, $person->species->id, $person->manifestation->id);
+            $list = $person->world->getMilestone($person->background->id, $person->species->id, $person->manifestation->id);
         } else {
-            $list = $person->world->getMilestone($upbringing, $person->caste->id, $person->species->id);
+            $list = $person->world->getMilestone($person->background->id, $person->species->id);
         }
 
 
         $idList = $this->idList($person->getMilestone());
 
-        $text = $upbringing == 1
-            ? 'upbringing'
-            : 'flexible';
-
         $form->genericStart();
 
-        $form->pointsForm($points, $text);
+        $form->pointsForm($points, 'milestone');
         $form->rollRadio('milestone');
         $form->viewStart();
 
@@ -892,9 +873,9 @@ class System {
                 }
                 break;
 
-            case 'caste':
+            case 'background':
                 foreach($list as $item) {
-                    $checkList[] = new Caste(null, $item);
+                    $checkList[] = new Background(null, $item);
                 }
                 break;
 
@@ -1005,8 +986,7 @@ class System {
 
         $form->getNumber('world', 'max_skill', true, 1, 90, 32);
         $form->getNumber('world', 'max_expertise', true, 1, 90, 12);
-        $form->getNumber('world', 'max_milestone_upbringing', true, 1, 20, 1);
-        $form->getNumber('world', 'max_milestone_flexible', true, 1, 20, 8);
+        $form->getNumber('world', 'max_milestone', true, 1, 20, 8);
         $form->getNumber('world', 'max_relationship', true, 1, 20, 8);
         $form->genericEnd(false);
     }
@@ -1163,7 +1143,7 @@ class System {
         $form->genericEnd(true);
     }
 
-    public function world_checkMilestone($world, $type) {
+    public function world_checkMilestone($world) {
         global $curl, $form;
 
         $speciesList = $world->getSpecies();
@@ -1175,7 +1155,7 @@ class System {
         $attributeList = $world->getAttribute();
         $attributeIdList = null;
 
-        $milestoneList = $curl->get('milestone/upbringing/'.$type)['data'];
+        $milestoneList = $curl->get('milestone')['data'];
         $list = null;
 
         foreach($speciesList as $item) {
@@ -1191,11 +1171,26 @@ class System {
         }
 
         foreach($milestoneList as $item) {
-            if(in_array($item['species_id'], $speciesIdList) || in_array($item['manifestation_id'], $manifestationIdList) || in_array($item['attribute_id'], $manifestationIdList) || $item['species_id'] == null || $item['manifestation_id'] == null || $item['attribute_id'] == null) {
+            if(
+                in_array($item['species_id'], $speciesIdList) ||
+                in_array($item['manifestation_id'], $manifestationIdList) ||
+                in_array($item['attribute_id'], $attributeIdList) ||
+                $item['species_id'] == null ||
+                $item['manifestation_id'] == null ||
+                $item['attribute_id'] == null
+            ) {
                 $milestone = new Milestone(null, $item);
 
-                if(isset($milestone->casteId)) {
-                    $milestone->name = $milestone->name.' ('.$milestone->casteName.')';
+                if(isset($milestone->backgroundId)) {
+                    $milestone->name = $milestone->name.' ('.$milestone->backgroundName.')';
+                }
+
+                if(isset($milestone->speciesId)) {
+                    $milestone->name = $milestone->name.' ('.$milestone->speciesName.')';
+                }
+
+                if(isset($milestone->manifestationId)) {
+                    $milestone->name = $milestone->name.' ('.$milestone->manifestationName.')';
                 }
 
                 $list[] = $milestone;

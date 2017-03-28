@@ -12,14 +12,14 @@ require_once('World.php');
 class Person {
 
     var $id, $hash, $popularity, $nickname, $firstname, $surname, $age, $gender, $occupation,
-        $description, $behaviour, $appearance, $features, $personality;
+        $description, $personality;
 
     var $isTemplate, $isCheater, $isSupernatural, $isOwner, $isCalculated;
 
-    var $pointSupernatural, $pointPotential, $pointMoney, $pointSkill, $pointExpertise, $pointUpbringing,
-        $pointMilestone, $pointGift, $pointImperfection, $pointRelationship;
+    var $pointSupernatural, $pointPotential, $pointMoney, $pointSkill, $pointExpertise, $pointMilestone,
+        $pointGift, $pointImperfection, $pointRelationship;
 
-    var $world, $species, $caste, $nature, $identity, $manifestation, $focus;
+    var $world, $species, $background, $nature, $identity, $manifestation, $focus;
 
     public function __construct($id = null, $hash = null) {
         global $curl;
@@ -44,9 +44,6 @@ class Person {
         $this->popularity = $data['popularity'];
 
         $this->description = $data['description'];
-        $this->behaviour = $data['behaviour'];
-        $this->appearance = $data['appearance'];
-        $this->features = $data['features'];
         $this->personality = $data['personality'];
 
         $this->isTemplate = $data['template'];
@@ -59,8 +56,7 @@ class Person {
         $this->pointMoney = intval($data['point_money']);
         $this->pointSkill = intval($data['point_skill']);
         $this->pointExpertise = intval($data['point_expertise']);
-        $this->pointUpbringing = intval($data['point_milestone_upbringing']);
-        $this->pointMilestone = intval($data['point_milestone_flexible']);
+        $this->pointMilestone = intval($data['point_milestone']);
         $this->pointGift = intval($data['point_characteristic_gift']);
         $this->pointImperfection = intval($data['point_characteristic_imperfection']);
         $this->pointRelationship = intval($data['point_relationship']);
@@ -73,8 +69,8 @@ class Person {
             ? new Species($data['species_id'])
             : null;
 
-        $this->caste = isset($data['caste_id'])
-            ? new Caste($data['caste_id'])
+        $this->background = isset($data['background_id'])
+            ? new Background($data['background_id'])
             : null;
 
         $this->nature = isset($data['nature_id'])
@@ -195,16 +191,12 @@ class Person {
         return $arrayList;
     }
 
-    public function getMilestone($upbringing = null) {
+    public function getMilestone() {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($upbringing)
-            ? 'person-milestone/id/'.$this->id.'/upbringing/'.$upbringing
-            : 'person-milestone/id/'.$this->id;
-
-        $result = $curl->get($get);
+        $result = $curl->get('person-milestone/id/'.$this->id);
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -578,7 +570,7 @@ class Person {
 
         $this->buildList($this->species->name, $this->species->description, $this->species->icon);
 
-        $this->buildList($this->caste->name, $this->caste->description, $this->caste->icon);
+        $this->buildList($this->background->name, $this->background->description, $this->background->icon);
 
         $this->buildList($this->nature->name, $this->nature->description, $this->nature->icon);
 

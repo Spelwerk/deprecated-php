@@ -41,17 +41,13 @@ function person_postPerson($postData) {
         ? $split_supernatural
         : $world['max_supernatural'];
 
-    $point_money = $split_milestone < $world['max_milestone_flexible']
+    $point_money = $split_milestone < $world['max_milestone']
         ? $split_milestone
-        : $world['max_milestone_flexible'];
+        : $world['max_milestone'];
 
-    $point_milestone_upbringing = $split_milestone < $world['max_milestone_upbringing']
+    $point_milestone = $split_milestone < $world['max_milestone']
         ? $split_milestone
-        : $world['max_milestone_upbringing'];
-
-    $point_milestone_flexible = $split_milestone < $world['max_milestone_flexible']
-        ? $split_milestone
-        : $world['max_milestone_flexible'];
+        : $world['max_milestone'];
 
     $point_skill = $split_skill < $world['max_skill']
         ? $split_skill
@@ -70,8 +66,7 @@ function person_postPerson($postData) {
     $postData['point_money'] = $point_money;
     $postData['point_skill'] = $point_skill;
     $postData['point_expertise'] = $point_expertise;
-    $postData['point_milestone_upbringing'] = $point_milestone_upbringing;
-    $postData['point_milestone_flexible'] = $point_milestone_flexible;
+    $postData['point_milestone'] = $point_milestone;
     $postData['point_characteristic_gift'] = intval($world['max_characteristic_gift']);
     $postData['point_characteristic_imperfection'] = intval($world['max_characteristic_imperfection']);
     $postData['point_relationship'] = $point_relationship;
@@ -458,8 +453,8 @@ function switch_person($do) {
             person_putPerson($POST_DATA, $POST_HASH);
 
             if(!$POST_ERROR) {
-                if(isset($POST_DATA['caste_id'])) {
-                    person_putAttributeFromTable('caste', $POST_DATA['caste_id'], $POST_ID);
+                if(isset($POST_DATA['background_id'])) {
+                    person_putAttributeFromTable('background', $POST_DATA['background_id'], $POST_ID);
                 }
 
                 if(isset($POST_DATA['nature_id'])) {
@@ -494,9 +489,9 @@ function switch_person($do) {
                 person_putAttributeFromTable('species-attribute', $POST_DATA['species_id'], $POST_ID, $POST_DATA['current_id']);
             }
 
-            if(isset($POST_DATA['caste_id'])) {
-                person_putPerson(['caste_id' => $POST_DATA['caste_id']], $POST_HASH);
-                person_putAttributeFromTable('caste', $POST_DATA['caste_id'], $POST_ID, $POST_DATA['current_id']);
+            if(isset($POST_DATA['background_id'])) {
+                person_putPerson(['background_id' => $POST_DATA['background_id']], $POST_HASH);
+                person_putAttributeFromTable('background', $POST_DATA['background_id'], $POST_ID, $POST_DATA['current_id']);
             }
 
             if(isset($POST_DATA['nature_id'])) {
@@ -535,7 +530,7 @@ function switch_person($do) {
             }
             break;
 
-        case 'person--flexible':
+        case 'person--milestone':
             $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
             person_postTo('milestone', $post);
 
@@ -543,7 +538,7 @@ function switch_person($do) {
                 person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
 
                 $calc = intval($_POST['post--points']) - 1;
-                person_putPerson(['point_milestone_flexible' => $calc], $POST_HASH);
+                person_putPerson(['point_milestone' => $calc], $POST_HASH);
             }
             break;
 
@@ -632,21 +627,6 @@ function switch_person($do) {
         case 'person--supernatural--expertise':
             $post = [$POST_DATA['expertise_id'] => 1];
             person_postExpertise($post, $POST_ID);
-            break;
-
-        case 'person--upbringing':
-            $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
-            person_postTo('milestone', $post);
-
-            if(!$POST_ERROR) {
-                person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
-
-                if(!$POST_ERROR) {
-                    $calc = intval($_POST['post--points']) - 1;
-                    person_putPerson(['point_milestone_upbringing' => $calc], $POST_HASH);
-                }
-            }
-
             break;
 
         case 'person--weapon':
