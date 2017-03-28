@@ -551,7 +551,7 @@ class System {
         $form->viewStart();
 
         $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--'.$text);
+        $form->getHidden('post', 'do', 'person--milestone');
         $form->getHidden('post', 'id', $person->id);
         $form->getHidden('post', 'hash', $person->hash);
 

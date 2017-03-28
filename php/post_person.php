@@ -454,7 +454,8 @@ function switch_person($do) {
 
             if(!$POST_ERROR) {
                 if(isset($POST_DATA['background_id'])) {
-                    person_putAttributeFromTable('background', $POST_DATA['background_id'], $POST_ID);
+                    person_putAttributeFromTable('background-attribute', $POST_DATA['background_id'], $POST_ID);
+                    //todo person has asset from background
                 }
 
                 if(isset($POST_DATA['nature_id'])) {
@@ -491,7 +492,7 @@ function switch_person($do) {
 
             if(isset($POST_DATA['background_id'])) {
                 person_putPerson(['background_id' => $POST_DATA['background_id']], $POST_HASH);
-                person_putAttributeFromTable('background', $POST_DATA['background_id'], $POST_ID, $POST_DATA['current_id']);
+                person_putAttributeFromTable('background-attribute', $POST_DATA['background_id'], $POST_ID, $POST_DATA['current_id']);
             }
 
             if(isset($POST_DATA['nature_id'])) {
