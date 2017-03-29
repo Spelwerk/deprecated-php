@@ -21,12 +21,15 @@ class Characteristic {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->gift = $data['gift'];
 
         $this->icon = $this->gift == 1
             ? '/img/person/characteristic-gift.png'
             : '/img/person/characteristic-imperfection.png';
+
+        $this->description = isset($data['characteristic_custom'])
+            ? $data['characteristic_custom']
+            : $data['description'];
 
         if(isset($data['species_id'])) {
             $this->species = [

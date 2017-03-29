@@ -25,8 +25,11 @@ class Species {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->icon = $data['icon_path'];
+
+        $this->description = isset($data['species_custom'])
+            ? $data['species_custom']
+            : $data['description'];
 
         $this->multiplySkill = intval($data['multiply_skill']);
         $this->multiplyExpertise = intval($data['multiply_expertise']);

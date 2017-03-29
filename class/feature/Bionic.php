@@ -21,9 +21,12 @@ class Bionic
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->legal = $data['legal'];
         $this->icon = $data['icon_path'];
+
+        $this->description = isset($data['bionic_custom'])
+            ? $data['bionic_custom']
+            : $data['description'];
 
         $this->price = isset($data['quality_price'])
             ? intval($data['price']) * intval($data['quality_price'])

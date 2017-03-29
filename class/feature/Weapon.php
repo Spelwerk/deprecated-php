@@ -23,10 +23,13 @@ class Weapon {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->hidden = $data['hidden'];
         $this->legal = $data['legal'];
         $this->icon = $data['icon_path'];
+
+        $this->description = isset($data['weapon_custom'])
+            ? $data['weapon_custom']
+            : $data['description'];
 
         $this->hand = isset($data['hand'])
             ? $data['hand']

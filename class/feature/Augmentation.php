@@ -21,9 +21,12 @@ class Augmentation {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->legal = $data['legal'];
         $this->icon = 'http://cdn.spelwerk.com/file/2caee0a3adc7b135ffdd111fc150fb36442ffaa7.png';
+
+        $this->description = isset($data['augmentation_custom']) && $data['augmentation_custom'] != null
+            ? $data['augmentation_custom']
+            : $data['description'];
 
         $this->price = isset($data['quality_price'])
             ? intval($data['price']) * intval($data['quality_price'])

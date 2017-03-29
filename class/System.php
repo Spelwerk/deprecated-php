@@ -83,7 +83,7 @@ class System {
 
                 $this->person_select(
                     $person,
-                    $person->world->getBackground(),
+                    $person->world->getBackground($person->species->id),
                     'background_id',
                     'Background'
                 );

@@ -23,7 +23,10 @@ class Milestone {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
+
+        $this->description = isset($data['milestone_custom'])
+            ? $data['milestone_custom']
+            : $data['description'];
 
         $this->backgroundId = $data['background_id'];
         $this->backgroundName = $data['background_name'];

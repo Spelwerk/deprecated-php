@@ -21,8 +21,11 @@ class Manifestation {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->icon = $data['icon_path'];
+
+        $this->description = isset($data['manifestation_custom'])
+            ? $data['manifestation_custom']
+            : $data['description'];
 
         $this->disciplineAttributeType = $data['attributetype_id'];
         $this->skillAttributeType = $data['skill_attributetype_id'];

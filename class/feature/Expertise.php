@@ -21,12 +21,15 @@ class Expertise {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->hidden = $data['hidden'];
         $this->icon = $data['icon_path'];
         $this->maximum = $data['maximum'];
         $this->species = $data['species_id'];
         $this->manifestation = $data['manifestation_id'];
+
+        $this->description = isset($data['expertise_custom'])
+            ? $data['expertise_custom']
+            : $data['description'];
 
         $this->level = isset($data['level'])
             ? $data['level']

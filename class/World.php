@@ -179,12 +179,16 @@ class World {
         return $arrayList;
     }
 
-    public function getBackground() {
+    public function getBackground($species = null) {
         global $curl;
 
         $arrayList = null;
 
-        $result = $curl->get('world-background/id/'.$this->id);
+        $get = isset($species)
+            ? 'world-background/id/'.$this->id.'/species/'.$species
+            : 'world-background/id/'.$this->id;
+
+        $result = $curl->get($get);
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {

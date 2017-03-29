@@ -23,7 +23,10 @@ class Background {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->icon = $data['icon_path'];
+
+        $this->description = isset($data['background_custom'])
+            ? $data['background_custom']
+            : $data['description'];
     }
 }

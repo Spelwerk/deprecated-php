@@ -21,8 +21,11 @@ class Protection {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
         $this->icon =  $data['icon_path'];
+
+        $this->description = isset($data['protection_custom'])
+            ? $data['protection_custom']
+            : $data['description'];
 
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
