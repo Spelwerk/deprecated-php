@@ -11,7 +11,7 @@ class User {
 
     var $isAdmin, $isVerified;
 
-    public function __construct($cookie = null) {
+    public function __construct() {
         global $curl;
 
         $this->token = $_COOKIE['sw_user_token'];

@@ -223,6 +223,7 @@ class Form {
         );
     }
 
+
     // needs refactoring
     public function getVarchar($tableName, $name, $required, $value = null) {
         $reqLabel = $required
@@ -471,6 +472,8 @@ class Form {
         );
     }
 
+
+    // Generic
     public function genericSelect($tableName, $name, $array, $value = null) {
         foreach($array as $object) {
             $this->getRadio($tableName, $name, $object->name, $object->id, $object->description);
@@ -500,6 +503,8 @@ class Form {
         );
     }
 
+
+    // Roll
     public function rollNumber($name, $times) {
         echo(
             '<div class="sw-c-randomizer sw-js-randomizer">'.
@@ -534,6 +539,8 @@ class Form {
         );
     }
 
+
+    // View
     public function viewStart() {
         echo(
             '<div class="sw-c-viewmore">'.
@@ -555,6 +562,8 @@ class Form {
         echo('</div>');
     }
 
+
+    // Points
     public function pointsForm($points, $text) {
         echo(
             '<div class="sw-c-points">'.
@@ -564,6 +573,8 @@ class Form {
         );
     }
 
+
+    // Print
     public function printPerson($tableData, $header) {
 
         echo('<div class="sw-l-table"><h3>'.$header.'</h3>');
@@ -606,7 +617,6 @@ class Form {
             '<div class="sw-l-table__col">'.$title.'</div>'.
             $owner.
             '</a>'.
-            '</div>'.
             '</div>'
         );
     }

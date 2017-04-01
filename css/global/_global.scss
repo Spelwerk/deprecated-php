@@ -1,10 +1,3 @@
-// SIZE
-
-$size-phone: 34rem;
-$size-desktop: 68rem;
-
-// MIXIN
-
 @mixin margin($margin) {
   margin: $margin $margin $margin $margin;
 }
@@ -36,16 +29,32 @@ $size-desktop: 68rem;
   display: table-cell;
 }
 
-// MEDIA
+html {
+  font-size: 10px;
 
-@mixin sw-for-desktop {
-  @media (min-width: 690px) { @content; }
+  @include sw-for-tiny {
+    font-size: 8px;
+  }
 }
 
-@mixin sw-for-phone {
-  @media (min-width: 350px) and (max-width: 689px) { @content; }
+body {
+  width: 100%;
+
+  background-color: $color-white-w2;
 }
 
-@mixin sw-for-tiny {
-  @media (max-width: 349px) { @content; }
+input {
+  &:required {
+    &:invalid {
+      border: 1px solid $color-red-secondary;
+    }
+
+    &:valid {
+      border: 1px solid $color-green-secondary;
+    }
+  }
+}
+
+button:hover, input[type=submit], a {
+  cursor: pointer;
 }

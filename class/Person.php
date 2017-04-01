@@ -305,6 +305,31 @@ class Person {
         );
     }
 
+    function buildEditDescription($id, $name, $description, $icon, $thing) {
+
+        //todo not finished yet
+        echo(
+            '<div class="sw-c-list__item">'.
+            '<div class="sw-c-list__header">'.
+            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
+            '<div class="sw-c-list__title">'.$name.'</div>'.
+            '</div>'.
+            '<form action="/post.php" method="post">'.
+            '<input type="hidden" name="post--return" value="play"/>'.
+            '<input type="hidden" name="post--do" value="person--edit--description"/>'.
+            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
+            '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
+            '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
+            '<div class="sw-c-list__description">'.
+            '<textarea class="sw-c-input__item sw-js-validation" name="item--description" id="item--description" rows="3">'.$description.'</textarea>'.
+            '<input class="sw-c-list__submit" type="submit" value="Edit" />'.
+            '</div>'.
+            '</form>'.
+            '</div>'
+        );
+    }
+
     function buildRemoval($id, $name, $icon, $thing) {
         echo(
             '<div class="sw-c-list__item">'.

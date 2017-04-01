@@ -1,0 +1,11 @@
+@mixin sw-for-desktop {
+  @media (min-width: 690px) { @content; }
+}
+
+@mixin sw-for-phone {
+  @media (min-width: 350px) and (max-width: 689px) { @content; }
+}
+
+@mixin sw-for-tiny {
+  @media (max-width: 349px) { @content; }
+}

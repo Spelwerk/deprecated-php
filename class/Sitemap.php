@@ -13,11 +13,13 @@ class Sitemap {
 
     var $page, $id, $hash, $thing, $unique;
 
+    var $menuID, $menuLink;
+
     var $isAdmin, $isUser;
 
-    public function __construct($user) {
+    public function __construct($user = null) {
         $this->requestURI = explode('/', $_SERVER['REQUEST_URI']);
-        $this->scriptName = explode('/',$_SERVER['SCRIPT_NAME']);
+        $this->scriptName = explode('/', $_SERVER['SCRIPT_NAME']);
 
         for ($i = 0; $i < sizeof($this->scriptName); $i++) {
             if ($this->requestURI[$i] == $this->scriptName[$i]) {
@@ -29,7 +31,7 @@ class Sitemap {
 
         $this->switchTop();
 
-        if($this->isAdmin && !$user->isAdmin) {
+        if($this->isAdmin && $user && !$user->isAdmin) {
             $this->page = 'site/no_admin.php';
         }
 
@@ -46,19 +48,24 @@ class Sitemap {
         switch($switch) {
             default:
                 $this->page = 'site/default.php';
+                $this->menuID = 'Home';
+                $this->menuLink = 'Home';
                 break;
 
             case 'admin':
                 $this->switchAdmin();
                 $this->isAdmin = true;
+                $this->menuID = 'Admin';
                 break;
 
             case 'play':
                 $this->switchPlay();
+                $this->menuID = 'Play';
                 break;
 
             case 'user':
                 $this->switchUser();
+                $this->menuID = 'User';
                 break;
 
             case 'view':
@@ -243,6 +250,10 @@ class Sitemap {
 
             case 'expertise':
                 $this->page = 'site/play/edit/expertise.php';
+                break;
+
+            case 'milestone':
+                $this->page = 'site/play/edit/milestone.php';
                 break;
 
             case 'protection':
