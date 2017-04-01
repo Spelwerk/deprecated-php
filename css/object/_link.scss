@@ -1,0 +1,21 @@
+.sw-o-link {
+  @include font--fancy;
+
+  display: block;
+
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  text-align: center;
+  vertical-align: middle;
+
+  font-size: 1.5rem;
+
+  color: $color-indigo-primary;
+
+  &:hover {
+    text-decoration: underline;
+    color: $color-indigo-secondary;
+    transition: color 1s ease;
+  }
+}

@@ -16,23 +16,10 @@
   width: $size;
 }
 
-@mixin table {
-  display: table;
-  table-layout: fixed;
-}
-
-@mixin table__row {
-  display: table-row;
-}
-
-@mixin table__cell {
-  display: table-cell;
-}
-
 html {
   font-size: 10px;
 
-  @include sw-for-tiny {
+  @include for-tiny {
     font-size: 8px;
   }
 }

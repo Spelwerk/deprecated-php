@@ -1,0 +1,29 @@
+.sw-c-attribute {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+
+  text-align: center;
+
+  .sw-c-item {
+    @include padding(1rem);
+
+    display: inline-block;
+
+    width: 10rem;
+
+    &__title {
+      @include font;
+
+      padding-bottom: 1rem;
+
+      font-size: 1.4rem;
+    }
+
+    &__value {
+      @include font--fancy;
+
+      font-size: 4rem;
+      color: $color-indigo-secondary;
+    }
+  }
+}

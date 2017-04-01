@@ -1,9 +1,20 @@
 .sw-l-wrap {
-  margin-left: auto;
-  margin-right: auto;
+  @include margin--auto;
 
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 
-  max-width: 90rem;
+  max-width: 80rem;
+}
+
+.sw-l-content {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.sw-l-content--highlight {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+
+  background-color: $color-white-w3;
 }

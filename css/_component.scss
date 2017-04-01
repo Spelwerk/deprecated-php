@@ -37,7 +37,7 @@ $sw-c-menu-border: $color-white-w3;
   }
 
   .sw-c-tab {
-    @include table__cell;
+    @include cell;
 
     padding-top: 0.6rem;
     padding-bottom: 0.3rem;
@@ -92,11 +92,11 @@ $sw-c-menu-border: $color-white-w3;
     font-size: 1.6rem;
 
     &__title {
-      @include table__cell;
+      @include cell;
     }
 
     &__icon {
-      @include table__cell;
+      @include cell;
 
       padding-right: 0.5rem;
 

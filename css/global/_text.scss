@@ -96,33 +96,51 @@
 .sw-t-t1 {
   @include font--thin;
 
-  font-size: 4rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  font-size: 3.4rem;
 }
 
 .sw-t-t2 {
+  @include font--thin;
 
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  font-size: 3rem;
 }
 
-.sw-t-t3 {
+.sw-t-t3 {
+  @include font--thin;
 
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  font-size: 2.6rem;
 }
 
 .sw-t-t4 {
+  @include font--thin;
 
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  font-size: 2.2rem;
 }
 
 .sw-t-s1 {
-
+  @include font;
 }
 
 .sw-t-s2 {
-
+  @include font;
 }
 
 .sw-t-s3 {
-
+  @include font;
 }
 
 .sw-t-s4 {
-
+  @include font;
 }

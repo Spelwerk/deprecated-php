@@ -9,21 +9,40 @@
   }
 
   &__logo {
-    @include table__cell;
+    @include cell;
     @include font--logo;
 
     font-size: 4rem;
 
     vertical-align: middle;
+
+    @include for-phone {
+      display: block;
+
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+
+      text-align: center;
+    }
   }
 
   &__tabs {
-    @include table__cell;
+    @include cell;
 
     width: 30rem;
 
     text-align: right;
     vertical-align: bottom;
+
+    @include for-phone {
+      display: block;
+
+      width: 100%;
+
+      padding-top: 1rem;
+
+      text-align: center;
+    }
   }
 
   &__bottom {
@@ -76,11 +95,17 @@
 
   text-align: right;
 
+  @include for-phone {
+    padding-left: 0.6rem;
+
+    text-align: center;
+  }
+
   .sw-c-item {
     @include link-item;
 
     &:hover {
-      color: $color-indigo-seconday;
+      color: $color-indigo-secondary;
 
       text-decoration: underline;
 
@@ -90,7 +115,7 @@
     &--active {
       @include link-item;
 
-      color: $color-indigo-seconday;
+      color: $color-indigo-secondary;
 
       text-decoration: underline;
     }
@@ -102,7 +127,7 @@
 
   padding-bottom: 1rem;
 
-  font-size: 4rem;
+  font-size: 4.4rem;
 
   background-color: $color-amber-primary;
 }

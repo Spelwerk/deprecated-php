@@ -1,0 +1,12 @@
+@mixin table {
+  display: table;
+  table-layout: fixed;
+}
+
+@mixin row {
+  display: table-row;
+}
+
+@mixin cell {
+  display: table-cell;
+}

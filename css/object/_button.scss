@@ -1,0 +1,49 @@
+.sw-o-button {
+  @include table;
+  @include margin--auto;
+
+  height: 5rem;
+  width: 60%;
+
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-align: center;
+
+  background-color: $color-white-w1;
+  border: 1px solid $color-white-w3;
+
+  @include for-phone {
+    width: 80%;
+  }
+
+  &:hover {
+    background-color: $color-white-w3;
+    transition: color 1s ease;
+  }
+
+  &__image {
+    display: inline-block;
+
+    width: 4rem;
+
+    vertical-align: middle;
+
+    img {
+      @include size(2.4rem);
+    }
+  }
+
+  &__title {
+    @include font--fancy;
+
+    display: inline-block;
+
+    vertical-align: middle;
+
+    font-size: 1.8rem;
+    color: $color-indigo-primary;
+  }
+}

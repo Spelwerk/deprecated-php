@@ -273,18 +273,18 @@ a {
       width: 30rem; } }
   .sw-c-card__item {
     padding: 0.8rem 0.8rem 0.8rem 0.8rem;
-    width: 10rem;
-    display: inline-block; }
+    display: inline-block;
+    width: 10rem; }
     @media (max-width: 349px) {
       .sw-c-card__item {
         width: 8.4rem; } }
     .sw-c-card__item--small {
       padding: 0.6rem 0.6rem 0.6rem 0.6rem;
-      width: 7.5rem;
-      display: inline-block; }
+      display: inline-block;
+      width: 7.5rem; }
       @media (max-width: 349px) {
         .sw-c-card__item--small {
-          width: 8.4rem; } }
+          width: 7rem; } }
   .sw-c-card__title {
     font-family: robotoregular, sans-serif;
     font-size: 1.5rem;

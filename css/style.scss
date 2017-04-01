@@ -501,9 +501,9 @@ a {
   &__item {
     @include mix-padding(0.8rem);
 
-    width: 10rem;
-
     display: inline-block;
+
+    width: 10rem;
 
     @include sw-for-tiny {
       width: 8.4rem;
@@ -512,13 +512,13 @@ a {
     &--small {
       @include mix-padding(0.6rem);
 
+      display: inline-block;
+
       width: 7.5rem;
 
       @include sw-for-tiny {
-        width: 8.4rem;
+        width: 7rem;
       }
-
-      display: inline-block;
     }
   }
 
