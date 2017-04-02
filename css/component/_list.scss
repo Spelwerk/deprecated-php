@@ -1,0 +1,88 @@
+.sw-c-list {
+  @include padding(1rem);
+
+  border-bottom: 1px solid $color-white-w4;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &__head {
+    @include table;
+
+    height: 5rem;
+    width: 100%;
+  }
+
+  &__icon {
+    @include cell;
+
+    width: 5rem;
+
+    vertical-align: middle;
+
+    img {
+      @include size(3.4rem);
+    }
+  }
+
+  &__select {
+    @include cell;
+
+    width: 3.6rem;
+
+    vertical-align: middle;
+
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    img {
+      @include size(2rem);
+    }
+  }
+
+  &__title {
+    @include cell;
+    @include font--fancy;
+
+    font-size: 2.6rem;
+
+    vertical-align: middle;
+  }
+
+  &__action {
+    @include cell;
+
+    width: 4rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    opacity: 0.6;
+
+    img {
+      @include size(2.4rem);
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__body {
+    @include padding(1rem);
+  }
+
+  &__text {
+    @include font;
+
+    font-size: 1.8rem;
+
+    p {
+      line-height: 2;
+    }
+  }
+}

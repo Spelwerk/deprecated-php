@@ -1,66 +1,68 @@
 .sw-c-roll {
-  text-align: center;
+  @include margin(1rem);
+  @include padding(0.4rem);
 
-  .sw-c-item {
-    @include margin(1rem);
-    @include padding(0.4rem);
+  display: inline-block;
 
-    display: inline-block;
+  height: 3.6rem;
+  width: 34rem;
 
-    height: 3.6rem;
-    width: 30rem;
+  background-color: $color-white-w1;
+  box-shadow: 0.2rem 0.2rem 0.3rem $color-gray-g1;
 
-    background-color: $color-white-w1;
-    box-shadow: 0.2rem 0.2rem 0.3rem $color-gray-g1;
+  border-radius: 0.4rem;
 
-    border-radius: 0.4rem;
+  @include for-phone {
+    display: block;
 
-    &:hover {
-      background-color: $color-white-w3;
-    }
+    width: 95%;
+  }
 
-    &__container {
-      @include table;
+  &:hover {
+    background-color: $color-white-w3;
+  }
 
-      width: 100%;
-    }
+  &__container {
+    @include table;
 
-    &__icon {
-      @include cell;
+    width: 100%;
+  }
 
-      width: 3rem;
+  &__icon {
+    @include cell;
 
-      text-align: left;
+    width: 3rem;
 
-      img {
-        @include size(2.6rem);
+    text-align: left;
 
-        vertical-align: middle;
-      }
-    }
+    img {
+      @include size(2.6rem);
 
-    &__title {
-      @include cell;
-      @include font;
-
-      font-size: 1.8rem;
-      text-align: left;
       vertical-align: middle;
     }
+  }
 
-    &__value {
-      @include cell;
-      @include font;
+  &__title {
+    @include cell;
+    @include font;
 
-      padding-right: 0.6rem;
+    font-size: 1.8rem;
+    text-align: left;
+    vertical-align: middle;
+  }
 
-      width: 8.5rem;
+  &__value {
+    @include cell;
+    @include font;
 
-      font-size: 2rem;
-      color: $color-indigo-secondary;
+    padding-right: 0.6rem;
 
-      text-align: right;
-      vertical-align: middle;
-    }
+    width: 8.5rem;
+
+    font-size: 2rem;
+    color: $color-indigo-secondary;
+
+    text-align: right;
+    vertical-align: middle;
   }
 }
