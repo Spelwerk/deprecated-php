@@ -1,0 +1,104 @@
+.sw-c-modal {
+  display: block;
+
+  height: 60rem;
+  width: 34rem;
+
+  position: fixed;
+
+  z-index: 99;
+
+  &__title {
+    @include font--thin(4rem);
+
+    height: 5rem;
+
+    text-align: center;
+    color: $color-white-w1;
+  }
+
+  &__content {
+    @include margin--auto;
+
+    height: 55rem;
+
+    background-color: $color-white-w1;
+  }
+
+  &__body {
+    height: 85%;
+
+    text-align: center;
+
+    background-color: $color-white-w1;
+
+    &__with {
+      @include font(1.5rem);
+
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+
+      text-transform: uppercase;
+    }
+
+    &__result {
+      @include font--thin(12rem);
+
+      padding-bottom: 4rem;
+    }
+
+    &__critical {
+      @include font--fancy(2rem);
+
+      padding-top: 1rem;
+      padding-bottom: 4rem;
+
+      text-transform: uppercase;
+      color: red;
+    }
+
+    &__count {
+      @include font(1.8rem);
+
+      padding-left: 0.6rem;
+      padding-right: 0.6rem;
+
+      color: $color-white-w4;
+    }
+
+    &__description {
+      @include font(2.2rem);
+
+      padding-top: 2rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+      padding-bottom: 2rem;
+    }
+  }
+
+  &__button {
+    @include table;
+
+    height: 15%;
+    width: 100%;
+
+    background-color: $color-white-w2;
+
+    &__item {
+      @include cell;
+
+      text-align: center;
+      vertical-align: middle;
+
+      &:active {
+        background-color: $color-amber-primary;
+      }
+
+      img {
+        @include size(4rem);
+      }
+    }
+  }
+
+
+}
