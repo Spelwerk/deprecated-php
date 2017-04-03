@@ -12,33 +12,34 @@
   padding-bottom: 4rem;
 }
 
-.sw-l-content--highlight {
+.sw-l-roll {
   padding-top: 4rem;
   padding-bottom: 4rem;
-
-  background-color: $color-white-w3;
-}
-
-.sw-l-roll {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
 
   text-align: center;
 }
 
 .sw-l-attribute {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 
   text-align: center;
 }
 
 .sw-l-list {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 
 .sw-l-purchase {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.sw-l-quicklink {
+  @include table;
+  @include margin--auto;
+
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

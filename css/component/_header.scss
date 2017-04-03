@@ -10,9 +10,7 @@
 
   &__logo {
     @include cell;
-    @include font--logo;
-
-    font-size: 4rem;
+    @include font--logo(4rem);
 
     vertical-align: middle;
 
@@ -82,11 +80,9 @@
 
 @mixin link-item {
   @include padding(1rem);
-  @include font;
+  @include font(1.4rem);
 
   display: inline-block;
-
-  font-size: 1.4rem;
 }
 
 .sw-c-links {
@@ -123,11 +119,9 @@
 }
 
 .sw-c-title {
-  @include font--thin;
+  @include font--thin(4.4rem);
 
   padding-bottom: 1rem;
-
-  font-size: 4.4rem;
 
   background-color: $color-amber-primary;
 }

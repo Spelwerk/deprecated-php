@@ -2,12 +2,12 @@
   opacity: 0.2;
 }
 
-.sw-is-open {
-
-}
-
 .sw-is-hidden {
   display: none;
+}
+
+.sw-is-highlighted {
+  background-color: $color-amber-highlight;
 }
 
 .sw-is-selected {

@@ -6,17 +6,14 @@
   width: 10rem;
 
   &__title {
-    @include font;
+    @include font(1.4rem);
 
     padding-bottom: 1rem;
-
-    font-size: 1.4rem;
   }
 
   &__value {
-    @include font--fancy;
+    @include font--fancy(4rem);
 
-    font-size: 4rem;
     color: $color-indigo-secondary;
   }
 }

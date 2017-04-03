@@ -1,0 +1,21 @@
+.sw-c-quicklink {
+  @include cell;
+
+  height: 5rem;
+  width: 5rem;
+
+  text-align: center;
+  vertical-align: middle;
+
+  border-radius: 0.8rem;
+
+  opacity: 0.4;
+
+  img {
+    @include size(3rem);
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

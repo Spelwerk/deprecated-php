@@ -1,5 +1,5 @@
 .sw-o-link {
-  @include font--fancy;
+  @include font--fancy(1.5rem);
 
   display: block;
 
@@ -8,8 +8,6 @@
 
   text-align: center;
   vertical-align: middle;
-
-  font-size: 1.5rem;
 
   color: $color-indigo-primary;
 

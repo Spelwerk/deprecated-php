@@ -9,7 +9,8 @@
 class Form {
     public function __construct() {}
 
-    // refactored
+    // INPUT FIELDS
+
     public function varchar($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
         $labelName = isset($label)
             ? $label
@@ -199,27 +200,47 @@ class Form {
             : $uniqueName;
 
         echo(
-            '<div class="sw-c-purchase sw-js-purchase-item">'.
+            '<div class="sw-c-purchase">'.
             '<div class="sw-c-purchase__head">'.
-            '<div class="sw-c-purchase__image">'.
-            '<img src="/img/missing_icon.png"/>'.
-            '</div>'.
+            '<div class="sw-c-purchase__icon">'/*<img src="'.$icon.'"/>*/.'</div>'.
             '<div class="sw-c-purchase__title">'.$labelName.'</div>'.
-            '<div class="sw-c-purchase__button">'.
-            '<button type="button" class="sw-js-purchase-button sw-js-purchase-minus">'.
-            '<img src="/img/minus.png"/>'.
-            '</button>'.
+            '<div class="sw-js-purchase-plus sw-c-purchase__action"><img src="/img/minus.png"/></div>'.
+            '<div class="sw-js-purchase-value sw-c-purchase__value">'.$value.'</div>'.
+            '<div class="sw-js-purchase-minus sw-c-purchase__action"><img src="/img/plus.png"/></div>'.
             '</div>'.
-            '<div class="sw-c-purchase__value sw-js-purchase-value">'.$value.'</div>'.
-            '<div class="sw-c-purchase__button">'.
-            '<button type="button" class="sw-js-purchase-button sw-js-purchase-plus">'.
-            '<img src="/img/plus.png"/>'.
-            '</button>'.
+            '<div class="sw-c-purchase__body">'.
+            '<div class="sw-c-purchase__text">'.
+            $labelDescription.
             '</div>'.
             '</div>'.
-            '<div class="sw-c-purchase__info">'.$labelDescription.'</div>'.
             '<input type="number" class="sw-js-purchase-input sw-is-hidden" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.'/>'.
             '</div>'
+        );
+    }
+
+
+    // GENERIC FORM START & END
+
+    public function start($action = null) {
+        $link = isset($action)
+            ? $action
+            : 'post.php';
+
+        echo('<form action="/'.$link.'" method="post">');
+    }
+
+    public function end($disabled = true) {
+        $class = $disabled
+            ? ' sw-is-unclickable'
+            : ' sw-is-clickable';
+
+        $disabled = $disabled
+            ? ' disabled'
+            : null;
+
+        echo(
+            '<input class="sw-js-submit sw-o-submit'.$class.'" type="submit" value="Save &raquo;"'.$disabled.'/>'.
+            '</form>'
         );
     }
 
@@ -523,7 +544,6 @@ class Form {
 
     public function rollRadio($name) {
         echo(
-
             '<div class="sw-c-randomizer sw-js-randomizer">'.
             '<button type="button" class="sw-c-randomizer__button sw-js-random-radio">'.
             '<div class="sw-c-randomizer__image">'.

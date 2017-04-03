@@ -1,0 +1,73 @@
+.sw-c-randomizer {
+  @include padding(1rem);
+
+  text-align: center;
+
+  &__button {
+    @include padding(2rem);
+
+    margin-bottom: 1rem;
+
+    border-radius: 1rem;
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+  }
+
+  &__image {
+    img {
+      @include size(7rem);
+    }
+  }
+
+  &__rolltext {
+    @include font--fancy(1.4rem);
+
+    padding-top: 1rem;
+
+    text-transform: uppercase;
+  }
+
+  &__value {
+    @include padding(0.4rem);
+    @include font--fancy(4rem);
+
+    color: $color-indigo-primary;
+  }
+
+  &__title {
+    @include font--fancy(2rem);
+
+    padding-top: 3rem;
+
+    border-top: 1px solid $color-white-w4;
+    color: $color-indigo-primary;
+  }
+
+  &__info {
+    @include font(1.3rem);
+
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+
+    border-bottom: 1px solid $color-white-w4;
+  }
+
+  &__rollfor {
+    @include font(1rem);
+
+    padding-top: 2rem;
+    padding-bottom: 0.4rem;
+
+    text-transform: uppercase;
+    color: $color-gray-g2;
+  }
+
+  &__attribute {
+    @include font--fancy(1.5rem);
+
+    text-transform: uppercase;
+    color: $color-gray-g2;
+  }
+}

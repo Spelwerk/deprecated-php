@@ -44,22 +44,20 @@
 
   &__title {
     @include cell;
-    @include font;
+    @include font(1.8rem);
 
-    font-size: 1.8rem;
     text-align: left;
     vertical-align: middle;
   }
 
   &__value {
     @include cell;
-    @include font;
+    @include font(2rem);
 
     padding-right: 0.6rem;
 
     width: 8.5rem;
 
-    font-size: 2rem;
     color: $color-indigo-secondary;
 
     text-align: right;

@@ -77,70 +77,66 @@
   font-style: normal;
 }
 
-@mixin font {
+@mixin font($size) {
   font-family: robotoregular, sans-serif;
+  font-size: $size;
 }
 
-@mixin font--logo {
+@mixin font--logo($size) {
   font-family: walkway_semiboldregular, sans-serif;
+  font-size: $size;
 }
 
-@mixin font--thin {
+@mixin font--thin($size) {
   font-family: ralewaylight, sans-serif;
+  font-size: $size;
 }
 
-@mixin font--fancy {
+@mixin font--fancy($size) {
   font-family: aleobold, serif;
+  font-size: $size;
 }
 
 .sw-t-t1 {
-  @include font--thin;
+  @include font--thin(3.4rem);
 
   margin-top: 1rem;
   margin-bottom: 2rem;
-
-  font-size: 3.4rem;
 }
 
 .sw-t-t2 {
-  @include font--thin;
+  @include font--thin(3rem);
 
   margin-top: 1rem;
   margin-bottom: 2rem;
-
-  font-size: 3rem;
 }
 
 .sw-t-t3 {
-  @include font--thin;
+  @include font--thin(2.6rem);
 
   margin-top: 1rem;
   margin-bottom: 1rem;
-
-  font-size: 2.6rem;
 }
 
 .sw-t-t4 {
-  @include font--thin;
+  @include font--thin(2.2rem);
 
   margin-top: 1rem;
   margin-bottom: 1rem;
-
-  font-size: 2.2rem;
 }
 
 .sw-t-s1 {
-  @include font;
+
 }
 
 .sw-t-s2 {
-  @include font;
+
 }
 
 .sw-t-s3 {
-  @include font;
+
 }
 
 .sw-t-s4 {
-  @include font;
+
 }

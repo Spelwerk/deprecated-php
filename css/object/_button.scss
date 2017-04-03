@@ -37,13 +37,12 @@
   }
 
   &__title {
-    @include font--fancy;
+    @include font--fancy(1.8rem);
 
     display: inline-block;
 
     vertical-align: middle;
 
-    font-size: 1.8rem;
     color: $color-indigo-primary;
   }
 }
