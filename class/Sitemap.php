@@ -138,18 +138,21 @@ class Sitemap {
                 $this->switchPlayCheat();
                 $this->id = $id;
                 $this->hash = $hash;
+                $this->menuLink = 'Person';
                 break;
 
             case 'edit':
                 $this->switchPlayEdit();
                 $this->id = $id;
                 $this->hash = $hash;
+                $this->menuLink = 'Person';
                 break;
 
             case 'wound':
                 $this->page = 'site/play/wound.php';
                 $this->id = $id;
                 $this->hash = $hash;
+                $this->menuLink = 'Person';
                 break;
         }
     }
@@ -231,9 +234,12 @@ class Sitemap {
                 $this->page = 'site/play/edit/default.php';
                 break;
 
+            case 'augmentation':
+                $this->page = 'site/play/edit/augmentation.php';
+                break;
+
             case 'bionic':
                 $this->page = 'site/play/edit/bionic.php';
-                $this->thing = $thing;
                 break;
 
             case 'consumable':

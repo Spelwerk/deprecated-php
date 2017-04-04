@@ -6,6 +6,14 @@
   display: none;
 }
 
+.sw-is-dangerous {
+  background-color: $color-red-primary;
+
+  &:hover {
+    background-color: $color-red-secondary;
+  }
+}
+
 .sw-is-highlighted {
   background-color: $color-amber-highlight;
 }

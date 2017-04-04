@@ -26,7 +26,7 @@ class Form {
 
         $inputValue = isset($value)
             ? ' value="'.$value.'"'
-            : '';
+            : null;
 
         $inputUnique = isset($uniqueId)
             ? $uniqueName.'__'.$uniqueId
@@ -118,7 +118,7 @@ class Form {
         }
     }
 
-    public function pick($required, $uniqueName, $label = null, $uniqueId = null, $pickTrue = 'Yes', $pickFalse = 'No') {
+    public function pick($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $pickTrue = 'Yes', $pickFalse = 'No') {
         $labelName = isset($label)
             ? $label
             : $uniqueName;
@@ -142,24 +142,27 @@ class Form {
 
             '<label for="item--'.$inputUnique.'--1">'.
             '<div class="sw-js-pick-item sw-c-pick__item">'.
-            '<div class="sw-js-pick-true sw-c-pick__icon"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-pick-false sw-c-pick__icon sw-is-hidden"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-pick-true sw-c-pick__icon sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon"><img src="/img/radio-false.png"/></div>'.
             '<div class="sw-c-pick__text">'.$pickTrue.'</div>'.
-            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--1" value="1"'.$inputRequired.' checked/>'.
+            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--1" value="1"'.$inputRequired.'/>'.
             '</div>'.
             '</label>'.
 
             '<label for="item--'.$inputUnique.'--0">'.
             '<div class="sw-js-pick-item sw-c-pick__item">'.
-            '<div class="sw-js-pick-true sw-c-pick__icon sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-pick-false sw-c-pick__icon"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-pick-true sw-c-pick__icon"><img src="/img/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon sw-is-hidden"><img src="/img/radio-false.png"/></div>'.
             '<div class="sw-c-pick__text">'.$pickFalse.'</div>'.
-            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--0" value="0"'.$inputRequired.'/>'.
+            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--0" value="0"'.$inputRequired.' checked/>'.
             '</div>'.
             '</label>'.
-
             '</div>'
         );
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
     }
 
     public function select($required, $uniqueName, $list, $label = null, $labelDescription = null, $value = null) {
@@ -274,7 +277,7 @@ class Form {
         );
     }
 
-    public function checkbox($tableName, $label, $labelDescription = null, $uniqueId = null, $selected = false) {
+    public function checkbox($label, $labelDescription = null, $uniqueId = null, $selected = false) {
         $selected = $selected
             ? ' checked'
             : '';
@@ -283,13 +286,13 @@ class Form {
             '<div class="sw-js-checkbox-item sw-c-list">'.
             '<div class="sw-l-wrap">'.
             '<label for="item--'.$uniqueId.'">'.
-            '<input class="sw-js-checkbox-input sw-is-hidden" type="checkbox" name="item--'.$tableName.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$selected.'/>'.
+            '<input class="sw-js-checkbox-input sw-is-hidden" type="checkbox" name="item--'.$uniqueId.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$selected.'/>'.
             '<div class="sw-c-list__head">'.
             '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/checkbox-true.png"/></div>'.
             '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/checkbox-false.png"/></div>'.
             '<div class="sw-c-list__title">'.$label.'</div>'.
             '</div>'.
-            '<div class="sw-js-list-body sw-c-list__body sw-is-hidden">'.
+            '<div class="sw-js-checkbox-body sw-c-list__body sw-is-hidden">'.
             '<div class="sw-c-list__text">'.
             $labelDescription.
             '</div>'.
@@ -361,7 +364,7 @@ class Form {
 
         echo(
             '<div class="sw-l-wrap">'.
-            '<input class="sw-js-submit '.$class.'" type="submit" value="'.$submitText.'"'.$disabled.'/>'.
+            '<input class="sw-js-submit'.$class.'" type="submit" value="'.$submitText.'"'.$disabled.'/>'.
             '</div>'.
             '</form>'
         );

@@ -5,29 +5,35 @@
  * Date: 15/02/2017
  * Time: 18:56
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
+
+$component->title('Edit '.$person->nickname);
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
 </div>
 
-<script src="/js/edit_attribute.js"></script>
-<h2>Experience</h2>
-<form action="/post.php" method="post">
-    <?php
-    $attribute = $person->getAttribute(null, $person->world->experience)[0];
+<?php
+$attribute = $person->getAttribute(null, $person->world->experience)[0];
 
-    $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
+$component->h2($attribute->name);
+$component->wrapStart();
+$form->formStart();
 
-    $form->getHidden('post', 'return', 'play');
-    $form->getHidden('post', 'do', 'person--edit--attribute');
-    $form->getHidden('post', 'id', $person->id);
-    $form->getHidden('post', 'hash', $person->hash);
-    ?>
-    <input class="sw-c-submit sw-js-submit sw-is-clickable" type="submit" value="Next &raquo;"/>
-</form>
+$form->hidden('return', 'play', 'post');
+$form->hidden('do', 'person--edit--attribute', 'post');
+$form->hidden('id', $person->id, 'post');
+$form->hidden('hash', $person->hash, 'post');
+
+$form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
+
+$form->formEnd();
+$component->wrapEnd();
+?>
+
+<script src="/js/play_create.js"></script>

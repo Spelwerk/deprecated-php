@@ -5,60 +5,68 @@
  * Date: 15/02/2017
  * Time: 15:06
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
+require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
+
+$component->title('Edit '.$person->nickname);
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
 </div>
 
 <?php if($sitemap->thing == 'gift'): ?>
 
-    <script src="/js/play.js"></script>
-
-    <h2>Gift</h2>
     <?php
     global $form;
 
     $system = new System();
 
+    $component->h2('Gift');
+
     $system->person_selectCharacteristic($person, 1, 1);
     ?>
+
+    <script src="/js/play_create.js"></script>
 
 <?php endif; ?>
 
 <?php if($sitemap->thing == 'imperfection'): ?>
 
-    <script src="/js/play.js"></script>
-
-    <h2>Imperfection</h2>
     <?php
     global $form;
 
     $system = new System();
 
+    $component->h2('Imperfection');
+
     $system->person_selectCharacteristic($person, 0, 1);
     ?>
+
+    <script src="/js/play_create.js"></script>
 
 <?php endif; ?>
 
 <?php if(!$sitemap->thing): ?>
 
-    <h2>Characteristic</h2>
     <?php
     $list = $person->getCharacteristic();
+
+    $component->h2('Characteristic');
+
+    $component->wrapStart();
 
     foreach($list as $item) {
         $person->buildRemoval($item->id, $item->name, $item->icon, 'characteristic');
     }
+
+    $component->linkButton('/play/'.$person->id.'/'.$person->hash.'/cheat/characteristic/gift','Add Gift');
+    $component->linkButton('/play/'.$person->id.'/'.$person->hash.'/cheat/characteristic/imperfection','Add Imperfection');
+    $component->wrapEnd();
     ?>
-    <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/characteristic/gift">Add Gift</a>
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/cheat/characteristic/imperfection">Add Imperfection</a>
-    </div>
 
 <?php endif; ?>

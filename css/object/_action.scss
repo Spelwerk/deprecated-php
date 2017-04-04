@@ -11,8 +11,7 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
 
-  background-color: $color-white-w1;
-  border: 1px solid $color-white-w3;
+  background-color: $color-indigo-primary;
 
   @include for-phone {
     width: 100%;
@@ -54,7 +53,7 @@
   &__title {
     @include font--fancy(3rem);
 
-    color: $color-indigo-primary;
+    color: $color-white-w1;
 
     @include for-phone {
       font-size: 2rem;
@@ -65,5 +64,7 @@
     @include font(1.5rem);
 
     padding-top: 1rem;
+
+    color: $color-white-w1;
   }
 }

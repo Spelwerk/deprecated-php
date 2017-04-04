@@ -5,40 +5,44 @@
  * Date: 15/02/2017
  * Time: 19:16
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
 require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
+
+$component->title('Edit '.$person->nickname);
 ?>
 
-<div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
-</div>
+    <div class="sw-l-quicklink">
+        <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
+    </div>
 
 <?php if($sitemap->thing == 'add'): ?>
 
-    <script src="/js/play.js"></script>
-
-    <h2>Add Protection</h2>
-    <?php $system->person_checkProtection($person); ?>
+    <?php
+    $component->h2('Add Protection');
+    $system->person_checkProtection($person);
+    ?>
 
 <?php else: ?>
 
-    <h2>Protection</h2>
     <?php
     $list = $person->getProtection();
+
+    $component->h2('Protection');
 
     if(isset($list)) {
         foreach($list as $item) {
             $person->buildRemoval($item->id, $item->name, $item->icon, 'protection');
         }
     }
+
+    $component->linkButton('/play/'.$person->id.'/'.$person->hash.'/edit/protection/add','Add');
     ?>
-    <div class="sw-l-content__wrap">
-        <a class="sw-c-link" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>/edit/protection/add">Add</a>
-    </div>
 
 <?php endif; ?>
+
+<script src="/js/play_create.js"></script>

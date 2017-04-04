@@ -7,7 +7,7 @@
  */
 global $form, $sitemap, $component;
 
-$component->title('Add Wound')
+$component->title('Add Wound');
 ?>
 
 <div class="sw-l-quicklink">

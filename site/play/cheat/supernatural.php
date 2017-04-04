@@ -5,20 +5,24 @@
  * Date: 15/02/2017
  * Time: 15:06
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
 require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
+
+$component->title('Edit '.$person->nickname);
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
 </div>
 
-<script src="/js/play.js"></script>
+<?php
+$component->h2('Edit Skills');
+$system->person_purchaseDiscipline($person, 999, true);
+?>
 
-<h2>Edit Supernatural</h2>
-<?php $system->person_purchaseDiscipline($person, 999); ?>
+<script src="/js/play_create.js"></script>

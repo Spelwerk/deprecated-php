@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 15/02/2017
- * Time: 18:51
+ * Date: 04/04/2017
+ * Time: 12:51
  */
 global $sitemap, $component;
 
@@ -22,11 +22,11 @@ $component->title('Edit '.$person->nickname);
 
 <?php
 $component->wrapStart();
-$component->h2('Add Bionic');
-$component->p('Once attached. Bionics cannot be removed.');
+$component->h2('Add Augmentation');
+$component->p('Once attached. Augmentations cannot be removed.');
 $component->wrapEnd();
 
-$system->person_checkBionic($person);
+$system->person_checkAugmentation($person);
 ?>
 
 <script src="/js/play_create.js"></script>

@@ -5,17 +5,19 @@
  * Date: 15/02/2017
  * Time: 15:05
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
 require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
+
+$component->title('Edit '.$person->nickname);
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
 </div>
 
 <?php if($sitemap->thing): ?>

@@ -41,8 +41,12 @@ class Component {
         );
     }
 
+    public function subtitle($content) {
+        echo('<div class="sw-t-subtitle">'.$content.'</div>');
+    }
+
     public function p($content) {
-        echo('<div class="sw-l-content sw-l-wrap">'.$content.'</div>');
+        echo('<p>'.$content.'</p>');
     }
 
     public function roll($title, $description, $icon = null, $value = null, $data = null) {
@@ -97,14 +101,13 @@ class Component {
         );
     }
 
-    public function linkButton($href, $title, $icon = null) {
-        $icon = isset($icon)
-            ? $icon
-            : '/img/missing_icon.png';
+    public function linkButton($href, $title, $dangerous = false) {
+        $dangerous = $dangerous
+            ? ' sw-is-dangerous'
+            : null;
 
         echo(
-            '<a class="sw-o-button" href="'.$href.'">'.
-            '<div class="sw-o-button__image"><img src="'.$icon.'"/></div>'.
+            '<a class="sw-o-button'.$dangerous.'" href="'.$href.'">'.
             '<div class="sw-o-button__title">'.$title.'</div>'.
             '</a>'
         );

@@ -436,6 +436,8 @@ class Person {
     public function makeButton($list, $type) {
         global $component;
 
+        echo('<div class="sw-l-roll">');
+
         foreach($list as $item) {
 
             $value = null;
@@ -475,6 +477,8 @@ class Person {
 
             $component->roll($item->name, $item->description, $item->icon, $value, $data);
         }
+
+        echo('</div>');
     }
 
     public function makeExpertise() {
@@ -483,10 +487,9 @@ class Person {
         $list = $this->getExpertise($this->world->expertiseDice);
 
         if($list) {
-            echo(
-                '<h2>Expertise</h2>'.
-                '<div class="sw-l-content">'
-            );
+            $component->h2('Expertise');
+
+            echo('<div class="sw-l-roll">');
 
             foreach($list as $item) {
                 $rollD12 = 2 + intval($item->dice);
@@ -615,10 +618,11 @@ class Person {
 
     public function makeSupernatural() {
         if($this->isSupernatural) {
-            echo(
-                '<h2>'.$this->manifestation->name.'</h2>'.
-                '<div class="sw-c-button">'
-            );
+            global $component;
+
+            $component->h2($this->manifestation->name);
+
+            echo('<div class="sw-l-roll">');
 
             foreach($this->getAttribute($this->manifestation->disciplineAttributeType) as $supernatural) {
                 $rollD12 = 2;
@@ -635,7 +639,7 @@ class Person {
 
                 $data = 'data-roll-type="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$supernatural->value.'"';
 
-                $this->buildButton($supernatural->name, $supernatural->description, $value, $data, $supernatural->icon);
+                $component->roll($supernatural->name, $supernatural->description, $supernatural->icon, $value, $data);
             }
 
             echo('</div>');

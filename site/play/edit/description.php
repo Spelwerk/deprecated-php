@@ -5,37 +5,41 @@
  * Date: 16/02/2017
  * Time: 20:00
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
 require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
+
+$component->title('Edit '.$person->nickname);
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
 </div>
 
-<h2>Description</h2>
-<form action="/post.php" method="post">
-    <?php
-    $form->getHidden('post', 'return', 'play');
-    $form->getHidden('post', 'do', 'person--put');
-    $form->getHidden('post', 'id', $person->id);
-    $form->getHidden('post', 'hash', $person->hash);
+<?php
+$component->h2('Description');
+$component->wrapStart();
+$form->formStart();
 
-    $form->getVarchar('person', 'nickname', false, $person->nickname);
+$form->hidden('return', 'play', 'post');
+$form->hidden('do', 'person--put', 'post');
+$form->hidden('id', $person->id, 'post');
+$form->hidden('hash', $person->hash, 'post');
 
-    $form->getVarchar('person', 'firstname', false, $person->firstname);
-    $form->getVarchar('person', 'surname', false, $person->surname);
-    $form->getVarchar('person', 'gender', false, $person->gender);
+$form->varchar(true, 'nickname', 'Nickname', null, null, $person->nickname);
+$form->varchar(true, 'firstname', 'First Name', null, null, $person->firstname);
+$form->varchar(true, 'surname', 'Surname', null, null, $person->surname);
+$form->varchar(true, 'gender', 'Gender', null, null, $person->gender);
+$form->number(true, 'age', 'Age', 'When changing age after creation, the system will no longer change any other variables.', null, 5, $person->species->maxAge, $person->age);
+$form->text(false, 'description', 'Description', 'Describe your character. Features, Appearance, etc.', null, $person->description);
+$form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
 
-    $form->getNumber('person', 'age', false, 0, $person->species->maxAge, $person->age);
+$form->formEnd();
+$component->wrapEnd();
+?>
 
-    $form->getText('person', 'description', false, $person->description);
-    $form->getText('person', 'personality', false, $person->personality);
-    ?>
-    <input class="sw-c-submit sw-js-submit sw-is-clickable" type="submit" value="Next &raquo;"/>
-</form>
+<script src="/js/play_create.js"></script>

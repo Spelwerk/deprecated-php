@@ -5,24 +5,35 @@
  * Date: 29/03/2017
  * Time: 14:24
  */
-global $sitemap, $form;
+global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
 require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
+
+$component->title('Edit '.$person->nickname);
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $person->id; ?>/<?php echo $person->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$person->id.'/'.$person->hash,'Return','/img/return.png'); ?>
 </div>
 
-<h2>Milestone</h2>
 <?php
 $list = $person->getMilestone();
 
-foreach($list as $item) {
-    $person->buildEditDescription($item->id, $item->name, $item->description, $item->icon, 'milestone');
+$component->wrapStart();
+$component->h2('Milestone');
+
+if(isset($list)) {
+    foreach($list as $item) {
+        $person->buildRemoval($item->id, $item->name, $item->icon, 'weapon');
+    }
 }
+
+$component->wrapEnd();
+
 ?>
+
+<script src="/js/play_create.js"></script>

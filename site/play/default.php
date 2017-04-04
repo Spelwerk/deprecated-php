@@ -92,33 +92,24 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     <?php endif; ?>
 
     <?php
-    $component->p('<p>This is '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'. '.$person->firstname.' is a '.$person->age.' years old '.$person->gender.' '.$person->occupation.'</p>');
-
-    $component->h2('Skill');
     $component->wrapStart();
+    $component->p('This is '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'. '.$person->firstname.' is a '.$person->age.' years old '.$person->gender.' '.$person->occupation.'');
+    $component->h2('Skill');
     $person->makeButton($person->getAttribute($person->world->attributeSkill), 'skill');
     $person->makeExpertise();
     $person->makeSupernatural();
-    $component->wrapEnd();
 
     $component->h2('Attribute');
-    $component->wrapStart();
     $person->makeButton($person->getAttribute($person->world->attributeReputation), 'skill');
     $person->makeButton($person->getAttribute($person->world->attributeCombat), 'skill');
-    $component->wrapEnd();
 
     $component->h2('Consumable');
-    $component->wrapStart();
     $person->makeButton($person->getAttribute($person->world->attributeConsumable), 'consumable');
-    $component->wrapEnd();
 
     $component->h2('Weapon', 'weapon');
-    $component->wrapStart();
     $person->makeButton($person->getWeapon(1), 'weapon');
-    $component->wrapEnd();
 
     $component->h2('Wound', 'wound');
-    $component->wrapStart();
     $person->makeProtection();
     /* $person->buildCard($person->getAttribute($person->world->attributeBody)); */
     /* $person->buildCard($person->getAttribute($person->world->attributeDamage)); */
@@ -163,8 +154,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         }
     }
 
-    $component->h2('Description');
     $component->wrapStart();
+    $component->h2('Description');
 
     if($person->description != null) {
         $component->p($person->description);

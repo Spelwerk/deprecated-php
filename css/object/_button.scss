@@ -2,7 +2,6 @@
   @include table;
   @include margin--auto;
 
-  height: 5rem;
   width: 60%;
 
   margin-top: 2rem;
@@ -10,17 +9,18 @@
 
   padding-top: 1rem;
   padding-bottom: 1rem;
+
+  border-radius: 0.8rem;
   text-align: center;
 
-  background-color: $color-white-w1;
-  border: 1px solid $color-white-w3;
+  background-color: $color-indigo-primary;
 
   @include for-phone {
     width: 80%;
   }
 
   &:hover {
-    background-color: $color-white-w3;
+    background-color: $color-indigo-secondary;
     transition: color 1s ease;
   }
 
@@ -32,7 +32,7 @@
     vertical-align: middle;
 
     img {
-      @include size(2.4rem);
+      @include size(2rem);
     }
   }
 
@@ -43,6 +43,6 @@
 
     vertical-align: middle;
 
-    color: $color-indigo-primary;
+    color: $color-white-w1;
   }
 }

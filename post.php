@@ -200,6 +200,7 @@ function manifestation_focus($postData, $manifestationId) {
     checkError($resultArray);
 }
 
+
 function person_postPerson($postData) {
     global $curl;
 
@@ -335,9 +336,10 @@ function person_postAttribute($postData, $personId, $allowsAll = false) {
     foreach($postData as $key => $value) {
         $explode = explode('__', $key);
         $attributeId = $explode[1];
+        $attributeValue = intval($value);
 
         if($allowsAll || $value > 0) {
-            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $value];
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $attributeValue];
         }
     }
 
@@ -348,23 +350,35 @@ function person_postAttribute($postData, $personId, $allowsAll = false) {
     checkError($resultArray);
 }
 
-function person_putAttribute($personId, $attributeId, $attributeValue) {
+function person_putAttribute($postData, $personId, $allowsAll = false) {
     global $curl;
 
+    $postArray = null;
     $resultArray = null;
-    $newValue = intval($attributeValue);
 
-    $current = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$attributeId);
+    print_r($postData);
 
-    if(isset($current['data'])) {
-        $currentValue = $current['data'][0]['value'];
+    foreach($postData as $key => $value) {
+        $explode = explode('__',$key);
+        $attributeId = $explode[1];
+        $attributeValue = intval($value);
 
-        $newValue += intval($currentValue);
+        $current = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$attributeId);
+
+        if(isset($current['data'])) {
+            $currentValue = $current['data'][0]['value'];
+
+            $attributeValue += intval($currentValue);
+        }
+
+        if($allowsAll || $value > 0) {
+            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $attributeValue];
+        }
     }
 
-    $post = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $newValue];
-
-    $resultArray[] = $curl->post('person-attribute', $post);
+    foreach($postArray as $post) {
+        $resultArray[] = $curl->post('person-attribute',$post);
+    }
 
     checkError($resultArray);
 }
@@ -526,17 +540,20 @@ function person_postExpertise($postData, $personId) {
     $postAttribute = null;
 
     foreach($postData as $key => $value) {
+        $explode = explode('__',$key);
+        $expertiseId = $explode[1];
+
         if($value > 0) {
             $previousLevel = 0;
 
-            $expertise = $curl->get('expertise/id/'.$key)['data'][0];
-            $currentExpertise = $curl->get('person-expertise/id/'.$personId.'/expertise/'.$key);
+            $expertise = $curl->get('expertise/id/'.$expertiseId)['data'][0];
+            $currentExpertise = $curl->get('person-expertise/id/'.$personId.'/expertise/'.$expertiseId);
 
             if(isset($currentExpertise['data'][0])) {
                 $previousLevel = $currentExpertise['data'][0]['level'];
             }
 
-            $postExpertise[] = ['person_id' => $personId, 'expertise_id' => $key, 'level' => $value];
+            $postExpertise[] = ['person_id' => $personId, 'expertise_id' => $expertiseId, 'level' => $value];
 
             if(isset($expertise['give_attribute_id'])) {
                 $currentValue = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$expertise['give_attribute_id'])['data'][0]['value'];
@@ -608,6 +625,7 @@ function person_woundAdd($postData, $personId, $woundId) {
 
     checkError($resultArray);
 }
+
 
 function user_postUser($postData) {
     global $curl;
@@ -736,6 +754,7 @@ function user_saveWorld($userId, $worldId, $worldHash) {
 
     checkError($resultArray);
 }
+
 
 function world_postWorld($postData) {
     global $curl;
@@ -1077,7 +1096,7 @@ function switch_person($do) {
             break;
 
         case 'person--money':
-            person_putAttribute($POST_ID, $POST_DATA['attribute_id'], $POST_DATA['value']);
+            person_putAttribute($POST_DATA, $POST_ID, true);
 
             if(!$POST_ERROR) {
                 person_putPerson(['point_money' => 0], $POST_HASH);
@@ -1123,7 +1142,7 @@ function switch_person($do) {
             break;
 
         case 'person--supernatural--power':
-            person_putAttribute($POST_ID, $POST_DATA['attribute_id'], $POST_DATA['value']);
+            person_putAttribute($POST_DATA, $POST_ID, true);
 
             if(!$POST_ERROR) {
                 person_putPerson(['point_power' => 0], $POST_HASH);
@@ -1131,7 +1150,7 @@ function switch_person($do) {
             break;
 
         case 'person--supernatural--expertise':
-            $post = [$POST_DATA['expertise_id'] => 1];
+            $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
             person_postExpertise($post, $POST_ID);
             break;
 

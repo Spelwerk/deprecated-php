@@ -151,12 +151,12 @@ $(document).ready(function() {
 
         if ($(this).is(':checked')) {
             $(this).parents('.sw-js-checkbox-item').addClass('sw-is-selected');
-            $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-info').removeClass('sw-is-hidden');
+            $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-body').removeClass('sw-is-hidden');
             $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-true').removeClass('sw-is-hidden');
             $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-false').addClass('sw-is-hidden');
         } else {
             $(this).parents('.sw-js-checkbox-item').removeClass('sw-is-selected');
-            $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-info').addClass('sw-is-hidden');
+            $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-body').addClass('sw-is-hidden');
             $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-true').addClass('sw-is-hidden');
             $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-false').removeClass('sw-is-hidden');
         }
