@@ -9,8 +9,6 @@
 
     border-radius: 0.6rem;
 
-    width: 90%;
-
     &:active {
       background-color: $color-amber-primary;
     }
@@ -42,4 +40,4 @@
       @include size(1.5rem);
     }
   }
-}
+} //todo refactor

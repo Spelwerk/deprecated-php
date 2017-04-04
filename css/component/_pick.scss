@@ -1,0 +1,36 @@
+.sw-c-pick {
+
+  &__item {
+    @include table;
+
+    height: 4rem;
+
+    border-radius: 0.4rem;
+
+    &:active {
+      background-color: $color-amber-primary;
+    }
+  }
+
+  &__icon {
+    @include cell;
+
+    width: 4rem;
+
+    text-align: center;
+    vertical-align: middle;
+
+    img {
+      @include size(3rem);
+    }
+  }
+
+  &__text {
+    @include cell;
+    @include font--fancy(2rem);
+
+    padding-right: 2rem;
+
+    vertical-align: middle;
+  }
+}

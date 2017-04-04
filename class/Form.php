@@ -9,7 +9,7 @@
 class Form {
     public function __construct() {}
 
-    // INPUT FIELDS
+    // INPUT
 
     public function varchar($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
         $labelName = isset($label)
@@ -33,8 +33,10 @@ class Form {
             : $uniqueName;
 
         echo(
-            '<label class="sw-c-input__label" for="item--'.$inputUnique.'">'.$labelName.$labelRequired.'</label>'.
-            '<input class="sw-c-input__item sw-js-validation" type="text" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputValue.$inputRequired.'/>'
+            '<label for="item--'.$inputUnique.'">'.
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+            '</label>'.
+            '<input class="sw-js-validation" type="text" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputValue.$inputRequired.'/>'
         );
 
         if($labelDescription) {
@@ -72,7 +74,9 @@ class Form {
             : $uniqueName;
 
         echo(
-            '<label class="sw-c-input__label" for="item--'.$inputUnique.'">'.$labelName.$labelRequired.'</label>'.
+            '<label for="item--'.$inputUnique.'">'.
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+            '</label>'.
             '<input class="sw-c-input__item sw-js-number sw-js-validation" type="number" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.$inputRequired.'/>'
         );
 
@@ -103,13 +107,59 @@ class Form {
             : $uniqueName;
 
         echo(
-            '<label class="sw-c-input__label" for="item--'.$inputUnique.'">'.$labelName.$labelRequired.'</label>'.
+            '<label for="item--'.$inputUnique.'">'.
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+            '</label>'.
             '<textarea class="sw-c-input__item sw-js-validation" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'" rows="3"'.$inputValue.$inputRequired.'></textarea>'
         );
 
         if($labelDescription) {
             echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
         }
+    }
+
+    public function pick($required, $uniqueName, $label = null, $uniqueId = null, $pickTrue = 'Yes', $pickFalse = 'No') {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+
+            '<div class="sw-js-pick sw-c-pick">'.
+
+            '<label for="item--'.$inputUnique.'--1">'.
+            '<div class="sw-js-pick-item sw-c-pick__item">'.
+            '<div class="sw-js-pick-true sw-c-pick__icon"><img src="/img/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon sw-is-hidden"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-c-pick__text">'.$pickTrue.'</div>'.
+            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--1" value="1"'.$inputRequired.' checked/>'.
+            '</div>'.
+            '</label>'.
+
+            '<label for="item--'.$inputUnique.'--0">'.
+            '<div class="sw-js-pick-item sw-c-pick__item">'.
+            '<div class="sw-js-pick-true sw-c-pick__icon sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-c-pick__text">'.$pickFalse.'</div>'.
+            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--0" value="0"'.$inputRequired.'/>'.
+            '</div>'.
+            '</label>'.
+
+            '</div>'
+        );
     }
 
     public function select($required, $uniqueName, $list, $label = null, $labelDescription = null, $value = null) {
@@ -146,12 +196,107 @@ class Form {
         }
     }
 
+    // HIDDEN
+
     public function hidden($uniqueName, $value, $type = null) {
         $inputType = isset($type)
             ? $type
             : 'item';
 
         echo('<input type="hidden" name="'.$inputType.'--'.$uniqueName.'" value="'.$value.'"/>');
+    }
+
+    // LISTS
+
+    public function purchase($uniqueName, $label = null, $labelDescription = null, $labelIcon = null, $uniqueId = null, $minimum = null, $maximum = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $inputMinimum = isset($minimum)
+            ? ' min="'.$minimum.'"'
+            : null;
+
+        $inputMaximum = isset($maximum)
+            ? ' max="'.$maximum.'"'
+            : '';
+
+        $inputValue  = isset($value)
+            ? ' value="'.$value.'"'
+            : '';
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<div class="sw-js-purchase-item sw-c-purchase">'.
+            '<div class="sw-c-purchase__head">'.
+            '<div class="sw-c-purchase__icon"><img src="'.$labelIcon.'"/></div>'.
+            '<div class="sw-c-purchase__title">'.$labelName.'</div>'.
+            '<div class="sw-js-purchase-button sw-js-purchase-minus sw-c-purchase__action"><img src="/img/minus.png"/></div>'.
+            '<div class="sw-js-purchase-value sw-c-purchase__value">'.$value.'</div>'.
+            '<div class="sw-js-purchase-button sw-js-purchase-plus sw-c-purchase__action"><img src="/img/plus.png"/></div>'.
+            '</div>'.
+            '<div class="sw-c-purchase__body">'.
+            '<div class="sw-c-purchase__text">'.
+            $labelDescription.
+            '</div>'.
+            '</div>'.
+            '<input type="number" class="sw-js-purchase-input sw-is-hidden" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.'/>'.
+            '</div>'
+        );
+    }
+
+    public function radio($tableName, $label, $labelDescription = null, $uniqueId = null, $selected = false) {
+        $selected = $selected
+            ? ' selected'
+            : '';
+
+        echo(
+            '<div class="sw-js-radio-item sw-c-list">'.
+            '<div class="sw-l-wrap">'.
+            '<label for="item--'.$uniqueId.'">'.
+            '<input class="sw-js-radio sw-is-hidden" type="radio" name="item--'.$tableName.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$selected.'/>'.
+            '<div class="sw-c-list__head">'.
+            '<div class="sw-js-radio-true sw-c-list__select sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
+            '<div class="sw-js-radio-false sw-c-list__select"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-radio-title sw-c-list__title">'.$label.'</div>'.
+            '</div>'.
+            '<div class="sw-js-radio-body sw-c-list__body sw-is-hidden">'.
+            '<div class="sw-js-radio-info sw-c-list__text">'.
+            $labelDescription.
+            '</div>'.
+            '</div>'.
+            '</label>'.
+            '</div>'.
+            '</div>'
+        );
+    }
+
+    public function checkbox($tableName, $label, $labelDescription = null, $uniqueId = null, $selected = false) {
+        $selected = $selected
+            ? ' checked'
+            : '';
+
+        echo(
+            '<div class="sw-js-checkbox-item sw-c-list">'.
+            '<div class="sw-l-wrap">'.
+            '<label for="item--'.$uniqueId.'">'.
+            '<input class="sw-js-checkbox-input sw-is-hidden" type="checkbox" name="item--'.$tableName.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$selected.'/>'.
+            '<div class="sw-c-list__head">'.
+            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/checkbox-true.png"/></div>'.
+            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/checkbox-false.png"/></div>'.
+            '<div class="sw-c-list__title">'.$label.'</div>'.
+            '</div>'.
+            '<div class="sw-js-list-body sw-c-list__body sw-is-hidden">'.
+            '<div class="sw-c-list__text">'.
+            $labelDescription.
+            '</div>'.
+            '</div>'.
+            '</div>'.
+            '</div>'
+        );
     }
 
     public function icon() {
@@ -178,50 +323,22 @@ class Form {
         echo('</div>');
     }
 
-    public function purchase($uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $minimum = null, $maximum = null, $value = null) {
-        $labelName = isset($label)
-            ? $label
-            : $uniqueName;
+    // POINTS
 
-        $inputMinimum = isset($minimum)
-            ? ' min="'.$minimum.'"'
-            : null;
-
-        $inputMaximum = isset($maximum)
-            ? ' max="'.$maximum.'"'
-            : '';
-
-        $inputValue  = isset($value)
-            ? ' value="'.$value.'"'
-            : '';
-
-        $inputUnique = isset($uniqueId)
-            ? $uniqueName.'__'.$uniqueId
-            : $uniqueName;
+    public function points($points, $text = null) {
+        $text = isset($text)
+            ? $text
+            : ' points';
 
         echo(
-            '<div class="sw-c-purchase">'.
-            '<div class="sw-c-purchase__head">'.
-            '<div class="sw-c-purchase__icon">'/*<img src="'.$icon.'"/>*/.'</div>'.
-            '<div class="sw-c-purchase__title">'.$labelName.'</div>'.
-            '<div class="sw-js-purchase-plus sw-c-purchase__action"><img src="/img/minus.png"/></div>'.
-            '<div class="sw-js-purchase-value sw-c-purchase__value">'.$value.'</div>'.
-            '<div class="sw-js-purchase-minus sw-c-purchase__action"><img src="/img/plus.png"/></div>'.
-            '</div>'.
-            '<div class="sw-c-purchase__body">'.
-            '<div class="sw-c-purchase__text">'.
-            $labelDescription.
-            '</div>'.
-            '</div>'.
-            '<input type="number" class="sw-js-purchase-input sw-is-hidden" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.'/>'.
-            '</div>'
+            '<div class="sw-c-points"><span class="sw-js-points-text">'.$points.'</span> '.$text.'</div>'.
+            '<input type="hidden" class="sw-js-points-input" name="post--points" value="'.$points.'"/>'
         );
     }
 
+    // FORM
 
-    // GENERIC FORM START & END
-
-    public function start($action = null) {
+    public function formStart($action = null) {
         $link = isset($action)
             ? $action
             : 'post.php';
@@ -229,7 +346,7 @@ class Form {
         echo('<form action="/'.$link.'" method="post">');
     }
 
-    public function end($disabled = true) {
+    public function formEnd($disabled = true, $submitText = null) {
         $class = $disabled
             ? ' sw-is-unclickable'
             : ' sw-is-clickable';
@@ -238,11 +355,87 @@ class Form {
             ? ' disabled'
             : null;
 
+        $submitText = isset($submitText)
+            ? $submitText
+            : 'Save &raquo;';
+
         echo(
-            '<input class="sw-js-submit sw-o-submit'.$class.'" type="submit" value="Save &raquo;"'.$disabled.'/>'.
+            '<div class="sw-l-wrap">'.
+            '<input class="sw-js-submit '.$class.'" type="submit" value="'.$submitText.'"'.$disabled.'/>'.
+            '</div>'.
             '</form>'
         );
     }
+
+    // RANDOM
+
+    public function randomRadio($title) {
+        echo(
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-js-randomizer sw-c-randomizer">'.
+            '<button type="button" class="sw-js-random-radio sw-c-randomizer__button">'.
+            '<div class="sw-c-randomizer__image">'.
+            '<img class="" src="/img/dice.png"/>'.
+            '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
+            '</div>'.
+            '</button>'.
+            '<div class="sw-js-random-title sw-c-randomizer__title">&nbsp;</div>'.
+            '<div class="sw-js-random-info sw-c-randomizer__info">&nbsp;</div>'.
+            '<div class="sw-c-randomizer__rollfor">Rolling for</div>'.
+            '<div class="sw-c-randomizer__attribute">'.$title.'</div>'.
+            '</div>'.
+            '</div>'
+        );
+    }
+
+    public function randomNumber($title, $times) {
+        echo(
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-js-randomizer sw-c-randomizer">'.
+            '<button type="button" class="sw-js-random-number sw-c-randomizer__button" data-roll-type="'.$title.'" data-rolls="'.$times.'">'.
+            '<div class="sw-c-randomizer__image">'.
+            '<img class="" src="/img/dice.png"/>'.
+            '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
+            '</div>'.
+            '</button>'.
+            '<div class="sw-js-random-value sw-c-randomizer__value">&nbsp;</div>'.
+            '<div class="sw-c-randomizer__rollfor">Rolling for</div>'.
+            '<div class="sw-c-randomizer__attribute">'.$title.'</div>'.
+            '</div>'.
+            '</div>'
+        );
+    }
+
+    // VIEW
+
+    public function viewStart() {
+        echo(
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-c-viewmore">'.
+            '<button type="button" class="sw-js-viewmore sw-c-viewmore__button">'.
+            '<div class="sw-c-viewmore__label">'.
+            '<div class="sw-c-viewmore__text sw-js-view-text">decide yourself</div>'.
+            '<div class="sw-c-viewmore__image">'.
+            '<img class="sw-js-chevron-down" src="/img/chevron-down.png"/>'.
+            '<img class="sw-js-chevron-up sw-is-hidden" src="/img/chevron-up.png"/>'.
+            '</div>'.
+            '</div>'.
+            '</button>'.
+            '</div>'.
+            '</div>'.
+            '<div class="sw-js-view-content sw-is-hidden">'
+        );
+    }
+
+    public function viewEnd() {
+        echo('</div>');
+    }
+
+
+
+
+
+
 
 
     // needs refactoring
@@ -493,14 +686,6 @@ class Form {
         );
     }
 
-
-    // Generic
-    public function genericSelect($tableName, $name, $array, $value = null) {
-        foreach($array as $object) {
-            $this->getRadio($tableName, $name, $object->name, $object->id, $object->description);
-        }
-    }
-
     public function genericStart($action = null) {
         $link = isset($action)
             ? $action
@@ -524,8 +709,6 @@ class Form {
         );
     }
 
-
-    // Roll
     public function rollNumber($name, $times) {
         echo(
             '<div class="sw-c-randomizer sw-js-randomizer">'.
@@ -559,31 +742,6 @@ class Form {
         );
     }
 
-
-    // View
-    public function viewStart() {
-        echo(
-            '<div class="sw-c-viewmore">'.
-            '<button type="button" class="sw-c-viewmore__button sw-js-view-button">'.
-            '<div class="sw-c-viewmore__label">'.
-            '<div class="sw-c-viewmore__text sw-js-view-text">decide yourself</div>'.
-            '<div class="sw-c-viewmore__image">'.
-            '<img class="sw-js-chevron-down" src="/img/chevron-down.png"/>'.
-            '<img class="sw-js-chevron-up sw-is-hidden" src="/img/chevron-up.png"/>'.
-            '</div>'.
-            '</div>'.
-            '</button>'.
-            '</div>'.
-            '<div class="sw-js-view-content sw-is-hidden">'
-        );
-    }
-
-    public function viewEnd() {
-        echo('</div>');
-    }
-
-
-    // Points
     public function pointsForm($points, $text) {
         echo(
             '<div class="sw-c-points">'.
@@ -593,8 +751,6 @@ class Form {
         );
     }
 
-
-    // Print
     public function printPerson($tableData, $header) {
 
         echo('<div class="sw-l-table"><h3>'.$header.'</h3>');

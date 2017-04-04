@@ -687,23 +687,7 @@ a {
 }
 
 .sw-c-submit {
-  @include mix-auto;
 
-  margin-top: 4rem;
-
-  text-align: center;
-
-  height: 5rem;
-  width: 100%;
-
-  border-top: 1px solid $color-white-dark;
-
-  font-family: $font-fancy;
-  font-size: 2rem;
-
-  &:active {
-    background-color: $color-amber-primary;
-  }
 }
 
 .sw-c-randomizer {

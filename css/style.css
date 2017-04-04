@@ -396,19 +396,6 @@ a {
     font-size: 1.6rem;
     text-align: center; }
 
-.sw-c-submit {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 4rem;
-  text-align: center;
-  height: 5rem;
-  width: 100%;
-  border-top: 1px solid #dddddd;
-  font-family: aleobold, serif;
-  font-size: 2rem; }
-  .sw-c-submit:active {
-    background-color: #ffd740; }
-
 .sw-c-randomizer {
   padding: 1rem 1rem 1rem 1rem;
   text-align: center; }

@@ -9,19 +9,9 @@ html {
 body {
   width: 100%;
 
+  padding-bottom: 6rem;
+
   background-color: $color-white-w2;
-}
-
-input {
-  &:required {
-    &:invalid {
-      border: 1px solid $color-red-secondary;
-    }
-
-    &:valid {
-      border: 1px solid $color-green-secondary;
-    }
-  }
 }
 
 button:hover, input[type=submit], a {

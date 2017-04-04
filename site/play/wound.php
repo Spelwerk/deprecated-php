@@ -5,27 +5,27 @@
  * Date: 12/02/2017
  * Time: 08:08
  */
-global $form, $sitemap;
+global $form, $sitemap, $component;
+
+$component->title('Add Wound')
 ?>
 
 <div class="sw-l-quicklink">
-    <a class="sw-l-quicklink__item" href="/play/<?php echo $sitemap->id; ?>/<?php echo $sitemap->hash; ?>"><img src="/img/return.png"/></a>
+    <?php $component->linkQuick('/play/'.$sitemap->id.'/'.$sitemap->hash,'Return','/img/return.png'); ?>
 </div>
 
-<script src="/js/validation.js"></script>
-
-<h2>Add Wound</h2>
-
 <?php
-$form->genericStart();
-$form->getHidden('post', 'return', 'play');
-$form->getHidden('post', 'returnid', 'wound');
-$form->getHidden('post', 'do', 'person--wound--add');
-$form->getHidden('post', 'id', $sitemap->id);
-$form->getHidden('post', 'hash', $sitemap->hash);
-
-$form->getVarchar('wound', 'name', true);
-$form->getBool('wound', 'lethal', true);
-
-$form->genericEnd();
+$component->wrapStart();
+$form->formStart();
+$form->hidden('return', 'play', 'post');
+$form->hidden('returnid', 'wound', 'post');
+$form->hidden('do', 'person--wound--add', 'post');
+$form->hidden('id', $sitemap->id, 'post');
+$form->hidden('hash', $sitemap->hash, 'post');
+$form->varchar(true, 'name', 'Short Description', 'A wound is significant damage that you have taken. It can either be serious or lethal.');
+$form->pick(true, 'lethal', 'Lethal');
+$form->formEnd();
+$component->wrapEnd();
 ?>
+
+<script src="/js/validation.js"></script>

@@ -268,91 +268,40 @@ class Person {
     }
 
 
-    function buildButton($title, $description, $value, $data, $icon = null) {
-        $icon = isset($icon)
-            ? $icon
-            : '/img/missing_icon.png';
-
-        echo(
-            '<button type="button" class="sw-c-button__item sw-js-roll-button" '.$data.'>'.
-            '<div class="sw-c-button__content">'.
-            '<div class="sw-c-button__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-button__title sw-js-button-title">'.$title.'</div>'.
-            '<div class="sw-c-button__value">'.$value.'</div></div>'.
-            '<div class="sw-js-button-information sw-is-hidden">'.$description.'</div></button>'
-        );
+    function buildEditDescription($id, $title, $description, $icon) {
+        //todo build this
     }
 
-    function buildList($title, $description, $icon = null) {
-        $icon = isset($icon)
-            ? $icon
-            : '/img/missing_icon.png';
+    function buildRemoval($id, $title, $icon, $thing, $returnId = null) {
+        $change = $this->isOwner
+            ?   '<form action="/post.php" method="post">'.
+                '<input type="hidden" name="post--return" value="play"/>'.
+                '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
+                '<input type="hidden" name="post--do" value="person--remove"/>'.
+                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
+                '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
+                '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
+                '<input class="sw-u-action" type="image" src="/img/remove.png" alt="Submit" />'.
+                '</form>'
+            :   null;
 
         echo(
-            '<div class="sw-c-list__item sw-js-list-item">'.
-            '<div class="sw-c-list__header sw-js-list-header">'.
+            '<div class="sw-c-list sw-u-even">'.
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-c-list__head">'.
             '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
             '<div class="sw-c-list__title">'.$title.'</div>'.
-            '<div class="sw-c-list__chevron">'.
-            '<img class="sw-js-chevron-down" src="/img/chevron-down.png"/>'.
-            '<img class="sw-js-chevron-up sw-is-hidden" src="/img/chevron-up.png"/>'.
+            '<div class="sw-c-list__action">'.
+            $change.
             '</div>'.
-            '</div>'.
-            '<div class="sw-c-list__information sw-js-list-information sw-is-hidden">'.
-            '<div class="sw-c-list__description">'.$description.'</div>'.
-            '</div>'.
-            '</div>'
-        );
-    }
-
-    function buildEditDescription($id, $name, $description, $icon, $thing) {
-
-        //todo not finished yet
-        echo(
-            '<div class="sw-c-list__item">'.
-            '<div class="sw-c-list__header">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$name.'</div>'.
-            '</div>'.
-            '<form action="/post.php" method="post">'.
-            '<input type="hidden" name="post--return" value="play"/>'.
-            '<input type="hidden" name="post--do" value="person--edit--description"/>'.
-            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-            '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
-            '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
-            '<div class="sw-c-list__description">'.
-            '<textarea class="sw-c-input__item sw-js-validation" name="item--description" id="item--description" rows="3">'.$description.'</textarea>'.
-            '<input class="sw-c-list__submit" type="submit" value="Edit" />'.
-            '</div>'.
-            '</form>'.
-            '</div>'
-        );
-    }
-
-    function buildRemoval($id, $name, $icon, $thing) {
-        echo(
-            '<div class="sw-c-list__item">'.
-            '<div class="sw-c-list__header">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$name.'</div>'.
-            '<div class="sw-c-list__icon">'.
-            '<form action="/post.php" method="post">'.
-            '<input type="hidden" name="post--return" value="play"/>'.
-            '<input type="hidden" name="post--do" value="person--remove--thing"/>'.
-            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-            '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
-            '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
-            '<input class="sw-c-list__submit" type="image" src="/img/remove.png" alt="Submit" />'.
-            '</form>'.
             '</div>'.
             '</div>'.
             '</div>'
         );
     }
 
-    function buildEquip($id, $name, $icon, $thing, $equipped, $returnId = null) {
+    function buildEquip($id, $title, $icon, $thing, $equipped, $returnId = null) {
         $e = $equipped == 1
             ? ''
             : ' sw-is-opacity';
@@ -375,33 +324,35 @@ class Person {
                 '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
                 '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
                 '<input type="hidden" name="thing--value" value="'.$flip.'"/>'.
-                '<input class="sw-c-list__submit" type="image" src="'.$i.'" alt="Submit" />'.
+                '<input class="sw-u-action" type="image" src="'.$i.'" alt="Submit" />'.
                 '</form>'
             :   null;
 
         echo(
-            '<div class="sw-c-list__item'.$e.'">'.
-            '<div class="sw-c-list__header">'.
+            '<div class="sw-c-list sw-u-even'.$e.'">'.
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-c-list__head">'.
             '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$name.'</div>'.
-            '<div class="sw-c-list__icon">'.
+            '<div class="sw-c-list__title">'.$title.'</div>'.
+            '<div class="sw-c-list__action">'.
             $change.
+            '</div>'.
             '</div>'.
             '</div>'.
             '</div>'
         );
     }
 
-    function buildWound($title, $woundId, $icon, $heal, $aid) {
-        $t = $heal == 1 && $aid == 1
-            ? ' sw-is-opacity'
+    function buildWound($id, $title, $icon, $heal, $aid) {
+        $labelAided = $aid == 1
+            ? ' (Aided)'
             : null;
 
-        $h = $heal == 1
-            ? ' sw-is-opacity'
+        $labelHealed = $heal == 1
+            ? ' (Healed)'
             : null;
 
-        $a = $aid == 1
+        $aidedAndHealed = $aid == 1 && $heal == 1
             ? ' sw-is-opacity'
             : null;
 
@@ -414,78 +365,76 @@ class Person {
             : 1;
 
         $aidButton = $heal == 0
-            ?   '<div class="sw-c-list__icon">'.
+            ?   '<div class="sw-c-list__action">'.
                 '<form action="/post.php" method="post">'.
                 '<input type="hidden" name="post--return" value="play"/>'.
                 '<input type="hidden" name="post--returnid" value="wound"/>'.
                 '<input type="hidden" name="post--do" value="person--wound--aid"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.
+                '<input type="hidden" name="wound--id" value="'.$id.'"/>'.
                 '<input type="hidden" name="wound--value" value="'.$flipAid.'"/>'.
-                '<input class="sw-c-list__submit'.$a.'" type="image" src="/img/wound-aid.png" alt="Submit" />'.
+                '<input class="sw-u-action" type="image" src="/img/wound-aid.png" alt="Submit" />'.
                 '</form>'.
                 '</div>'
             :   null;
 
         $healButton = $aid == 1
-            ?   '<div class="sw-c-list__icon">'.
+            ?   '<div class="sw-c-list__action">'.
                 '<form action="/post.php" method="post">'.
                 '<input type="hidden" name="post--return" value="play"/>'.
                 '<input type="hidden" name="post--returnid" value="wound"/>'.
                 '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="wound--id" value="'.$woundId.'"/>'.
+                '<input type="hidden" name="wound--id" value="'.$id.'"/>'.
                 '<input type="hidden" name="wound--value" value="'.$flipHeal.'"/>'.
-                '<input class="sw-c-list__submit'.$h.'" type="image" src="/img/wound-heal.png"/>'.
+                '<input class="sw-u-action" type="image" src="/img/wound-heal.png"/>'.
                 '</form>'.
                 '</div>'
             :   null;
 
-
-
         echo(
-            '<div class="sw-c-list__item">'.
-                '<div class="sw-c-list__header">'.
-                    '<div class="sw-c-list__icon'.$t.'"><img src="'.$icon.'"/></div>'.
-                    '<div class="sw-c-list__title'.$t.'">'.$title.'</div>'.
-                    $healButton.
-                    $aidButton.
-                '</div>'.
+            '<div class="sw-c-list sw-u-even'.$aidedAndHealed.'">'.
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-c-list__head">'.
+            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
+            '<div class="sw-c-list__title">'.$title.$labelAided.$labelHealed.'</div>'.
+            $aidButton.
+            $healButton.
+            '</div>'.
+            '</div>'.
             '</div>'
         );
     }
 
 
-    public function makeCard($list, $modifier = null) {
-        echo('<div class="sw-c-card">');
+    public function makeCard($list) {
+        global $component;
+
+        echo('<div class="sw-l-attribute">');
 
         foreach($list as $object) {
-            echo(
-                '<div class="sw-c-card__item'.$modifier.'">'.
-                '<div class="sw-c-card__title">'.$object->name.'</div>'.
-                '<div class="sw-c-card__value">'.$object->value.'</div></div>'
-            );
+            $component->attribute($object->name, $object->value);
         }
 
         echo('</div>');
     }
 
     public function makeList($list) {
-        echo('<div class="sw-c-list">');
+        global $component;
+
+        echo('<div class="sw-c-content">');
 
         if($list) {
             foreach($list as $item) {
-                $this->buildList($item->name, $item->description, $item->icon);
+                $component->listItem($item->name, $item->description, $item->icon);
             }
         }
-
-        echo('</div>');
     }
 
     public function makeButton($list, $type) {
-        echo('<div class="sw-c-button">');
+        global $component;
 
         foreach($list as $item) {
 
@@ -524,30 +473,30 @@ class Person {
 
             }
 
-            $this->buildButton($item->name, $item->description, $value, $data, $item->icon);
+            $component->roll($item->name, $item->description, $item->icon, $value, $data);
         }
-
-        echo('</div>');
     }
 
     public function makeExpertise() {
+        global $component;
+
         $list = $this->getExpertise($this->world->expertiseDice);
 
         if($list) {
             echo(
                 '<h2>Expertise</h2>'.
-                '<div class="sw-c-button">'
+                '<div class="sw-l-content">'
             );
 
-            foreach($list as $expertise) {
-                $rollD12 = 2 + intval($expertise->dice);
-                $rollBonus = $expertise->skillValue;
+            foreach($list as $item) {
+                $rollD12 = 2 + intval($item->dice);
+                $rollBonus = $item->skillValue;
 
                 $value = $rollD12.'d12+'.$rollBonus;
 
                 $data = 'data-roll-type="default" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'"';
 
-                $this->buildButton($expertise->name, $expertise->description, $value, $data, $expertise->icon);
+                $component->roll($item->name, $item->description, $item->icon, $value, $data);
             }
 
             echo('</div>');
@@ -555,12 +504,14 @@ class Person {
     }
 
     public function makeExpertiseList() {
+        global $component;
+
         $list = $this->getExpertise($this->world->expertiseAttribute);
 
         if($list) {
             echo(
                 '<h3>Expertise</h3>'.
-                '<div class="sw-c-list">'
+                '<div class="sw-l-content">'
             );
 
             foreach($list as $expertise) {
@@ -580,7 +531,7 @@ class Person {
 
                 $title = $expertise->name . $lvl;
 
-                $this->buildList($title, $info, $expertise->icon);
+                $component->listItem($title, $info, $expertise->icon);
             }
 
             echo('</div>');
@@ -588,35 +539,33 @@ class Person {
     }
 
     public function makeFeatures() {
-        echo('<div class="sw-c-list">');
+        global $component;
+
+        echo('<div class="sw-c-content">');
 
         $characteristicList = $this->getCharacteristic();
         $milestoneList = $this->getMilestone();
 
-        $this->buildList($this->species->name, $this->species->description, $this->species->icon);
-
-        $this->buildList($this->background->name, $this->background->description, $this->background->icon);
-
-        $this->buildList($this->nature->name, $this->nature->description, $this->nature->icon);
-
-        $this->buildList($this->identity->name, $this->identity->description, $this->identity->icon);
+        $component->listItem($this->species->name, $this->species->description, $this->species->icon);
+        $component->listItem($this->background->name, $this->background->description, $this->background->icon);
+        $component->listItem($this->nature->name, $this->nature->description, $this->nature->icon);
+        $component->listItem($this->identity->name, $this->identity->description, $this->identity->icon);
 
         if($characteristicList) {
             foreach($characteristicList as $item) {
-                $this->buildList($item->name, $item->description, $item->icon);
+                $component->listItem($item->name, $item->description, $item->icon);
             }
         }
 
         if($milestoneList) {
             foreach($milestoneList as $item) {
-                $this->buildList($item->name, $item->description, $item->icon);
+                $component->listItem($item->name, $item->description, $item->icon);
             }
         }
 
         if($this->isSupernatural) {
-            $this->buildList($this->manifestation->name, $this->manifestation->description);
-
-            $this->buildList($this->focus->name, $this->focus->description, $this->focus->icon);
+            $component->listItem($this->manifestation->name, $this->manifestation->description, $this->manifestation->icon);
+            $component->listItem($this->focus->name, $this->focus->description, $this->focus->icon);
         }
 
         echo('</div>');
@@ -647,11 +596,11 @@ class Person {
             }
         }
 
-        $this->makeCard($attributeList, '--small');
+        $this->makeCard($attributeList);
     }
 
     public function makeProtectionEquip() {
-        echo('<div class="sw-c-list">');
+        echo('<div class="sw-l-content">');
 
         $list = $this->getProtection();
 
@@ -694,7 +643,7 @@ class Person {
     }
 
     public function makeWeaponEquip() {
-        echo('<div class="sw-c-list">');
+        echo('<div class="sw-l-content">');
 
         $list = $this->getWeapon();
 
@@ -708,6 +657,8 @@ class Person {
     }
 
     public function makeWound() {
+        global $component;
+
         echo('<div class="sw-c-list">');
 
         $countLethal = 0;
@@ -720,53 +671,52 @@ class Person {
         $attributes = $this->getAttribute($this->world->attributeWound);
 
         if($lethal) {
-            foreach($lethal as $object) {
-                if($object->heal == 0) {
+            foreach($lethal as $item) {
+                if($item->heal == 0) {
                     $countLethal++;
                 }
             }
         }
 
         if($serious) {
-            foreach($serious as $object) {
-                if($object->heal == 0) {
+            foreach($serious as $item) {
+                if($item->heal == 0) {
                     $countSerious++;
                 }
             }
         }
 
         if($all) {
-            foreach($all as $object) {
-                $this->buildWound($object->name, $object->id, $object->icon, $object->heal, $object->aid);
+            $component->wrapEnd();
+
+            foreach($all as $item) {
+                $this->buildWound($item->id, $item->name, $item->icon, $item->heal, $item->aid);
             }
+
+            $component->wrapStart();
         }
 
         foreach($attributes as $key => $item) {
 
         }
 
-        echo('<div class="sw-c-card">');
+        echo('<div class="sw-l-attribute">');
 
-        foreach($attributes as $object) {
+        foreach($attributes as $item) {
 
             $count = 0;
 
-            if($object->id == $this->world->woundSerious) {
+            if($item->id == $this->world->woundSerious) {
                 $count = $countSerious;
-            } else if($object->id == $this->world->woundLethal) {
+            } else if($item->id == $this->world->woundLethal) {
                 $count = $countLethal;
             }
 
-            $color = $count >= $object->value
+            $color = $count >= $item->value
                 ? ' sw-is-invalid'
                 : null;
 
-            echo(
-                '<div class="sw-c-card__item">'.
-                '<div class="sw-c-card__title">'.$object->name.'</div>'.
-                '<div class="sw-c-card__value'.$color.'">'.$count.'/'.$object->value.'</div>'.
-                '</div>'
-            );
+            $component->attribute($item->name, $count.'/'.$item->value);
         }
 
         echo('</div>');

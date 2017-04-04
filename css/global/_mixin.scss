@@ -15,3 +15,12 @@
   height: $size;
   width: $size;
 }
+
+@mixin wrap() {
+  @include margin--auto;
+
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  max-width: 70rem;
+}

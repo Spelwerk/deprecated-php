@@ -5,8 +5,12 @@
  * Date: 19/02/2017
  * Time: 09:38
  */
+global $component;
 ?>
 
-<h2>You are not Administrator</h2>
+<?php $component->title('Error'); ?>
 
-<p>Seems like you're either not logged in, or you're missing administrator rights.</p>
+<section class="sw-l-wrap">
+    <h1>You are not administrator</h1>
+    <p>Seems like you're either not logged in, or you're missing administrator rights.</p>
+</section>

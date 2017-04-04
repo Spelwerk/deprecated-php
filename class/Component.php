@@ -17,6 +17,34 @@ class Component {
         );
     }
 
+    public function h1($title, $id = null) {
+        echo(
+            '<h1 id="'.$id.'">'.$title.'</h1>'
+        );
+    }
+
+    public function h2($title, $id = null) {
+        echo(
+            '<h2 id="'.$id.'">'.$title.'</h2>'
+        );
+    }
+
+    public function h3($title, $id = null) {
+        echo(
+            '<h3 id="'.$id.'">'.$title.'</h3>'
+        );
+    }
+
+    public function h4($title, $id = null) {
+        echo(
+            '<h4 id="'.$id.'">'.$title.'</h4>'
+        );
+    }
+
+    public function p($content) {
+        echo('<div class="sw-l-content sw-l-wrap">'.$content.'</div>');
+    }
+
     public function roll($title, $description, $icon = null, $value = null, $data = null) {
         $icon = isset($icon)
             ? $icon
@@ -49,6 +77,16 @@ class Component {
             '<div class="sw-c-attribute__value">'.$value.'</div>'.
             '</div>'
         );
+    }
+
+    // WRAP
+
+    public function wrapStart() {
+        echo('<section class="sw-l-wrap">');
+    }
+
+    public function wrapEnd() {
+        echo('</section>');
     }
 
     // LINK
@@ -107,6 +145,8 @@ class Component {
             '<div class="sw-js-list-head sw-c-list__head">'.
             '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
             '<div class="sw-c-list__title">'.$title.'</div>'.
+            '<div class="sw-js-list-chevron-up sw-c-list__action sw-is-hidden"><img src="/img/chevron-up.png"/></div>'.
+            '<div class="sw-js-list-chevron-down sw-c-list__action"><img src="/img/chevron-down.png"/></div>'.
             '</div>'.
             '<div class="sw-js-list-body sw-c-list__body sw-is-hidden">'.
             '<div class="sw-c-list__text">'.
@@ -114,108 +154,7 @@ class Component {
             '</div>'.
             '</div>'.
             '</div>'.
-            '</div>'
-        );
-    }
-
-    public function listEdit($title, $description, $icon = null) {
-        $icon = isset($icon)
-            ? $icon
-            : '/img/missing_icon.png';
-
-        echo(
-            '<div class="sw-js-list sw-c-list">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-js-list-head sw-c-list__head">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$title.'</div>'.
-            '<div class="sw-c-list__action"><img src="/img/remove.png"/></div>'.
-            '<div class="sw-c-list__action"><img src="/img/edit.png"/></div>'.
-            '</div>'.
-            '<div class="sw-js-list-body sw-c-list__body">'.
-            '<div class="sw-c-list__text">'.
-            $description.
-            '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        ); // todo add input textfield
-    }
-
-    public function listCheckbox($title, $description) {
-        echo(
-            '<div class="sw-js-list sw-c-list">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-js-list-head sw-c-list__head">'.
-            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/checkbox-true.png"/></div>'.
-            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/checkbox-false.png"/></div>'.
-            '<div class="sw-c-list__title">'.$title.'</div>'.
-            '</div>'.
-            '<div class="sw-js-list-body sw-c-list__body sw-is-hidden">'.
-            '<div class="sw-c-list__text">'.
-            $description.
-            '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        );
-    }
-
-    public function listRadio($title, $description) {
-        echo(
-            '<div class="sw-js-list sw-c-list">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-js-list-head sw-c-list__head">'.
-            '<div class="sw-js-radio-true sw-c-list__select sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-radio-false sw-c-list__select"><img src="/img/radio-false.png"/></div>'.
-            '<div class="sw-c-list__title">'.$title.'</div>'.
-            '</div>'.
-            '<div class="sw-js-list-body sw-c-list__body sw-is-hidden">'.
-            '<div class="sw-c-list__text">'.
-            $description.
-            '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        );
-    }
-
-    // RANDOM
-
-    public function randomRadio($title) {
-        echo(
-            '<div class="sw-js-randomizer sw-c-randomizer">'.
-            '<button type="button" class="sw-js-random-radio sw-c-randomizer__button">'.
-            '<div class="sw-c-randomizer__image">'.
-            '<img class="" src="/img/dice.png"/>'.
-            '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
-            '</div>'.
-            '</button>'.
-            '<div class="sw-js-random-title sw-c-randomizer__title">&nbsp;</div>'.
-            '<div class="sw-js-random-info sw-c-randomizer__info">&nbsp;</div>'.
-            '<div class="sw-c-randomizer__rollfor">Rolling for</div>'.
-            '<div class="sw-c-randomizer__attribute">'.$title.'</div>'.
-            '</div>'
-        );
-    }
-
-    public function randomNumber($title, $times) {
-        echo(
-            '<div class="sw-js-randomizer sw-c-randomizer">'.
-            '<button type="button" class="sw-js-random-number sw-c-randomizer__button" data-roll-type="'.$title.'" data-rolls="'.$times.'">'.
-            '<div class="sw-c-randomizer__image">'.
-            '<img class="" src="/img/dice.png"/>'.
-            '<div class="sw-c-randomizer__rolltext">Click here to roll</div>'.
-            '</div>'.
-            '</button>'.
-            '<div class="sw-js-random-value sw-c-randomizer__value">&nbsp;</div>'.
-            '<div class="sw-c-randomizer__rollfor">Rolling for</div>'.
-            '<div class="sw-c-randomizer__attribute">'.$title.'</div>'.
             '</div>'
         );
     }
 }
-
-/*
-
-*/

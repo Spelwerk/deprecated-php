@@ -9,3 +9,26 @@
 .sw-u-text-right {
   text-align: right !important;
 }
+
+.sw-u-action {
+  @include size(3rem);
+}
+
+.sw-u-even {
+  &:nth-child {
+    background-color: $color-white-w4;
+  }
+}
+
+.sw-u-mask {
+  height: 100%;
+  width: 100%;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 90;
+}

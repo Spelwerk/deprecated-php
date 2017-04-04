@@ -1,0 +1,72 @@
+input[type=text], input[type=number], textarea {
+  @include padding(0.5rem);
+  @include font(2rem);
+
+  width: 100%;
+
+  background-color: $color-white-w1;
+
+  &:required {
+    &:invalid {
+      background-color: $color-red-highlight;
+      border: 1px solid $color-red-border;
+    }
+
+    &:valid {
+      background-color: $color-green-highlight;
+      border: 1px solid $color-green-border;
+    }
+  }
+
+  &:optional {
+    border: 1px solid $color-white-w4;
+  }
+}
+
+input[type=submit] {
+  @include margin--auto;
+  @include font--fancy(2rem);
+
+  margin-top: 2rem;
+
+  height: 5rem;
+  width: 100%;
+
+  text-align: center;
+
+  border-radius: 1rem;
+
+  &:enabled {
+    background-color: $color-indigo-primary;
+    color: $color-white-w1;
+  }
+
+  &:disabled {
+    background-color: $color-white-w4;
+    color: $color-white-w1;
+  }
+
+  &:active {
+    background-color: $color-amber-primary;
+  }
+}
+
+.sw-c-input {
+
+  &__title {
+    @include font--fancy(1.6rem);
+
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  &__description {
+    @include font(1.2rem);
+
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+
+    color: $color-gray-g4;
+    line-height: 1.5;
+  }
+}

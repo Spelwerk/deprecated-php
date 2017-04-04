@@ -131,6 +131,7 @@ class Sitemap {
                 $this->page = 'site/play/default.php';
                 $this->id = $id;
                 $this->hash = $hash;
+                $this->menuLink = 'Person';
                 break;
 
             case 'cheat':

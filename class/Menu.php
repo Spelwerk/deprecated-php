@@ -19,6 +19,39 @@ class Menu {
         $this->user = $user;
         $this->tabArray = [];
         $this->listArray = [];
+
+        $this->addTab('Home', 'Home', '/img/tab-home.png');
+        $this->addTab('Play', 'Play', '/img/tab-play.png');
+        $this->addTab('Admin', 'Admin', '/img/tab-admin.png');
+        $this->addTab('Help', 'Help', '/img/tab-help.png');
+        $this->addTab('User', 'User', '/img/tab-user.png');
+
+        $menuHome = new MenuList('Home');
+        $menuHome->add('Home', '/');
+        $menuHome->add('News', '/news');
+        $menuHome->add('About', '/about');
+
+        $menuPlay = new MenuList('Play');
+        $menuPlay->add('Person', '/play');
+        $menuPlay->add('Story', '/story');
+
+        $menuAdmin = new MenuList('Admin');
+        $menuAdmin->add('World', '#');
+        $menuAdmin->add('Companion', '#');
+        $menuAdmin->add('Manifestation', '#');
+
+        $menuHelp = new MenuList('Help');
+        $menuHelp->add('Help', '#');
+
+        $menuUser = new MenuList('User');
+        $menuUser->add('Login', '#');
+        $menuUser->add('Create', '#');
+
+        $this->addList($menuHome);
+        $this->addList($menuPlay);
+        $this->addList($menuAdmin);
+        $this->addList($menuHelp);
+        $this->addList($menuUser);
     }
 
     public function addTab($title, $listID, $icon, $active = false, $user = null, $admin = false) {

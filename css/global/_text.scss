@@ -97,46 +97,84 @@
   font-size: $size;
 }
 
-.sw-t-t1 {
+@mixin h1 {
   @include font--thin(3.4rem);
 
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+
+  text-align: center;
+
+  cursor: default;
+}
+
+@mixin h2 {
+  @include font--thin(3rem);
+
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+
+  text-align: center;
+
+  cursor: default;
+}
+
+@mixin h3 {
+  @include font--thin(2.6rem);
+
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+
+  text-align: center;
+
+  cursor: default;
+}
+
+@mixin h4 {
+  @include font--thin(2.2rem);
+
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+
+  text-align: center;
+
+  cursor: default;
+}
+
+h1 {
+  @include h1;
+}
+
+h2 {
+  @include h2;
+}
+
+h3 {
+  @include h3;
+}
+
+h4 {
+  @include h4;
+}
+
+p {
+  @include font(1.8rem);
+
+  line-height: 1.5;
+}
+
+.sw-t-t1 {
+  @include h1;
 }
 
 .sw-t-t2 {
-  @include font--thin(3rem);
-
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  @include h2;
 }
 
 .sw-t-t3 {
-  @include font--thin(2.6rem);
-
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  @include h3;
 }
 
 .sw-t-t4 {
-  @include font--thin(2.2rem);
-
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.sw-t-s1 {
-
-}
-
-.sw-t-s2 {
-
-}
-
-.sw-t-s3 {
-
-}
-
-.sw-t-s4 {
-
+  @include h4;
 }

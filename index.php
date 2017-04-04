@@ -12,12 +12,16 @@ require_once('php/config.php');
 
 if(!$maintenanceMode) {
     require_once('class/Curl.php');
+    require_once('class/Component.php');
     require_once('class/Form.php');
+    require_once('class/Menu.php');
     require_once('class/Sitemap.php');
     require_once('class/User.php');
 
+    $component = new Component();
     $curl = new Curl($config_curl);
     $form = new Form();
+    $menu = new Menu();
 
     $user = isset($_COOKIE['sw_user_token'])
         ? new User($_COOKIE['sw_user_token'])
@@ -28,6 +32,11 @@ if(!$maintenanceMode) {
         : 0;
 
     $sitemap = new Sitemap($user);
+
+    $sitemapTab = 'Play';
+    $sitemapLink = 'Person';
+
+    $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 }
 ?>
 
@@ -38,15 +47,17 @@ if(!$maintenanceMode) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <link rel="stylesheet" type="text/css" media="screen" href="/dependency/reset.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css"/>
 
     <script src="/dependency/prefixfree.min.js"></script>
     <script src="/dependency/jquery-2.2.4.min.js"></script>
-    <script src="/js/menu.js"></script>
+
+    <script src="/js/test.js"></script>
 
     <title>Spelwerk</title>
 </head>
 <body>
+
 
 <?php if(!$maintenanceMode): ?>
 
@@ -56,47 +67,42 @@ if(!$maintenanceMode) {
     }
     ?>
 
-    <div class="sw-l-header">
-        <div class="sw-l-header__content">
-            <div class="sw-l-header__hamburger sw-js-hamburger"><a href="#"><img src="/img/hamburger--white.png"/></a></div>
-            <a class="sw-l-header__logo" href="/">spelwerk</a>
-            <div class="sw-l-header__menu">
-                <div class="sw-l-header__menu__content">
-                    <a class="sw-l-header__menu__item" href="/play">Play</a>
-                    <a class="sw-l-header__menu__item sw-js-menu">New</a>
-                    <a class="sw-l-header__menu__item sw-js-menu">View</a>
-                    <?php if(isset($user) && $user->isAdmin): ?>
-                    <a class="sw-l-header__menu__item" href="/admin">Admin</a>
-                    <?php endif; ?>
+    <header class="sw-c-header">
+        <div class="sw-l-wrap">
+            <div class="sw-c-header__top">
+                <div class="sw-c-header__logo">spelwerk</div>
+                <div class="sw-c-header__tabs">
+                    <?php $menu->buildTab(); ?>
                 </div>
             </div>
-            <div class="sw-l-header__user sw-js-user"><a href="/user"><img src="/img/user--white.png"/></a></div>
         </div>
-    </div>
+        </div>
+        <div class="sw-c-header__bottom">
+            <div class="sw-l-wrap">
+                <?php $menu->buildList(); ?>
+            </div>
+        </div>
+    </header>
 
-    <div class="sw-l-submenu">
-        <div class="sw-l-submenu__content sw-js-menu-new sw-is-hidden">
-            <a class="sw-l-submenu__item" href="/play">Person</a>
-            <a class="sw-l-submenu__item" href="/world">World</a>
-        </div>
-        <div class="sw-l-submenu__content sw-js-menu-view sw-is-hidden">
-            <a class="sw-l-submenu__item" href="/view/person">Persons</a>
-            <a class="sw-l-submenu__item" href="/view/world">Worlds</a>
-        </div>
-    </div>
+    <section id="content">
 
-    <div class="sw-l-content">
     <?php
     if(isset($sitemap->page)) {
         require_once($sitemap->page);
     }
     ?>
-    </div>
+
+    </section>
+
+    <footer class="sw-l-footer">
+        <div class="sw-l-wrap">
+
+        </div>
+    </footer>
 
     <?php require_once('php/modal.php'); ?>
 
-    <div class="sw-l-mask--modal sw-js-modal-mask sw-is-hidden"></div>
-    <div class="sw-l-mask--menu sw-js-menu-mask sw-is-hidden"></div>
+    <div class="sw-js-modal-mask sw-u-mask sw-is-hidden"></div>
     <div class="sw-js-saved-critical sw-is-hidden">0</div>
     <div class="sw-js-roll-modifier sw-is-hidden">0</div>
 
@@ -106,7 +112,6 @@ if(!$maintenanceMode) {
     <?php require('site/maintenance.php'); ?>
 
 <?php endif; ?>
-
 
 </body>
 </html>

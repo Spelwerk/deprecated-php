@@ -11,35 +11,38 @@ class System {
 
 
     public function createPerson($person = null, $world = null, $species = null) {
+        global $component;
+
         if(!isset($person) && !isset($world) && !isset($species)) {
-            echo '<h2>Select World</h2>';
+            $component->title('Create');
+            $component->h1('Select World');
+            $component->p('<p>You will need to select a world in which your character exists.</p>');
 
             $this->person_selectWorld();
 
         } else if(!isset($person) && isset($world) && !isset($species)) {
-            echo '<h2>Select Species</h2>';
+            $component->title('Create');
+            $component->h1('Select Species');
 
             $this->person_selectSpecies($world);
 
         } else if(!isset($person) && isset($world) && isset($species)) {
-            echo '<h2>Required Information</h2>';
+            $component->title('Create');
+            $component->h1('Nickname, Age, and Occupation');
 
             $this->person_make($world, $species);
 
         } else if(isset($person)) {
-            if($person->pointMoney > 0) {
-                echo '<h2>Money</h2>';
+            $component->title($person->nickname);
 
-                $this->person_rollAttribute(
-                    $person,
-                    $person->world->money,
-                    $person->pointMoney,
-                    'dice',
-                    'money'
-                );
+            if($person->pointMoney > 0) {
+                $component->h1('Money');
+                $component->p('<p>You will be rolling <span class="sw-js-points-text">'.$person->pointMoney.'</span> dice to either improve or impair your financial status.</p>');
+
+                $this->person_rollAttribute($person,$person->world->money,$person->pointMoney,'money');
 
             } else if($person->isSupernatural && !isset($person->manifestation)) {
-                echo '<h2>Manifestation</h2>';
+                $component->h1('Manifestation');
 
                 $this->person_select(
                     $person,
@@ -48,7 +51,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && isset($person->manifestation) && !isset($person->focus)) {
-                echo '<h2>Focus</h2>';
+                $component->h1('Focus');
 
                 $this->person_select(
                     $person,
@@ -57,7 +60,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && isset($person->manifestation) && isset($person->focus) && $person->getExpertise($person->manifestation->expertiseType) == null) {
-                echo '<h2>Supernatural Expertise</h2>';
+                $component->h1('Doctrine');
 
                 $this->person_select(
                     $person,
@@ -68,7 +71,7 @@ class System {
                 );
 
             } else if($person->isSupernatural && $person->pointPower > 0) {
-                echo '<h2>Potential</h2>';
+                $component->h1('Potential');
 
                 $this->person_rollAttribute(
                     $person,
@@ -79,7 +82,8 @@ class System {
                 );
 
             } else if(!isset($person->background)) {
-                echo '<h2>Background</h2>';
+                $component->h1('Background');
+                $component->p('<p>You will select <span>1</span> background from which you will gain a few attribute and skill changes.</p>');
 
                 $this->person_select(
                     $person,
@@ -89,7 +93,7 @@ class System {
                 );
 
             } else if(!isset($person->nature)) {
-                echo '<h2>Nature</h2>';
+                $component->h1('Nature');
 
                 $this->person_select(
                     $person,
@@ -99,7 +103,7 @@ class System {
                 );
 
             } else if(!isset($person->identity)) {
-                echo '<h2>Identity</h2>';
+                $component->h1('Identity');
 
                 $this->person_select(
                     $person,
@@ -109,27 +113,31 @@ class System {
                 );
 
             } else if($person->pointGift > 0) {
-                echo '<h2>Characteristic</h2>';
+                $component->h1('Gift');
+                $component->p('<p>Get <span>'.$person->pointGift.'</span> gift that sets your character aside from others.</p>');
 
                 $this->person_selectCharacteristic($person, 1, $person->pointGift);
 
             } else if($person->pointImperfection > 0) {
-                echo '<h2>Characteristic</h2>';
+                $component->h1('Imperfection');
+                $component->p('<p>Get <span>'.$person->pointImperfection.'</span> imperfection that sets your character aside from others.</p>');
 
                 $this->person_selectCharacteristic($person, 0, $person->pointImperfection);
 
             } else if($person->pointMilestone > 0) {
-                echo '<h2>Milestone</h2>';
+                $component->h1('Milestone');
+                $component->p('<p>Get <span>'.$person->pointMilestone.'</span> milestones that have happened to your character.</p>');
 
                 $this->person_selectMilestone($person, $person->pointMilestone);
 
             } else if($person->pointSkill > 0) {
-                echo '<h2>Skill</h2>';
+                $component->h1('Skill');
+                $component->p('<p>You will be using <span>'.$person->pointSkill.'</span> points to purchase Skills. Try to get at least 1 above 4, and a couple above 2.</p>');
 
                 $this->person_purchaseSkill($person, $person->pointSkill);
 
             } else if($person->pointExpertise > 0) {
-                echo '<h2>Expertise</h2>';
+                $component->h1('Expertise');
 
                 $exp = $person->getAttribute(null, $person->world->experience)[0];
                 $pts = $person->pointExpertise;
@@ -137,7 +145,7 @@ class System {
                 $this->person_purchaseExpertise($person, intval($exp->value + $pts));
 
             } else if($person->isSupernatural && $person->pointSupernatural > 0) {
-                echo '<h2>'.$person->manifestation->name.'</h2>';
+                $component->h1($person->manifestation->name);
 
                 $exp = $person->getAttribute(null, $person->world->experience)[0];
                 $pts = $person->pointSupernatural;
@@ -145,12 +153,12 @@ class System {
                 $this->person_purchaseDiscipline($person, intval($exp->value + $pts));
 
             } else if(!isset($person->firstname) || !isset($person->surname) || !isset($person->gender)) {
-                echo '<h2>Further Information</h2>';
+                $component->h1('Name & Details');
 
                 $this->person_describe($person);
 
             } else {
-                echo '<h2>Weapon</h2>';
+                $component->h1('Weapon');
 
                 $this->person_checkWeapon($person);
 
@@ -314,45 +322,52 @@ class System {
         return $idList;
     }
 
-    function checkboxList($itemList, $idList = null, $checkboxName) {
+    function checkboxList($tableName, $itemList, $idList = null) {
         global $form;
+
+        echo('<section class="sw-l-content">');
 
         if(isset($itemList)) {
             foreach($itemList as $item) {
                 if(!$idList || !in_array($item->id, $idList)) {
-                    $form->getCheckbox($checkboxName, $item->name, $item->id, $item->description);
+                    $form->checkbox($tableName, $item->name, $item->description, $item->id);
                 }
             }
         }
+
+        echo('</section>');
     }
 
     function checkboxAll() {
         echo(
-            '<label for="post--checkAll">'.
-            '<div class="sw-c-radio__item sw-js-check-item">'.
-            '<div class="sw-c-radio__header">'.
-            '<div class="sw-c-radio__radio">'.
-            '<img class="sw-js-check-false" src="/img/checkbox-false.png"/>'.
-            '<img class="sw-js-check-true sw-is-hidden" src="/img/checkbox-true.png"/>'.
+            '<div class="sw-js-checkbox-item sw-c-list">'.
+            '<div class="sw-l-wrap">'.
+            '<label for="post--checkall">'.
+            '<input class="sw-js-checkbox-all sw-is-hidden" type="checkbox" name="post--checkall" id="post--checkall" value="0"/>'.
+            '<div class="sw-c-list__head">'.
+            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/checkbox-true.png"/></div>'.
+            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/checkbox-false.png"/></div>'.
+            '<div class="sw-c-list__title">Check All</div>'.
             '</div>'.
-            '<div class="sw-c-radio__title sw-js-check-title">Check All</div>'.
             '</div>'.
-            '<input class="sw-js-check-all sw-is-hidden" type="checkbox" name="post--checkAll" id="post--checkAll" value="0"/>'.
-            '</div>'.
-            '</label>'
+            '</div>'
         );
     }
 
-    function radioList($itemList, $idList = null, $radioName, $radioSelect) {
+    function radioList($tableName, $itemList, $idList = null) {
         global $form;
+
+        echo('<section class="sw-l-content">');
 
         if(isset($itemList)) {
             foreach($itemList as $item) {
                 if(!$idList || !in_array($item->id, $idList)) {
-                    $form->getRadio($radioName, $radioSelect, $item->name, $item->id, $item->description);
+                    $form->radio($tableName, $item->name, $item->description, $item->id);
                 }
             }
         }
+
+        echo('</section>');
     }
 
 
@@ -377,11 +392,9 @@ class System {
             $list[] = new World(null, null, $item);
         }
 
-        $form->genericStart('play');
-
-        $form->genericSelect('person', 'world_id', $list);
-
-        $form->genericEnd();
+        $form->formStart('play');
+        $this->radioList('world_id',$list);
+        $form->formEnd();
     }
 
     function person_selectSpecies($world) {
@@ -389,85 +402,82 @@ class System {
 
         $list = $world->getSpecies();
 
-        $form->genericStart('play');
-
-        $form->genericSelect('person', 'species_id', $list);
-
-        $form->getHidden('person', 'world_id', $world->id);
-
-        $form->genericEnd();
+        $form->formStart('play');
+        $this->radioList('species_id', $list);
+        $form->hidden('world_id', $world->id);
+        $form->formEnd();
     }
 
     function person_make($world, $species) {
-        global $form, $user;
+        global $form, $user, $component;
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--post');
+        $component->wrapStart();
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--post', 'post');
+        $form->hidden('world_id', $world->id);
+        $form->hidden('species_id', $species->id);
+        $form->hidden('cheated', 0);
+        $form->hidden('template', 0);
+        $form->hidden('popularity', 0);
+        $form->hidden('calculated', 0);
+
+        $form->varchar(true, 'nickname', 'Nickname', 'The nickname of your character will be your primary simple identifier.');
+        $form->number(true, 'age', 'Age', 'Deciding age is important, as it determines many important things for the creation of your character. While you can change age at a later stage, the system will not take that into account after creation.', null, 5, $species->maxAge);
+        $form->varchar(true, 'occupation', 'Occupation', 'The occupation of your character is your secondary simple identifier.');
 
         if(isset($user->id)) {
-            $form->getHidden('post', 'user', $user->id);
+            $form->hidden('user', $user->id, 'post');
         }
-
-        $form->getVarchar('person', 'nickname', true);
-        $form->getNumber('person', 'age', true, 5, $species->maxAge);
-        $form->getVarchar('person', 'occupation', true);
 
         if($world->existsSupernatural) {
             $form->getBool('person', 'supernatural', true);
         } else {
-            $form->getHidden('person', 'supernatural', 0);
+            $form->hidden('supernatural', 0);
         }
 
-        $form->getHidden('person', 'world_id', $world->id);
-        $form->getHidden('person', 'species_id', $species->id);
-        $form->getHidden('person', 'cheated', 0);
-        $form->getHidden('person', 'template', 0);
-        $form->getHidden('person', 'popularity', 0);
-        $form->getHidden('person', 'calculated', 0);
-        $form->genericEnd();
+        $form->formEnd();
+        $component->wrapEnd();
     }
 
     function person_describe($person) {
-        global $form;
+        global $form, $component;
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--put');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
-
-        $form->getVarchar('person', 'firstname', true);
-        $form->getVarchar('person', 'surname', true);
-        $form->getVarchar('person', 'gender', true);
-
-        $form->getText('person', 'description', false);
-        $form->getText('person', 'personality', false);
-        $form->genericEnd();
+        $component->wrapStart();
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--put', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
+        $form->varchar(true, 'firstname', 'First Name');
+        $form->varchar(true, 'surname', 'Surname');
+        $form->varchar(true, 'gender', 'Gender');
+        $form->text(false, 'description', 'Description', 'Describe your character. Features, Appearance, etc.');
+        $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
+        $form->formEnd();
+        $component->wrapEnd();
     }
 
-    public function person_rollAttribute($person, $attributeId, $points, $pointsText, $postDo) {
-        global $curl, $form;
+    public function person_rollAttribute($person, $attributeId, $points, $postDo) {
+        global $curl, $form, $component;
 
         $attribute = $curl->get('attribute/id/'.$attributeId)['data'][0];
 
-        $form->genericStart();
-
-        $form->pointsForm($points, $pointsText);
-        $form->rollNumber($attribute['name'], $points);
-
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--'.$postDo);
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $component->wrapStart();
+        $form->start();
+        $form->points($points);
+        $form->randomNumber($attribute['name'], $points);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--'.$postDo, 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
 
         $form->viewStart();
-        $form->getNumber('person', 'value', true, null, $attribute['maximum']);
+        $form->number(true, 'attribute_id', $attribute['name'], $attribute['description'], null, null, $attribute['maximum']);
         $form->viewEnd();
 
-        $form->getHidden('person', 'attribute_id', $attribute['id']);
-
-        $form->genericEnd();
+        $form->end();
+        $component->wrapEnd();
     }
 
     public function person_select($person, $list, $listTableName, $withRoll = null, $do = null, $value = null) {
@@ -477,23 +487,24 @@ class System {
             ? $do
             : 'put';
 
-        $form->genericStart();
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--'.$do, 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
 
         if(isset($withRoll)) {
-            $form->rollRadio($withRoll);
+            $form->randomRadio($withRoll);
             $form->viewStart();
         }
 
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--'.$do);
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $this->radioList($listTableName,$list);
 
-        $form->genericSelect('person', $listTableName, $list, $value);
+        if(isset($withRoll)) {
+            $form->viewEnd();
+        }
 
-        if(isset($withRoll)) $form->viewEnd();
-
-        $form->genericEnd();
+        $form->formEnd();
     }
 
     public function person_selectCharacteristic($person, $gift, $points = null) {
@@ -513,21 +524,17 @@ class System {
             ? 'gift'
             : 'imperfection';
 
-        $form->genericStart();
-
-        $form->pointsForm($points, $text);
-        $form->rollRadio('characteristic');
+        $form->formStart();
+        $form->points($points);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--'.$text, 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
+        $form->randomRadio('characteristic');
         $form->viewStart();
-
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--'.$text);
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
-
-        $this->radioList($list, $idList, 'person', 'characteristic');
-
+        $this->radioList('characteristic',$list, $idList);
         $form->viewEnd();
-        $form->genericEnd();
+        $form->formEnd();
     }
 
     public function person_selectMilestone($person, $points) {
@@ -544,43 +551,64 @@ class System {
 
         $idList = $this->idList($person->getMilestone());
 
-        $form->genericStart();
-
-        $form->pointsForm($points, 'milestone');
-        $form->rollRadio('milestone');
+        $form->formStart();
+        $form->points($points);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--milestone', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
+        $form->randomRadio('milestone');
         $form->viewStart();
-
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--milestone');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
-
-        $this->radioList($list, $idList, 'person', 'milestone');
-
+        $this->radioList('milestone',$list, $idList);
         $form->viewEnd();
-        $form->genericEnd();
+        $form->formEnd();
+    }
+
+    public function person_purchaseSkill($person, $points) {
+        global $form, $component;
+
+        $currentList = $person->getAttribute($person->world->attributeSkill);
+
+        $component->wrapStart();
+        $form->formStart();
+        $form->points($points);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--skill', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
+        $form->hidden('experience', $person->world->experience, 'post');
+
+        if($points == 999) {
+            $form->hidden('points', 999, 'post');
+        }
+
+        foreach($currentList as $current) {
+            $form->purchase('attribute_id', $current->name, $current->description, $current->icon, $current->id, 0, $current->maximum, $current->value);
+        }
+
+        $form->formEnd();
+        $component->wrapEnd();
     }
 
     public function person_purchaseExpertise($person, $points) {
-        global $form, $curl;
+        global $form, $curl, $component;
 
         $typeList = $curl->get('expertisetype')['data'];
         $skillList = $person->getAttribute($person->world->attributeSkill);
         $currentList = $person->getExpertise();
         $idList = [];
 
-        $form->genericStart();
-
-        $form->pointsForm($points, 'points');
-
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--expertise');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $component->wrapStart();
+        $form->formStart();
+        $form->points($points);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--expertise', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
         $form->hidden('experience', $person->world->experience, 'post');
 
         if($points == 999) {
-            $form->getHidden('post', 'points', 999);
+            $form->hidden('points', 999, 'post');
         }
 
         if(count($currentList) != null) {
@@ -603,7 +631,7 @@ class System {
                     : $math2 + 1;
 
                 if($calculatedMax != 0) {
-                    $form->getPurchase($current->name, $current->id, $current->description, $calculatedMax, $current->level);
+                    $form->purchase('expertise_id', $current->name, $current->description, $current->icon, $current->id, 0, $calculatedMax, $current->level);
                 }
             }
         }
@@ -623,7 +651,7 @@ class System {
                                     ? $expertise->maximum
                                     : $math2 + 1;
 
-                                $form->getPurchase($expertise->name, $expertise->id, $expertise->description, $calculatedMax);
+                                $form->purchase('expertise_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax);
                             }
                         }
                     }
@@ -631,36 +659,13 @@ class System {
             }
         }
 
-        $form->genericEnd();
+        $form->formEnd();
+        $component->wrapEnd();
     }
 
-    public function person_purchaseSkill($person, $points) {
-        global $form;
-
-        $currentList = $person->getAttribute($person->world->attributeSkill);
-
-        $form->genericStart();
-        $form->pointsForm($points, 'points');
-
-        $form->hidden('return', 'play', 'post');
-        $form->hidden('do', 'person--skill', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
-        $form->hidden('experience', $person->world->experience, 'post');
-
-        if($points == 999) {
-            $form->getHidden('post', 'points', 999);
-        }
-
-        foreach($currentList as $current) {
-            $form->purchase('attribute_id', $current->name, $current->description, $current->id, 0, $current->maximum, $current->value);
-        }
-
-        $form->genericEnd();
-    }
 
     public function person_purchaseDiscipline($person, $points) {
-        global $curl, $form;
+        global $curl, $form, $component;
 
         $supernaturalList = $person->world->getAttribute($person->manifestation->disciplineAttributeType, $person->species->id);
         $expertiseList = $person->getExpertise();
@@ -670,17 +675,17 @@ class System {
 
         $personPower = $curl->get('person-attribute/id/'.$person->id.'/attribute/'.$person->manifestation->power)['data'][0]['value'];
 
-        $form->genericStart();
-        $form->pointsForm($points, 'points');
-
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--supernatural');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $component->wrapStart();
+        $form->formStart();
+        $form->points($points);
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--supernatural', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
         $form->hidden('experience', $person->world->experience, 'post');
 
         if($points == 999) {
-            $form->getHidden('post', 'points', 999);
+            $form->hidden('points', 999, 'post');
         }
 
         if(count($currentList) != null) {
@@ -710,7 +715,8 @@ class System {
             }
         }
 
-        $form->genericEnd();
+        $form->formEnd();
+        $component->wrapEnd();
     }
 
     public function person_checkAugmentation($person) {
@@ -719,11 +725,11 @@ class System {
         $bionicList = $person->getBionic();
         $idList = $this->idList($person->getAugmentation());
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--augmentation');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--augmentation', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
 
         if(isset($bionicList)) {
             foreach($bionicList as $bionic) {
@@ -731,96 +737,85 @@ class System {
 
                 echo('<h4>'.$bionic->name.'</h4>');
 
-                $this->checkboxList($augmentationList, $idList, 'augmentation');
+                $this->checkboxList('augmentation_id',$augmentationList, $idList);
             }
         }
 
         $this->checkboxAll();
-
-        $form->genericEnd();
+        $form->formEnd();
     }
 
     public function person_checkBionic($person) {
         global $form, $curl;
 
         $bodypartList = $curl->get('bodypart')['data'];
-
         $idList = $this->idList($person->getBionic());
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--bionic');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--bionic', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
 
         foreach($bodypartList as $bodypart) {
             $bionicList = $person->world->getBionic($bodypart['id']);
 
             echo('<h4>'.$bodypart['name'].'</h4>');
 
-            $this->checkboxList($bionicList, $idList, 'bionic');
+            $this->checkboxList('bionic_id',$bionicList, $idList);
         }
 
         $this->checkboxAll();
-
-        $form->genericEnd();
+        $form->formEnd();
     }
 
     public function person_checkProtection($person) {
         global $form, $curl;
 
         $typeList = $curl->get('protectiontype')['data'];
-
         $idList = $this->idList($person->getProtection());
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--protection');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--protection', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
 
         foreach($typeList as $type) {
             $protectionList = $person->world->getProtection($type['id']);
 
             echo('<h4>'.$type['name'].'</h4>');
 
-            $this->checkboxList($protectionList, $idList, 'bionic');
+            $this->checkboxList('protection_id',$protectionList, $idList);
         }
 
         $this->checkboxAll();
-
-        $form->genericEnd();
+        $form->formEnd();
     }
 
     public function person_checkWeapon($person) {
-        global $form, $curl;
+        global $form;
 
-        $groupList = $curl->get('weapongroup')['data'];
         $speciesList = $person->species->getWeapon();
-
         $idList = $this->idList($person->getWeapon());
+        $weaponList = $person->world->getWeapon();
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'play');
-        $form->getHidden('post', 'do', 'person--weapon');
-        $form->getHidden('post', 'id', $person->id);
-        $form->getHidden('post', 'hash', $person->hash);
+        $form->formStart();
+        $form->hidden('return', 'play', 'post');
+        $form->hidden('do', 'person--weapon', 'post');
+        $form->hidden('id', $person->id, 'post');
+        $form->hidden('hash', $person->hash, 'post');
 
-        foreach($groupList as $group) {
-            $weaponList = $person->world->getWeapon($group['id']);
-
-            $this->checkboxList($weaponList, $idList, 'weapon');
-        }
+        $this->checkboxList('weapon_id', $weaponList, $idList);
+        $this->checkboxAll();
 
         if(isset($speciesList)) {
             foreach($speciesList as $species) {
-                $form->getHidden('weapon', $species['weapon_id'], 0);
+                $form->hidden($species['weapon_id'], 0, 'weapon');
             }
         }
 
-        $this->checkboxAll();
-
-        $form->genericEnd(false);
+        $form->formEnd(false);
     }
 
 

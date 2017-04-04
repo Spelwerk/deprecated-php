@@ -20,7 +20,7 @@ $system = new System();
 
 <?php if($sitemap->thing): ?>
 
-    <script src="/js/edit_radio.js"></script>
+    <script src="/js/radio.js"></script>
 
     <form action="/post.php" method="post">
 

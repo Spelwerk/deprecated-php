@@ -1,19 +1,12 @@
 .sw-c-points {
   @include font--thin(3rem);
+
   padding-top: 1rem;
   padding-bottom: 1rem;
-
-  width: 100%;
-
-  position: fixed;
-  bottom: 0;
-  left: 0;
-
-  background-color: $color-white-w4;
 
   text-align: center;
 
   span {
     color: $color-indigo-primary;
   }
-}
+} //todo refactor

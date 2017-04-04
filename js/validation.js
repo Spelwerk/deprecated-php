@@ -34,14 +34,14 @@ $(document).ready(function(){
 
     });
 
-    $(".sw-js-input-radio").change(function() {
+    $(".sw-js-pick-input").change(function() {
         $(this).attr('checked', true);
 
-        $(this).parents('.sw-js-bool').find('.sw-js-radio-true').addClass('sw-is-hidden');
-        $(this).parents('.sw-js-bool').find('.sw-js-radio-false').removeClass('sw-is-hidden');
+        $(this).parents('.sw-js-pick').find('.sw-js-pick-true').addClass('sw-is-hidden');
+        $(this).parents('.sw-js-pick').find('.sw-js-pick-false').removeClass('sw-is-hidden');
 
-        $(this).parents('.sw-js-input-item').find('.sw-js-radio-true').removeClass('sw-is-hidden');
-        $(this).parents('.sw-js-input-item').find('.sw-js-radio-false').addClass('sw-is-hidden');
+        $(this).parents('.sw-js-pick-item').find('.sw-js-pick-true').removeClass('sw-is-hidden');
+        $(this).parents('.sw-js-pick-item').find('.sw-js-pick-false').addClass('sw-is-hidden');
     });
 
     $(".sw-js-check").change(function() {
