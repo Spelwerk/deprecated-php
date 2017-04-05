@@ -183,7 +183,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         $person->makeList($person->getBionic());
 
         if($person->isOwner) {
-            $component->link($person->siteLink.'/edit/bionic/bionic','Edit Bionic');
+            $component->link($person->siteLink.'/edit/bionic','Edit Bionic');
         }
     }
 
@@ -192,9 +192,11 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         $person->makeList($person->getAugmentation());
 
         if($person->isOwner) {
-            $component->link($person->siteLink.'/edit/bionic/augmentation','Edit Augmentation');
+            $component->link($person->siteLink.'/edit/augmentation','Edit Augmentation');
         }
     }
+
+    $component->linkButton('#','Bookmark this Person',true,'sw-js-bookmark');
 
     ?>
 

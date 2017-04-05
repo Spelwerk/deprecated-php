@@ -101,25 +101,37 @@ class Component {
         );
     }
 
-    public function linkButton($href, $title, $dangerous = false) {
+    public function linkButton($href, $title, $dangerous = false, $customClass = null) {
         $dangerous = $dangerous
             ? ' sw-is-dangerous'
             : null;
 
+        $class = $customClass
+            ? ' '.$customClass
+            : null;
+
         echo(
-            '<a class="sw-o-button'.$dangerous.'" href="'.$href.'">'.
+            '<a class="sw-o-button'.$dangerous.$class.'" href="'.$href.'">'.
             '<div class="sw-o-button__title">'.$title.'</div>'.
             '</a>'
         );
     }
 
-    public function linkAction($href, $title, $text, $icon = null) {
+    public function linkAction($href, $title, $text, $icon = null, $dangerous = false, $customClass = null) {
         $icon = isset($icon)
             ? $icon
             : '/img/missing_icon.png';
 
+        $dangerous = $dangerous
+            ? ' sw-is-dangerous'
+            : null;
+
+        $class = $customClass
+            ? ' '.$customClass
+            : null;
+
         echo(
-            '<a class="sw-o-action" href="'.$href.'">'.
+            '<a class="sw-o-action'.$dangerous.$class.'" href="'.$href.'">'.
             '<div class="sw-o-action__image"><img src="'.$icon.'"/></div>'.
             '<div class="sw-o-action__container">'.
             '<div class="sw-o-action__title">'.$title.'</div>'.

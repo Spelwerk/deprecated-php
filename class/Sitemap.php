@@ -264,63 +264,63 @@ class Sitemap {
     }
 
     function switch_play_person_id_edit() {
-        $switch = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
+        $switch = isset($this->command[6]) && $this->command[6] != null
+            ? $this->command[6]
             : null;
 
-        $context = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
+        $context = isset($this->command[7]) && $this->command[7] != null
+            ? $this->command[7]
             : null;
 
         switch($switch) {
             default:
-                $this->page = 'play/person/edit/edit.php';
+                $this->page = 'page/play/person/edit/edit.php';
                 break;
 
             case 'augmentation':
-                $this->page = 'play/person/edit/augmentation.php';
+                $this->page = 'page/play/person/edit/augmentation.php';
                 break;
 
             case 'bionic':
-                $this->page = 'play/person/edit/bionic.php';
+                $this->page = 'page/play/person/edit/bionic.php';
                 break;
 
             case 'consumable':
-                $this->page = 'play/person/edit/consumable.php';
+                $this->page = 'page/play/person/edit/consumable.php';
                 $this->context = $context;
                 break;
 
             case 'description':
-                $this->page = 'play/person/edit/description.php';
+                $this->page = 'page/play/person/edit/description.php';
                 break;
 
             case 'experience':
-                $this->page = 'play/person/edit/experience.php';
+                $this->page = 'page/play/person/edit/experience.php';
                 break;
 
             case 'expertise':
-                $this->page = 'play/person/edit/expertise.php';
+                $this->page = 'page/play/person/edit/expertise.php';
                 break;
 
             case 'milestone':
-                $this->page = 'play/person/edit/milestone.php';
+                $this->page = 'page/play/person/edit/milestone.php';
                 break;
 
             case 'protection':
-                $this->page = 'play/person/edit/protection.php';
+                $this->page = 'page/play/person/edit/protection.php';
                 $this->context = $context;
                 break;
 
             case 'skill':
-                $this->page = 'play/person/edit/skill.php';
+                $this->page = 'page/play/person/edit/skill.php';
                 break;
 
             case 'supernatural':
-                $this->page = 'play/person/edit/supernatural.php';
+                $this->page = 'page/play/person/edit/supernatural.php';
                 break;
 
             case 'weapon':
-                $this->page = 'play/person/edit/weapon.php';
+                $this->page = 'page/play/person/edit/weapon.php';
                 $this->context = $context;
                 break;
         }

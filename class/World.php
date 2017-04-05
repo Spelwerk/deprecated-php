@@ -152,7 +152,7 @@ class World {
 
         $arrayList = null;
 
-        $get = isset($type)
+        $get = isset($bionic)
             ? 'world-augmentation/id/'.$this->id.'/bionic/'.$bionic
             : 'world-augmentation/id/'.$this->id;
 

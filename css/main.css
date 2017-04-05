@@ -786,6 +786,7 @@ input[type=submit] {
   margin-top: 3rem;
   margin-bottom: 3rem;
   padding-top: 1rem;
+  padding-right: 1rem;
   padding-bottom: 1rem;
   border-radius: 0.6rem;
   background-color: #3f51b5; }
