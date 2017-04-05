@@ -38,7 +38,7 @@ $menu->findActive($sitemap->menuID, $sitemap->menuLink);
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css"/>
 
     <script src="/dependency/prefixfree.min.js"></script>
-    <script src="/dependency/jquery-2.2.4.min.js"></script>
+    <script src="/dependency/jquery-3.2.0.min.js"></script>
 
     <script src="/js/menu.js"></script>
 
