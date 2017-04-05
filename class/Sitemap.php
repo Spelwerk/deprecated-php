@@ -402,14 +402,13 @@ class Sitemap {
 
 /
 
-/play
-
+  /play
   /play/person
   /play/person/add
   /play/person/id/{id}
   /play/person/id/{id}/{hash}
-/play/person/id/{id}/{hash}/edit
-/play/person/id/{id}/{hash}/edit/{thing}
+  /play/person/id/{id}/{hash}/edit
+  /play/person/id/{id}/{hash}/edit/{thing}
 
 /play/story
 /play/story/add

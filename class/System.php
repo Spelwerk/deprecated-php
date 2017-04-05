@@ -36,7 +36,10 @@ class System {
             $component->title($person->nickname);
 
             if($person->pointMoney > 0) {
-                $component->h1('Money');
+                $component->h1('Bookmark');
+                $component->subtitle('The framework for your character has been created in our database. We will never lose where in the creation process you are so take the chance and save your person now!');
+
+                $component->h2('Money');
                 $component->subtitle('You will be rolling <span class="sw-js-points-text">'.$person->pointMoney.'</span> dice to either improve or impair your financial status.');
 
                 $this->person_rollAttribute($person,$person->world->money,$person->pointMoney,'attribute--money');

@@ -19,6 +19,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 }
 ?>
 
+<div class="sw-js-person-name sw-is-hidden"><?php echo($person->nickname); ?></div>
+
 <?php if($person && $sitemap->hash && !$person->isCalculated): ?>
 
     <?php
@@ -29,6 +31,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     ?>
 
     <script src="/js/validation.js"></script>
+    <script src="/js/play.js"></script>
 
 <?php endif; ?>
 

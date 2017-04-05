@@ -228,29 +228,48 @@ function person_add($postData) {
     $split_expertise = floor($age / $world['split_expertise']) * intval($item['multiply_expertise']);
     $split_relationship = floor($age / $world['split_relationship']);
 
-    $point_supernatural = $split_supernatural < $world['max_supernatural']
-        ? $split_supernatural
-        : $world['max_supernatural'];
+    $point_supernatural = 1;
+    $point_money = 1;
+    $point_milestone = 1;
+    $point_skill = 1;
+    $point_expertise = 1;
+    $point_relationship = 1;
 
-    $point_money = $split_milestone < $world['max_milestone']
-        ? $split_milestone
-        : $world['max_milestone'];
+    if($split_supernatural < $world['max_supernatural'] && $split_supernatural > 1) {
+        $point_supernatural = $split_supernatural;
+    } else if($split_supernatural > $world['max_supernatural']) {
+        $point_supernatural = $world['max_supernatural'];
+    }
 
-    $point_milestone = $split_milestone < $world['max_milestone']
-        ? $split_milestone
-        : $world['max_milestone'];
+    if($split_milestone < $world['max_milestone'] && $split_milestone > 1) {
+        $point_money = $split_milestone;
+    } else if($split_milestone > $world['max_milestone']) {
+        $point_money = $world['max_milestone'];
+    }
 
-    $point_skill = $split_skill < $world['max_skill']
-        ? $split_skill
-        : $world['max_skill'];
+    if($split_milestone < $world['max_milestone'] && $split_milestone > 1) {
+        $point_milestone = $split_milestone;
+    } else if($split_milestone > $world['max_milestone']) {
+        $point_milestone = $world['max_milestone'];
+    }
 
-    $point_expertise = $split_expertise < $world['max_expertise']
-        ? $split_expertise
-        : $world['max_expertise'];
+    if($split_skill < $world['max_skill'] && $split_skill > 1) {
+        $point_skill = $split_skill;
+    } else if($split_skill > $world['max_skill']) {
+        $point_skill = $world['max_skill'];
+    }
 
-    $point_relationship = $split_relationship < $world['max_relationship']
-        ? $split_relationship
-        : $world['max_relationship'];
+    if($split_expertise < $world['max_expertise'] && $split_expertise > 1) {
+        $point_expertise = $split_expertise;
+    } else if($split_expertise > $world['max_expertise']) {
+        $point_expertise = $world['max_expertise'];
+    }
+
+    if($split_relationship < $world['max_relationship'] && $split_relationship > 1) {
+        $point_relationship = $split_relationship;
+    } else if($split_relationship > $world['max_relationship']) {
+        $point_relationship = $world['max_relationship'];
+    }
 
     $postData['point_supernatural'] = $point_supernatural;
     $postData['point_power'] = 1;
