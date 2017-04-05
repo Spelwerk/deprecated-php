@@ -230,7 +230,7 @@ html {
 body {
   width: 100%;
   padding-bottom: 6rem;
-  background-color: #f8f8f8; }
+  background-color: #fefefe; }
 
 button:hover, input[type=submit], a {
   cursor: pointer; }
@@ -339,8 +339,7 @@ input[type=submit] {
         padding-top: 1rem;
         text-align: center; } }
   .sw-c-header__bottom {
-    height: 16rem;
-    background-color: #ffd740; }
+    background-color: #f8f8f8; }
 
 .sw-c-tabs .sw-c-item {
   display: inline-block;
@@ -361,40 +360,40 @@ input[type=submit] {
     padding-bottom: 0.4rem;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
-    background-color: #ffd740; }
+    background-color: #f8f8f8; }
     .sw-c-tabs .sw-c-item--active img {
       height: 3rem;
       width: 3rem; }
 
 .sw-c-links {
-  padding-top: 1rem;
-  padding-right: 0.6rem;
   text-align: right; }
   @media (max-width: 689px) {
     .sw-c-links {
-      padding-left: 0.6rem;
       text-align: center; } }
   .sw-c-links .sw-c-item {
-    padding: 1rem 1rem 1rem 1rem;
-    font-family: robotoregular, sans-serif;
-    font-size: 1.4rem;
-    display: inline-block; }
+    padding: 1.8rem 1.8rem 1.8rem 1.8rem;
+    font-family: aleobold, serif;
+    font-size: 1.5rem;
+    display: inline-block;
+    text-transform: uppercase; }
     .sw-c-links .sw-c-item:hover {
       color: #283593;
       text-decoration: underline;
       transition: color 0.5s ease; }
     .sw-c-links .sw-c-item--active {
-      padding: 1rem 1rem 1rem 1rem;
-      font-family: robotoregular, sans-serif;
-      font-size: 1.4rem;
+      padding: 1.8rem 1.8rem 1.8rem 1.8rem;
+      font-family: aleobold, serif;
+      font-size: 1.5rem;
       display: inline-block;
+      text-transform: uppercase;
       color: #283593;
       text-decoration: underline; }
 
 .sw-c-title {
   font-family: ralewaylight, sans-serif;
   font-size: 4.4rem;
-  padding-bottom: 1rem;
+  padding-top: 14rem;
+  padding-bottom: 2rem;
   background-color: #ffd740;
   cursor: default; }
 

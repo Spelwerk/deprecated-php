@@ -48,8 +48,7 @@
   }
 
   &__bottom {
-    height: 16rem;
-    background-color: $color-amber-primary;
+    background-color: $color-white-w2;
   }
 }
 
@@ -77,27 +76,24 @@
     &--active {
       @include tab-item;
 
-      background-color: $color-amber-primary;
+      background-color: $color-white-w2;
     }
   }
 }
 
 @mixin link-item {
-  @include padding(1rem);
-  @include font(1.4rem);
+  @include padding(1.8rem);
+  @include font--fancy(1.5rem);
 
   display: inline-block;
+
+  text-transform: uppercase;
 }
 
 .sw-c-links {
-  padding-top: 1rem;
-  padding-right: 0.6rem;
-
   text-align: right;
 
   @include for-phone {
-    padding-left: 0.6rem;
-
     text-align: center;
   }
 
@@ -125,7 +121,8 @@
 .sw-c-title {
   @include font--thin(4.4rem);
 
-  padding-bottom: 1rem;
+  padding-top: 14rem;
+  padding-bottom: 2rem;
 
   background-color: $color-amber-primary;
 
