@@ -1,33 +1,18 @@
-/**
- * Created by jonn on 15/02/2017.
- */
+$(document).ready(function() {
 
-$(document).ready(function(){
+    var tab = $('.sw-js-menu-tab');
 
-    $(".sw-js-menu").click(function() {
+    tab.click(function() {
+        $('.sw-js-menu-tab').removeClass('sw-c-item--active').addClass('sw-c-item');
+        $(this).addClass('sw-c-item--active');
 
-        if($(this).text() == 'New') {
-            $('.sw-js-menu-play').addClass('sw-is-hidden');
-            $('.sw-js-menu-new').removeClass('sw-is-hidden');
-            $('.sw-js-menu-view').addClass('sw-is-hidden');
-        }
+        var id = $(this).attr('id');
+        var split = id.split('__');
+        var listID = split[1];
+        var idName = '#list__' + listID;
 
-        if($(this).text() == 'View') {
-            $('.sw-js-menu-play').addClass('sw-is-hidden');
-            $('.sw-js-menu-new').addClass('sw-is-hidden');
-            $('.sw-js-menu-view').removeClass('sw-is-hidden');
-        }
-
-        $(".sw-js-menu-mask").removeClass('sw-is-hidden');
-
-    });
-
-    $(".sw-js-menu-mask").click(function() {
-
-        $('.sw-js-menu-new').addClass('sw-is-hidden');
-        $('.sw-js-menu-view').addClass('sw-is-hidden');
-        $(".sw-js-menu-mask").addClass('sw-is-hidden');
-
+        $('.sw-js-menu-links').addClass('sw-is-hidden');
+        $(idName).removeClass('sw-is-hidden');
     });
 
 });
