@@ -63,9 +63,11 @@ class World {
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
-        $this->popularity = $data['popularity'];
         $this->hidden = $data['hidden'];
         $this->money = $data['money_attribute_id'];
+
+        $this->thumbsup = $data['thumbsup'];
+        $this->thumbsdown = $data['thumbsdown'];
 
         $this->isTemplate = $data['template'];
         $this->isCalculated = $data['calculated'];

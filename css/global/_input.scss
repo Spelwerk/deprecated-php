@@ -1,4 +1,4 @@
-input[type=text], input[type=number], textarea {
+input[type=text], input[type=number], input[type=email], input[type=password], textarea {
   @include padding(0.5rem);
   @include font(2rem);
 
@@ -24,21 +24,26 @@ input[type=text], input[type=number], textarea {
 }
 
 input[type=submit] {
-  @include margin--auto;
+  @include centered;
   @include font--fancy(2rem);
 
-  margin-top: 2rem;
+  display: block;
+
+  margin-top: 3rem;
 
   height: 5rem;
-  width: 100%;
 
   text-align: center;
 
-  border-radius: 0.8rem;
+  border-radius: 0.6rem;
 
   &:enabled {
-    background-color: $color-indigo-primary;
+    background-color: $color-green-primary;
     color: $color-white-w1;
+
+    &:hover {
+      background-color: $color-green-secondary;
+    }
   }
 
   &:disabled {

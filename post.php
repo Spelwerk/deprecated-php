@@ -37,6 +37,14 @@ $POST_HASH = isset($_POST['post--hash'])
     ? $_POST['post--hash']
     : null;
 
+$POST_CONTEXT = isset($_POST['post--context'])
+    ? $_POST['post--context']
+    : null;
+
+$POST_THING = isset($_POST['post--thing'])
+    ? $_POST['post--thing']
+    : null;
+
 $POST_USER = isset($_POST['post--user'])
     ? $_POST['post--user']
     : null;
@@ -62,7 +70,7 @@ function checkError($resultArray) {
     }
 }
 
-function cookiePerson($personNickname, $personId, $personHash) {
+function cookie_person_add($personNickname, $personId, $personHash) {
     if(isset($_COOKIE['sw_person_list'])) {
         $cookie = unserialize($_COOKIE['sw_person_list']);
     }
@@ -201,7 +209,7 @@ function manifestation_focus($postData, $manifestationId) {
 }
 
 
-function person_postPerson($postData) {
+function person_add($postData) {
     global $curl;
 
     $postArray = null;
@@ -245,6 +253,10 @@ function person_postPerson($postData) {
         ? $split_relationship
         : $world['max_relationship'];
 
+    $postData['cheated'] = 0;
+    $postData['template'] = 0;
+    $postData['calculated'] = 0;
+
     $postData['point_supernatural'] = $point_supernatural;
     $postData['point_power'] = 1;
     $postData['point_money'] = $point_money;
@@ -260,34 +272,36 @@ function person_postPerson($postData) {
     $personId = $result['id'];
     $personHash = $result['hash'];
 
-    foreach($defaultList as $default) {
-        if($default['protected'] || $default['attributetype_id'] == $world['skill_attributetype_id']) {
-            $postArray[] = ['person_id' => $personId, 'attribute_id' => $default['id'], 'value' => $default['default_value']];
-        }
-    }
-
-    foreach($postArray as $key => $array) {
-        foreach($speciesList as $item) {
-            if($array['attribute_id'] == $item['attribute_id']) {
-                $postArray[$key]['value'] += $item['value'];
+    if($result['id']) {
+        foreach($defaultList as $default) {
+            if($default['protected'] || $default['attributetype_id'] == $world['skill_attributetype_id']) {
+                $postArray[] = ['person_id' => $personId, 'attribute_id' => $default['id'], 'value' => $default['default_value']];
             }
         }
+
+        foreach($postArray as $key => $array) {
+            foreach($speciesList as $item) {
+                if($array['attribute_id'] == $item['attribute_id']) {
+                    $postArray[$key]['value'] += $item['value'];
+                }
+            }
+        }
+
+        foreach($postArray as $array) {
+            $resultArray[] = $curl->post('person-attribute', $array);
+        }
+
+        checkError($resultArray);
+
+        return [
+            'id' => $personId,
+            'hash' => $personHash,
+            'nickname' => $postData['nickname']
+        ];
     }
-
-    foreach($postArray as $array) {
-        $resultArray[] = $curl->post('person-attribute', $array);
-    }
-
-    checkError($resultArray);
-
-    return [
-        'id' => $personId,
-        'hash' => $personHash,
-        'nickname' => $postData['nickname']
-    ];
 }
 
-function person_putPerson($postData, $personHash) {
+function person_edit($postData, $personHash) {
     global $curl;
 
     $resultArray = null;
@@ -297,37 +311,7 @@ function person_putPerson($postData, $personHash) {
     checkError($resultArray);
 }
 
-function person_removeFrom($table, $thingId, $personId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->delete('person-'.$table.'/id/'.$personId.'/id/'.$thingId);
-
-    checkError($resultArray);
-}
-
-function person_postTo($table, $postData) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->post('person-'.$table, $postData);
-
-    checkError($resultArray);
-}
-
-function person_putTable($table, $personId, $tableId, $post) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->put('person-'.$table.'/id/'.$personId.'/id/'.$tableId, $post);
-
-    checkError($resultArray);
-}
-
-function person_postAttribute($postData, $personId, $allowsAll = false) {
+function person_attribute_add($postData, $personId, $allowsAll = false) {
     global $curl;
 
     $postArray = null;
@@ -350,7 +334,7 @@ function person_postAttribute($postData, $personId, $allowsAll = false) {
     checkError($resultArray);
 }
 
-function person_putAttribute($postData, $personId, $allowsAll = false) {
+function person_attribute_edit($postData, $personId, $allowsAll = false) {
     global $curl;
 
     $postArray = null;
@@ -383,7 +367,7 @@ function person_putAttribute($postData, $personId, $allowsAll = false) {
     checkError($resultArray);
 }
 
-function person_putAttributeFromTable($table, $tableId, $personId, $currentId = null) {
+function person_attribute_from_has($table, $tableId, $personId, $currentId = null) {
     global $curl;
 
     $resultArray = null;
@@ -448,7 +432,7 @@ function person_putAttributeFromTable($table, $tableId, $personId, $currentId = 
     checkError($resultArray);
 }
 
-function person_postAugmentation($postData, $personId) {
+function person_augmentation_add($postData, $personId) {
     global $curl;
 
     $resultArray = null;
@@ -496,7 +480,7 @@ function person_postAugmentation($postData, $personId) {
     checkError($resultArray);
 }
 
-function person_postBionic($postData, $personId) {
+function person_bionic_add($postData, $personId) {
     global $curl;
 
     $resultArray = null;
@@ -532,7 +516,7 @@ function person_postBionic($postData, $personId) {
     checkError($resultArray);
 }
 
-function person_postExpertise($postData, $personId) {
+function person_expertise_add($postData, $personId) {
     global $curl;
 
     $resultArray = null;
@@ -580,7 +564,37 @@ function person_postExpertise($postData, $personId) {
     checkError($resultArray);
 }
 
-function person_postProtection($postData, $personId) {
+function person_has_add($table, $postData) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->post('person-'.$table, $postData);
+
+    checkError($resultArray);
+}
+
+function person_has_delete($table, $thingId, $personId) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->delete('person-'.$table.'/id/'.$personId.'/id/'.$thingId);
+
+    checkError($resultArray);
+}
+
+function person_has_edit($table, $personId, $tableId, $post) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->put('person-'.$table.'/id/'.$personId.'/id/'.$tableId, $post);
+
+    checkError($resultArray);
+}
+
+function person_protection_add($postData, $personId) {
     global $curl;
 
     $resultArray = null;
@@ -597,7 +611,7 @@ function person_postProtection($postData, $personId) {
     checkError($resultArray);
 }
 
-function person_postWeapon($postData, $personId) {
+function person_weapon_add($postData, $personId) {
     global $curl;
 
     $resultArray = null;
@@ -614,7 +628,7 @@ function person_postWeapon($postData, $personId) {
     checkError($resultArray);
 }
 
-function person_woundAdd($postData, $personId, $woundId) {
+function person_wound_add($postData, $personId, $woundId) {
     global $curl;
 
     $resultArray = null;
@@ -627,19 +641,21 @@ function person_woundAdd($postData, $personId, $woundId) {
 }
 
 
-function user_postUser($postData) {
+function user_add($postData) {
     global $curl;
 
-    $resultArray = null;
+    unsetUser();
 
-    if($postData['password'] == $postData['password2']) {
-        $resultArray[] = $curl->post('user', $postData);
-    }
+    $result = $curl->post('user', $postData);
 
-    checkError($resultArray);
+    $token = isset($result['token'])
+        ? $result['token']
+        : null;
+
+    setUser($token);
 }
 
-function user_verifyUser($postData) {
+function user_add_verify($postData) {
     global $curl;
 
     $resultArray = null;
@@ -649,7 +665,7 @@ function user_verifyUser($postData) {
     checkError($resultArray);
 }
 
-function user_resendVerification($postData) {
+function user_add_timeout($postData) {
     global $curl;
 
     $resultArray = null;
@@ -659,12 +675,12 @@ function user_resendVerification($postData) {
     checkError($resultArray);
 }
 
-function user_loginPass($postData) {
+function user_login($postData) {
     global $curl;
 
     unsetUser();
 
-    if($postData['username'] && $postData['password']) {
+    if($postData['email'] && $postData['password']) {
         $result = $curl->post('user/login/password', $postData);
     }
 
@@ -675,7 +691,7 @@ function user_loginPass($postData) {
     setUser($token);
 }
 
-function user_loginMail($postData) {
+function user_login_email($postData) {
     global $curl;
 
     $resultArray[] = null;
@@ -687,7 +703,7 @@ function user_loginMail($postData) {
     checkError($resultArray);
 }
 
-function user_loginMailVerify($postData) {
+function user_login_email_verify($postData) {
     global $curl;
 
     unsetUser();
@@ -703,7 +719,7 @@ function user_loginMailVerify($postData) {
     setUser($token);
 }
 
-function user_passMail($postData) {
+function user_reset($postData) {
     global $curl;
 
     $resultArray = null;
@@ -715,19 +731,19 @@ function user_passMail($postData) {
     checkError($resultArray);
 }
 
-function user_passVerify($postData) {
+function user_reset_verify($postData) {
     global $curl;
 
     $resultArray = null;
 
-    if($postData['verification'] && $postData['password']) {
+    if($postData['hash'] && $postData['password']) {
         $resultArray[] = $curl->put('user/password/set', $postData);
     }
 
     checkError($resultArray);
 }
 
-function user_savePerson($userId, $personId, $personHash) {
+function user_save_person($userId, $personId, $personHash) {
     global $curl;
 
     $resultArray = null;
@@ -741,7 +757,7 @@ function user_savePerson($userId, $personId, $personHash) {
     checkError($resultArray);
 }
 
-function user_saveWorld($userId, $worldId, $worldHash) {
+function user_save_world($userId, $worldId, $worldHash) {
     global $curl;
 
     $resultArray = null;
@@ -762,7 +778,8 @@ function world_postWorld($postData) {
     $resultArray = null;
 
     $postData['template'] = 0;
-    $postData['popularity'] = 0;
+    $postData['thumbsup'] = 0;
+    $postData['thumbsdown'] = 0;
     $postData['hidden'] = 1;
     $postData['calculated'] = 0;
 
@@ -931,7 +948,7 @@ function world_woundAdd($postData) {
 
 
 function switch_manifestation($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
 
     switch($do) {
         default: break;
@@ -952,13 +969,13 @@ function switch_manifestation($do) {
 }
 
 function switch_person($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_USER, $POST_ERROR;
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER, $POST_ERROR;
 
     switch($do) {
         default: break;
 
-        case 'person--post':
-            $result = person_postPerson($POST_DATA);
+        case 'person--add':
+            $result = person_add($POST_DATA);
 
             if(!$POST_ERROR) {
                 $POST_ID = $result['id'];
@@ -966,273 +983,276 @@ function switch_person($do) {
                 $resultNickname = $result['nickname'];
 
                 if($POST_USER) {
-                    user_savePerson($POST_USER, $POST_ID, $POST_HASH);
+                    user_save_person($POST_USER, $POST_ID, $POST_HASH);
                 }
 
-                cookiePerson($resultNickname, $POST_ID, $POST_HASH);
+                cookie_person_add($resultNickname, $POST_ID, $POST_HASH);
             }
             break;
 
-        case 'person--put':
-            person_putPerson($POST_DATA, $POST_HASH);
+        case 'person--edit':
+            person_edit($POST_DATA, $POST_HASH);
 
             if(!$POST_ERROR) {
                 if(isset($POST_DATA['background_id'])) {
-                    person_putAttributeFromTable('background-attribute', $POST_DATA['background_id'], $POST_ID);
+                    person_attribute_from_has('background-attribute', $POST_DATA['background_id'], $POST_ID);
                     //todo person has asset from background
                 }
 
                 if(isset($POST_DATA['nature_id'])) {
-                    person_putAttributeFromTable('nature', $POST_DATA['nature_id'], $POST_ID);
+                    person_attribute_from_has('nature', $POST_DATA['nature_id'], $POST_ID);
                 }
 
                 if(isset($POST_DATA['identity_id'])) {
-                    person_putAttributeFromTable('identity', $POST_DATA['identity_id'], $POST_ID);
+                    person_attribute_from_has('identity', $POST_DATA['identity_id'], $POST_ID);
                 }
 
                 if(isset($POST_DATA['focus_id'])) {
-                    person_putAttributeFromTable('focus', $POST_DATA['focus_id'], $POST_ID);
+                    person_attribute_from_has('focus', $POST_DATA['focus_id'], $POST_ID);
                 }
             }
             break;
 
-        case 'person--augmentation':
-            person_postAugmentation($POST_DATA, $POST_ID);
-            break;
-
-        case 'person--bionic':
-            person_postBionic($POST_DATA, $POST_ID);
-            break;
-
-        case 'person--edit--attribute':
-            person_postAttribute($POST_DATA, $POST_ID, true);
-            break;
-
-        case 'person--edit--feature':
-            if(isset($POST_DATA['species_id'])) {
-                person_putPerson(['species_id' => $POST_DATA['species_id']], $POST_HASH);
-                person_putAttributeFromTable('species-attribute', $POST_DATA['species_id'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if(isset($POST_DATA['background_id'])) {
-                person_putPerson(['background_id' => $POST_DATA['background_id']], $POST_HASH);
-                person_putAttributeFromTable('background-attribute', $POST_DATA['background_id'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if(isset($POST_DATA['nature_id'])) {
-                person_putPerson(['nature_id' => $POST_DATA['nature_id']], $POST_HASH);
-                person_putAttributeFromTable('nature', $POST_DATA['nature_id'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if(isset($POST_DATA['identity_id'])) {
-                person_putPerson(['identity_id' => $POST_DATA['identity_id']], $POST_HASH);
-                person_putAttributeFromTable('identity', $POST_DATA['identity_id'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if(isset($POST_DATA['focus_id'])) {
-                person_putPerson(['focus_id' => $POST_DATA['focus_id']], $POST_HASH);
-                person_putAttributeFromTable('focus', $POST_DATA['focus_id'], $POST_ID, $POST_DATA['current_id']);
-            }
-            break;
-
-        case 'person--equip':
-            $post = ['equipped' => $POST_DATA['value']];
-            person_putTable($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
-            break;
-
-        case 'person--expertise':
-            person_postExpertise($POST_DATA, $POST_ID);
+        case 'person--attribute--doctrine':
+            person_attribute_add($POST_DATA, $POST_ID);
 
             if(!$POST_ERROR) {
-                person_putPerson(['point_expertise' => 0], $POST_HASH);
+                person_edit(['point_supernatural' => 0], $POST_HASH);
+
+                if(!$POST_ERROR) {
+                    if(isset($_POST['post--experience'])) {
+                        $key = 'attribute_id__'.$_POST['post--experience'];
+                        $value = intval($_POST['post--points']);
+
+                        person_attribute_add([$key => $value], $POST_ID, true);
+                    }
+                }
+            }
+            break;
+
+        case 'person--attribute--edit':
+            person_attribute_add($POST_DATA, $POST_ID, true);
+            break;
+
+        case 'person--attribute--money':
+            person_attribute_edit($POST_DATA, $POST_ID, true);
+
+            if(!$POST_ERROR) {
+                person_edit(['point_money' => 0], $POST_HASH);
+            }
+            break;
+
+        case 'person--attribute--power':
+            person_attribute_edit($POST_DATA, $POST_ID, true);
+
+            if(!$POST_ERROR) {
+                person_edit(['point_power' => 0], $POST_HASH);
+            }
+            break;
+
+        case 'person--attribute--skill':
+            person_attribute_add($POST_DATA, $POST_ID);
+
+            if(!$POST_ERROR) {
+                person_edit(['point_skill' => 0], $POST_HASH);
+
+                if(!$POST_ERROR) {
+                    if(isset($_POST['post--experience'])) {
+                        $key = 'attribute_id__'.$_POST['post--experience'];
+                        $value = intval($_POST['post--points']);
+
+                        person_attribute_add([$key => $value], $POST_ID, true);
+                    }
+                }
+            }
+            break;
+
+        case 'person--augmentation--add':
+            person_augmentation_add($POST_DATA, $POST_ID);
+            break;
+
+        case 'person--bionic--add':
+            person_bionic_add($POST_DATA, $POST_ID);
+            break;
+
+        case 'person--characteristic--gift':
+            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
+            person_has_add('characteristic', $post);
+
+            if(!$POST_ERROR) {
+                person_attribute_from_has('characteristic', $POST_DATA['characteristic'], $POST_ID);
+
+                if(!$POST_ERROR) {
+                    $calc = intval($_POST['post--points']) - 1;
+                    person_edit(['point_characteristic_gift' => $calc], $POST_HASH);
+                }
+            }
+            break;
+
+        case 'person--characteristic--imperfection':
+            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
+            person_has_add('characteristic', $post);
+
+            if(!$POST_ERROR) {
+                person_attribute_from_has('characteristic', $POST_DATA['characteristic'], $POST_ID);
+
+                if(!$POST_ERROR) {
+                    $calc = intval($_POST['post--points']) - 1;
+                    person_edit(['point_characteristic_imperfection' => $calc], $POST_HASH);
+                }
+            }
+            break;
+
+        case 'person--expertise--add':
+            person_expertise_add($POST_DATA, $POST_ID);
+
+            if(!$POST_ERROR) {
+                person_edit(['point_expertise' => 0], $POST_HASH);
 
                 if(isset($_POST['post--experience'])) {
                     $key = 'attribute_id__'.$_POST['post--experience'];
                     $value = intval($_POST['post--points']);
 
-                    person_postAttribute([$key => $value], $POST_ID, true);
+                    person_attribute_add([$key => $value], $POST_ID, true);
                 }
             }
             break;
 
-        case 'person--milestone':
+        case 'person--expertise--doctrine':
+            $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
+            person_expertise_add($post, $POST_ID);
+            break;
+
+        case 'person--feature--edit':
+            if($POST_CONTEXT == 'species') {
+                person_edit(['species_id' => $POST_DATA['species']], $POST_HASH);
+                person_attribute_from_has('species-attribute', $POST_DATA['species'], $POST_ID, $POST_DATA['current_id']);
+            }
+
+            if($POST_CONTEXT == 'background') {
+                person_edit(['background_id' => $POST_DATA['background']], $POST_HASH);
+                person_attribute_from_has('background-attribute', $POST_DATA['background'], $POST_ID, $POST_DATA['current_id']);
+            }
+
+            if($POST_CONTEXT == 'nature') {
+                person_edit(['nature_id' => $POST_DATA['nature']], $POST_HASH);
+                person_attribute_from_has('nature', $POST_DATA['nature'], $POST_ID, $POST_DATA['current_id']);
+            }
+
+            if($POST_CONTEXT == 'identity') {
+                person_edit(['identity_id' => $POST_DATA['identity']], $POST_HASH);
+                person_attribute_from_has('identity', $POST_DATA['identity'], $POST_ID, $POST_DATA['current_id']);
+            }
+
+            if($POST_CONTEXT == 'focus') {
+                person_edit(['focus_id' => $POST_DATA['focus']], $POST_HASH);
+                person_attribute_from_has('focus', $POST_DATA['focus'], $POST_ID, $POST_DATA['current_id']);
+            }
+
+            break;
+
+        case 'person--milestone--add':
             $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
-            person_postTo('milestone', $post);
+            person_has_add('milestone', $post);
 
             if(!$POST_ERROR) {
-                person_putAttributeFromTable('milestone', $POST_DATA['milestone'], $POST_ID);
+                person_attribute_from_has('milestone', $POST_DATA['milestone'], $POST_ID);
 
                 $calc = intval($_POST['post--points']) - 1;
-                person_putPerson(['point_milestone' => $calc], $POST_HASH);
+                person_edit(['point_milestone' => $calc], $POST_HASH);
             }
             break;
 
-        case 'person--gift':
-            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
-            person_postTo('characteristic', $post);
+        case 'person--protection--add':
+            person_protection_add($POST_DATA, $POST_ID);
+            break;
+
+        case 'person--weapon--add':
+            person_weapon_add($POST_DATA, $POST_ID);
 
             if(!$POST_ERROR) {
-                person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
-
-                if(!$POST_ERROR) {
-                    $calc = intval($_POST['post--points']) - 1;
-                    person_putPerson(['point_characteristic_gift' => $calc], $POST_HASH);
-                }
+                person_edit(['calculated' => 1], $POST_HASH);
             }
-            break;
-
-        case 'person--imperfection':
-            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
-            person_postTo('characteristic', $post);
-
-            if(!$POST_ERROR) {
-                person_putAttributeFromTable('characteristic', $POST_DATA['characteristic'], $POST_ID);
-
-                if(!$POST_ERROR) {
-                    $calc = intval($_POST['post--points']) - 1;
-                    person_putPerson(['point_characteristic_imperfection' => $calc], $POST_HASH);
-                }
-            }
-            break;
-
-        case 'person--money':
-            person_putAttribute($POST_DATA, $POST_ID, true);
-
-            if(!$POST_ERROR) {
-                person_putPerson(['point_money' => 0], $POST_HASH);
-            }
-            break;
-
-        case 'person--protection':
-            person_postProtection($POST_DATA, $POST_ID);
-            break;
-
-        case 'person--skill':
-            person_postAttribute($POST_DATA, $POST_ID);
-
-            if(!$POST_ERROR) {
-                person_putPerson(['point_skill' => 0], $POST_HASH);
-
-                if(!$POST_ERROR) {
-                    if(isset($_POST['post--experience'])) {
-                        $key = 'attribute_id__'.$_POST['post--experience'];
-                        $value = intval($_POST['post--points']);
-
-                        person_postAttribute([$key => $value], $POST_ID, true);
-                    }
-                }
-            }
-            break;
-
-        case 'person--supernatural':
-            person_postAttribute($POST_DATA, $POST_ID);
-
-            if(!$POST_ERROR) {
-                person_putPerson(['point_supernatural' => 0], $POST_HASH);
-
-                if(!$POST_ERROR) {
-                    if(isset($_POST['post--experience'])) {
-                        $key = 'attribute_id__'.$_POST['post--experience'];
-                        $value = intval($_POST['post--points']);
-
-                        person_postAttribute([$key => $value], $POST_ID, true);
-                    }
-                }
-            }
-            break;
-
-        case 'person--supernatural--power':
-            person_putAttribute($POST_DATA, $POST_ID, true);
-
-            if(!$POST_ERROR) {
-                person_putPerson(['point_power' => 0], $POST_HASH);
-            }
-            break;
-
-        case 'person--supernatural--expertise':
-            $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
-            person_postExpertise($post, $POST_ID);
-            break;
-
-        case 'person--weapon':
-            person_postWeapon($POST_DATA, $POST_ID);
-
-            if(!$POST_ERROR) {
-                person_putPerson(['calculated' => 1], $POST_HASH);
-            }
-            break;
-
-        case 'person--remove--thing':
-            person_removeFrom($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
             break;
 
         case 'person--wound--add':
             $returnId = world_woundAdd($POST_DATA);
-            person_woundAdd($POST_DATA, $POST_ID, $returnId);
+            person_wound_add($POST_DATA, $POST_ID, $returnId);
             break;
 
         case 'person--wound--aid':
             $post = ['aid' => $POST_DATA['value']];
-            person_putTable('wound', $POST_ID, $POST_DATA['id'], $post);
+            person_has_edit('wound', $POST_ID, $POST_DATA['id'], $post);
             break;
 
         case 'person--wound--heal':
             $post = ['heal' => $POST_DATA['value']];
-            person_putTable('wound', $POST_ID, $POST_DATA['id'], $post);
+            person_has_edit('wound', $POST_ID, $POST_DATA['id'], $post);
+            break;
+
+
+
+        case 'person--remove--thing':
+            person_has_delete($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
+            break;
+
+        case 'person--equip':
+            $post = ['equipped' => $POST_DATA['value']];
+            person_has_edit($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
             break;
     }
 }
 
 function switch_user($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
 
     switch($do) {
         default: break;
 
-        case 'user--new':
-            user_postUser($POST_DATA);
+        case 'user--add':
+            user_add($POST_DATA);
             break;
 
-        case 'user--new--verify':
-            user_verifyUser($POST_DATA);
+        case 'user--add--timeout':
+            user_add_timeout($POST_DATA);
             break;
 
-        case 'user--new--timeout':
-            user_resendVerification($POST_DATA);
+        case 'user--login':
+            user_login($POST_DATA);
             break;
 
-        case 'user--login--pass':
-            user_loginPass($POST_DATA);
-            break;
-
-        case 'user--login--mail':
-            user_loginMail($POST_DATA);
-            break;
-
-        case 'user--login--verify':
-            user_loginMailVerify($POST_DATA);
+        case 'user--login--email':
+            user_login_email($POST_DATA);
             break;
 
         case 'user--reset':
-            user_passMail($POST_DATA);
+            user_reset($POST_DATA);
             break;
 
-        case 'user--password':
-            user_passVerify($POST_DATA);
+        case 'user--verify--add':
+            user_add_verify($POST_DATA);
+            break;
+
+        case 'user--verify--login':
+            user_login_email_verify($POST_DATA);
+            break;
+
+        case 'user--verify--reset':
+            user_reset_verify($POST_DATA);
             break;
 
         case 'user--logout':
             unsetUser();
             break;
 
-        case 'user--save':
-            user_savePerson($POST_USER, $POST_ID, $POST_HASH);
+        case 'user--save--person':
+            user_save_person($POST_USER, $POST_ID, $POST_HASH);
             break;
     }
 }
 
 function switch_world($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
 
     switch($do) {
         default: break;
@@ -1245,7 +1265,7 @@ function switch_world($do) {
             $resultName = $result['name'];
 
             if($POST_USER) {
-                user_saveWorld($POST_USER, $POST_ID, $POST_HASH); // todo save world to user
+                user_save_world($POST_USER, $POST_ID, $POST_HASH); // todo save world to user
             }
             break;
 

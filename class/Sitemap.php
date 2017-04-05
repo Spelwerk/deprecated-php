@@ -11,7 +11,7 @@ class Sitemap {
 
     var $requestURI, $scriptName, $command;
 
-    var $page, $id, $hash, $thing, $unique;
+    var $page, $id, $hash, $context, $unique, $thing;
 
     var $menuID, $menuLink;
 
@@ -29,472 +29,399 @@ class Sitemap {
 
         $this->command = array_values($this->requestURI);
 
-        $this->switchTop();
+        $this->switch_top();
 
         if($this->isAdmin && $user && !$user->isAdmin) {
-            $this->page = 'site/no_admin.php';
+            $this->page = 'page/error/not_admin.php';
         }
 
         if($this->isUser && !$user->id) {
-            $this->page = 'site/no_user.php';
+            $this->page = 'page/error/not_user.php';
         }
     }
 
-    function switchTop() {
+    function switch_top() {
         $switch = isset($this->command[0]) && $this->command[0] != null
             ? $this->command[0]
             : null;
 
         switch($switch) {
             default:
-                $this->page = 'site/default.php';
+                $this->page = 'page/home.php';
                 $this->menuID = 'Home';
                 $this->menuLink = 'Home';
                 break;
 
-            case 'admin':
-                $this->switchAdmin();
-                $this->isAdmin = true;
-                $this->menuID = 'Admin';
+            case 'content':
+                $this->switch_content();
+                $this->isUser = true;
+                $this->menuID = 'Content';
                 break;
 
             case 'play':
-                $this->switchPlay();
+                $this->switch_play();
                 $this->menuID = 'Play';
                 break;
 
             case 'user':
-                $this->switchUser();
+                $this->switch_user();
                 $this->menuID = 'User';
-                break;
-
-            case 'view':
-                $this->switchView();
-                break;
-
-            case 'world':
-                $this->switchWorld();
-                $this->isUser = true;
-                break;
-
-            case 'error':
-                $this->page = 'site/error.php';
                 break;
         }
     }
 
-    function switchAdmin() {
+    function switch_content() {
         $switch = isset($this->command[1]) && $this->command[1] != null
             ? $this->command[1]
             : null;
 
-        $id = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        $thing = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
-
         switch($switch) {
             default:
-                $this->page = 'site/admin/default.php';
+                $this->page = 'page/content/content.php';
+                $this->menuLink = 'Content';
                 break;
 
             case 'manifestation':
-                $this->page = 'site/admin/manifestation.php';
-                $this->id = $id;
-                $this->thing = $thing;
-                break;
-
-            case 'database':
-                $this->page = 'site/admin/database.php';
-                break;
-        }
-    }
-
-    function switchPlay() {
-        $id = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
-
-        $hash = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        $switch = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
-
-        switch($switch) {
-            default:
-                $this->page = 'site/play/default.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->menuLink = 'Person';
-                break;
-
-            case 'cheat':
-                $this->switchPlayCheat();
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->menuLink = 'Person';
-                break;
-
-            case 'edit':
-                $this->switchPlayEdit();
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->menuLink = 'Person';
-                break;
-
-            case 'wound':
-                $this->page = 'site/play/wound.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->menuLink = 'Person';
-                break;
-        }
-    }
-
-    function switchPlayCheat() {
-        $switch = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
-            : null;
-
-        $thing = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
-            : null;
-
-        switch($switch) {
-            default:
-                $this->page = 'site/play/cheat/default.php';
-                break;
-
-            case 'attribute':
-                $this->page = 'site/play/cheat/attribute.php';
-                $this->unique = $thing;
-                break;
-
-            case 'bionic':
-                $this->page = 'site/play/edit/bionic.php';
-                $this->unique = $thing;
-                break;
-
-            case 'characteristic':
-                $this->page = 'site/play/cheat/characteristic.php';
-                $this->thing = $thing;
-                break;
-
-            case 'expertise':
-                $this->page = 'site/play/cheat/expertise.php';
-                break;
-
-            case 'feature':
-                $this->page = 'site/play/cheat/feature.php';
-                $this->thing = $thing;
-                break;
-
-            case 'milestone':
-                $this->page = 'site/play/cheat/milestone.php';
-                $this->thing = $thing;
-                break;
-
-            case 'protection':
-                $this->page = 'site/play/edit/protection.php';
-                $this->thing = $thing;
-                break;
-
-            case 'skill':
-                $this->page = 'site/play/cheat/skill.php';
-                break;
-
-            case 'supernatural':
-                $this->page = 'site/play/cheat/supernatural.php';
-                break;
-
-            case 'weapon':
-                $this->page = 'site/play/edit/weapon.php';
-                $this->thing = $thing;
-                break;
-        }
-    }
-
-    function switchPlayEdit() {
-        $switch = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
-            : null;
-
-        $thing = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
-            : null;
-
-        switch($switch) {
-            default:
-                $this->page = 'site/play/edit/default.php';
-                break;
-
-            case 'augmentation':
-                $this->page = 'site/play/edit/augmentation.php';
-                break;
-
-            case 'bionic':
-                $this->page = 'site/play/edit/bionic.php';
-                break;
-
-            case 'consumable':
-                $this->page = 'site/play/edit/consumable.php';
-                $this->thing = $thing;
-                break;
-
-            case 'description':
-                $this->page = 'site/play/edit/description.php';
-                break;
-
-            case 'experience':
-                $this->page = 'site/play/edit/experience.php';
-                break;
-
-            case 'expertise':
-                $this->page = 'site/play/edit/expertise.php';
-                break;
-
-            case 'milestone':
-                $this->page = 'site/play/edit/milestone.php';
-                break;
-
-            case 'protection':
-                $this->page = 'site/play/edit/protection.php';
-                $this->thing = $thing;
-                break;
-
-            case 'skill':
-                $this->page = 'site/play/edit/skill.php';
-                break;
-
-            case 'supernatural':
-                $this->page = 'site/play/edit/supernatural.php';
-                break;
-
-            case 'weapon':
-                $this->page = 'site/play/edit/weapon.php';
-                $this->thing = $thing;
-                break;
-        }
-    }
-
-    function switchUser() {
-        $switch = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
-
-        $hash = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        switch($switch) {
-            default:
-                $this->page = 'site/user/default.php';
-                break;
-
-            case 'new':
-                $this->switchUserNew();
-                break;
-
-            case 'login':
-                $this->switchUserLogin();
-                break;
-
-            case 'edit':
-                $this->page = 'site/user/edit.php';
-                $this->isUser = true;
-                break;
-
-            case 'reset':
-                $this->page = 'site/user/reset.php';
-                $this->isUser = true;
-                break;
-
-            case 'password':
-                $this->page = 'site/user/password.php';
-                $this->hash = $hash;
-                $this->isUser = true;
-                break;
-        }
-    }
-
-    function switchUserNew() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        $hash = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
-
-        switch ($switch) {
-            default:
-                $this->page = 'site/user/new/default.php';
-                break;
-
-            case 'verify':
-                $this->page = 'site/user/new/verify.php';
-                $this->hash = $hash;
-                break;
-
-            case 'timeout':
-                $this->page = 'site/user/new/timeout.php';
-                break;
-        }
-    }
-
-    function switchUserLogin() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        $hash = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
-
-        switch ($switch) {
-            default:
-                $this->page = 'site/user/login/default.php';
-                break;
-
-            case 'mail':
-                $this->page = 'site/user/login/mail.php';
-                break;
-
-            case 'pass':
-                $this->page = 'site/user/login/pass.php';
-                break;
-
-            case 'verify':
-                $this->page = 'site/user/login/verify.php';
-                $this->hash = $hash;
-                break;
-        }
-    }
-
-    function switchView() {
-        $switch = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
-
-        $id = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        switch($switch) {
-            default:
-                break;
-
-            case 'person':
-                $this->page = 'site/view/person.php';
-                $this->id = $id;
+                $this->menuLink = 'Content';
                 break;
 
             case 'world':
-                $this->page = 'site/view/world.php';
-                $this->id = $id;
-                $this->isUser = true;
+                $this->menuLink = 'World';
                 break;
         }
     }
 
-    function switchWorld() {
-        $id = isset($this->command[1]) && $this->command[1] != null
+    function switch_play() {
+        $switch = isset($this->command[1]) && $this->command[1] != null
             ? $this->command[1]
             : null;
 
-        $hash = isset($this->command[2]) && $this->command[2] != null
+        switch($switch) {
+            default:
+                $this->page = 'page/play/play.php';
+                $this->menuLink = 'Play';
+                break;
+
+            case 'companion':
+                $this->switch_play_companion();
+                $this->menuLink = 'Companion';
+                break;
+
+            case 'person':
+                $this->switch_play_person();
+                $this->menuLink = 'Person';
+                break;
+
+            case 'story':
+                $this->switch_play_story();
+                $this->menuLink = 'Story';
+                break;
+        }
+    }
+
+    function switch_play_companion() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
             ? $this->command[2]
             : null;
 
-        $switch = isset($this->command[3]) && $this->command[3] != null
+        switch($switch) {
+            default:
+                $this->page = 'page/play/companion/companion.php';
+                break;
+
+            case 'add':
+                break;
+
+            case 'id':
+                break;
+        }
+    }
+
+    function switch_play_person() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'page/play/person/person.php';
+                break;
+
+            case 'add':
+                $this->page = 'page/play/person/add.php';
+                break;
+
+            case 'id':
+                $this->switch_play_person_id();
+                break;
+        }
+    }
+
+    function switch_play_person_id() {
+        $id = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
+            : null;
+
+        $hash = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        $switch = isset($this->command[5]) && $this->command[5] != null
+            ? $this->command[5]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'page/play/person/id.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'cheat':
+                $this->switch_play_person_id_cheat();
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'edit':
+                $this->switch_play_person_id_edit();
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'wound':
+                $this->page = 'page/play/person/wound.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+        }
+    }
+
+    function switch_play_person_id_cheat() {
+        $switch = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        $context = isset($this->command[5]) && $this->command[5] != null
+            ? $this->command[5]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'page/play/person/cheat/cheat.php';
+                break;
+
+            case 'attribute':
+                $this->page = 'page/play/person/cheat/attribute.php';
+                $this->unique = $context;
+                break;
+
+            case 'characteristic':
+                $this->page = 'page/play/person/cheat/characteristic.php';
+                $this->context = $context;
+                break;
+
+            case 'doctrine':
+                $this->page = 'page/play/person/cheat/doctrine.php';
+                break;
+
+            case 'expertise':
+                $this->page = 'page/play/person/cheat/expertise.php';
+                break;
+
+            case 'feature':
+                $this->page = 'page/play/person/cheat/feature.php';
+                $this->context = $context;
+                break;
+
+            case 'milestone':
+                $this->page = 'page/play/person/cheat/milestone.php';
+                $this->context = $context;
+                break;
+
+            case 'skill':
+                $this->page = 'page/play/person/cheat/skill.php';
+                break;
+        }
+    }
+
+    function switch_play_person_id_edit() {
+        $switch = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        $context = isset($this->command[5]) && $this->command[5] != null
+            ? $this->command[5]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'play/person/edit/edit.php';
+                break;
+
+            case 'augmentation':
+                $this->page = 'play/person/edit/augmentation.php';
+                break;
+
+            case 'bionic':
+                $this->page = 'play/person/edit/bionic.php';
+                break;
+
+            case 'consumable':
+                $this->page = 'play/person/edit/consumable.php';
+                $this->context = $context;
+                break;
+
+            case 'description':
+                $this->page = 'play/person/edit/description.php';
+                break;
+
+            case 'experience':
+                $this->page = 'play/person/edit/experience.php';
+                break;
+
+            case 'expertise':
+                $this->page = 'play/person/edit/expertise.php';
+                break;
+
+            case 'milestone':
+                $this->page = 'play/person/edit/milestone.php';
+                break;
+
+            case 'protection':
+                $this->page = 'play/person/edit/protection.php';
+                $this->context = $context;
+                break;
+
+            case 'skill':
+                $this->page = 'play/person/edit/skill.php';
+                break;
+
+            case 'supernatural':
+                $this->page = 'play/person/edit/supernatural.php';
+                break;
+
+            case 'weapon':
+                $this->page = 'play/person/edit/weapon.php';
+                $this->context = $context;
+                break;
+        }
+    }
+
+    function switch_play_story() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'page/play/story/story.php';
+                break;
+
+            case 'add':
+                break;
+
+            case 'id':
+                break;
+        }
+    }
+
+    function switch_user() {
+        $switch = isset($this->command[1]) && $this->command[1] != null
+            ? $this->command[1]
+            : null;
+
+        $context = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        $hash = isset($this->command[3]) && $this->command[3] != null
             ? $this->command[3]
             : null;
 
         switch($switch) {
             default:
-                $this->page = 'site/world/default.php';
-                $this->id = $id;
-                $this->hash = $hash;
+                $this->page = 'page/user/user.php';
                 break;
 
-            case 'values':
-                $this->page = 'site/world/values.php';
-                $this->id = $id;
-                $this->hash = $hash;
+            case 'add':
+                $this->page = 'page/user/add.php';
+                $this->context = $context;
+                $this->menuLink = 'Add';
                 break;
 
-            case 'species':
-                $this->page = 'site/world/species.php';
-                $this->id = $id;
-                $this->hash = $hash;
+            case 'login':
+                $this->page = 'page/user/login.php';
+                $this->context = $context;
+                $this->menuLink = 'Login';
                 break;
 
-            case 'background':
-                $this->page = 'site/world/background.php';
-                $this->id = $id;
-                $this->hash = $hash;
+            case 'logout':
+                $this->page = 'page/user/logout.php';
+                $this->menuLink = 'Logout';
                 break;
 
-            case 'nature':
-                $this->page = 'site/world/nature.php';
-                $this->id = $id;
+            case 'verify':
+                $this->page = 'page/user/verify.php';
+                $this->context = $context;
                 $this->hash = $hash;
+                $this->menuLink = 'Login';
                 break;
 
-            case 'identity':
-                $this->page = 'site/world/identity.php';
-                $this->id = $id;
-                $this->hash = $hash;
+            case 'me':
+                $this->page = 'page/user/me.php';
+                $this->menuLink = 'Me';
                 break;
-
-            case 'defaults':
-                $this->page = 'site/world/defaults.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'skill':
-                $this->page = 'site/world/skill.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'expertise':
-                $this->page = 'site/world/expertise.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'characteristic':
-                $this->page = 'site/world/characteristic.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'milestones':
-                $this->page = 'site/world/milestones.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'weapon':
-                $this->page = 'site/world/weapon.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'protection':
-                $this->page = 'site/world/protection.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
         }
     }
+
+    function switch_user_me() {
+
+    }
 }
+
+/*
+
+/
+
+/play
+
+  /play/person
+  /play/person/add
+  /play/person/id/{id}
+  /play/person/id/{id}/{hash}
+/play/person/id/{id}/{hash}/edit
+/play/person/id/{id}/{hash}/edit/{thing}
+
+/play/story
+/play/story/add
+/play/story/id/{id}
+/play/story/id/{id}/{hash}
+/play/story/id/{id}/{hash}/edit
+/play/story/id/{id}/{hash}/edit/{thing}
+
+/content
+/content/{thing}
+/content/{thing}/add
+/content/{thing}/id/{id}
+/content/{thing}/id/{id}/{hash}
+
+/user
+  /user/add
+  /user/add/timeout
+  /user/login
+  /user/login/email
+  /user/login/reset
+  /user/verify/add
+  /user/verify/add/{hash}
+  /user/verify/reset
+  /user/verify/reset/{hash}
+  /user/verify/login
+  /user/verify/login/{hash}
+  /user/logout
+/user/me
+/user/me/edit
+/user/me/edit/{thing}
+/user/name/{displayname}
+
+ */

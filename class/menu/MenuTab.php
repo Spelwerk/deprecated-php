@@ -9,17 +9,20 @@
 class MenuTab {
     var $title, $listID, $icon, $active, $user, $admin;
 
-    public function __construct($title, $listID, $icon, $active = false, $user = null, $admin = false) {
+    public function __construct($title, $listID, $icon, $user = false, $admin = false) {
         $this->title = $title;
         $this->listID = $listID;
         $this->icon = $icon;
-        $this->active = $active;
         $this->user = $user;
         $this->admin = $admin;
     }
 
-    public function build($user = null) {
-        if($this->admin && $user && $user->admin || !$this->admin) {
+    public function build($user) {
+        if($this->user && !$user->isActive) {}
+        else if($this->admin && !$user->isActive) {}
+        else if($this->user && $user->isActive && !$user->isVerified) {}
+        else if($this->admin && $user->isActive && !$user->isAdmin) {}
+        else {
             $class = $this->active
                 ? 'sw-js-menu-tab sw-c-item--active'
                 : 'sw-js-menu-tab sw-c-item';

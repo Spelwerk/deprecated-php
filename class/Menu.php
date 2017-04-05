@@ -11,9 +11,9 @@ require_once('menu/MenuList.php');
 require_once('menu/MenuLink.php');
 
 class Menu {
+    var $tabArray, $listArray;
+
     var $user;
-    var $tabArray;
-    var $listArray;
 
     public function __construct($user = null) {
         $this->user = $user;
@@ -22,40 +22,51 @@ class Menu {
 
         $this->addTab('Home', 'Home', '/img/tab-home.png');
         $this->addTab('Play', 'Play', '/img/tab-play.png');
-        $this->addTab('Admin', 'Admin', '/img/tab-admin.png');
-        $this->addTab('Help', 'Help', '/img/tab-help.png');
+        $this->addTab('Content', 'Content', '/img/tab-content.png',true);
         $this->addTab('User', 'User', '/img/tab-user.png');
+        $this->addTab('Help', 'Help', '/img/tab-help.png');
+        $this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
 
         $menuHome = new MenuList('Home');
         $menuHome->add('Home', '/');
-        $menuHome->add('News', '/news');
-        $menuHome->add('About', '/about');
+        $menuHome->add('News', '#');
+        $menuHome->add('About', '#');
 
         $menuPlay = new MenuList('Play');
-        $menuPlay->add('Person', '/play');
-        $menuPlay->add('Story', '/story');
+        $menuPlay->add('Play', '/play');
+        $menuPlay->add('Person', '/play/person');
+        $menuPlay->add('Story', '/play/story');
+        $menuPlay->add('Companion', '/play/companion',true);
 
-        $menuAdmin = new MenuList('Admin');
-        $menuAdmin->add('World', '#');
-        $menuAdmin->add('Companion', '#');
-        $menuAdmin->add('Manifestation', '#');
+        $menuContent = new MenuList('Content',true);
+        $menuContent->add('Content', '/content',true);
+        $menuContent->add('World', '/content/world',true);
+
+        $menuAdmin = new MenuList('Admin', true, true);
+        $menuAdmin->add('Admin', '#',true,true);
 
         $menuHelp = new MenuList('Help');
         $menuHelp->add('Help', '#');
 
         $menuUser = new MenuList('User');
-        $menuUser->add('Login', '#');
-        $menuUser->add('Create', '#');
+        if(!$user->isActive) {
+            $menuUser->add('Login', '/user/login');
+            $menuUser->add('Add', '/user/add');
+        } else {
+            $menuUser->add('Me', '/user/me',true);
+            $menuUser->add('Logout', '/user/logout',true);
+        }
 
+        $this->addList($menuAdmin);
+        $this->addList($menuContent);
+        $this->addList($menuHelp);
         $this->addList($menuHome);
         $this->addList($menuPlay);
-        $this->addList($menuAdmin);
-        $this->addList($menuHelp);
         $this->addList($menuUser);
     }
 
-    public function addTab($title, $listID, $icon, $active = false, $user = null, $admin = false) {
-        $this->tabArray[] = new MenuTab($title, $listID, $icon, $active, $user, $admin);
+    public function addTab($title, $listID, $icon, $user = null, $admin = false) {
+        $this->tabArray[] = new MenuTab($title, $listID, $icon, $user, $admin);
     }
 
     public function addList($linkList) {

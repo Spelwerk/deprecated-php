@@ -12,12 +12,16 @@
     @include cell;
     @include font--logo(4rem);
 
+    width: 18rem;
+
     vertical-align: middle;
 
     cursor: default;
 
     @include for-phone {
       display: block;
+
+      width: 100%;
 
       padding-top: 1rem;
       padding-bottom: 1rem;
@@ -28,8 +32,6 @@
 
   &__tabs {
     @include cell;
-
-    width: 30rem;
 
     text-align: right;
     vertical-align: bottom;

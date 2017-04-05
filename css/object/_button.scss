@@ -1,8 +1,6 @@
 .sw-o-button {
   @include table;
-  @include margin--auto;
-
-  width: 60%;
+  @include centered;
 
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -10,14 +8,10 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
 
-  border-radius: 0.8rem;
+  border-radius: 0.6rem;
   text-align: center;
 
   background-color: $color-indigo-primary;
-
-  @include for-phone {
-    width: 80%;
-  }
 
   &:hover {
     background-color: $color-indigo-secondary;

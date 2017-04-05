@@ -41,7 +41,10 @@ class Person {
         $this->age = $data['age'];
         $this->gender = $data['gender'];
         $this->occupation = $data['occupation'];
+
         $this->popularity = $data['popularity'];
+        $this->thumbsup = $data['thumbsup'];
+        $this->thumbsdown = $data['thumbsdown'];
 
         $this->description = $data['description'];
         $this->personality = $data['personality'];
@@ -60,6 +63,10 @@ class Person {
         $this->pointGift = intval($data['point_characteristic_gift']);
         $this->pointImperfection = intval($data['point_characteristic_imperfection']);
         $this->pointRelationship = intval($data['point_relationship']);
+
+        $this->siteLink = $this->isOwner
+            ? '/play/person/id/'.$this->id.'/'.$this->hash
+            : '/play/person/id/'.$this->id;
 
         $this->world = isset($data['world_id'])
             ? new World($data['world_id'])

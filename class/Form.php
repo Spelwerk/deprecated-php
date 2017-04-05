@@ -199,6 +199,72 @@ class Form {
         }
     }
 
+    public function email($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        $inputValue = isset($value)
+            ? ' value="'.$value.'"'
+            : null;
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<label for="item--'.$inputUnique.'">'.
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+            '</label>'.
+            '<input class="sw-js-validation" type="email" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'" placeholder="e@mail.com"'.$inputValue.$inputRequired.'/>'
+        );
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
+    }
+
+    public function password($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
+        $labelName = isset($label)
+            ? $label
+            : $uniqueName;
+
+        $labelRequired = $required
+            ? ' *'
+            : null;
+
+        $inputRequired = $required
+            ? ' required'
+            : null;
+
+        $inputValue = isset($value)
+            ? ' value="'.$value.'"'
+            : null;
+
+        $inputUnique = isset($uniqueId)
+            ? $uniqueName.'__'.$uniqueId
+            : $uniqueName;
+
+        echo(
+            '<label for="item--'.$inputUnique.'">'.
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+            '</label>'.
+            '<input class="sw-js-validation" type="password" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputValue.$inputRequired.'/>'
+        );
+
+        if($labelDescription) {
+            echo('<div class="sw-c-input__description">'.$labelDescription.'</div>');
+        }
+    }
+
     // HIDDEN
 
     public function hidden($uniqueName, $value, $type = null) {
@@ -363,9 +429,7 @@ class Form {
             : 'Save &raquo;';
 
         echo(
-            '<div class="sw-l-wrap">'.
             '<input class="sw-js-submit'.$class.'" type="submit" value="'.$submitText.'"'.$disabled.'/>'.
-            '</div>'.
             '</form>'
         );
     }

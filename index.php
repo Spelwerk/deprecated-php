@@ -11,8 +11,8 @@
 require_once('php/config.php');
 
 if(!$maintenanceMode) {
-    require_once('class/Curl.php');
     require_once('class/Component.php');
+    require_once('class/Curl.php');
     require_once('class/Form.php');
     require_once('class/Menu.php');
     require_once('class/Sitemap.php');
@@ -21,20 +21,10 @@ if(!$maintenanceMode) {
     $component = new Component();
     $curl = new Curl($config_curl);
     $form = new Form();
-    $menu = new Menu();
+    $user = new User();
 
-    $user = isset($_COOKIE['sw_user_token'])
-        ? new User($_COOKIE['sw_user_token'])
-        : null;
-
-    $admin = isset($user)
-        ? $user->isAdmin
-        : 0;
-
+    $menu = new Menu($user);
     $sitemap = new Sitemap($user);
-
-    $sitemapTab = 'Play';
-    $sitemapLink = 'Person';
 
     $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 }
@@ -57,7 +47,6 @@ if(!$maintenanceMode) {
     <title>Spelwerk</title>
 </head>
 <body>
-
 
 <?php if(!$maintenanceMode): ?>
 
@@ -106,10 +95,9 @@ if(!$maintenanceMode) {
     <div class="sw-js-saved-critical sw-is-hidden">0</div>
     <div class="sw-js-roll-modifier sw-is-hidden">0</div>
 
-
 <?php else: ?>
 
-    <?php require('site/maintenance.php'); ?>
+    <?php require('page/error/maintenance_mode.php'); ?>
 
 <?php endif; ?>
 
