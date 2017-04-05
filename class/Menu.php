@@ -29,8 +29,7 @@ class Menu {
 
         $menuHome = new MenuList('Home');
         $menuHome->add('Home', '/');
-        $menuHome->add('News', '#');
-        $menuHome->add('About', '#');
+        $menuHome->add('About', '/about');
 
         $menuPlay = new MenuList('Play');
         $menuPlay->add('Play', '/play');

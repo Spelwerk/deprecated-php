@@ -52,6 +52,12 @@ class Sitemap {
                 $this->menuLink = 'Home';
                 break;
 
+            case 'about':
+                $this->page = 'page/about.php';
+                $this->menuID = 'Home';
+                $this->menuLink = 'About';
+                break;
+
             case 'content':
                 $this->switch_content();
                 $this->isUser = true;
@@ -177,6 +183,12 @@ class Sitemap {
                 $this->hash = $hash;
                 break;
 
+            case 'disease':
+                $this->page = 'page/play/person/disease.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
             case 'cheat':
                 $this->switch_play_person_id_cheat();
                 $this->id = $id;
@@ -185,6 +197,12 @@ class Sitemap {
 
             case 'edit':
                 $this->switch_play_person_id_edit();
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'sanity':
+                $this->page = 'page/play/person/sanity.php';
                 $this->id = $id;
                 $this->hash = $hash;
                 break;

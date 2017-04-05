@@ -100,7 +100,6 @@ function setUser($token) {
 }
 
 
-
 function manifestation_post($postData) {
     global $curl;
 
@@ -252,10 +251,6 @@ function person_add($postData) {
     $point_relationship = $split_relationship < $world['max_relationship']
         ? $split_relationship
         : $world['max_relationship'];
-
-    $postData['cheated'] = 0;
-    $postData['template'] = 0;
-    $postData['calculated'] = 0;
 
     $postData['point_supernatural'] = $point_supernatural;
     $postData['point_power'] = 1;
@@ -628,14 +623,16 @@ function person_weapon_add($postData, $personId) {
     checkError($resultArray);
 }
 
-function person_wound_add($postData, $personId, $woundId) {
+function person_wound_add($postData, $personId, $contextRoute, $woundId) {
     global $curl;
 
     $resultArray = null;
 
-    $post = ['person_id' => $personId, 'wound_id' => $woundId, 'aid' => 0, 'heal' => 0, 'lethal' => $postData['lethal']];
+    $idName = $contextRoute.'_id';
 
-    $resultArray[] = $curl->post('person-wound', $post);
+    $post = ['person_id' => $personId, $idName => $woundId, 'timestwo' => $postData['double']];
+
+    $resultArray[] = $curl->post('person-'.$contextRoute, $post);
 
     checkError($resultArray);
 }
@@ -931,20 +928,19 @@ function world_hasManifestation($postData, $worldId) {
     checkError($resultArray);
 }
 
-function world_woundAdd($postData) {
+function world_wound_add($postData, $contextRoute) {
     global $curl;
 
     $resultArray = null;
 
-    $post = ['name' => $postData['name'], 'popularity' => 0, 'hidden' => 1];
+    $post = ['name' => $postData['name']];
 
-    $resultArray[] = $curl->post('wound', $post);
+    $resultArray[] = $curl->post($contextRoute, $post);
 
     checkError($resultArray);
 
     return $resultArray[0]['id'];
 }
-
 
 
 function switch_manifestation($do) {
@@ -1103,6 +1099,15 @@ function switch_person($do) {
             }
             break;
 
+        case 'person--delete--has':
+            person_has_delete($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
+            break;
+
+        case 'person--equip':
+            $post = ['equipped' => $POST_DATA['value']];
+            person_has_edit($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
+            break;
+
         case 'person--expertise--add':
             person_expertise_add($POST_DATA, $POST_ID);
 
@@ -1176,8 +1181,8 @@ function switch_person($do) {
             break;
 
         case 'person--wound--add':
-            $returnId = world_woundAdd($POST_DATA);
-            person_wound_add($POST_DATA, $POST_ID, $returnId);
+            $returnId = world_wound_add($POST_DATA, $POST_CONTEXT);
+            person_wound_add($POST_DATA, $POST_ID, $POST_CONTEXT, $returnId);
             break;
 
         case 'person--wound--aid':
@@ -1187,18 +1192,7 @@ function switch_person($do) {
 
         case 'person--wound--heal':
             $post = ['heal' => $POST_DATA['value']];
-            person_has_edit('wound', $POST_ID, $POST_DATA['id'], $post);
-            break;
-
-
-
-        case 'person--remove--thing':
-            person_has_delete($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
-            break;
-
-        case 'person--equip':
-            $post = ['equipped' => $POST_DATA['value']];
-            person_has_edit($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
+            person_has_edit($POST_CONTEXT, $POST_ID, $POST_DATA['id'], $post);
             break;
     }
 }
@@ -1339,6 +1333,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
     }
 }
 
+
 $r = isset($POST_RETURN)
     ? '/'.$POST_RETURN
     : null;
@@ -1359,10 +1354,12 @@ $a = isset($POST_RETURNAFTER)
     ? '/'.$POST_RETURNAFTER
     : null;
 
+
 if(!$POST_ERROR) {
     redirect($baseUrl.$r.$i.$h.$a.$d);
 } else {
     print_r($POST_ERROR);
 }
+
 
 echo '<a href="'.$baseUrl.$r.$i.$h.$a.$d.'">'.$baseUrl.$r.$i.$h.$a.$d.'</a>';

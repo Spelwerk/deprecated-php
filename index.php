@@ -69,7 +69,7 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
     </div>
 </header>
 
-<section id="content">
+<div id="content"></div>
 
 <?php
 if($maintenanceMode) {
@@ -80,8 +80,6 @@ if($maintenanceMode) {
     }
 }
 ?>
-
-</section>
 
 <footer class="sw-l-footer">
     <div class="sw-l-wrap">

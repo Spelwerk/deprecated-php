@@ -442,7 +442,7 @@ class System {
         $component->wrapStart();
         $form->formStart();
 
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--edit', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -465,7 +465,7 @@ class System {
         $component->wrapStart();
         $form->formStart();
 
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--'.$postDo, 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -489,7 +489,7 @@ class System {
             : 'edit';
 
         $form->formStart();
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--'.$do, 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -526,7 +526,7 @@ class System {
 
         $form->formStart();
         $form->points($points);
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--characteristic--'.$text, 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -553,7 +553,7 @@ class System {
 
         $form->formStart();
         $form->points($points);
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--milestone--add', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -579,7 +579,7 @@ class System {
             $form->hidden('experience', $person->world->experience, 'post');
         }
 
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--attribute--skill', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -610,7 +610,7 @@ class System {
             $form->hidden('experience', $person->world->experience, 'post');
         }
 
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--expertise--add', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -688,7 +688,7 @@ class System {
             $form->hidden('experience', $person->world->experience, 'post');
         }
 
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--attribute--doctrine', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -731,7 +731,7 @@ class System {
         $idList = $this->idList($person->getAugmentation());
 
         $form->formStart();
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--augmentation--add', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -757,7 +757,7 @@ class System {
         $idList = $this->idList($person->getBionic());
 
         $form->formStart();
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--bionic--add', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -781,7 +781,7 @@ class System {
         $idList = $this->idList($person->getProtection());
 
         $form->formStart();
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--protection--add', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');
@@ -806,7 +806,7 @@ class System {
         $weaponList = $person->world->getWeapon();
 
         $form->formStart();
-        $form->hidden('return', 'play/person/add', 'post');
+        $form->hidden('return', 'play/person/id', 'post');
         $form->hidden('do', 'person--weapon--add', 'post');
         $form->hidden('id', $person->id, 'post');
         $form->hidden('hash', $person->hash, 'post');

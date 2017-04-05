@@ -158,6 +158,22 @@ class Person {
         return $arrayList;
     }
 
+    public function getDisease() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('person-disease/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Disease(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getCharacteristic($gift = null) {
         global $curl;
 
@@ -234,6 +250,22 @@ class Person {
         return $arrayList;
     }
 
+    public function getSanity() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('person-sanity/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Sanity(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getWeapon($equipped = null) {
         global $curl;
 
@@ -254,16 +286,12 @@ class Person {
         return $arrayList;
     }
 
-    public function getWound($lethal = null) {
+    public function getWound() {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($lethal)
-            ? 'person-wound/id/'.$this->id.'/lethal/'.$lethal
-            : 'person-wound/id/'.$this->id;
-
-        $result = $curl->get($get);
+        $result = $curl->get('person-wound/id/'.$this->id);
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -284,7 +312,7 @@ class Person {
             ?   '<form action="/post.php" method="post">'.
                 '<input type="hidden" name="post--return" value="play"/>'.
                 '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
-                '<input type="hidden" name="post--do" value="person--remove"/>'.
+                '<input type="hidden" name="post--do" value="person--delete--has"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
                 '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
@@ -323,7 +351,7 @@ class Person {
 
         $change = $this->isOwner
             ?   '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play"/>'.
+                '<input type="hidden" name="post--return" value="play/person/id"/>'.
                 '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
                 '<input type="hidden" name="post--do" value="person--equip"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
@@ -343,6 +371,44 @@ class Person {
             '<div class="sw-c-list__title">'.$title.'</div>'.
             '<div class="sw-c-list__action">'.
             $change.
+            '</div>'.
+            '</div>'.
+            '</div>'.
+            '</div>'
+        );
+    }
+
+    function buildDiseaseSanity($context, $id, $title, $icon, $heal) {
+        $labelHealed = $heal == 1
+            ? ' (Healed)'
+            : null;
+
+        $healed = $heal == 1
+            ? ' sw-is-opacity'
+            : null;
+
+        $flipHeal = $heal == 1
+            ? 0
+            : 1;
+
+        echo(
+            '<div class="sw-c-list sw-u-even'.$healed.'">'.
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-c-list__head">'.
+            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
+            '<div class="sw-c-list__title">'.$title.$labelHealed.'</div>'.
+            '<div class="sw-c-list__action">'.
+            '<form action="/post.php" method="post">'.
+            '<input type="hidden" name="post--return" value="play/person/id"/>'.
+            '<input type="hidden" name="post--returnid" value="'.$context.'"/>'.
+            '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
+            '<input type="hidden" name="post--context" value="'.$context.'"/>'.
+            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
+            '<input type="hidden" name="item--id" value="'.$id.'"/>'.
+            '<input type="hidden" name="item--value" value="'.$flipHeal.'"/>'.
+            '<input class="sw-u-action" type="image" src="/img/wound-heal-'.$context.'.png"/>'.
+            '</form>'.
             '</div>'.
             '</div>'.
             '</div>'.
@@ -374,14 +440,15 @@ class Person {
         $aidButton = $heal == 0
             ?   '<div class="sw-c-list__action">'.
                 '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play"/>'.
+                '<input type="hidden" name="post--return" value="play/person/id"/>'.
                 '<input type="hidden" name="post--returnid" value="wound"/>'.
                 '<input type="hidden" name="post--do" value="person--wound--aid"/>'.
+                '<input type="hidden" name="post--context" value="wound"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="wound--id" value="'.$id.'"/>'.
-                '<input type="hidden" name="wound--value" value="'.$flipAid.'"/>'.
-                '<input class="sw-u-action" type="image" src="/img/wound-aid.png" alt="Submit" />'.
+                '<input type="hidden" name="item--id" value="'.$id.'"/>'.
+                '<input type="hidden" name="item--value" value="'.$flipAid.'"/>'.
+                '<input class="sw-u-action" type="image" src="/img/wound-aid.png"/>'.
                 '</form>'.
                 '</div>'
             :   null;
@@ -389,14 +456,15 @@ class Person {
         $healButton = $aid == 1
             ?   '<div class="sw-c-list__action">'.
                 '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play"/>'.
+                '<input type="hidden" name="post--return" value="play/person/id"/>'.
                 '<input type="hidden" name="post--returnid" value="wound"/>'.
                 '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
+                '<input type="hidden" name="post--context" value="wound"/>'.
                 '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
                 '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="wound--id" value="'.$id.'"/>'.
-                '<input type="hidden" name="wound--value" value="'.$flipHeal.'"/>'.
-                '<input class="sw-u-action" type="image" src="/img/wound-heal.png"/>'.
+                '<input type="hidden" name="item--id" value="'.$id.'"/>'.
+                '<input type="hidden" name="item--value" value="'.$flipHeal.'"/>'.
+                '<input class="sw-u-action" type="image" src="/img/wound-heal-wound.png"/>'.
                 '</form>'.
                 '</div>'
             :   null;
@@ -431,8 +499,6 @@ class Person {
     public function makeList($list) {
         global $component;
 
-        echo('<div class="sw-c-content">');
-
         if($list) {
             foreach($list as $item) {
                 $component->listItem($item->name, $item->description, $item->icon);
@@ -443,7 +509,7 @@ class Person {
     public function makeButton($list, $type) {
         global $component;
 
-        echo('<div class="sw-l-roll">');
+        echo('<div class="sw-l-center">');
 
         foreach($list as $item) {
 
@@ -486,6 +552,39 @@ class Person {
         }
 
         echo('</div>');
+    }
+
+    public function makeDisease() {
+        global $component;
+
+        $itemCount = 0;
+        $itemList = $this->getDisease();
+        $itemAttribute = $this->getAttribute(null,$this->world->disease)[0];
+
+        $stamina = $this->getAttribute(null,$this->world->stamina);
+        $this->makeCard($stamina);
+
+        if(isset($itemList)) {
+            foreach($itemList as $item) {
+                if($item->heal == 0) {
+                    $itemCount = $itemCount + $item->value;
+                }
+
+                $this->buildDiseaseSanity('disease', $item->id, $item->name, $item->icon, $item->heal);
+            }
+        }
+
+        if($itemCount != 0) {
+            echo('<div class="sw-l-attribute">');
+
+            $color = $itemCount >= $itemAttribute->value
+                ? ' sw-is-invalid'
+                : null;
+
+            $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
+
+            echo('</div>');
+        }
     }
 
     public function makeExpertise() {
@@ -584,18 +683,10 @@ class Person {
     public function makeProtection() {
         $equippedList = $this->getProtection(1);
         $attributeList = $this->getAttribute($this->world->attributeProtection);
-        $toleranceList = $this->getAttribute($this->world->attributeBody);
-
-        $tolerance = 0;
-
-        foreach($toleranceList as $attr) {
-            if($attr->id == $this->world->tolerance) {
-                $tolerance = $attr->value;
-            }
-        }
+        $tolerance = $this->getAttribute(null,$this->world->tolerance)[0];
 
         foreach($attributeList as $attribute) {
-            $attribute->value = intval($attribute->value) + intval($tolerance);
+            $attribute->value = intval($attribute->value) + intval($tolerance->value);
 
             if($equippedList) {
                 foreach($equippedList as $protection) {
@@ -610,17 +701,46 @@ class Person {
     }
 
     public function makeProtectionEquip() {
-        echo('<div class="sw-l-content">');
-
         $list = $this->getProtection();
 
         if(isset($list)) {
             foreach($list as $protection) {
-                $this->buildEquip($protection->id, $protection->name, $protection->icon, 'protection', $protection->equipped, 'protection');
+                $this->buildEquip($protection->id, $protection->name, $protection->icon, 'protection', $protection->equipped, 'eq_protection');
+            }
+        }
+    }
+
+    public function makeSanity() {
+        global $component;
+
+        $itemCount = 0;
+        $itemList = $this->getSanity();
+        $itemAttribute = $this->getAttribute(null,$this->world->sanity)[0];
+
+        $resilience = $this->getAttribute(null,$this->world->resilience);
+        $this->makeCard($resilience);
+
+        if(isset($itemList)) {
+            foreach($itemList as $item) {
+                if($item->heal == 0) {
+                    $itemCount = $itemCount + $item->value;
+                }
+
+                $this->buildDiseaseSanity('sanity', $item->id, $item->name, $item->icon, $item->heal);
             }
         }
 
-        echo('</div>');
+        if($itemCount != 0) {
+            echo('<div class="sw-l-attribute">');
+
+            $color = $itemCount >= $itemAttribute->value
+                ? ' sw-is-invalid'
+                : null;
+
+            $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
+
+            echo('</div>');
+        }
     }
 
     public function makeSupernatural() {
@@ -654,84 +774,44 @@ class Person {
     }
 
     public function makeWeaponEquip() {
-        echo('<div class="sw-l-content">');
-
         $list = $this->getWeapon();
 
         if(isset($list)) {
             foreach($list as $weapon) {
-                $this->buildEquip($weapon->id, $weapon->name, $weapon->icon, 'weapon', $weapon->equipped, 'weapon');
+                $this->buildEquip($weapon->id, $weapon->name, $weapon->icon, 'weapon', $weapon->equipped, 'eq_weapon');
             }
         }
-
-        echo('</div>');
     }
 
     public function makeWound() {
         global $component;
 
-        echo('<div class="sw-c-list">');
+        $itemCount = 0;
+        $itemList = $this->getWound();
+        $itemAttribute = $this->getAttribute(null,$this->world->trauma)[0];
 
-        $countLethal = 0;
-        $countSerious = 0;
+        $this->makeProtection();
 
-        $lethal = $this->getWound(1);
-        $serious = $this->getWound(0);
-        $all = $this->getWound();
-
-        $attributes = $this->getAttribute($this->world->attributeWound);
-
-        if($lethal) {
-            foreach($lethal as $item) {
+        if(isset($itemList)) {
+            foreach($itemList as $item) {
                 if($item->heal == 0) {
-                    $countLethal++;
+                    $itemCount = $itemCount + $item->value;
                 }
-            }
-        }
 
-        if($serious) {
-            foreach($serious as $item) {
-                if($item->heal == 0) {
-                    $countSerious++;
-                }
-            }
-        }
-
-        if($all) {
-            $component->wrapEnd();
-
-            foreach($all as $item) {
                 $this->buildWound($item->id, $item->name, $item->icon, $item->heal, $item->aid);
             }
-
-            $component->wrapStart();
         }
 
-        foreach($attributes as $key => $item) {
+        if($itemCount != 0) {
+            echo('<div class="sw-l-attribute">');
 
-        }
-
-        echo('<div class="sw-l-attribute">');
-
-        foreach($attributes as $item) {
-
-            $count = 0;
-
-            if($item->id == $this->world->woundSerious) {
-                $count = $countSerious;
-            } else if($item->id == $this->world->woundLethal) {
-                $count = $countLethal;
-            }
-
-            $color = $count >= $item->value
+            $color = $itemCount >= $itemAttribute->value
                 ? ' sw-is-invalid'
                 : null;
 
-            $component->attribute($item->name, $count.'/'.$item->value);
+            $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
+
+            echo('</div>');
         }
-
-        echo('</div>');
-
-        echo('</div>');
     }
 }

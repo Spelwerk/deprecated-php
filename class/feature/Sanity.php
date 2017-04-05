@@ -3,11 +3,10 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 15/02/2017
- * Time: 11:16
+ * Date: 05/04/2017
+ * Time: 19:41
  */
-
-class Wound {
+class Sanity {
 
     var $id, $name, $popularity, $hidden, $aid, $heal, $lethal, $icon;
 
@@ -29,10 +28,6 @@ class Wound {
             ? $data['hidden']
             : null;
 
-        $this->aid = isset($data['aid'])
-            ? $data['aid']
-            : null;
-
         $this->heal = isset($data['heal'])
             ? $data['heal']
             : null;
@@ -45,6 +40,7 @@ class Wound {
             ? 2
             : 1;
 
-        $this->icon = '/img/wound-wound.png';
+        $this->icon = '/img/wound-sanity.png';
     }
+
 }

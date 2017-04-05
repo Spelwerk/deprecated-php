@@ -12,6 +12,7 @@ require_once('feature/Augmentation.php');
 require_once('feature/Bionic.php');
 require_once('feature/Background.php');
 require_once('feature/Characteristic.php');
+require_once('feature/Disease.php');
 require_once('feature/Expertise.php');
 require_once('feature/Focus.php');
 require_once('feature/Identity.php');
@@ -19,6 +20,7 @@ require_once('feature/Manifestation.php');
 require_once('feature/Milestone.php');
 require_once('feature/Nature.php');
 require_once('feature/Protection.php');
+require_once('feature/Sanity.php');
 require_once('feature/Species.php');
 require_once('feature/Weapon.php');
 require_once('feature/Wound.php');
@@ -81,7 +83,6 @@ class World {
         $this->attributePower = 7;
         $this->attributeProtection = 4;
         $this->attributeReputation = 6;
-        $this->attributeWound = 5;
 
         $this->attributeSkill = $data['skill_attributetype_id'];
         $this->expertiseAttribute = $data['attribute_expertisetype_id'];
@@ -111,9 +112,14 @@ class World {
             : null;
 
         $this->experience = 22;
-        $this->woundLethal = 14;
-        $this->woundSerious = 15;
+
         $this->tolerance = 1;
+        $this->stamina = 2;
+        $this->resilience = 3;
+
+        $this->sanity = 7;
+        $this->disease = 8;
+        $this->trauma = 9;
     }
 
 

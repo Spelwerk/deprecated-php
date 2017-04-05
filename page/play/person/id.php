@@ -28,6 +28,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     $system->createPerson($person, null, null);
     ?>
 
+    <script src="/js/validation.js"></script>
+
 <?php endif; ?>
 
 <?php if($person && $person->isCalculated): ?>
@@ -52,7 +54,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
         <div class="sw-l-quicklink">
             <?php
-            $component->linkQuick($person->siteLink.'/wound','Wound','/img/wound.png');
+            $component->linkQuick($person->siteLink.'/wound','Wound','/img/wound-wound.png');
             $component->linkQuick($person->siteLink.'/edit/weapon','Weapon','/img/weapon.png');
             $component->linkQuick($person->siteLink.'/edit/protection','Protection','/img/armor.png');
 
@@ -81,6 +83,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     <?php endif; ?>
 
     <?php
+    echo('<div class="sw-l-content">');
+
     $component->wrapStart();
     $component->p('This is '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'. '.$person->firstname.' is a '.$person->age.' years old '.$person->gender.' '.$person->occupation.'');
     $component->h2('Skill');
@@ -88,60 +92,42 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     $person->makeExpertise();
     $person->makeSupernatural();
 
-    $component->h2('Attribute');
-    $person->makeButton($person->getAttribute($person->world->attributeReputation), 'skill');
-    $person->makeButton($person->getAttribute($person->world->attributeCombat), 'skill');
+    $component->h2('Weapon', 'weapon');
+    $person->makeButton($person->getWeapon(1), 'weapon');
 
     $component->h2('Consumable');
     $person->makeButton($person->getAttribute($person->world->attributeConsumable), 'consumable');
 
-    $component->h2('Weapon', 'weapon');
-    $person->makeButton($person->getWeapon(1), 'weapon');
-
-    $component->h2('Wound', 'wound');
-    $person->makeProtection();
-    /* $person->buildCard($person->getAttribute($person->world->attributeBody)); */
-    /* $person->buildCard($person->getAttribute($person->world->attributeDamage)); */
-    $person->makeWound();
-
-    if($person->isOwner) {
-        $component->link($person->siteLink.'/wound','Add Wound');
-    }
+    $component->h2('Attribute');
+    $person->makeButton($person->getAttribute($person->world->attributeReputation), 'skill');
+    $person->makeButton($person->getAttribute($person->world->attributeCombat), 'skill');
 
     $component->wrapEnd();
 
-    $component->h2('Equipment');
-    $component->h3('Weapon');
-    $person->makeWeaponEquip();
+    echo('</div><div class="sw-l-content sw-is-gray">');
+
+    $component->h2('Wound', 'wound');
+    $person->makeWound();
 
     if($person->isOwner) {
-        $component->link($person->siteLink.'/edit/weapon','Edit Weapon');
+        $component->linkButton($person->siteLink.'/wound','Add Wound');
     }
 
-    $component->h3('Protection','protection');
-    $person->makeProtectionEquip();
+    $component->h2('Disease','disease');
+    $person->makeDisease();
 
     if($person->isOwner) {
-        $component->link($person->siteLink.'/edit/protection','Edit Protection');
+        $component->linkButton($person->siteLink.'/disease','Add Disease');
     }
 
-    if($person->world->existsBionic) {
-        $component->h3('Bionic','bionic');
-        $person->makeList($person->getBionic());
+    $component->h2('Sanity','sanity');
+    $person->makeSanity();
 
-        if($person->isOwner) {
-            $component->link($person->siteLink.'/edit/bionic/bionic','Edit Bionic');
-        }
+    if($person->isOwner) {
+        $component->linkButton($person->siteLink.'/sanity','Add Sanity');
     }
 
-    if($person->world->existsAugmentation) {
-        $component->h3('Augmentation','augmentation');
-        $person->makeList($person->getAugmentation());
-
-        if($person->isOwner) {
-            $component->link($person->siteLink.'/edit/bionic/augmentation','Edit Augmentation');
-        }
-    }
+    echo('</div>');
 
     $component->wrapStart();
     $component->h2('Description');
@@ -172,6 +158,39 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
     if($person->isOwner) {
         $component->linkButton($person->siteLink.'/edit', 'Level Up', '/img/arrow-up.png');
+    }
+
+    $component->h2('Equipment');
+    $component->h3('Weapon','eq_weapon');
+    $person->makeWeaponEquip();
+
+    if($person->isOwner) {
+        $component->link($person->siteLink.'/edit/weapon','Edit Weapon');
+    }
+
+    $component->h3('Protection','eq_protection');
+    $person->makeProtectionEquip();
+
+    if($person->isOwner) {
+        $component->link($person->siteLink.'/edit/protection','Edit Protection');
+    }
+
+    if($person->world->existsBionic) {
+        $component->h3('Bionic','eq_bionic');
+        $person->makeList($person->getBionic());
+
+        if($person->isOwner) {
+            $component->link($person->siteLink.'/edit/bionic/bionic','Edit Bionic');
+        }
+    }
+
+    if($person->world->existsAugmentation) {
+        $component->h3('Augmentation','eq_augmentation');
+        $person->makeList($person->getAugmentation());
+
+        if($person->isOwner) {
+            $component->link($person->siteLink.'/edit/bionic/augmentation','Edit Augmentation');
+        }
     }
 
     ?>

@@ -74,11 +74,11 @@ class Component {
         );
     }
 
-    public function attribute($title, $value) {
+    public function attribute($title, $value, $class = null) {
         echo(
             '<div class="sw-c-attribute">'.
-            '<div class="sw-c-attribute__title">'.$title.'</div>'.
-            '<div class="sw-c-attribute__value">'.$value.'</div>'.
+            '<div class="sw-c-attribute__title'.$class.'">'.$title.'</div>'.
+            '<div class="sw-c-attribute__value'.$class.'">'.$value.'</div>'.
             '</div>'
         );
     }

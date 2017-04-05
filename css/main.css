@@ -753,9 +753,7 @@ input[type=submit] {
   padding-top: 2rem;
   padding-bottom: 2rem; }
 
-.sw-l-roll {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.sw-l-center {
   text-align: center; }
 
 .sw-l-attribute {
@@ -891,6 +889,9 @@ span {
 
 .sw-is-highlighted {
   background-color: #ffe57f; }
+
+.sw-is-gray {
+  background-color: #eeeeee; }
 
 .sw-is-selected {
   background-color: #7cb342; }
