@@ -70,12 +70,12 @@ function checkError($resultArray) {
     }
 }
 
-function cookie_person_add($personNickname, $personId, $personHash) {
+function cookie_person_add($personId, $personHash) {
     if(isset($_COOKIE['sw_person_list'])) {
         $cookie = unserialize($_COOKIE['sw_person_list']);
     }
 
-    $cookie[] = ['name' => $personNickname, 'person_id' => $personId, 'person_hash' => $personHash];
+    $cookie[] = ['person_id' => $personId, 'person_hash' => $personHash];
 
     setcookie('sw_person_list', serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
 }

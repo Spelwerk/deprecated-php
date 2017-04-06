@@ -175,19 +175,38 @@ h4 {
   cursor: default; }
 
 p {
+  margin-left: auto;
+  margin-right: auto;
+  width: 60rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  width: 76rem;
   font-family: robotoregular, sans-serif;
   font-size: 1.8rem;
   line-height: 1.5; }
+  @media (max-width: 689px) {
+    p {
+      width: 90%; } }
 
 .sw-t-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+  width: 60rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  width: 76rem;
   font-family: robotoregular, sans-serif;
   font-size: 1.8rem;
+  padding-top: 2rem;
   padding-left: 5%;
   padding-right: 5%;
   padding-bottom: 1rem;
   font-style: italic;
   text-align: center;
   line-height: 1.8; }
+  @media (max-width: 689px) {
+    .sw-t-subtitle {
+      width: 90%; } }
 
 .sw-t-t1 {
   font-family: ralewaylight, sans-serif;

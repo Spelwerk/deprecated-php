@@ -86,11 +86,29 @@ class Component {
 
     // WRAP
 
-    public function wrapStart() {
-        echo('<section class="sw-l-wrap">');
+    public function wrapStart($centered = false) {
+        $center = $centered
+            ? ' sw-l-center'
+            : null;
+
+        echo('<section class="sw-l-wrap'.$center.'">');
     }
 
     public function wrapEnd() {
+        echo('</section>');
+    }
+
+    // SECTION
+
+    public function sectionStart($class = null) {
+        $class = isset($class)
+            ? ' '.$class
+            : null;
+
+        echo('<section class="sw-l-content'.$class.'">');
+    }
+
+    public function sectionEnd() {
         echo('</section>');
     }
 

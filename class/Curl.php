@@ -16,26 +16,26 @@ class Curl {
         $this->apiKey = $array['apiKey'];
     }
 
-    public function get($route, $token = null) {
-        return $this->curl('GET', $route, null, $token);
+    public function get($route, $token = null, $filter = null) {
+        return $this->curl('GET',$route,null,$token,$filter);
     }
 
     public function post($route, $data = null, $token = null) {
-        return $this->curl('POST', $route, $data, $token);
+        return $this->curl('POST',$route,$data,$token);
     }
 
     public function put($route, $data = null, $token = null) {
-        return $this->curl('PUT', $route, $data, $token);
+        return $this->curl('PUT',$route,$data,$token);
     }
 
     public function delete($route, $token = null) {
-        return $this->curl('DELETE', $route, null, $token);
+        return $this->curl('DELETE',$route,null,$token);
     }
 
     public function user($route, $token) {
         $return = [];
 
-        $curl = $this->curl('GET', $route, null, $token);
+        $curl = $this->curl('GET',$route,null,$token);
 
         if($curl['error']) {
             $return = $curl;
@@ -46,7 +46,7 @@ class Curl {
         return $return;
     }
 
-    function curl($method, $route, $data, $token) {
+    function curl($method, $route, $data = null, $token = null, $filter = null) {
         $request = $this->url . '/' . $route;
         $auth = null;
         $return = null;
@@ -83,9 +83,21 @@ class Curl {
             default: break;
         }
 
-        if($token) {
-            $auth = 'token: '.$token;
-        }
+        $token = $token
+            ? 'token: '.$token
+            : null;
+
+        $orderBy = $filter && isset($filter['order-by'])
+            ? 'x-order-by: '.$filter['order-by']
+            : null;
+
+        $paginationLimit = $filter && isset($filter['limit-from'])
+            ? 'x-pagination-limit: '.$filter['limit-from']
+            : null;
+
+        $paginationAmount = $filter && isset($filter['limit-to'])
+            ? 'x-pagination-amount: '.$filter['limit-to']
+            : null;
 
         curl_setopt($curl, CURLOPT_URL, $request);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -93,7 +105,10 @@ class Curl {
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'apikey: '.$this->apiKey,
-            $auth
+            $token,
+            $orderBy,
+            $paginationLimit,
+            $paginationAmount
         ]);
 
         $result = curl_exec($curl);

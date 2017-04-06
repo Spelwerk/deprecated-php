@@ -9,7 +9,5 @@ global $component;
 
 $component->title('About');
 $component->h1('spelwerk');
-$component->wrapStart();
 $component->p('Spelwerk is a group of people dedicated to making this online pen&paper roleplaying game.');
-$component->wrapEnd();
 ?>

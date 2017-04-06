@@ -18,6 +18,15 @@
   }
 }
 
+@mixin centered--full() {
+  @include centered;
+
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  width: $size-desktop;
+}
+
 @mixin padding($padding) {
   padding: $padding $padding $padding $padding;
 }
@@ -33,5 +42,5 @@
   padding-left: 2rem;
   padding-right: 2rem;
 
-  max-width: 70rem;
+  width: $size-desktop;
 }

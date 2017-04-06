@@ -484,6 +484,34 @@ class Person {
     }
 
 
+    public function makeAugmentation() {
+        global $component;
+
+        if($this->world->existsAugmentation) {
+            $component->h3('Augmentation','eq_augmentation');
+
+            $bionicList = $this->getBionic();
+
+            if($bionicList) {
+                foreach($bionicList as $bionic) {
+                    $augmentationList = $this->getAugmentation($bionic->id);
+
+                    if($augmentationList) {
+                        $component->h4($bionic->name);
+
+                        foreach($augmentationList as $item) {
+                            $component->listItem($item->name, $item->description, $item->icon);
+                        }
+                    }
+                }
+            }
+
+            if($this->isOwner) {
+                $component->link($this->siteLink.'/edit/augmentation','Edit Augmentation');
+            }
+        }
+    }
+
     public function makeCard($list) {
         global $component;
 
@@ -509,7 +537,7 @@ class Person {
     public function makeButton($list, $type) {
         global $component;
 
-        echo('<div class="sw-l-center">');
+        $component->wrapStart(true);
 
         foreach($list as $item) {
 
@@ -551,7 +579,7 @@ class Person {
             $component->roll($item->name, $item->description, $item->icon, $value, $data);
         }
 
-        echo('</div>');
+        $component->wrapEnd();
     }
 
     public function makeDisease() {
@@ -594,8 +622,7 @@ class Person {
 
         if($list) {
             $component->h2('Expertise');
-
-            echo('<div class="sw-l-roll">');
+            $component->wrapStart(true);
 
             foreach($list as $item) {
                 $rollD12 = 2 + intval($item->dice);
@@ -608,7 +635,7 @@ class Person {
                 $component->roll($item->name, $item->description, $item->icon, $value, $data);
             }
 
-            echo('</div>');
+            $component->wrapEnd();
         }
     }
 
@@ -748,8 +775,7 @@ class Person {
             global $component;
 
             $component->h2($this->manifestation->name);
-
-            echo('<div class="sw-l-roll">');
+            $component->wrapStart(true);
 
             foreach($this->getAttribute($this->manifestation->disciplineAttributeType) as $supernatural) {
                 $rollD12 = 2;
@@ -769,7 +795,7 @@ class Person {
                 $component->roll($supernatural->name, $supernatural->description, $supernatural->icon, $value, $data);
             }
 
-            echo('</div>');
+            $component->wrapEnd();
         }
     }
 

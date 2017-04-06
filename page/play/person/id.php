@@ -35,6 +35,15 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
 <?php endif; ?>
 
+<?php if($person && !$sitemap->hash && !$person->isCalculated): ?>
+
+    <?php
+    $component->title('Not done yet!');
+    $component->subtitle('This person has not been fully completed yet. Give it a while and you\'ll probably find something here in the future');
+    ?>
+
+<?php endif; ?>
+
 <?php if($person && $person->isCalculated): ?>
 
     <?php
@@ -86,9 +95,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     <?php endif; ?>
 
     <?php
-    echo('<div class="sw-l-content">');
+    $component->sectionStart();
 
-    $component->wrapStart();
     $component->p('This is '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'. '.$person->firstname.' is a '.$person->age.' years old '.$person->gender.' '.$person->occupation.'');
     $component->h2('Skill');
     $person->makeButton($person->getAttribute($person->world->attributeSkill), 'skill');
@@ -105,9 +113,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     $person->makeButton($person->getAttribute($person->world->attributeReputation), 'skill');
     $person->makeButton($person->getAttribute($person->world->attributeCombat), 'skill');
 
-    $component->wrapEnd();
-
-    echo('</div><div class="sw-l-content sw-is-gray">');
+    $component->sectionEnd();
+    $component->sectionStart('sw-is-gray');
 
     $component->h2('Wound', 'wound');
     $person->makeWound();
@@ -130,9 +137,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         $component->linkButton($person->siteLink.'/sanity','Add Sanity');
     }
 
-    echo('</div>');
-
-    $component->wrapStart();
+    $component->sectionEnd();
     $component->h2('Description');
 
     if($person->description != null) {
@@ -146,8 +151,6 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     if($person->isOwner) {
         $component->link($person->siteLink.'/edit/description','Edit Description');
     }
-
-    $component->wrapEnd();
 
     $component->h2('Features');
     $person->makeFeatures();
@@ -187,14 +190,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         }
     }
 
-    if($person->world->existsAugmentation) {
-        $component->h3('Augmentation','eq_augmentation');
-        $person->makeList($person->getAugmentation());
-
-        if($person->isOwner) {
-            $component->link($person->siteLink.'/edit/augmentation','Edit Augmentation');
-        }
-    }
+    $person->makeAugmentation();
 
     $component->linkButton('#','Bookmark this Person',true,'sw-js-bookmark');
 
