@@ -69,8 +69,6 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
     </div>
 </header>
 
-<div id="content"></div>
-
 <?php
 if($maintenanceMode) {
     require('page/error/maintenance_mode.php');

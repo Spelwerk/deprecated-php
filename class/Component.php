@@ -13,7 +13,8 @@ class Component {
         echo(
             '<div class="sw-c-title">'.
             '<div class="sw-l-wrap">'.$title.'</div>'.
-            '</div>'
+            '</div>'.
+            '<div id="content"></div>'
         );
     }
 
