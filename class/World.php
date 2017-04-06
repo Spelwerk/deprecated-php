@@ -242,9 +242,12 @@ class World {
 
         if(isset($skill) && isset($type) && isset($species)) {
             $get = isset($manifestation)
-                ? 'world-expertise/id/'.$this->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$species.'/manifestation/'.$manifestation
-                : 'world-expertise/id/'.$this->id.'/skill/'.$skill.'/type/'.$type.'/species/'.$species;
+                ? 'world-expertise/id/'.$this->id.'/type/'.$type.'/skill/'.$skill.'/species/'.$species.'/manifestation/'.$manifestation
+                : 'world-expertise/id/'.$this->id.'/type/'.$type.'/skill/'.$skill.'/species/'.$species;
+
+            echo($get.'<br>');
         } else if(isset($type)) {
+            echo('that');
             $get = 'world-expertise/id/'.$this->id.'/type/'.$type;
         }
 
