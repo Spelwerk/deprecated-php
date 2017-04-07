@@ -1,35 +1,35 @@
 .sw-is-opacity {
-  opacity: 0.2;
+  opacity: 0.2 !important;;
 }
 
 .sw-is-hidden {
-  display: none;
+  display: none !important;;
 }
 
 .sw-is-dangerous {
-  background-color: $color-red-primary;
+  background-color: $color-red-primary !important;;
 
   &:hover {
-    background-color: $color-red-secondary;
+    background-color: $color-red-secondary !important;;
   }
 }
 
 .sw-is-highlighted {
-  background-color: $color-amber-highlight;
+  background-color: $color-amber-highlight !important;;
 }
 
 .sw-is-gray {
-  background-color: $color-white-w3;
+  background-color: $color-white-w3 !important;;
 }
 
 .sw-is-selected {
-  background-color: $color-green-primary;
+  background-color: $color-green-primary !important;;
 }
 
 .sw-is-valid {
-  color: $color-green-secondary;
+  color: $color-green-secondary !important;;
 }
 
 .sw-is-invalid {
-  color: $color-red-primary;
+  color: $color-red-primary !important;
 }

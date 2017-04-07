@@ -770,6 +770,8 @@ function user_save_person($userId, $personId, $personHash) {
 
     $resultArray[] = $curl->post('user-person', $post);
 
+    cookie_person_add($personId, $personHash);
+
     checkError($resultArray);
 }
 
@@ -995,13 +997,12 @@ function switch_person($do) {
             if(!$POST_ERROR) {
                 $POST_ID = $result['id'];
                 $POST_HASH = $result['hash'];
-                $resultNickname = $result['nickname'];
 
                 if($POST_USER) {
                     user_save_person($POST_USER, $POST_ID, $POST_HASH);
                 }
 
-                cookie_person_add($resultNickname, $POST_ID, $POST_HASH);
+                cookie_person_add($POST_ID, $POST_HASH);
             }
             break;
 

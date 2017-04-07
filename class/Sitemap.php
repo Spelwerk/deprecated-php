@@ -153,8 +153,8 @@ class Sitemap {
                 $this->page = 'page/play/person/person.php';
                 break;
 
-            case 'add':
-                $this->page = 'page/play/person/add.php';
+            case 'new':
+                $this->page = 'page/play/person/new.php';
                 break;
 
             case 'id':
@@ -362,10 +362,10 @@ class Sitemap {
                 $this->page = 'page/user/user.php';
                 break;
 
-            case 'add':
-                $this->page = 'page/user/add.php';
+            case 'new':
+                $this->page = 'page/user/new.php';
                 $this->context = $context;
-                $this->menuLink = 'Add';
+                $this->menuLink = 'New';
                 break;
 
             case 'login':

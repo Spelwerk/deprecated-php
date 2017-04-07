@@ -300,6 +300,7 @@ class Form {
 
         echo(
             '<div class="sw-js-purchase-item sw-c-purchase">'.
+            '<div class="sw-l-wrap">'.
             '<div class="sw-c-purchase__head">'.
             '<div class="sw-c-purchase__icon"><img src="'.$labelIcon.'"/></div>'.
             '<div class="sw-c-purchase__title">'.$labelName.'</div>'.
@@ -313,6 +314,7 @@ class Form {
             '</div>'.
             '</div>'.
             '<input type="number" class="sw-js-purchase-input sw-is-hidden" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputMinimum.$inputMaximum.$inputValue.'/>'.
+            '</div>'.
             '</div>'
         );
     }
@@ -400,8 +402,10 @@ class Form {
             : ' points';
 
         echo(
+            '<div class="sw-js-points">'.
             '<div class="sw-c-points"><span class="sw-js-points-text">'.$points.'</span> '.$text.'</div>'.
-            '<input type="hidden" class="sw-js-points-input" name="post--points" value="'.$points.'"/>'
+            '<input type="hidden" class="sw-js-points-input" name="post--points" value="'.$points.'"/>'.
+            '</div>'
         );
     }
 

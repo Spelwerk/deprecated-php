@@ -574,11 +574,24 @@ input[type=submit] {
 .sw-c-points {
   font-family: ralewaylight, sans-serif;
   font-size: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
   text-align: center; }
+  @media (max-width: 689px) {
+    .sw-c-points {
+      width: 90%; } }
   .sw-c-points span {
     color: #3f51b5; }
+  .sw-c-points--position {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f8f8;
+    z-index: 999; }
 
 .sw-c-purchase {
   padding: 1rem 1rem 1rem 1rem; }
@@ -897,30 +910,30 @@ span {
   color: #3f51b5; }
 
 .sw-is-opacity {
-  opacity: 0.2; }
+  opacity: 0.2 !important; }
 
 .sw-is-hidden {
-  display: none; }
+  display: none !important; }
 
 .sw-is-dangerous {
-  background-color: #f44336; }
+  background-color: #f44336 !important; }
   .sw-is-dangerous:hover {
-    background-color: #d50000; }
+    background-color: #d50000 !important; }
 
 .sw-is-highlighted {
-  background-color: #ffe57f; }
+  background-color: #ffe57f !important; }
 
 .sw-is-gray {
-  background-color: #eeeeee; }
+  background-color: #eeeeee !important; }
 
 .sw-is-selected {
-  background-color: #7cb342; }
+  background-color: #7cb342 !important; }
 
 .sw-is-valid {
-  color: #33691b; }
+  color: #33691b !important; }
 
 .sw-is-invalid {
-  color: #f44336; }
+  color: #f44336 !important; }
 
 .sw-u-text-left {
   text-align: left !important; }

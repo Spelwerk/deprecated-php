@@ -8,7 +8,7 @@
 global $user, $component, $curl;
 
 $component->title('Person');
-$component->linkAction('/play/person/add','Create Person','A person, or a character, is what you use to play the game.','/img/add-person.png');
+$component->linkAction('/play/person/new','Create Person','A person, or a character, is what you use to play the game.','/img/add-person.png');
 
 $result = $curl->get('person/short',null,['order-by' => '{"popularity":"DESC", "thumbsup":"DESC", "nickname":"ASC"}', 'limit-from' => 5]);
 

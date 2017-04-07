@@ -1,5 +1,6 @@
-.sw-c-points {
+@mixin sw-c-points {
   @include font--thin(3rem);
+  @include centered;
 
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -8,5 +9,22 @@
 
   span {
     color: $color-indigo-primary;
+  }
+}
+
+.sw-c-points {
+  @include sw-c-points;
+
+  &--position {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    background-color: $color-white-w2;
+
+    z-index: 999;
   }
 } //todo refactor

@@ -2,6 +2,12 @@
  * Created by jonn on 12/02/2017.
  */
 
+var points = $(".sw-js-points");
+
+if(points !== undefined) {
+    var points_offset = points.offset().top - 50;
+}
+
 $(document).ready(function() {
 
     $('form').find('input,textarea,select').on("change paste keyup", function() {
@@ -109,17 +115,17 @@ $(document).ready(function() {
         var pointsText = $(this).parents('body').find('.sw-js-points-text');
         var pointsInput = $(this).parents('body').find('.sw-js-points-input');
 
-        var pointsTextValue = pointsText.text();
+        var pointsTextValue = parseInt(pointsText.text());
 
         var buttonInput = $(this).parents('.sw-js-purchase-item').find('.sw-js-purchase-input');
-        var buttonInputValue = buttonInput.val();
+        var buttonInputValue = parseInt(buttonInput.val());
 
         var buttonValueText = $(this).parents('.sw-js-purchase-item').find('.sw-js-purchase-value');
 
-        var purchaseMin = buttonInput.attr('min');
-        var purchaseMax = buttonInput.attr('max');
+        var purchaseMin = parseInt(buttonInput.attr('min'));
+        var purchaseMax = parseInt(buttonInput.attr('max'));
 
-        if($(this).hasClass('sw-js-purchase-plus') && buttonInputValue != purchaseMax) {
+        if($(this).hasClass('sw-js-purchase-plus') && buttonInputValue !== purchaseMax) {
             var p = parseInt(pointsTextValue);
 
             buttonInputValue++;
@@ -129,7 +135,7 @@ $(document).ready(function() {
             pointsTextValue = p-i;
         }
 
-        if($(this).hasClass('sw-js-purchase-minus') && buttonInputValue != purchaseMin) {
+        if($(this).hasClass('sw-js-purchase-minus') && buttonInputValue !== purchaseMin) {
             var p = parseInt(pointsTextValue);
             var i = parseInt(buttonInputValue);
 
@@ -144,10 +150,14 @@ $(document).ready(function() {
         buttonValueText.text(buttonInputValue);
         buttonInput.val(buttonInputValue);
 
-        if(pointsTextValue >= 0) {
-            $(this).parents('form').find('.sw-js-submit').removeClass('sw-is-unclickable').addClass('sw-is-clickable').prop('disabled', false);
+        if(pointsTextValue >= 0 || pointsTextValue === 0) {
+            if(pointsText.hasClass('sw-is-invalid')) {
+                pointsText.removeClass('sw-is-invalid');
+            }
+            $(this).parents('form').find('.sw-js-submit').prop('disabled', false);
         } else {
-            $(this).parents('form').find('.sw-js-submit').addClass('sw-is-unclickable').removeClass('sw-is-clickable').prop('disabled', true);
+            pointsText.addClass('sw-is-invalid');
+            $(this).parents('form').find('.sw-js-submit').prop('disabled', true);
         }
     });
 
@@ -211,6 +221,19 @@ $(document).ready(function() {
         console.log();
     });
 
+});
+
+$(window).scroll(function() {
+
+    if(points !== undefined) {
+        if($(this).scrollTop() > points_offset && !points.hasClass('sw-c-points--position')) {
+            points.addClass('sw-c-points--position');
+        }
+
+        if($(this).scrollTop() < points_offset && points.hasClass('sw-c-points--position')) {
+            points.removeClass('sw-c-points--position');
+        }
+    }
 });
 
 function rollNumber(type, times) {

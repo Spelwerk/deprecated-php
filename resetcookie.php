@@ -2,12 +2,12 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 15/02/2017
- * Time: 21:23
+ * Date: 07/04/2017
+ * Time: 09:24
  */
 require_once('php/config.php');
 
-setcookie('sw_cookie_policy', '1', time() + (9 * 365 * 24 * 60 * 60));
+setcookie('sw_person_list', '', time() -2000); setcookie('sw_world_list', '', time() -2000);
 
 ob_start();
 header('Location: '.$baseUrl.$_GET['return'], true, 303);

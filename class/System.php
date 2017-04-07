@@ -393,7 +393,7 @@ class System {
         }
 
 
-        $form->formStart('play/person/add');
+        $form->formStart('play/person/new');
         $this->radioList('world_id',$list);
         $form->formEnd();
     }
@@ -403,7 +403,7 @@ class System {
 
         $list = $world->getSpecies();
 
-        $form->formStart('play/person/add');
+        $form->formStart('play/person/new');
         $this->radioList('species_id', $list);
         $form->hidden('world_id', $world->id);
         $form->formEnd();
@@ -482,6 +482,7 @@ class System {
         $form->formEnd();
         $component->wrapEnd();
     }
+
 
     public function person_select($person, $list, $listTableName, $withRoll = null, $do = null, $value = null) {
         global $form;
@@ -566,12 +567,12 @@ class System {
         $form->formEnd();
     }
 
+
     public function person_purchaseSkill($person, $points, $cheat = false) {
         global $form, $component;
 
         $currentList = $person->getAttribute($person->world->attributeSkill);
 
-        $component->wrapStart();
         $form->formStart();
 
         if($cheat) {
@@ -591,7 +592,6 @@ class System {
         }
 
         $form->formEnd();
-        $component->wrapEnd();
     }
 
     public function person_purchaseExpertise($person, $points, $cheat = false) {
@@ -602,7 +602,6 @@ class System {
         $currentList = $person->getExpertise();
         $idList = [];
 
-        $component->wrapStart();
         $form->formStart();
 
         if($cheat) {
@@ -666,7 +665,6 @@ class System {
         }
 
         $form->formEnd();
-        $component->wrapEnd();
     }
 
     public function person_purchaseDiscipline($person, $points, $cheat = false) {
@@ -680,7 +678,6 @@ class System {
 
         $personPower = $curl->get('person-attribute/id/'.$person->id.'/attribute/'.$person->manifestation->power)['data'][0]['value'];
 
-        $component->wrapStart();
         $form->formStart();
 
         if($cheat) {
@@ -723,8 +720,8 @@ class System {
         }
 
         $form->formEnd();
-        $component->wrapEnd();
     }
+
 
     public function person_checkAugmentation($person) {
         global $form, $component;
