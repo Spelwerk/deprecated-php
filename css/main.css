@@ -478,14 +478,18 @@ input[type=submit] {
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 90; }
+  z-index: 300; }
 
 .sw-c-modal {
   display: block;
   height: 60rem;
   width: 34rem;
   position: fixed;
-  z-index: 99; }
+  z-index: 500; }
+  @media (max-width: 689px) {
+    .sw-c-modal {
+      height: 90%;
+      width: 90%; } }
   .sw-c-modal__title {
     font-family: ralewaylight, sans-serif;
     font-size: 4rem;
@@ -497,6 +501,9 @@ input[type=submit] {
     margin-right: auto;
     height: 55rem;
     background-color: #fefefe; }
+    @media (max-width: 689px) {
+      .sw-c-modal__content {
+        height: 90%; } }
   .sw-c-modal__body {
     height: 85%;
     text-align: center;
@@ -591,7 +598,7 @@ input[type=submit] {
     left: 0;
     width: 100%;
     background-color: #f8f8f8;
-    z-index: 999; }
+    z-index: 410; }
 
 .sw-c-purchase {
   padding: 1rem 1rem 1rem 1rem; }

@@ -67,7 +67,7 @@ class Component {
             '<button class="sw-js-roll sw-c-roll"'.$data.'>'.
             '<div class="sw-c-roll__container">'.
             '<div class="sw-c-roll__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-roll__title">'.$title.'</div>'.
+            '<div class="sw-js-roll-title sw-c-roll__title">'.$title.'</div>'.
             '<div class="sw-c-roll__value">'.$value.'</div>'.
             '</div>'.
             '<div class="sw-js-roll-text sw-is-hidden">'.$description.'</div>'.

@@ -6,7 +6,12 @@
 
   position: fixed;
 
-  z-index: 99;
+  z-index: $z-modal;
+
+  @include for-phone {
+    height: 90%;
+    width: 90%;
+  }
 
   &__title {
     @include font--thin(4rem);
@@ -23,6 +28,10 @@
     height: 55rem;
 
     background-color: $color-white-w1;
+
+    @include for-phone {
+      height: 90%;
+    }
   }
 
   &__body {

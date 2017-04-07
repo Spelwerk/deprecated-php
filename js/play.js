@@ -42,8 +42,8 @@ $(document).ready(function(){
         strike_bonus = $(this).attr('data-strike-bonus');
         strike_critical = $(this).attr('data-strike-critical');
 
-        $('.sw-js-modal-title').text($(this).find('.sw-js-button-title').text());
-        $('.sw-js-modal-description').html($(this).find('.sw-js-button-information').html());
+        $('.sw-js-modal-title').text($(this).find('.sw-js-roll-title').text());
+        $('.sw-js-modal-description').html($(this).find('.sw-js-roll-text').html());
 
         switch(type) {
             case 'default':
