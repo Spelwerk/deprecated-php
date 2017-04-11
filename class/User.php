@@ -54,6 +54,18 @@ class User {
         return $data;
     }
 
+    public function getStory() {
+        global $curl;
+
+        $result = $curl->get('user-story/id/'.$this->id);
+
+        $data = isset($result['data'])
+            ? $result['data']
+            : null;
+
+        return $data;
+    }
+
     public function getWorld() {
         global $curl;
 

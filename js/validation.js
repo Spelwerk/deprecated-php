@@ -2,10 +2,9 @@
  * Created by jonn on 12/02/2017.
  */
 
-var points = $(".sw-js-points");
-
-if(points !== undefined) {
-    var points_offset = points.offset().top - 50;
+if($(".sw-js-points").length) {
+    var points = $(".sw-js-points"),
+        points_offset = points.offset().top - 50;
 }
 
 $(document).ready(function() {
@@ -115,10 +114,10 @@ $(document).ready(function() {
         var pointsText = $(this).parents('body').find('.sw-js-points-text');
         var pointsInput = $(this).parents('body').find('.sw-js-points-input');
 
-        var pointsTextValue = parseInt(pointsText.text());
+        var pointsTextValue = pointsText.text();
 
         var buttonInput = $(this).parents('.sw-js-purchase-item').find('.sw-js-purchase-input');
-        var buttonInputValue = parseInt(buttonInput.val());
+        var buttonInputValue = buttonInput.val();
 
         var buttonValueText = $(this).parents('.sw-js-purchase-item').find('.sw-js-purchase-value');
 

@@ -1,10 +1,8 @@
 input[type=text], input[type=number], input[type=email], input[type=password], textarea {
   @include padding(0.5rem);
   @include font(2rem);
-
+  
   width: 100%;
-
-  background-color: $color-white-w1;
 
   &:required {
     &:invalid {
@@ -19,6 +17,7 @@ input[type=text], input[type=number], input[type=email], input[type=password], t
   }
 
   &:optional {
+    background: $color-white-w0;
     border: 1px solid $color-white-w4;
   }
 }

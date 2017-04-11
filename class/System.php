@@ -166,6 +166,24 @@ class System {
         }
     }
 
+    public function createStory($story = null, $world = null) {
+        global $component;
+
+        if(!isset($story) && !isset($world)) {
+            $component->title('Create');
+            $component->h1('Select World');
+            $component->subtitle('You will need to select a world in which your story takes place. It will also enable the system to understand what persons you can add.');
+
+            $this->story_selectWorld();
+
+        } else if(!isset($person) && isset($world)) {
+            $component->title('Create');
+            $component->h1('Story Details');
+
+            $this->story_make($world);
+        }
+    }
+
     public function createWorld($world = null) {
         if(!isset($world)) {
             echo('<h2>Create World</h2>');
@@ -325,7 +343,7 @@ class System {
     function checkboxList($itemList, $idList = null) {
         global $form;
 
-        echo('<section class="sw-l-content">');
+        echo('<section class="sw-l-padding">');
 
         if(isset($itemList)) {
             foreach($itemList as $item) {
@@ -357,7 +375,7 @@ class System {
     function radioList($tableName, $itemList, $idList = null) {
         global $form;
 
-        echo('<section class="sw-l-content">');
+        echo('<section class="sw-l-padding">');
 
         if(isset($itemList)) {
             foreach($itemList as $item) {
@@ -386,7 +404,7 @@ class System {
             }
         }
 
-        $worldList = $curl->get('world/template')['data'];
+        $worldList = $curl->get('world/template')['data']; // todo remove template
 
         foreach($worldList as $item) {
             $list[] = new World(null, null, $item);
@@ -483,7 +501,6 @@ class System {
         $component->wrapEnd();
     }
 
-
     public function person_select($person, $list, $listTableName, $withRoll = null, $do = null, $value = null) {
         global $form;
 
@@ -566,7 +583,6 @@ class System {
         $form->viewEnd();
         $form->formEnd();
     }
-
 
     public function person_purchaseSkill($person, $points, $cheat = false) {
         global $form, $component;
@@ -722,7 +738,6 @@ class System {
         $form->formEnd();
     }
 
-
     public function person_checkAugmentation($person) {
         global $form, $component;
 
@@ -813,6 +828,56 @@ class System {
         }
 
         $form->formEnd(false);
+    }
+
+
+    function story_selectWorld() {
+        global $form, $curl, $user;
+
+        $list = null;
+
+        if($user) {
+            $userList = $curl->get('user-world/id/'.$user->id.'/calculated');
+
+            if(isset($userList['data'])) {
+                foreach($userList['data'] as $item) {
+                    $list[] = new World($item['world_id']);
+                }
+            }
+        }
+
+        $worldList = $curl->get('world/template')['data']; // todo remove template
+
+        foreach($worldList as $item) {
+            $list[] = new World(null, null, $item);
+        }
+
+
+        $form->formStart('play/story/new');
+        $this->radioList('world_id',$list);
+        $form->formEnd();
+    }
+
+    function story_make($world) {
+        global $form, $user, $component;
+
+        $component->wrapStart();
+        $form->formStart();
+
+        $form->hidden('return', 'play/story/id', 'post');
+        $form->hidden('do', 'story--add', 'post');
+        $form->hidden('world_id', $world->id);
+
+        $form->varchar(true, 'name', 'Name', 'The name of your story will make it easier to remember which one it is.');
+        $form->text(false, 'description', 'Description', 'Describe your Story. This field can be added to in the future.');
+        $form->text(false, 'plot', 'Plot', 'Describe the plot of your Story. This field can be added to in the future.');
+
+        if(isset($user->id)) {
+            $form->hidden('user', $user->id, 'post');
+        }
+
+        $form->formEnd();
+        $component->wrapEnd();
     }
 
 

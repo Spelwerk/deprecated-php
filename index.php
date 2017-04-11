@@ -59,7 +59,6 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
             </div>
         </div>
     </div>
-    </div>
     <div class="sw-c-header__bottom">
         <div class="sw-l-wrap">
             <?php $menu->buildList(); ?>
@@ -67,15 +66,17 @@ if(!isset($_COOKIE['sw_cookie_policy'])) {
     </div>
 </header>
 
-<?php
-if($maintenanceMode) {
-    require('page/error/maintenance_mode.php');
-} else {
-    if(isset($sitemap->page)) {
-        require_once($sitemap->page);
+<div class="sw-l-content">
+    <?php
+    if($maintenanceMode) {
+        require('page/error/maintenance_mode.php');
+    } else {
+        if(isset($sitemap->page)) {
+            require_once($sitemap->page);
+        }
     }
-}
-?>
+    ?>
+</div>
 
 <footer class="sw-l-footer">
     <div class="sw-l-wrap">

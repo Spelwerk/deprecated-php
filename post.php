@@ -70,6 +70,20 @@ function checkError($resultArray) {
     }
 }
 
+function cookie_add($type, $id, $hash) {
+    $cookieName = 'sw_'.$type.'_list';
+    $cookieId = $type.'_id';
+    $cookieHash = $type.'_hash';
+
+    if(isset($_COOKIE[$cookieName])) {
+        $cookie = unserialize($_COOKIE[$cookieName]);
+    }
+
+    $cookie[] = [$cookieId => $id, $cookieHash  => $hash];
+
+    setcookie($cookieName, serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
+}
+
 function cookie_person_add($personId, $personHash) {
     if(isset($_COOKIE['sw_person_list'])) {
         $cookie = unserialize($_COOKIE['sw_person_list']);
@@ -78,6 +92,16 @@ function cookie_person_add($personId, $personHash) {
     $cookie[] = ['person_id' => $personId, 'person_hash' => $personHash];
 
     setcookie('sw_person_list', serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
+}
+
+function cookie_story_add($personId, $personHash) {
+    if(isset($_COOKIE['sw_story_list'])) {
+        $cookie = unserialize($_COOKIE['sw_story_list']);
+    }
+
+    $cookie[] = ['story_id' => $personId, 'story_hash' => $personHash];
+
+    setcookie('sw_story_list', serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
 }
 
 
@@ -309,8 +333,7 @@ function person_add($postData) {
 
         return [
             'id' => $personId,
-            'hash' => $personHash,
-            'nickname' => $postData['nickname']
+            'hash' => $personHash
         ];
     }
 }
@@ -657,6 +680,65 @@ function person_wound_add($postData, $personId, $contextRoute, $woundId) {
 }
 
 
+function story_add($postData) {
+    global $curl;
+
+    $resultArray = null;
+
+    $result = $curl->post('story',$postData);
+    $resultArray = $result;
+
+    $storyId = $result['id'];
+    $storyHash = $result['hash'];
+
+    checkError($resultArray);
+
+    return [
+        'id' => $storyId,
+        'hash' => $storyHash
+    ];
+}
+
+function story_person_add($postData, $storyId) {
+    global $curl;
+
+    $resultArray = null;
+    $personId = null;
+
+    if(isset($postData['person_link'])) {
+        $explode = explode('/',$postData['person_link']);
+
+        $count = count($explode) - 1;
+
+        $shouldBeInt = intval($explode[$count]);
+        $shouldBeId = $explode[$count-1] == 'id'
+            ? true
+            : false;
+
+        $shouldBePerson = $explode[$count-2] == 'person'
+            ? true
+            : false;
+
+        $shouldBePlay = $explode[$count-3] == 'play'
+            ? true
+            : false;
+
+        if($shouldBePlay && $shouldBePerson && $shouldBeId && $shouldBeInt) {
+            $personId = $shouldBeInt;
+        }
+    } else if(isset($postData['person_id'])) {
+        $personId = $postData['person_id'];
+    }
+
+    // todo add person hash
+    $post = ['story_id' => $storyId, 'person_id' => $personId];
+
+    $resultArray[] = $curl->post('story-person',$post);
+
+    checkError($resultArray);
+}
+
+
 function user_add($postData) {
     global $curl;
 
@@ -771,6 +853,22 @@ function user_save_person($userId, $personId, $personHash) {
     $resultArray[] = $curl->post('user-person', $post);
 
     cookie_person_add($personId, $personHash);
+
+    checkError($resultArray);
+}
+
+function user_save_story($userId, $storyId, $storyHash) {
+    global $curl;
+
+    $resultArray = null;
+
+    $post = isset($storyHash)
+        ? ['user_id' => $userId, 'story_id' => $storyId, 'hash' => $storyHash]
+        : ['user_id' => $userId, 'story_id' => $storyId];
+
+    $resultArray[] = $curl->post('user-story', $post);
+
+    cookie_person_add($storyId, $storyHash);
 
     checkError($resultArray);
 }
@@ -1217,6 +1315,32 @@ function switch_person($do) {
     }
 }
 
+function switch_story($do) {
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER, $POST_ERROR;
+
+    switch($do) {
+        default: break;
+
+        case 'story--add':
+            $result = story_add($POST_DATA);
+
+            if(!$POST_ERROR) {
+                $POST_ID = $result['id'];
+                $POST_HASH = $result['hash'];
+
+                if($POST_USER) {
+                    user_save_story($POST_USER, $POST_ID, $POST_HASH);
+                }
+
+                cookie_story_add($POST_ID, $POST_HASH);
+            }
+            break;
+
+        case 'story--person--add':
+            story_person_add($POST_DATA, $POST_ID);
+    }
+}
+
 function switch_user($do) {
     global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
 
@@ -1341,6 +1465,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'person':
             switch_person($POST_DO);
+            break;
+
+        case 'story':
+            switch_story($POST_DO);
             break;
 
         case 'user':

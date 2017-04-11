@@ -11,7 +11,7 @@ class Form {
 
     // INPUT
 
-    public function varchar($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null) {
+    public function varchar($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $value = null, $placeholder = null) {
         $labelName = isset($label)
             ? $label
             : $uniqueName;
@@ -32,11 +32,15 @@ class Form {
             ? $uniqueName.'__'.$uniqueId
             : $uniqueName;
 
+        $inputPlaceholder = isset($placeholder)
+            ? ' placeholder="'.$placeholder.'"'
+            : null;
+
         echo(
             '<label for="item--'.$inputUnique.'">'.
             '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
             '</label>'.
-            '<input class="sw-js-validation" type="text" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputValue.$inputRequired.'/>'
+            '<input class="sw-js-validation" type="text" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'"'.$inputPlaceholder.$inputValue.$inputRequired.'/>'
         );
 
         if($labelDescription) {

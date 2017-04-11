@@ -184,7 +184,7 @@ class Sitemap {
                 break;
 
             case 'disease':
-                $this->page = 'page/play/person/disease.php';
+                $this->page = 'page/play/person/wound/disease.php';
                 $this->id = $id;
                 $this->hash = $hash;
                 break;
@@ -202,13 +202,13 @@ class Sitemap {
                 break;
 
             case 'sanity':
-                $this->page = 'page/play/person/sanity.php';
+                $this->page = 'page/play/person/wound/sanity.php';
                 $this->id = $id;
                 $this->hash = $hash;
                 break;
 
             case 'wound':
-                $this->page = 'page/play/person/wound.php';
+                $this->page = 'page/play/person/wound/wound.php';
                 $this->id = $id;
                 $this->hash = $hash;
                 break;
@@ -336,10 +336,66 @@ class Sitemap {
                 $this->page = 'page/play/story/story.php';
                 break;
 
-            case 'add':
+            case 'id':
+                $this->switch_play_story_id();
                 break;
 
-            case 'id':
+            case 'new':
+                $this->page = 'page/play/story/new.php';
+                break;
+        }
+    }
+
+    function switch_play_story_id() {
+        $id = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
+            : null;
+
+        $hash = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        $switch = isset($this->command[5]) && $this->command[5] != null
+            ? $this->command[5]
+            : null;
+
+        $context = isset($this->command[6]) && $this->command[6] != null
+            ? $this->command[6]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'page/play/story/id.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                break;
+
+            case 'edit':
+                $this->page = 'page/play/story/edit.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                $this->context = $context;
+                break;
+
+            case 'location':
+                $this->page = 'page/play/story/location.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                $this->context = $context;
+                break;
+
+            case 'meeting':
+                $this->page = 'page/play/story/meeting.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                $this->context = $context;
+                break;
+
+            case 'person':
+                $this->page = 'page/play/story/person.php';
+                $this->id = $id;
+                $this->hash = $hash;
+                $this->context = $context;
                 break;
         }
     }

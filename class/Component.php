@@ -88,7 +88,7 @@ class Component {
 
     public function wrapStart($centered = false) {
         $center = $centered
-            ? ' sw-l-center'
+            ? ' sw-u-center'
             : null;
 
         echo('<section class="sw-l-wrap'.$center.'">');
@@ -105,7 +105,7 @@ class Component {
             ? ' '.$class
             : null;
 
-        echo('<section class="sw-l-content'.$class.'">');
+        echo('<section class="sw-l-section'.$class.'">');
     }
 
     public function sectionEnd() {

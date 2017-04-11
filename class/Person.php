@@ -515,7 +515,7 @@ class Person {
     public function makeCard($list) {
         global $component;
 
-        echo('<div class="sw-l-attribute">');
+        echo('<div class="sw-u-center">');
 
         foreach($list as $object) {
             $component->attribute($object->name, $object->value);
@@ -573,6 +573,7 @@ class Person {
                              data-strike-d12="'.$item->damageD12.'" 
                              data-strike-bonus="'.$item->damageBonus.'" 
                              data-strike-critical="'.$item->criticalD12.'"';
+                    break;
 
             }
 
@@ -603,7 +604,7 @@ class Person {
         }
 
         if($itemCount != 0) {
-            echo('<div class="sw-l-attribute">');
+            echo('<div class="sw-u-center">');
 
             $color = $itemCount >= $itemAttribute->value
                 ? ' sw-is-invalid'
@@ -647,7 +648,7 @@ class Person {
         if($list) {
             echo(
                 '<h3>Expertise</h3>'.
-                '<div class="sw-l-content">'
+                '<div class="sw-l-padding">'
             );
 
             foreach($list as $expertise) {
@@ -758,7 +759,7 @@ class Person {
         }
 
         if($itemCount != 0) {
-            echo('<div class="sw-l-attribute">');
+            echo('<div class="sw-u-center">');
 
             $color = $itemCount >= $itemAttribute->value
                 ? ' sw-is-invalid'
@@ -829,7 +830,7 @@ class Person {
         }
 
         if($itemCount != 0) {
-            echo('<div class="sw-l-attribute">');
+            echo('<div class="sw-u-center">');
 
             $color = $itemCount >= $itemAttribute->value
                 ? ' sw-is-invalid'
