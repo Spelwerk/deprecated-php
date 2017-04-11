@@ -191,4 +191,28 @@ class Component {
             '</div>'
         );
     }
+
+    public function listAction($title, $action = null, $options = null) {
+        $icon = isset($options['icon'])
+            ? $options['icon']
+            : '/img/missing_icon.png';
+
+        $class = isset($options['class'])
+            ? $options['class']
+            : null;
+
+        echo(
+            '<div class="sw-c-list'.$class.'">'.
+            '<div class="sw-l-wrap">'.
+            '<div class="sw-c-list__head">'.
+            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
+            '<div class="sw-c-list__title">'.$title.'</div>'.
+            '<div class="sw-c-list__action">'.
+            $action.
+            '</div>'.
+            '</div>'.
+            '</div>'.
+            '</div>'
+        );
+    }
 }

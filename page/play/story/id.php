@@ -43,9 +43,9 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
         <div class="sw-l-quicklink">
             <?php
-            $component->linkQuick($story->siteLink.'/edit/context','Location','/img/edit.png');
-            $component->linkQuick($story->siteLink.'/edit/context','Meeting','/img/edit.png');
-            $component->linkQuick($story->siteLink.'/person','Person','/img/edit.png');
+            $component->linkQuick($story->siteLink.'/location','Location','/img/story-location.png');
+            $component->linkQuick($story->siteLink.'/meeting','Meeting','/img/story-meeting.png');
+            $component->linkQuick($story->siteLink.'/person','Person','/img/link-person.png');
             $component->linkQuick($story->siteLink.'/edit','Edit','/img/edit.png');
             ?>
         </div>

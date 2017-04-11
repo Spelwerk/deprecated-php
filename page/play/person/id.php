@@ -192,6 +192,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
     $person->makeAugmentation();
 
+    $component->h1('Reminder');
     $component->linkButton('#','Bookmark this Person',true,'sw-js-bookmark');
 
     ?>

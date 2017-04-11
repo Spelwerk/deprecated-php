@@ -44,6 +44,56 @@ class Story {
             : '/play/story/id/'.$this->id;
     }
 
+
+    public function getPerson() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('story-person/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = $array;
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getLocation() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('story-location/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = $array;
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getMeeting() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('story-meeting/id/'.$this->id);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = $array;
+            }
+        }
+
+        return $arrayList;
+    }
+
+
     public function makeButton() {
         global $component;
 
@@ -88,20 +138,34 @@ class Story {
     }
 
     public function makePerson() {
-        global $curl, $component;
+        global $component;
 
-        $result = $curl->get('story-person/id/'.$this->id);
+        $list = $this->getPerson();
 
-        if(isset($result['data'])) {
-            foreach($result['data'] as $person) {
+        if($list) {
+            foreach($list as $person) {
                 $link = isset($person['person_hash'])
                     ? '/play/person/id/'.$person['person_id'].'/'.$person['person_hash']
                     : '/play/person/id/'.$person['person_id'];
 
-                $component->linkAction($link, $person['person_nickname'], $person['person_occupation'], '/img/person.png');
+                $component->linkAction($link, $person['person_nickname'], $person['person_occupation'], '/img/link-person-w.png');
             }
         }
 
         $component->link('/play/story/id/'.$this->id.'/'.$this->hash.'/person/add','Add Person');
+    }
+
+
+    public function buildRemoval($thing, $title, $icon, $context) {
+        global $component, $form;
+
+        $quick = $this->isOwner
+            ? $form->quick('story--delete--has',$this->id,$this->hash,'play/story/id','delete',[
+                'context' => $context,
+                'thing' => $thing
+            ])
+            : null;
+
+        $component->listAction($title, $quick, ['icon' => $icon]);
     }
 }

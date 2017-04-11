@@ -102,10 +102,6 @@ class Form {
             ? ' required'
             : null;
 
-        $inputValue = isset($value)
-            ? ' value="'.$value.'"'
-            : '';
-
         $inputUnique = isset($uniqueId)
             ? $uniqueName.'__'.$uniqueId
             : $uniqueName;
@@ -114,7 +110,7 @@ class Form {
             '<label for="item--'.$inputUnique.'">'.
             '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
             '</label>'.
-            '<textarea class="sw-c-input__item sw-js-validation" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'" rows="3"'.$inputValue.$inputRequired.'></textarea>'
+            '<textarea class="sw-c-input__item sw-js-validation" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'" rows="3"'.$inputRequired.'>'.$value.'</textarea>'
         );
 
         if($labelDescription) {
@@ -269,7 +265,38 @@ class Form {
         }
     }
 
-    // HIDDEN
+    // SPECIAL
+
+    public function quick($postDo, $postId, $postHash, $postReturn, $postIcon, $options = null) {
+        $returnid = isset($options['returnid'])
+            ? '<input type="hidden" name="post--returnid" value="'.$options['returnid'].'"/>'
+            : null;
+
+        $context = isset($options['context'])
+            ? '<input type="hidden" name="post--context" value="'.$options['context'].'"/>'
+            : null;
+
+        $thing = isset($options['thing'])
+            ? '<input type="hidden" name="post--thing" value="'.$options['thing'].'"/>'
+            : null;
+
+        $extra = isset($options['extra'])
+            ? '<input type="hidden" name="post--extra" value="'.$options['extra'].'"/>'
+            : null;
+
+        return
+            '<form action="/post.php" method="post">'.
+            '<input type="hidden" name="post--do" value="'.$postDo.'"/>'.
+            '<input type="hidden" name="post--id" value="'.$postId.'"/>'.
+            '<input type="hidden" name="post--hash" value="'.$postHash.'"/>'.
+            '<input type="hidden" name="post--return" value="'.$postReturn.'"/>'.
+            $returnid.
+            $context.
+            $thing.
+            $extra.
+            '<input class="sw-u-action" type="image" src="/img/'.$postIcon.'.png" alt="Submit" />'.
+            '</form>';
+    }
 
     public function hidden($uniqueName, $value, $type = null) {
         $inputType = isset($type)
@@ -415,12 +442,59 @@ class Form {
 
     // FORM
 
-    public function formStart($action = null) {
-        $link = isset($action)
-            ? $action
+    public function formStart($options = null) {
+        $formAction = isset($options['action'])
+            ? $options['action']
             : 'post.php';
 
-        echo('<form action="/'.$link.'" method="post">');
+        $postDo = isset($options['do']) && $options['do'] != null
+            ? '<input type="hidden" name="post--do" value="'.$options['do'].'"/>'
+            : null;
+
+        $postId = isset($options['id']) && $options['id'] != null
+            ? '<input type="hidden" name="post--id" value="'.$options['id'].'"/>'
+            : null;
+
+        $postHash = isset($options['hash']) && $options['hash'] != null
+            ? '<input type="hidden" name="post--hash" value="'.$options['hash'].'"/>'
+            : null;
+
+        $postUser = isset($options['user']) && $options['user'] != null
+            ? '<input type="hidden" name="post--extra" value="'.$options['extra2'].'"/>'
+            : null;
+
+        $postReturn = isset($options['return']) && $options['return'] != null
+            ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
+            : null;
+
+        $postReturnId = isset($options['return']) && $options['return'] != null
+            ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
+            : null;
+
+        $postContext = isset($options['context']) && $options['context'] != null
+            ? '<input type="hidden" name="post--context" value="'.$options['context'].'"/>'
+            : null;
+
+        $postThing = isset($options['extra1']) && $options['extra1'] != null
+            ? '<input type="hidden" name="post--thing" value="'.$options['extra1'].'"/>'
+            : null;
+
+        $postExtra = isset($options['extra2']) && $options['extra2'] != null
+            ? '<input type="hidden" name="post--extra" value="'.$options['extra2'].'"/>'
+            : null;
+
+        echo(
+            '<form action="/'.$formAction.'" method="post">'.
+            $postDo.
+            $postId.
+            $postHash.
+            $postUser.
+            $postReturn.
+            $postReturnId.
+            $postContext.
+            $postThing.
+            $postExtra
+        );
     }
 
     public function formEnd($disabled = true, $submitText = null) {

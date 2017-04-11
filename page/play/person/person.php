@@ -8,7 +8,7 @@
 global $user, $component, $curl;
 
 $component->title('Person');
-$component->linkAction('/play/person/new','Create Person','A person, or a character, is what you use to play the game.','/img/add-person.png');
+$component->linkAction('/play/person/new','Create Person','A person, or a character, is what you use to play the game.','/img/link-person-w.png');
 
 $result = $curl->get('person/short',null,['order-by' => '{"popularity":"DESC", "thumbsup":"DESC", "nickname":"ASC"}', 'limit-from' => 5]);
 
@@ -73,11 +73,11 @@ if($cookieList) {
     }
 }
 
-$component->h1('Popular Persons');
-foreach($popularList as $person) {
-    if($filterList && in_array($person['id'],$filterList)) {}
-    else {
-        $component->linkButton('/play/person/id/'.$person['id'],$person['nickname'].' ('.$person['occupation'].') ('.$person['age'].')');
+if($popularList) {
+    $component->h1('Most Popular Persons');
+
+    foreach($popularList as $person) {
+        $component->linkButton('/play/person/id/' . $person['id'], $person['nickname'] . ' (' . $person['occupation'] . ') (' . $person['age'] . ')');
     }
 }
 ?>

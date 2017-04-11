@@ -374,7 +374,6 @@ class Sitemap {
                 $this->page = 'page/play/story/edit.php';
                 $this->id = $id;
                 $this->hash = $hash;
-                $this->context = $context;
                 break;
 
             case 'location':

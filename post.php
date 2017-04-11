@@ -25,10 +25,6 @@ $POST_RETURNID = isset($_POST['post--returnid'])
     ? $_POST['post--returnid']
     : null;
 
-$POST_RETURNAFTER = isset($_POST['post--returnafter'])
-    ? $_POST['post--returnafter']
-    : null;
-
 $POST_ID = isset($_POST['post--id'])
     ? $_POST['post--id']
     : null;
@@ -43,6 +39,10 @@ $POST_CONTEXT = isset($_POST['post--context'])
 
 $POST_THING = isset($_POST['post--thing'])
     ? $_POST['post--thing']
+    : null;
+
+$POST_EXTRA = isset($_POST['post--extra'])
+    ? $_POST['post--extra']
     : null;
 
 $POST_USER = isset($_POST['post--user'])
@@ -699,13 +699,23 @@ function story_add($postData) {
     ];
 }
 
+function story_edit($postData, $storyHash) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->put('story/hash/'.$storyHash, $postData);
+
+    checkError($resultArray);
+}
+
 function story_person_add($postData, $storyId) {
     global $curl;
 
     $resultArray = null;
     $personId = null;
 
-    if(isset($postData['person_link'])) {
+    if(isset($postData['person_link']) && $postData['person_link'] != null) {
         $explode = explode('/',$postData['person_link']);
 
         $count = count($explode) - 1;
@@ -726,7 +736,7 @@ function story_person_add($postData, $storyId) {
         if($shouldBePlay && $shouldBePerson && $shouldBeId && $shouldBeInt) {
             $personId = $shouldBeInt;
         }
-    } else if(isset($postData['person_id'])) {
+    } else if(isset($postData['person_id']) && $postData['person_id'] != null) {
         $personId = $postData['person_id'];
     }
 
@@ -734,6 +744,16 @@ function story_person_add($postData, $storyId) {
     $post = ['story_id' => $storyId, 'person_id' => $personId];
 
     $resultArray[] = $curl->post('story-person',$post);
+
+    checkError($resultArray);
+}
+
+function story_has_delete($table, $thingId, $personId) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->delete('story-'.$table.'/id/'.$personId.'/id/'.$thingId);
 
     checkError($resultArray);
 }
@@ -1084,7 +1104,7 @@ function switch_manifestation($do) {
 }
 
 function switch_person($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER, $POST_ERROR;
+    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_THING, $POST_EXTRA, $POST_USER, $POST_ERROR;
 
     switch($do) {
         default: break;
@@ -1100,7 +1120,7 @@ function switch_person($do) {
                     user_save_person($POST_USER, $POST_ID, $POST_HASH);
                 }
 
-                cookie_person_add($POST_ID, $POST_HASH);
+                cookie_add('person',$POST_ID, $POST_HASH);
             }
             break;
 
@@ -1218,12 +1238,12 @@ function switch_person($do) {
             break;
 
         case 'person--delete--has':
-            person_has_delete($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
+            person_has_delete($POST_CONTEXT, $POST_THING, $POST_ID);
             break;
 
         case 'person--equip':
-            $post = ['equipped' => $POST_DATA['value']];
-            person_has_edit($POST_DATA['table'], $POST_ID, $POST_DATA['id'], $post);
+            $post = ['equipped' => $POST_EXTRA];
+            person_has_edit($POST_CONTEXT, $POST_ID, $POST_THING, $post);
             break;
 
         case 'person--expertise--add':
@@ -1332,12 +1352,21 @@ function switch_story($do) {
                     user_save_story($POST_USER, $POST_ID, $POST_HASH);
                 }
 
-                cookie_story_add($POST_ID, $POST_HASH);
+                cookie_add('story',$POST_ID,$POST_HASH);
             }
+            break;
+
+        case 'story--edit':
+            story_edit($POST_DATA, $POST_HASH);
             break;
 
         case 'story--person--add':
             story_person_add($POST_DATA, $POST_ID);
+            break;
+
+        case 'story--delete--has':
+            story_has_delete($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
+            break;
     }
 }
 
@@ -1498,16 +1527,12 @@ $d = isset($POST_RETURNID)
     ? '#'.$POST_RETURNID
     : '#content';
 
-$a = isset($POST_RETURNAFTER)
-    ? '/'.$POST_RETURNAFTER
-    : null;
-
 
 if(!$POST_ERROR) {
-    redirect($baseUrl.$r.$i.$h.$a.$d);
+    redirect($baseUrl.$r.$i.$h.$d);
 } else {
     print_r($POST_ERROR);
 }
 
 
-echo '<a href="'.$baseUrl.$r.$i.$h.$a.$d.'">'.$baseUrl.$r.$i.$h.$a.$d.'</a>';
+echo '<a href="'.$baseUrl.$r.$i.$h.$d.'">'.$baseUrl.$r.$i.$h.$d.'</a>';

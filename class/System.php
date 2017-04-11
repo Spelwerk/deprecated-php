@@ -36,7 +36,7 @@ class System {
             $component->title($person->nickname);
 
             if($person->pointMoney > 0) {
-                $component->linkAction('#','Bookmark this Person','The framework for your character has been created in our database. Time to bookmark so you can return whenever you want!','/img/bookmark.png',true,'sw-js-bookmark');
+                $component->linkAction('#','Bookmark this Person','The framework for your character has been created in our database. Time to bookmark so you can return whenever you want!','/img/link-bookmark-w.png',true,'sw-js-bookmark');
 
                 $component->h1('Money');
                 $component->subtitle('You will be rolling <span class="sw-js-points-text">'.$person->pointMoney.'</span> dice to either improve or impair your financial status.');
@@ -410,8 +410,7 @@ class System {
             $list[] = new World(null, null, $item);
         }
 
-
-        $form->formStart('play/person/new');
+        $form->formStart(['action' => 'play/person/new']);
         $this->radioList('world_id',$list);
         $form->formEnd();
     }
@@ -421,7 +420,7 @@ class System {
 
         $list = $world->getSpecies();
 
-        $form->formStart('play/person/new');
+        $form->formStart(['action' => 'play/person/new']);
         $this->radioList('species_id', $list);
         $form->hidden('world_id', $world->id);
         $form->formEnd();
@@ -430,21 +429,21 @@ class System {
     function person_make($world, $species) {
         global $form, $user, $component;
 
-        $component->wrapStart();
-        $form->formStart();
+        $userid = $user && isset($user->id)
+            ? $user->id
+            : null;
 
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--add', 'post');
+        $component->wrapStart();
+        $form->formStart([
+            'do' => 'person--add',
+            'user' => $userid,
+            'return' => 'play/person/id'
+        ]);
         $form->hidden('world_id', $world->id);
         $form->hidden('species_id', $species->id);
-
         $form->varchar(true, 'nickname', 'Nickname', 'The nickname of your character will be your primary simple identifier.');
         $form->number(true, 'age', 'Age', 'Deciding age is important, as it determines many important things for the creation of your character. While you can change age at a later stage, the system will not take that into account after creation.', null, 5, $species->maxAge);
         $form->varchar(true, 'occupation', 'Occupation', 'The occupation of your character is your secondary simple identifier.');
-
-        if(isset($user->id)) {
-            $form->hidden('user', $user->id, 'post');
-        }
 
         if($world->existsSupernatural) {
             $form->pick(true, 'supernatural', $world->supernaturalName, 'In this world, your character can have supernatural ('.$world->supernaturalName.') abilities. Choose yes if this is the case.');
@@ -460,19 +459,17 @@ class System {
         global $form, $component;
 
         $component->wrapStart();
-        $form->formStart();
-
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--edit', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
-
+        $form->formStart([
+            'do' => 'person--edit',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
         $form->varchar(true, 'firstname', 'First Name');
         $form->varchar(true, 'surname', 'Surname');
         $form->varchar(true, 'gender', 'Gender');
         $form->text(false, 'description', 'Description', 'Describe your character. Features, Appearance, etc.');
         $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
-
         $form->formEnd();
         $component->wrapEnd();
     }
@@ -483,20 +480,17 @@ class System {
         $attribute = $curl->get('attribute/id/'.$attributeId)['data'][0];
 
         $component->wrapStart();
-        $form->formStart();
-
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--'.$postDo, 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
-
+        $form->formStart([
+            'do' => 'person--'.$postDo,
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
         $form->points($points);
         $form->randomNumber($attribute['name'], $points);
-
         $form->viewStart();
         $form->number(true, 'attribute_id', $attribute['name'], $attribute['description'], $attribute['id'], null, $attribute['maximum']);
         $form->viewEnd();
-
         $form->formEnd();
         $component->wrapEnd();
     }
@@ -508,11 +502,12 @@ class System {
             ? $do
             : 'edit';
 
-        $form->formStart();
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--'.$do, 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
+        $form->formStart([
+            'do' => 'person--'.$do,
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         if(isset($withRoll)) {
             $form->randomRadio($withRoll);
@@ -544,12 +539,13 @@ class System {
             ? 'gift'
             : 'imperfection';
 
-        $form->formStart();
+        $form->formStart([
+            'do' => 'person--characteristic--'.$text,
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
         $form->points($points);
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--characteristic--'.$text, 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
         $form->randomRadio('characteristic');
         $form->viewStart();
         $this->radioList('characteristic',$list, $idList);
@@ -571,12 +567,13 @@ class System {
 
         $idList = $this->idList($person->getMilestone());
 
-        $form->formStart();
+        $form->formStart([
+            'do' => 'person--milestone--add',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
         $form->points($points);
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--milestone--add', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
         $form->randomRadio('milestone');
         $form->viewStart();
         $this->radioList('milestone',$list, $idList);
@@ -589,7 +586,12 @@ class System {
 
         $currentList = $person->getAttribute($person->world->attributeSkill);
 
-        $form->formStart();
+        $form->formStart([
+            'do' => 'person--attribute--skill',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         if($cheat) {
             echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
@@ -597,11 +599,6 @@ class System {
             $form->points($points);
             $form->hidden('experience', $person->world->experience, 'post');
         }
-
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--attribute--skill', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
 
         foreach($currentList as $current) {
             $form->purchase('attribute_id', $current->name, $current->description, $current->icon, $current->id, 0, $current->maximum, $current->value);
@@ -618,7 +615,12 @@ class System {
         $currentList = $person->getExpertise();
         $idList = [];
 
-        $form->formStart();
+        $form->formStart([
+            'do' => 'person--expertise--add',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         if($cheat) {
             echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
@@ -626,11 +628,6 @@ class System {
             $form->points($points);
             $form->hidden('experience', $person->world->experience, 'post');
         }
-
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--expertise--add', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
 
         if(count($currentList) != null) {
             foreach($currentList as $current) {
@@ -694,7 +691,12 @@ class System {
 
         $personPower = $curl->get('person-attribute/id/'.$person->id.'/attribute/'.$person->manifestation->power)['data'][0]['value'];
 
-        $form->formStart();
+        $form->formStart([
+            'do' => 'person--attribute--doctrine',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         if($cheat) {
             echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
@@ -702,11 +704,6 @@ class System {
             $form->points($points);
             $form->hidden('experience', $person->world->experience, 'post');
         }
-
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--attribute--doctrine', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
 
         if(count($currentList) != null) {
             foreach($currentList as $current) {
@@ -745,11 +742,12 @@ class System {
 
         $idList = $this->idList($person->getAugmentation());
 
-        $form->formStart();
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--augmentation--add', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
+        $form->formStart([
+            'do' => 'person--augmentation--add',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         if(isset($bionicList)) {
             foreach($bionicList as $bionic) {
@@ -769,11 +767,12 @@ class System {
         $bionicList = $person->world->getBionic();
         $idList = $this->idList($person->getBionic());
 
-        $form->formStart();
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--bionic--add', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
+        $form->formStart([
+            'do' => 'person--bionic--add',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         $this->checkboxList($bionicList, $idList);
 
@@ -787,11 +786,12 @@ class System {
         $typeList = $curl->get('protectiontype')['data'];
         $idList = $this->idList($person->getProtection());
 
-        $form->formStart();
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--protection--add', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
+        $form->formStart([
+            'do' => 'person--protection--add',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         foreach($typeList as $type) {
             $protectionList = $person->world->getProtection($type['id']);
@@ -812,11 +812,12 @@ class System {
         $idList = $this->idList($person->getWeapon());
         $weaponList = $person->world->getWeapon();
 
-        $form->formStart();
-        $form->hidden('return', 'play/person/id', 'post');
-        $form->hidden('do', 'person--weapon--add', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
+        $form->formStart([
+            'do' => 'person--weapon--add',
+            'id' => $person->id,
+            'hash' => $person->hash,
+            'return' => 'play/person/id'
+        ]);
 
         $this->checkboxList($weaponList, $idList);
         $this->checkboxAll();
@@ -853,7 +854,7 @@ class System {
         }
 
 
-        $form->formStart('play/story/new');
+        $form->formStart(['action' => 'play/story/new']);
         $this->radioList('world_id',$list);
         $form->formEnd();
     }
@@ -861,20 +862,22 @@ class System {
     function story_make($world) {
         global $form, $user, $component;
 
-        $component->wrapStart();
-        $form->formStart();
+        $userid = $user && isset($user->id)
+            ? $user->id
+            : null;
 
-        $form->hidden('return', 'play/story/id', 'post');
-        $form->hidden('do', 'story--add', 'post');
+        $component->wrapStart();
+        $form->formStart([
+            'do' => 'story--add',
+            'user' => $userid,
+            'return' => 'play/story/id',
+        ]);
+
         $form->hidden('world_id', $world->id);
 
         $form->varchar(true, 'name', 'Name', 'The name of your story will make it easier to remember which one it is.');
         $form->text(false, 'description', 'Description', 'Describe your Story. This field can be added to in the future.');
         $form->text(false, 'plot', 'Plot', 'Describe the plot of your Story. This field can be added to in the future.');
-
-        if(isset($user->id)) {
-            $form->hidden('user', $user->id, 'post');
-        }
 
         $form->formEnd();
         $component->wrapEnd();
@@ -884,17 +887,19 @@ class System {
     function world_make() {
         global $form, $curl, $user;
 
+        $userid = $user && isset($user->id)
+            ? $user->id
+            : null;
+
         //$attribute = $curl->get('attribute/type/8')['data'];
         $attributetype = $curl->get('attributetype')['data'];
         $expertisetype = $curl->get('expertisetype')['data'];
 
-        $form->genericStart();
-        $form->getHidden('post', 'return', 'world');
-        $form->getHidden('post', 'do', 'world--post');
-
-        if(isset($user->id)) {
-            $form->getHidden('post', 'user', $user->id);
-        }
+        $form->genericStart([
+            'do' => 'world--post',
+            'user' => $userid,
+            'return' => 'world'
+        ]);
 
         $form->getVarchar('world', 'name', true);
         $form->getText('world', 'description', false);

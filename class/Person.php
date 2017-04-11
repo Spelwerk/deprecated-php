@@ -307,75 +307,48 @@ class Person {
         //todo build this
     }
 
-    function buildRemoval($id, $title, $icon, $thing, $returnId = null) {
-        $change = $this->isOwner
-            ?   '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play"/>'.
-                '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
-                '<input type="hidden" name="post--do" value="person--delete--has"/>'.
-                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
-                '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
-                '<input class="sw-u-action" type="image" src="/img/remove.png" alt="Submit" />'.
-                '</form>'
+    function buildRemoval($thing, $title, $icon, $context, $returnId = null) {
+        global $component, $form;
+
+        $quick = $this->isOwner
+            ?   $form->quick('person--delete--has',$this->id,$this->hash,'play/person/id','delete',[
+                    'returnid' => $returnId,
+                    'context' => $context,
+                    'thing' => $thing
+                ])
             :   null;
 
-        echo(
-            '<div class="sw-c-list sw-u-even">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-c-list__head">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$title.'</div>'.
-            '<div class="sw-c-list__action">'.
-            $change.
-            '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        );
+        $component->listAction($title, $quick, ['icon' => $icon]);
     }
 
-    function buildEquip($id, $title, $icon, $thing, $equipped, $returnId = null) {
-        $e = $equipped == 1
-            ? ''
+    function buildEquip($thing, $title, $icon, $context, $equipped, $returnId = null) {
+        global $component, $form;
+
+        $opacity = $equipped == 1
+            ? null
             : ' sw-is-opacity';
 
-        $i = $equipped == 1
-            ? '/img/equip-true.png'
-            : '/img/equip-false.png';
+        $img = $equipped == 1
+            ? 'equip-true'
+            : 'equip-false';
 
         $flip = $equipped == 1
             ? 0
             : 1;
 
-        $change = $this->isOwner
-            ?   '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play/person/id"/>'.
-                '<input type="hidden" name="post--returnid" value="'.$returnId.'"/>'.
-                '<input type="hidden" name="post--do" value="person--equip"/>'.
-                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="thing--table" value="'.$thing.'"/>'.
-                '<input type="hidden" name="thing--id" value="'.$id.'"/>'.
-                '<input type="hidden" name="thing--value" value="'.$flip.'"/>'.
-                '<input class="sw-u-action" type="image" src="'.$i.'" alt="Submit" />'.
-                '</form>'
+        $quick = $this->isOwner
+            ?   $form->quick('person--equip',$this->id,$this->hash,'play/person/id',$img,[
+                    'returnid' => $returnId,
+                    'context' => $context,
+                    'thing' => $thing,
+                    'extra' => $flip
+                ])
             :   null;
 
-        echo(
-            '<div class="sw-c-list sw-u-even'.$e.'">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-c-list__head">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$title.'</div>'.
-            '<div class="sw-c-list__action">'.
-            $change.
-            '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        );
+        $component->listAction($title, $quick, [
+            'icon' => $icon,
+            'class' => $opacity
+        ]);
     }
 
     function buildDiseaseSanity($context, $id, $title, $icon, $heal) {
