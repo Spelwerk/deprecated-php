@@ -27,9 +27,9 @@ require_once('feature/Wound.php');
 
 class World {
 
-    var $id, $hash, $template, $popularity, $hidden, $owner, $name, $description, $money;
+    var $id, $hash, $popularity, $owner, $name, $description, $money;
 
-    var $isTemplate, $isOwner, $isCalculated;
+    var $isOwner, $isCalculated;
 
     var $supernaturalName;
 
@@ -65,13 +65,10 @@ class World {
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
-        $this->hidden = $data['hidden'];
         $this->money = $data['money_attribute_id'];
-
         $this->thumbsup = $data['thumbsup'];
         $this->thumbsdown = $data['thumbsdown'];
 
-        $this->isTemplate = $data['template'];
         $this->isCalculated = $data['calculated'];
 
         // Hard Coded values for the System // todo add all these to database?
@@ -99,8 +96,8 @@ class World {
         $this->splitMilestone = intval($data['split_milestone']);
         $this->splitRelationship = intval($data['split_relationship']);
 
-        $this->maxGift = intval($data['max_characteristic_gift']);
-        $this->maxImperfection = intval($data['max_characteristic_imperfection']);
+        $this->maxGift = intval($data['max_gift']);
+        $this->maxImperfection = intval($data['max_imperfection']);
         $this->maxSupernatural = intval($data['max_supernatural']);
         $this->maxSkill = intval($data['max_skill']);
         $this->maxExpertise = intval($data['max_expertise']);

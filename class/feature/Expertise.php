@@ -8,7 +8,7 @@
  */
 class Expertise {
 
-    var $id, $name, $description, $hidden, $level, $dice, $maximum, $icon;
+    var $id, $name, $description, $special, $level, $dice, $maximum, $icon;
 
     var $type, $skill, $species, $manifestation, $attribute;
 
@@ -21,7 +21,7 @@ class Expertise {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->hidden = $data['hidden'];
+        $this->special = $data['special'];
         $this->icon = $data['icon_path'];
         $this->maximum = $data['maximum'];
         $this->species = $data['species_id'];

@@ -13,9 +13,9 @@ $person = null;
 $userOwner = null;
 
 if(isset($sitemap->id) && isset($sitemap->hash)) {
-    $person = new Person($sitemap->id, $sitemap->hash);
+    $person = new Person(true, $sitemap->id, $sitemap->hash);
 } else if (isset($sitemap->id)) {
-    $person = new Person($sitemap->id);
+    $person = new Person(true, $sitemap->id);
 }
 ?>
 

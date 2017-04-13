@@ -10,5 +10,4 @@ global $user, $component;
 
 <?php
 $component->title($user->displayname);
-print_r($user);
 ?>

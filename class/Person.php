@@ -11,20 +11,26 @@ require_once('World.php');
 
 class Person {
 
-    var $id, $hash, $popularity, $nickname, $firstname, $surname, $age, $gender, $occupation,
-        $description, $personality;
+    var $id, $hash, $nickname, $firstname, $surname, $age, $gender, $occupation,
+        $description, $personality, $appearance;
 
-    var $isTemplate, $isCheater, $isSupernatural, $isOwner, $isCalculated;
+    var $popularity, $thumbsup, $thumbsdown;
+
+    var $isOwner, $isPlayable, $isCalculated, $isCheater, $isSupernatural;
 
     var $pointSupernatural, $pointPotential, $pointMoney, $pointSkill, $pointExpertise, $pointMilestone,
         $pointGift, $pointImperfection, $pointRelationship;
 
     var $world, $species, $background, $nature, $identity, $manifestation, $focus;
 
-    public function __construct($id = null, $hash = null) {
+    public function __construct($playable, $id, $hash = null) {
         global $curl;
 
-        $data = $curl->get('person/id/'.$id)['data'][0];
+        $get = $playable
+            ? 'person/playable/id/'.$id
+            : 'person/id/'.$id;
+
+        $data = $curl->get($get)['data'][0];
 
         $this->hash = isset($hash)
             ? $hash
@@ -34,67 +40,73 @@ class Person {
             ? true
             : false;
 
-        $this->id = $data['id'];
-        $this->nickname = $data['nickname'];
-        $this->firstname = $data['firstname'];
-        $this->surname = $data['surname'];
-        $this->age = $data['age'];
-        $this->gender = $data['gender'];
-        $this->occupation = $data['occupation'];
+        $this->isPlayable = $data['playable'];
+        $this->isCalculated = $data['calculated'];
 
         $this->popularity = $data['popularity'];
         $this->thumbsup = $data['thumbsup'];
         $this->thumbsdown = $data['thumbsdown'];
 
+        $this->id = $data['id'];
+        $this->nickname = $data['nickname'];
+        $this->firstname = $data['firstname'];
+        $this->surname = $data['surname'];
+        $this->occupation = $data['occupation'];
+        $this->gender = $data['gender'];
         $this->description = $data['description'];
-        $this->personality = $data['personality'];
 
-        $this->isTemplate = $data['template'];
-        $this->isCheater = $data['cheated'];
-        $this->isSupernatural = $data['supernatural'];
-        $this->isCalculated = $data['calculated'];
+        $this->world = new World($data['world_id']);
 
-        $this->pointSupernatural = intval($data['point_supernatural']);
-        $this->pointPower= intval($data['point_power']);
-        $this->pointMoney = intval($data['point_money']);
-        $this->pointSkill = intval($data['point_skill']);
-        $this->pointExpertise = intval($data['point_expertise']);
-        $this->pointMilestone = intval($data['point_milestone']);
-        $this->pointGift = intval($data['point_characteristic_gift']);
-        $this->pointImperfection = intval($data['point_characteristic_imperfection']);
-        $this->pointRelationship = intval($data['point_relationship']);
+        if($this->isPlayable) {
+            $this->isCheater = $data['cheated'];
+            $this->isSupernatural = $data['supernatural'];
+
+            $this->age = $data['age'];
+            $this->personality = $data['personality'];
+            $this->appearance = $data['appearance'];
+
+            $this->species = new Species($data['species_id']);
+            $this->speciesCustom = $data['species_custom'];
+
+            $this->background = isset($data['background_id'])
+                ? new Background($data['background_id'])
+                : null;
+            $this->backgroundCustom = $data['background_custom'];
+
+            $this->nature = isset($data['nature_id'])
+                ? new Nature($data['nature_id'])
+                : null;
+
+            $this->identity = isset($data['identity_id'])
+                ? new Identity($data['identity_id'])
+                : null;
+
+            $this->manifestation = isset($data['manifestation_id'])
+                ? new Manifestation($data['manifestation_id'])
+                : null;
+
+            $this->focus = isset($data['focus_id'])
+                ? new Focus($data['focus_id'])
+                : null;
+
+            if(!$this->isCalculated) {
+                $creation = $curl->get('person-creation/id/'.$this->id)['data'][0];
+
+                $this->pointSupernatural = intval($creation['point_supernatural']);
+                $this->pointPower= intval($creation['point_power']);
+                $this->pointMoney = intval($creation['point_money']);
+                $this->pointSkill = intval($creation['point_skill']);
+                $this->pointExpertise = intval($creation['point_expertise']);
+                $this->pointMilestone = intval($creation['point_milestone']);
+                $this->pointGift = intval($creation['point_gift']);
+                $this->pointImperfection = intval($creation['point_imperfection']);
+                $this->pointRelationship = intval($creation['point_relationship']);
+            }
+        }
 
         $this->siteLink = $this->isOwner
             ? '/play/person/id/'.$this->id.'/'.$this->hash
             : '/play/person/id/'.$this->id;
-
-        $this->world = isset($data['world_id'])
-            ? new World($data['world_id'])
-            : null;
-
-        $this->species = isset($data['species_id'])
-            ? new Species($data['species_id'])
-            : null;
-
-        $this->background = isset($data['background_id'])
-            ? new Background($data['background_id'])
-            : null;
-
-        $this->nature = isset($data['nature_id'])
-            ? new Nature($data['nature_id'])
-            : null;
-
-        $this->identity = isset($data['identity_id'])
-            ? new Identity($data['identity_id'])
-            : null;
-
-        $this->manifestation = isset($data['manifestation_id'])
-            ? new Manifestation($data['manifestation_id'])
-            : null;
-
-        $this->focus = isset($data['focus_id'])
-            ? new Focus($data['focus_id'])
-            : null;
     }
 
 

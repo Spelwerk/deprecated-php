@@ -49,7 +49,9 @@ class System {
                 $this->person_select(
                     $person,
                     $person->world->getManifestation(),
-                    'manifestation_id'
+                    'manifestation_id',
+                    null,
+                    'manifestation'
                 );
 
             } else if($person->isSupernatural && isset($person->manifestation) && !isset($person->focus)) {
@@ -58,7 +60,9 @@ class System {
                 $this->person_select(
                     $person,
                     $person->world->getFocus($person->manifestation->id),
-                    'focus_id'
+                    'focus_id',
+                    null,
+                    'focus'
                 );
 
             } else if($person->isSupernatural && isset($person->manifestation) && isset($person->focus) && $person->getExpertise($person->manifestation->expertiseType) == null) {
@@ -90,7 +94,8 @@ class System {
                     $person,
                     $person->world->getBackground($person->species->id),
                     'background_id',
-                    'Background'
+                    'Background',
+                    'background'
                 );
 
             } else if(!isset($person->nature)) {
@@ -100,7 +105,8 @@ class System {
                     $person,
                     $person->world->getNature(),
                     'nature_id',
-                    'Nature'
+                    null,
+                    'nature'
                 );
 
             } else if(!isset($person->identity)) {
@@ -110,7 +116,8 @@ class System {
                     $person,
                     $person->world->getIdentity(),
                     'identity_id',
-                    'Identity'
+                    null,
+                    'identity'
                 );
 
             } else if($person->pointGift > 0) {
@@ -158,10 +165,6 @@ class System {
 
                 $this->person_describe($person);
 
-            } else {
-                $component->h1('Weapon');
-
-                $this->person_checkWeapon($person);
             }
         }
     }
@@ -404,7 +407,7 @@ class System {
             }
         }
 
-        $worldList = $curl->get('world/template')['data']; // todo remove template
+        $worldList = $curl->get('world')['data']; // todo remove template
 
         foreach($worldList as $item) {
             $list[] = new World(null, null, $item);
@@ -460,7 +463,7 @@ class System {
 
         $component->wrapStart();
         $form->formStart([
-            'do' => 'person--edit',
+            'do' => 'person--describe',
             'id' => $person->id,
             'hash' => $person->hash,
             'return' => 'play/person/id'
@@ -468,8 +471,9 @@ class System {
         $form->varchar(true, 'firstname', 'First Name');
         $form->varchar(true, 'surname', 'Surname');
         $form->varchar(true, 'gender', 'Gender');
-        $form->text(false, 'description', 'Description', 'Describe your character. Features, Appearance, etc.');
+        $form->text(false, 'description', 'Description', 'Describe your character.');
         $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
+        $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
         $form->formEnd();
         $component->wrapEnd();
     }

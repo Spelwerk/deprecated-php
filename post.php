@@ -235,21 +235,35 @@ function manifestation_focus($postData, $manifestationId) {
 function person_add($postData) {
     global $curl;
 
-    $postArray = null;
+    $personPost = null;
+    $playablePost = null;
+    $creationPost = null;
+    $attributePost = null;
+    $weaponPost = null;
     $resultArray = null;
 
     $age = intval($postData['age']);
 
-    $world = $curl->get('world/id/'.$postData['world_id'])['data'][0];
-    $item = $curl->get('species/id/'.$postData['species_id'])['data'][0];
+    $personPost['playable'] = 1;
+    $personPost['nickname'] = $postData['nickname'];
+    $personPost['occupation'] = $postData['occupation'];
+    $personPost['world_id'] = $postData['world_id'];
 
-    $defaultList = $curl->get('world-attribute/id/'.$postData['world_id'].'/species/'.$postData['species_id'])['data'];
-    $speciesList = $curl->get('species-attribute/id/'.$postData['species_id'])['data'];
+    $playablePost['supernatural'] = intval($postData['supernatural']);
+    $playablePost['age'] = $age;
+    $playablePost['species_id'] = $postData['species_id'];
+
+    $world = $curl->get('world/id/'.$postData['world_id'])['data'][0];
+    $species = $curl->get('species/id/'.$postData['species_id'])['data'][0];
+
+    $defaultAttributes = $curl->get('world-attribute/id/'.$postData['world_id'].'/species/'.$postData['species_id'])['data'];
+    $speciesAttributes = $curl->get('species-attribute/id/'.$postData['species_id'])['data'];
+    $speciesWeapons = $curl->get('species-weapon/id/'.$postData['species_id'])['data'];
 
     $split_supernatural = floor($age / $world['split_supernatural']);
     $split_milestone = floor($age / $world['split_milestone']);
-    $split_skill = floor($age / $world['split_skill']) * intval($item['multiply_skill']);
-    $split_expertise = floor($age / $world['split_expertise']) * intval($item['multiply_expertise']);
+    $split_skill = floor($age / $world['split_skill']) * intval($species['multiply_skill']);
+    $split_expertise = floor($age / $world['split_expertise']) * intval($species['multiply_expertise']);
     $split_relationship = floor($age / $world['split_relationship']);
 
     $point_supernatural = 1;
@@ -295,38 +309,52 @@ function person_add($postData) {
         $point_relationship = $world['max_relationship'];
     }
 
-    $postData['point_supernatural'] = $point_supernatural;
-    $postData['point_power'] = 1;
-    $postData['point_money'] = $point_money;
-    $postData['point_skill'] = $point_skill;
-    $postData['point_expertise'] = $point_expertise;
-    $postData['point_milestone'] = $point_milestone;
-    $postData['point_characteristic_gift'] = intval($world['max_characteristic_gift']);
-    $postData['point_characteristic_imperfection'] = intval($world['max_characteristic_imperfection']);
-    $postData['point_relationship'] = $point_relationship;
+    $creationPost['point_supernatural'] = $point_supernatural;
+    $creationPost['point_power'] = 1;
+    $creationPost['point_money'] = $point_money;
+    $creationPost['point_skill'] = $point_skill;
+    $creationPost['point_expertise'] = $point_expertise;
+    $creationPost['point_milestone'] = $point_milestone;
+    $creationPost['point_gift'] = intval($world['max_gift']);
+    $creationPost['point_imperfection'] = intval($world['max_imperfection']);
+    $creationPost['point_relationship'] = $point_relationship;
 
-    $result = $curl->post('person', $postData);
+    $result = $curl->post('person',$personPost);
 
     $personId = $result['id'];
     $personHash = $result['hash'];
 
     if($result['id']) {
-        foreach($defaultList as $default) {
-            if($default['protected'] || $default['attributetype_id'] == $world['skill_attributetype_id']) {
-                $postArray[] = ['person_id' => $personId, 'attribute_id' => $default['id'], 'value' => $default['default_value']];
+        $creationPost['id'] = $personId;
+        $playablePost['id'] = $personId;
+        
+        $resultArray[] = $curl->post('person-creation',$creationPost);
+        $resultArray[] = $curl->post('person-playable',$playablePost);
+
+        foreach($defaultAttributes as $item) {
+            if($item['protected'] || $item['attributetype_id'] == $world['skill_attributetype_id']) {
+                $attributePost[] = ['person_id' => $personId, 'attribute_id' => $item['id'], 'value' => $item['default_value']];
             }
         }
 
-        foreach($postArray as $key => $array) {
-            foreach($speciesList as $item) {
+        foreach($attributePost as $key => $array) {
+            foreach($speciesAttributes as $item) {
                 if($array['attribute_id'] == $item['attribute_id']) {
-                    $postArray[$key]['value'] += $item['value'];
+                    $attributePost[$key]['value'] += $item['value'];
                 }
             }
         }
 
-        foreach($postArray as $array) {
-            $resultArray[] = $curl->post('person-attribute', $array);
+        foreach($speciesWeapons as $item) {
+            $weaponPost[] = ['person_id' => $personId, 'weapon_id' => $item['weapon_id'], 'weaponquality_id' => 3, 'equipped' => 1];
+        }
+
+        foreach($attributePost as $array) {
+            $resultArray[] = $curl->post('person-attribute',$array);
+        }
+
+        foreach($weaponPost as $array) {
+            $resultArray[] = $curl->post('person-weapon',$array);
         }
 
         checkError($resultArray);
@@ -338,12 +366,42 @@ function person_add($postData) {
     }
 }
 
-function person_edit($postData, $personHash) {
+function person_edit($postData, $personId) {
     global $curl;
 
     $resultArray = null;
 
-    $resultArray[] = $curl->put('person/hash/'.$personHash, $postData);
+    $resultArray[] = $curl->put('person/id/'.$personId, $postData);
+
+    checkError($resultArray);
+}
+
+function person_edit_playable($postData, $personId) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->put('person-playable/id/'.$personId, $postData);
+
+    checkError($resultArray);
+}
+
+function person_edit_creation($postData, $personId) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->put('person-creation/id/'.$personId, $postData);
+
+    checkError($resultArray);
+}
+
+function person_delete_creation($personId) {
+    global $curl;
+
+    $resultArray = null;
+
+    $resultArray[] = $curl->delete('person-creation/id/'.$personId);
 
     checkError($resultArray);
 }
@@ -1124,27 +1182,26 @@ function switch_person($do) {
             }
             break;
 
+        case 'person--background':
+            person_edit_playable($POST_DATA, $POST_ID);
+            person_attribute_from_has('background-attribute', $POST_DATA['background_id'], $POST_ID);
+            break;
+
+        case 'person--describe':
+            $personData['firstname'] = $POST_DATA['firstname'];
+            $personData['surname'] = $POST_DATA['surname'];
+            $personData['gender'] = $POST_DATA['gender'];
+            $personData['description'] = $POST_DATA['description'];
+            person_edit($personData, $POST_ID);
+
+            $playableData['calculated'] = 1;
+            $playableData['personality'] = $POST_DATA['personality'];
+            $playableData['appearance'] = $POST_DATA['appearance'];
+            person_edit_playable($playableData, $POST_ID);
+            break;
+
         case 'person--edit':
             person_edit($POST_DATA, $POST_HASH);
-
-            if(!$POST_ERROR) {
-                if(isset($POST_DATA['background_id'])) {
-                    person_attribute_from_has('background-attribute', $POST_DATA['background_id'], $POST_ID);
-                    //todo person has asset from background
-                }
-
-                if(isset($POST_DATA['nature_id'])) {
-                    person_attribute_from_has('nature', $POST_DATA['nature_id'], $POST_ID);
-                }
-
-                if(isset($POST_DATA['identity_id'])) {
-                    person_attribute_from_has('identity', $POST_DATA['identity_id'], $POST_ID);
-                }
-
-                if(isset($POST_DATA['focus_id'])) {
-                    person_attribute_from_has('focus', $POST_DATA['focus_id'], $POST_ID);
-                }
-            }
             break;
 
         case 'person--attribute--doctrine':
@@ -1172,7 +1229,7 @@ function switch_person($do) {
             person_attribute_edit($POST_DATA, $POST_ID, true);
 
             if(!$POST_ERROR) {
-                person_edit(['point_money' => 0], $POST_HASH);
+                person_edit_creation(['point_money' => 0], $POST_ID);
             }
             break;
 
@@ -1188,7 +1245,7 @@ function switch_person($do) {
             person_attribute_add($POST_DATA, $POST_ID);
 
             if(!$POST_ERROR) {
-                person_edit(['point_skill' => 0], $POST_HASH);
+                person_edit_creation(['point_skill' => 0], $POST_ID);
 
                 if(!$POST_ERROR) {
                     if(isset($_POST['post--experience'])) {
@@ -1218,7 +1275,7 @@ function switch_person($do) {
 
                 if(!$POST_ERROR) {
                     $calc = intval($_POST['post--points']) - 1;
-                    person_edit(['point_characteristic_gift' => $calc], $POST_HASH);
+                    person_edit_creation(['point_gift' => $calc], $POST_ID);
                 }
             }
             break;
@@ -1232,7 +1289,7 @@ function switch_person($do) {
 
                 if(!$POST_ERROR) {
                     $calc = intval($_POST['post--points']) - 1;
-                    person_edit(['point_characteristic_imperfection' => $calc], $POST_HASH);
+                    person_edit_creation(['point_imperfection' => $calc], $POST_ID);
                 }
             }
             break;
@@ -1250,7 +1307,7 @@ function switch_person($do) {
             person_expertise_add($POST_DATA, $POST_ID);
 
             if(!$POST_ERROR) {
-                person_edit(['point_expertise' => 0], $POST_HASH);
+                person_edit_creation(['point_expertise' => 0], $POST_ID);
 
                 if(isset($_POST['post--experience'])) {
                     $key = 'attribute_id__'.$_POST['post--experience'];
@@ -1294,6 +1351,20 @@ function switch_person($do) {
 
             break;
 
+        case 'person--focus':
+            person_edit_playable($POST_DATA, $POST_ID);
+            person_attribute_from_has('focus', $POST_DATA['focus_id'], $POST_ID);
+            break;
+
+        case 'person--identity':
+            person_edit_playable($POST_DATA, $POST_ID);
+            person_attribute_from_has('identity', $POST_DATA['identity_id'], $POST_ID);
+            break;
+
+        case 'person--manifestation':
+            person_edit_playable($POST_DATA, $POST_ID);
+            break;
+
         case 'person--milestone--add':
             $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
             person_has_add('milestone', $post);
@@ -1302,8 +1373,13 @@ function switch_person($do) {
                 person_attribute_from_has('milestone', $POST_DATA['milestone'], $POST_ID);
 
                 $calc = intval($_POST['post--points']) - 1;
-                person_edit(['point_milestone' => $calc], $POST_HASH);
+                person_edit_creation(['point_milestone' => $calc], $POST_ID);
             }
+            break;
+
+        case 'person--nature':
+            person_edit_playable($POST_DATA, $POST_ID);
+            person_attribute_from_has('nature', $POST_DATA['nature_id'], $POST_ID);
             break;
 
         case 'person--protection--add':
@@ -1312,10 +1388,6 @@ function switch_person($do) {
 
         case 'person--weapon--add':
             person_weapon_add($POST_DATA, $POST_ID);
-
-            if(!$POST_ERROR) {
-                person_edit(['calculated' => 1], $POST_HASH);
-            }
             break;
 
         case 'person--wound--add':

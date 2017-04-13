@@ -8,10 +8,12 @@
 global $form, $component, $user, $sitemap;
 
 $component->title('Logout');
+$component->h1('Logout');
+$component->subtitle('Press the button below if you wish to logout of this user.');
 $component->wrapStart();
-
-$form->formStart();
-$form->hidden('do','user--logout','post');
-$form->hidden('return','user','post');
+$form->formStart([
+    'do' => 'user--logout',
+    'return' => 'user'
+]);
 $form->formEnd(false,'Logout');
 ?>

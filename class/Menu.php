@@ -23,9 +23,9 @@ class Menu {
         $this->addTab('Home', 'Home', '/img/tab-home.png');
         $this->addTab('Play', 'Play', '/img/tab-play.png');
         $this->addTab('Content', 'Content', '/img/tab-content.png',true);
+        $this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
         $this->addTab('User', 'User', '/img/tab-user.png');
         $this->addTab('Help', 'Help', '/img/tab-help.png');
-        $this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
 
         $menuHome = new MenuList('Home');
         $menuHome->add('Home', '/');
@@ -39,10 +39,16 @@ class Menu {
 
         $menuContent = new MenuList('Content',true);
         $menuContent->add('Content', '/content',true);
-        $menuContent->add('World', '/content/world',true);
+        $menuContent->add('About', '/content/about',true);
+        $menuContent->add('Create', '/content/create',true);
+        $menuContent->add('Manage', '/content/manage',true);
 
         $menuAdmin = new MenuList('Admin', true, true);
-        $menuAdmin->add('Admin', '#',true,true);
+        $menuAdmin->add('Admin', '/admin',true,true);
+        $menuAdmin->add('Content', '/admin/content',true,true);
+        $menuAdmin->add('Person', '/admin/person',true,true);
+        $menuAdmin->add('Story', '/admin/story',true,true);
+        $menuAdmin->add('User', '/admin/user',true,true);
 
         $menuHelp = new MenuList('Help');
         $menuHelp->add('Help', '#');

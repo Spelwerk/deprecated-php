@@ -58,6 +58,13 @@ class Sitemap {
                 $this->menuLink = 'About';
                 break;
 
+            case 'admin':
+                $this->switch_admin();
+                $this->isUser = true;
+                $this->isAdmin = true;
+                $this->menuID = 'Admin';
+                break;
+
             case 'content':
                 $this->switch_content();
                 $this->isUser = true;
@@ -76,6 +83,87 @@ class Sitemap {
         }
     }
 
+    function switch_admin() {
+        $switch = isset($this->command[1]) && $this->command[1] != null
+            ? $this->command[1]
+            : null;
+
+        switch($switch) {
+            default:
+                $this->page = 'page/admin/admin.php';
+                $this->menuLink = 'Admin';
+                break;
+
+            case 'content':
+                $this->switch_admin_content();
+                $this->menuLink = 'Content';
+                break;
+
+            case 'person':
+                $this->switch_admin_person();
+                $this->menuLink = 'Person';
+                break;
+
+            case 'story':
+                $this->switch_admin_story();
+                $this->menuLink = 'Story';
+                break;
+
+            case 'user':
+                $this->switch_admin_user();
+                $this->menuLink = 'User';
+                break;
+        }
+    }
+
+    function switch_admin_content() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch ($switch) {
+            default:
+                $this->page = 'page/admin/content/content.php';
+                break;
+        }
+    }
+
+    function switch_admin_person() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch ($switch) {
+            default:
+                $this->page = 'page/admin/person/person.php';
+                break;
+        }
+    }
+
+    function switch_admin_story() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch ($switch) {
+            default:
+                $this->page = 'page/admin/story/story.php';
+                break;
+        }
+    }
+
+    function switch_admin_user() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch ($switch) {
+            default:
+                $this->page = 'page/admin/user/user.php';
+                break;
+        }
+    }
+
     function switch_content() {
         $switch = isset($this->command[1]) && $this->command[1] != null
             ? $this->command[1]
@@ -87,12 +175,31 @@ class Sitemap {
                 $this->menuLink = 'Content';
                 break;
 
-            case 'manifestation':
-                $this->menuLink = 'Content';
+            case 'about':
+                $this->page = 'page/content/about.php';
+                $this->menuLink = 'About';
                 break;
 
-            case 'world':
-                $this->menuLink = 'World';
+            case 'create':
+                $this->page = 'page/content/create.php';
+                $this->menuLink = 'Create';
+                break;
+
+            case 'manage':
+                $this->switch_content_manage();
+                $this->menuLink = 'Manage';
+                break;
+        }
+    }
+
+    function switch_content_manage() {
+        $switch = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        switch ($switch) {
+            default:
+                $this->page = 'page/content/manage/manage.php';
                 break;
         }
     }
@@ -455,45 +562,10 @@ class Sitemap {
 
 /*
 
-/
-
-  /play
-  /play/person
-  /play/person/add
-  /play/person/id/{id}
-  /play/person/id/{id}/{hash}
-  /play/person/id/{id}/{hash}/edit
-  /play/person/id/{id}/{hash}/edit/{thing}
-
-/play/story
-/play/story/add
-/play/story/id/{id}
-/play/story/id/{id}/{hash}
-/play/story/id/{id}/{hash}/edit
-/play/story/id/{id}/{hash}/edit/{thing}
-
 /content
 /content/{thing}
 /content/{thing}/add
 /content/{thing}/id/{id}
 /content/{thing}/id/{id}/{hash}
-
-/user
-  /user/add
-  /user/add/timeout
-  /user/login
-  /user/login/email
-  /user/login/reset
-  /user/verify/add
-  /user/verify/add/{hash}
-  /user/verify/reset
-  /user/verify/reset/{hash}
-  /user/verify/login
-  /user/verify/login/{hash}
-  /user/logout
-/user/me
-/user/me/edit
-/user/me/edit/{thing}
-/user/name/{displayname}
 
  */

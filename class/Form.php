@@ -460,7 +460,7 @@ class Form {
             : null;
 
         $postUser = isset($options['user']) && $options['user'] != null
-            ? '<input type="hidden" name="post--extra" value="'.$options['extra2'].'"/>'
+            ? '<input type="hidden" name="post--user" value="'.$options['user'].'"/>'
             : null;
 
         $postReturn = isset($options['return']) && $options['return'] != null
