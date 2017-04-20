@@ -21,15 +21,16 @@ $component->title('Add Wound');
 
     <?php
     $component->wrapStart();
-    $form->formStart();
-    $form->hidden('return', 'play/person/id', 'post');
-    $form->hidden('returnid', 'wound', 'post');
-    $form->hidden('do', 'person--wound--add', 'post');
-    $form->hidden('context', 'wound', 'post');
-    $form->hidden('id', $person->id, 'post');
-    $form->hidden('hash', $person->hash, 'post');
+    $form->formStart([
+        'do' => 'person--wound',
+        'id' => $person->id,
+        'secret' => $person->secret,
+        'return' => 'play/person/id',
+        'returnid' => 'wound',
+        'context' => 'wound'
+    ]);
     $form->varchar(true, 'name', 'Short Description', 'A wound is significant damage that you have taken. It can either be serious or lethal.');
-    $form->pick(true, 'double', 'Double Damage','Check this if you have suffered double damage.');
+    $form->pick(true, 'timestwo', 'Double Damage','Check this if you have suffered double damage.');
     $form->formEnd();
     $component->wrapEnd();
     ?>

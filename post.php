@@ -25,24 +25,32 @@ $POST_RETURNID = isset($_POST['post--returnid'])
     ? $_POST['post--returnid']
     : null;
 
+$POST_RETURNAFTER = isset($_POST['post--returnafter'])
+    ? $_POST['post--returnafter']
+    : null;
+
 $POST_ID = isset($_POST['post--id'])
     ? $_POST['post--id']
     : null;
 
-$POST_HASH = isset($_POST['post--hash'])
-    ? $_POST['post--hash']
+$POST_SECRET = isset($_POST['post--secret'])
+    ? $_POST['post--secret']
     : null;
 
 $POST_CONTEXT = isset($_POST['post--context'])
     ? $_POST['post--context']
     : null;
 
-$POST_THING = isset($_POST['post--thing'])
-    ? $_POST['post--thing']
+$POST_CONTEXT2 = isset($_POST['post--context2'])
+    ? $_POST['post--context2']
     : null;
 
 $POST_EXTRA = isset($_POST['post--extra'])
     ? $_POST['post--extra']
+    : null;
+
+$POST_EXTRA2 = isset($_POST['post--extra2'])
+    ? $_POST['post--extra2']
     : null;
 
 $POST_USER = isset($_POST['post--user'])
@@ -70,39 +78,38 @@ function checkError($resultArray) {
     }
 }
 
-function cookie_add($type, $id, $hash) {
+function cookie_add($type, $id, $secret) {
     $cookieName = 'sw_'.$type.'_list';
     $cookieId = $type.'_id';
-    $cookieHash = $type.'_hash';
+    $cookieSecret = $type.'_hash';
 
     if(isset($_COOKIE[$cookieName])) {
         $cookie = unserialize($_COOKIE[$cookieName]);
     }
 
-    $cookie[] = [$cookieId => $id, $cookieHash  => $hash];
+    $cookie[] = [$cookieId => $id, $cookieSecret  => $secret];
 
     setcookie($cookieName, serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
 }
 
-function cookie_person_add($personId, $personHash) {
-    if(isset($_COOKIE['sw_person_list'])) {
-        $cookie = unserialize($_COOKIE['sw_person_list']);
+function explode_key_value($postData) {
+    $return = [];
+
+    foreach($postData as $key => $value) {
+        $explode = explode('__', $key);
+
+        if(isset($explode[1])) {
+            $return[$explode[0]] = $explode[1];
+
+            $return['value'] = $value;
+        } else {
+            $return[$key] = $value;
+        }
     }
 
-    $cookie[] = ['person_id' => $personId, 'person_hash' => $personHash];
-
-    setcookie('sw_person_list', serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
+    return $return;
 }
 
-function cookie_story_add($personId, $personHash) {
-    if(isset($_COOKIE['sw_story_list'])) {
-        $cookie = unserialize($_COOKIE['sw_story_list']);
-    }
-
-    $cookie[] = ['story_id' => $personId, 'story_hash' => $personHash];
-
-    setcookie('sw_story_list', serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
-}
 
 
 function unsetUser() {
@@ -122,6 +129,7 @@ function unsetUser() {
 function setUser($token) {
     setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
 }
+
 
 
 function manifestation_post($postData) {
@@ -231,453 +239,148 @@ function manifestation_focus($postData, $manifestationId) {
     checkError($resultArray);
 }
 
+/** PERSON */
 
-function person_add($postData) {
+function person_augmentation_post($postData, $bionicId, $personId, $personSecret) {
     global $curl;
 
-    $personPost = null;
-    $playablePost = null;
-    $creationPost = null;
-    $attributePost = null;
-    $weaponPost = null;
-    $resultArray = null;
+    $postArray = [];
+    $resultArray = [];
 
-    $age = intval($postData['age']);
-
-    $personPost['playable'] = 1;
-    $personPost['nickname'] = $postData['nickname'];
-    $personPost['occupation'] = $postData['occupation'];
-    $personPost['world_id'] = $postData['world_id'];
-
-    $playablePost['supernatural'] = intval($postData['supernatural']);
-    $playablePost['age'] = $age;
-    $playablePost['species_id'] = $postData['species_id'];
-
-    $world = $curl->get('world/id/'.$postData['world_id'])['data'][0];
-    $species = $curl->get('species/id/'.$postData['species_id'])['data'][0];
-
-    $defaultAttributes = $curl->get('world-attribute/id/'.$postData['world_id'].'/species/'.$postData['species_id'])['data'];
-    $speciesAttributes = $curl->get('species-attribute/id/'.$postData['species_id'])['data'];
-    $speciesWeapons = $curl->get('species-weapon/id/'.$postData['species_id'])['data'];
-
-    $split_supernatural = floor($age / $world['split_supernatural']);
-    $split_milestone = floor($age / $world['split_milestone']);
-    $split_skill = floor($age / $world['split_skill']) * intval($species['multiply_skill']);
-    $split_expertise = floor($age / $world['split_expertise']) * intval($species['multiply_expertise']);
-    $split_relationship = floor($age / $world['split_relationship']);
-
-    $point_supernatural = 1;
-    $point_money = 1;
-    $point_milestone = 1;
-    $point_skill = 1;
-    $point_expertise = 1;
-    $point_relationship = 1;
-
-    if($split_supernatural < $world['max_supernatural'] && $split_supernatural > 1) {
-        $point_supernatural = $split_supernatural;
-    } else if($split_supernatural > $world['max_supernatural']) {
-        $point_supernatural = $world['max_supernatural'];
-    }
-
-    if($split_milestone < $world['max_milestone'] && $split_milestone > 1) {
-        $point_money = $split_milestone;
-    } else if($split_milestone > $world['max_milestone']) {
-        $point_money = $world['max_milestone'];
-    }
-
-    if($split_milestone < $world['max_milestone'] && $split_milestone > 1) {
-        $point_milestone = $split_milestone;
-    } else if($split_milestone > $world['max_milestone']) {
-        $point_milestone = $world['max_milestone'];
-    }
-
-    if($split_skill < $world['max_skill'] && $split_skill > 1) {
-        $point_skill = $split_skill;
-    } else if($split_skill > $world['max_skill']) {
-        $point_skill = $world['max_skill'];
-    }
-
-    if($split_expertise < $world['max_expertise'] && $split_expertise > 1) {
-        $point_expertise = $split_expertise;
-    } else if($split_expertise > $world['max_expertise']) {
-        $point_expertise = $world['max_expertise'];
-    }
-
-    if($split_relationship < $world['max_relationship'] && $split_relationship > 1) {
-        $point_relationship = $split_relationship;
-    } else if($split_relationship > $world['max_relationship']) {
-        $point_relationship = $world['max_relationship'];
-    }
-
-    $creationPost['point_supernatural'] = $point_supernatural;
-    $creationPost['point_power'] = 1;
-    $creationPost['point_money'] = $point_money;
-    $creationPost['point_skill'] = $point_skill;
-    $creationPost['point_expertise'] = $point_expertise;
-    $creationPost['point_milestone'] = $point_milestone;
-    $creationPost['point_gift'] = intval($world['max_gift']);
-    $creationPost['point_imperfection'] = intval($world['max_imperfection']);
-    $creationPost['point_relationship'] = $point_relationship;
-
-    $result = $curl->post('person',$personPost);
-
-    $personId = $result['id'];
-    $personHash = $result['hash'];
-
-    if($result['id']) {
-        $creationPost['id'] = $personId;
-        $playablePost['id'] = $personId;
-        
-        $resultArray[] = $curl->post('person-creation',$creationPost);
-        $resultArray[] = $curl->post('person-playable',$playablePost);
-
-        foreach($defaultAttributes as $item) {
-            if($item['protected'] || $item['attributetype_id'] == $world['skill_attributetype_id']) {
-                $attributePost[] = ['person_id' => $personId, 'attribute_id' => $item['id'], 'value' => $item['default_value']];
-            }
+    foreach($postData as $key => $value) {
+        if($key == $value) {
+            $postArray[] = ['secret' => $personSecret, 'bionic_id' => $bionicId, 'augmentation_id' => $key];
         }
-
-        foreach($attributePost as $key => $array) {
-            foreach($speciesAttributes as $item) {
-                if($array['attribute_id'] == $item['attribute_id']) {
-                    $attributePost[$key]['value'] += $item['value'];
-                }
-            }
-        }
-
-        foreach($speciesWeapons as $item) {
-            $weaponPost[] = ['person_id' => $personId, 'weapon_id' => $item['weapon_id'], 'weaponquality_id' => 3, 'equipped' => 1];
-        }
-
-        foreach($attributePost as $array) {
-            $resultArray[] = $curl->post('person-attribute',$array);
-        }
-
-        foreach($weaponPost as $array) {
-            $resultArray[] = $curl->post('person-weapon',$array);
-        }
-
-        checkError($resultArray);
-
-        return [
-            'id' => $personId,
-            'hash' => $personHash
-        ];
     }
-}
 
-function person_edit($postData, $personId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->put('person/id/'.$personId, $postData);
+    foreach($postArray as $post) {
+        $resultArray[] = $curl->post('person/id/'.$personId.'/augmentation',$post);
+    }
 
     checkError($resultArray);
 }
 
-function person_edit_playable($postData, $personId) {
+function person_attribute_post($postData, $personId, $personSecret) {
     global $curl;
 
-    $resultArray = null;
-
-    $resultArray[] = $curl->put('person-playable/id/'.$personId, $postData);
-
-    checkError($resultArray);
-}
-
-function person_edit_creation($postData, $personId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->put('person-creation/id/'.$personId, $postData);
-
-    checkError($resultArray);
-}
-
-function person_delete_creation($personId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->delete('person-creation/id/'.$personId);
-
-    checkError($resultArray);
-}
-
-function person_attribute_add($postData, $personId, $allowsAll = false) {
-    global $curl;
-
-    $postArray = null;
-    $resultArray = null;
+    $postArray = [];
+    $resultArray = [];
 
     foreach($postData as $key => $value) {
         $explode = explode('__', $key);
-        $attributeId = $explode[1];
-        $attributeValue = intval($value);
 
-        if($allowsAll || $value > 0) {
-            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $attributeValue];
+        if(isset($explode[1]) && $explode[0] == 'attribute_id') {
+            $postArray[] = ['secret' => $personSecret, 'attribute_id' => $explode[1], 'value' => $value];
         }
     }
 
     foreach($postArray as $post) {
-        $resultArray[] = $curl->post('person-attribute',$post);
+        $resultArray[] = $curl->post('person/id/'.$personId.'/attribute',$post);
     }
 
     checkError($resultArray);
 }
 
-function person_attribute_edit($postData, $personId, $allowsAll = false) {
+function person_attribute_put($postData, $personId, $personSecret) {
     global $curl;
 
-    $postArray = null;
-    $resultArray = null;
-
-    print_r($postData);
+    $postArray = [];
+    $resultArray = [];
 
     foreach($postData as $key => $value) {
-        $explode = explode('__',$key);
-        $attributeId = $explode[1];
-        $attributeValue = intval($value);
+        $explode = explode('__', $key);
 
-        $current = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$attributeId);
-
-        if(isset($current['data'])) {
-            $currentValue = $current['data'][0]['value'];
-
-            $attributeValue += intval($currentValue);
-        }
-
-        if($allowsAll || $value > 0) {
-            $postArray[] = ['person_id' => $personId, 'attribute_id' => $attributeId, 'value' => $attributeValue];
+        if(isset($explode[1]) && $explode[0] == 'attribute_id') {
+            $postArray[] = ['secret' => $personSecret, 'attribute_id' => $explode[1], 'value' => $value];
         }
     }
 
     foreach($postArray as $post) {
-        $resultArray[] = $curl->post('person-attribute',$post);
+        $resultArray[] = $curl->put('person/id/'.$personId.'/attribute',$post);
     }
 
     checkError($resultArray);
 }
 
-function person_attribute_from_has($table, $tableId, $personId, $currentId = null) {
+function person_bionic_post($postData, $personId, $personSecret) {
     global $curl;
 
-    $resultArray = null;
-
-    // first we do removal
-
-    if(isset($currentId)) {
-        $currentPost = null;
-
-        $personList= $curl->get('person-attribute/id/'.$personId)['data'];
-        $currentList = $curl->get($table.'/id/'.$currentId)['data'];
-
-        foreach($personList as $person) {
-            foreach($currentList as $current) {
-                if($person['id'] == $current['attribute_id']) {
-                    if(isset($current['attribute_value'])) {
-                        $value = intval($person['value']) - intval($current['attribute_value']);
-                    } else {
-                        $value = intval($person['value']) - intval($current['value']);
-                    }
-
-                    $currentPost[] = ['person_id' => $personId, 'attribute_id' => $current['attribute_id'], 'value' => $value];
-                }
-            }
-        }
-
-        if(isset($currentPost)) {
-            foreach($currentPost as $post) {
-                $resultArray[] = $curl->post('person-attribute', $post);
-            }
-        }
-    }
-
-    // then we do addition
-
-    $changePost = null;
-
-    $personList= $curl->get('person-attribute/id/'.$personId)['data'];
-    $changeList = $curl->get($table.'/id/'.$tableId)['data'];
-
-    foreach($personList as $person) {
-        foreach($changeList as $change) {
-            if($person['id'] == $change['attribute_id']) {
-
-                if(isset($change['attribute_value'])) {
-                    $value = intval($person['value']) + intval($change['attribute_value']);
-                } else {
-                    $value = intval($person['value']) + intval($change['value']);
-                }
-
-                $changePost[] = ['person_id' => $personId, 'attribute_id' => $change['attribute_id'], 'value' => $value];
-            }
-        }
-    }
-
-    if(isset($changePost)) {
-        foreach($changePost as $post) {
-            $resultArray[] = $curl->post('person-attribute', $post);
-        }
-    }
-
-    checkError($resultArray);
-}
-
-function person_augmentation_add($postData, $personId) {
-    global $curl;
-
-    $resultArray = null;
-    $returnArray = null;
-    $postAugmentation = null;
-    $postAttribute = null;
-    $postWeapon = null;
+    $postArray = [];
+    $resultArray = [];
 
     foreach($postData as $key => $value) {
-        $postAugmentation[] = ['person_id' => $personId, 'augmentation_id' => $key, 'augmentationquality_id' => 4];
-
-        $augmentation = $curl->get('augmentation/id/'.$key)['data'][0];
-
-        if(isset($augmentation['attribute_id'])) {
-            $currentValue = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$augmentation['attribute_id'])['data'][0]['value'];
-
-            $newValue = intval($augmentation['attribute_value']) + intval($currentValue);
-
-            $postAttribute[] = ['person_id' => $personId, 'attribute_id' => $augmentation['attribute_id'], 'value' => $newValue];
-        }
-
-        if(isset($augmentation['weapon_id'])) {
-            $postWeapon[] = ['person_id' => $personId, 'weapon_id' => $augmentation['weapon_id'], 'weaponquality_id' => 3, 'equipped' => 1];
+        if($key == $value) {
+            $postArray[] = ['secret' => $personSecret, 'bionic_id' => $key];
         }
     }
 
-    if(isset($postAugmentation)) {
-        foreach($postAugmentation as $post) {
-            $resultArray[] = $curl->post('person-augmentation', $post);
-        }
-    }
-
-    if(isset($postAttribute)) {
-        foreach($postAttribute as $post) {
-            $resultArray[] = $curl->post('person-attribute', $post);
-        }
-    }
-
-    if(isset($postWeapon)) {
-        foreach($postWeapon as $post) {
-            $resultArray[] = $curl->post('person-weapon', $post);
-        }
+    foreach($postArray as $post) {
+        $resultArray[] = $curl->post('person/id/'.$personId.'/bionic',$post);
     }
 
     checkError($resultArray);
 }
 
-function person_bionic_add($postData, $personId) {
+function person_expertise_post($postData, $personId, $personSecret) {
     global $curl;
 
-    $resultArray = null;
-    $postBionic = null;
-    $postAttribute = null;
+    $postArray = [];
+    $resultArray = [];
 
     foreach($postData as $key => $value) {
-        $postBionic[] = ['person_id' => $personId, 'bionic_id' => $key, 'bionicquality_id' => 4];
+        $explode = explode('__', $key);
 
-        $bionic = $curl->get('bionic/id/'.$key)['data'][0];
-
-        if(isset($bionic['attribute_id'])) {
-            $currentValue = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$bionic['attribute_id'])['data'][0]['value'];
-
-            $newValue = intval($bionic['attribute_value']) + intval($currentValue);
-
-            $postAttribute[] = ['person_id' => $personId, 'attribute_id' => $bionic['attribute_id'], 'value' => $newValue];
+        if(isset($explode[1]) && $explode[0] == 'expertise_id') {
+            $postArray[] = ['secret' => $personSecret, 'expertise_id' => $explode[1], 'level' => $value];
         }
     }
 
-    if(isset($postBionic)) {
-        foreach($postBionic as $post) {
-            $resultArray[] = $curl->post('person-bionic', $post);
-        }
-    }
-
-    if(isset($postAttribute)) {
-        foreach($postAttribute as $post) {
-            $resultArray[] = $curl->post('person-attribute', $post);
-        }
+    foreach($postArray as $post) {
+        $resultArray[] = $curl->post('person/id/'.$personId.'/expertise',$post);
     }
 
     checkError($resultArray);
 }
 
-function person_expertise_add($postData, $personId) {
+function person_protection_post($postData, $personId, $personSecret) {
     global $curl;
 
-    $resultArray = null;
-    $postExpertise = null;
-    $postAttribute = null;
+    $postArray = [];
+    $resultArray = [];
 
     foreach($postData as $key => $value) {
-        $explode = explode('__',$key);
-        $expertiseId = $explode[1];
-
-        if($value > 0) {
-            $previousLevel = 0;
-
-            $expertise = $curl->get('expertise/id/'.$expertiseId)['data'][0];
-            $currentExpertise = $curl->get('person-expertise/id/'.$personId.'/expertise/'.$expertiseId);
-
-            if(isset($currentExpertise['data'][0])) {
-                $previousLevel = $currentExpertise['data'][0]['level'];
-            }
-
-            $postExpertise[] = ['person_id' => $personId, 'expertise_id' => $expertiseId, 'level' => $value];
-
-            if(isset($expertise['give_attribute_id'])) {
-                $currentValue = $curl->get('person-attribute/id/'.$personId.'/attribute/'.$expertise['give_attribute_id'])['data'][0]['value'];
-
-                $newValue = intval($value) + intval($currentValue) - intval($previousLevel);
-
-                $postAttribute[] = ['person_id' => $personId, 'attribute_id' => $expertise['give_attribute_id'], 'value' => $newValue];
-            }
+        if($key == $value) {
+            $postArray[] = ['secret' => $personSecret, 'protection_id' => $key];
         }
     }
 
-    if(isset($postExpertise)) {
-        foreach($postExpertise as $post) {
-            $resultArray[] = $curl->post('person-expertise', $post);
-        }
-    }
-
-    if(isset($postAttribute)) {
-        foreach($postAttribute as $post) {
-            $resultArray[] = $curl->post('person-attribute', $post);
-        }
+    foreach($postArray as $post) {
+        $resultArray[] = $curl->post('person/id/'.$personId.'/protection',$post);
     }
 
     checkError($resultArray);
 }
 
-function person_has_add($table, $postData) {
+function person_weapon_post($postData, $personId, $personSecret) {
     global $curl;
 
-    $resultArray = null;
+    $postArray = [];
+    $resultArray = [];
 
-    $resultArray[] = $curl->post('person-'.$table, $postData);
+    foreach($postData as $key => $value) {
+        if($key == $value) {
+            $postArray[] = ['secret' => $personSecret, 'weapon_id' => $key];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $resultArray[] = $curl->post('person/id/'.$personId.'/weapon',$post);
+    }
 
     checkError($resultArray);
 }
 
-function person_has_delete($table, $thingId, $personId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->delete('person-'.$table.'/id/'.$personId.'/id/'.$thingId);
-
-    checkError($resultArray);
-}
+// OBSOLETE?
 
 function person_has_edit($table, $personId, $tableId, $post) {
     global $curl;
@@ -685,40 +388,6 @@ function person_has_edit($table, $personId, $tableId, $post) {
     $resultArray = null;
 
     $resultArray[] = $curl->put('person-'.$table.'/id/'.$personId.'/id/'.$tableId, $post);
-
-    checkError($resultArray);
-}
-
-function person_protection_add($postData, $personId) {
-    global $curl;
-
-    $resultArray = null;
-    $postArray = null;
-
-    foreach($postData as $key => $value) {
-        $postArray[] = ['person_id' => $personId, 'protection_id' => $key, 'protectionquality_id' => 3, 'equipped' => 1];
-    } // todo quality should not be hardcoded
-
-    foreach($postArray as $post) {
-        $resultArray[] = $curl->post('person-protection', $post);
-    }
-
-    checkError($resultArray);
-}
-
-function person_weapon_add($postData, $personId) {
-    global $curl;
-
-    $resultArray = null;
-    $postArray = null;
-
-    foreach($postData as $key => $value) {
-        $post = ['person_id' => $personId, 'weapon_id' => $key, 'weaponquality_id' => 3, 'equipped' => 1];
-
-        $resultArray[] = $curl->post('person-weapon', $post);
-    }
-
-    // todo quality should not be hardcoded
 
     checkError($resultArray);
 }
@@ -737,6 +406,7 @@ function person_wound_add($postData, $personId, $contextRoute, $woundId) {
     checkError($resultArray);
 }
 
+/** STORY */
 
 function story_add($postData) {
     global $curl;
@@ -747,22 +417,22 @@ function story_add($postData) {
     $resultArray = $result;
 
     $storyId = $result['id'];
-    $storyHash = $result['hash'];
+    $storySecret = $result['hash'];
 
     checkError($resultArray);
 
     return [
         'id' => $storyId,
-        'hash' => $storyHash
+        'hash' => $storySecret
     ];
 }
 
-function story_edit($postData, $storyHash) {
+function story_edit($postData, $storySecret) {
     global $curl;
 
     $resultArray = null;
 
-    $resultArray[] = $curl->put('story/hash/'.$storyHash, $postData);
+    $resultArray[] = $curl->put('story/hash/'.$storySecret, $postData);
 
     checkError($resultArray);
 }
@@ -816,6 +486,7 @@ function story_has_delete($table, $thingId, $personId) {
     checkError($resultArray);
 }
 
+/** USER */
 
 function user_add($postData) {
     global $curl;
@@ -919,45 +590,45 @@ function user_reset_verify($postData) {
     checkError($resultArray);
 }
 
-function user_save_person($userId, $personId, $personHash) {
+function user_save_person($userId, $personId, $personSecret) {
     global $curl;
 
     $resultArray = null;
 
-    $post = isset($personHash)
-        ? ['user_id' => $userId, 'person_id' => $personId, 'hash' => $personHash]
+    $post = isset($personSecret)
+        ? ['user_id' => $userId, 'person_id' => $personId, 'hash' => $personSecret]
         : ['user_id' => $userId, 'person_id' => $personId];
 
     $resultArray[] = $curl->post('user-person', $post);
 
-    cookie_person_add($personId, $personHash);
+    cookie_person_add($personId, $personSecret);
 
     checkError($resultArray);
 }
 
-function user_save_story($userId, $storyId, $storyHash) {
+function user_save_story($userId, $storyId, $storySecret) {
     global $curl;
 
     $resultArray = null;
 
-    $post = isset($storyHash)
-        ? ['user_id' => $userId, 'story_id' => $storyId, 'hash' => $storyHash]
+    $post = isset($storySecret)
+        ? ['user_id' => $userId, 'story_id' => $storyId, 'hash' => $storySecret]
         : ['user_id' => $userId, 'story_id' => $storyId];
 
     $resultArray[] = $curl->post('user-story', $post);
 
-    cookie_person_add($storyId, $storyHash);
+    cookie_person_add($storyId, $storySecret);
 
     checkError($resultArray);
 }
 
-function user_save_world($userId, $worldId, $worldHash) {
+function user_save_world($userId, $worldId, $worldSecret) {
     global $curl;
 
     $resultArray = null;
 
-    $post = isset($worldHash)
-        ? ['user_id' => $userId, 'world_id' => $worldId, 'hash' => $worldHash]
+    $post = isset($worldSecret)
+        ? ['user_id' => $userId, 'world_id' => $worldId, 'hash' => $worldSecret]
         : ['user_id' => $userId, 'world_id' => $worldId];
 
     $resultArray[] = $curl->post('user-world', $post);
@@ -965,6 +636,7 @@ function user_save_world($userId, $worldId, $worldHash) {
     checkError($resultArray);
 }
 
+/** WORLD */
 
 function world_postWorld($postData) {
     global $curl;
@@ -994,21 +666,21 @@ function world_postWorld($postData) {
     $result = $curl->post('world', $postData);
 
     $worldId = $result['id'];
-    $worldHash = $result['hash'];
+    $worldSecret = $result['hash'];
 
     return [
         'id' => $worldId,
-        'hash' => $worldHash,
+        'hash' => $worldSecret,
         'name' => $postData['name']
     ];
 }
 
-function world_putWorld($postData, $worldHash) {
+function world_putWorld($postData, $worldSecret) {
     global $curl;
 
     $resultArray = null;
 
-    $resultArray[] = $curl->put('world/hash/'.$worldHash, $postData);
+    $resultArray[] = $curl->put('world/hash/'.$worldSecret, $postData);
 
     checkError($resultArray);
 }
@@ -1139,9 +811,10 @@ function world_wound_add($postData, $contextRoute) {
     return $resultArray[0]['id'];
 }
 
+/** SWITCHES */
 
 function switch_manifestation($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER;
 
     switch($do) {
         default: break;
@@ -1162,253 +835,249 @@ function switch_manifestation($do) {
 }
 
 function switch_person($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_THING, $POST_EXTRA, $POST_USER, $POST_ERROR;
+    global $curl, $POST_ID, $POST_SECRET, $POST_USER, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
     switch($do) {
         default: break;
 
+        // New API
+
         case 'person--add':
-            $result = person_add($POST_DATA);
+            $POST_DATA['playable'] = 1;
 
-            if(!$POST_ERROR) {
-                $POST_ID = $result['id'];
-                $POST_HASH = $result['hash'];
+            $result = $curl->post('person',$POST_DATA);
+            $POST_ID = $result['id'];
+            $POST_SECRET = $result['secret'];
 
-                if($POST_USER) {
-                    user_save_person($POST_USER, $POST_ID, $POST_HASH);
-                }
-
-                cookie_add('person',$POST_ID, $POST_HASH);
+            if($POST_USER) {
+                user_save_person($POST_USER, $POST_ID, $POST_SECRET);
             }
+
+            cookie_add('person',$POST_ID, $POST_SECRET);
+            break;
+
+        case 'person--augmentation':
+            person_augmentation_post($POST_DATA, $POST_CONTEXT, $POST_ID, $POST_SECRET);
             break;
 
         case 'person--background':
-            person_edit_playable($POST_DATA, $POST_ID);
-            person_attribute_from_has('background-attribute', $POST_DATA['background_id'], $POST_ID);
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/background',$POST_DATA);
+            checkError($resultArray);
+            break;
+
+        case 'person--bionic':
+            person_bionic_post($POST_DATA, $POST_ID, $POST_SECRET);
+            break;
+
+        case 'person--bionic--custom':
+            break;
+
+        case 'person--cheat':
+            $resultArray = [];
+
+            $POST_DATA['cheated'] = 1;
+            $POST_DATA['popularity'] = 0;
+            $POST_DATA['thumbsup'] = 0;
+            $POST_DATA['thumbsdown'] = 0;
+
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,$POST_DATA);
+
+            checkError($resultArray);
             break;
 
         case 'person--describe':
-            $personData['firstname'] = $POST_DATA['firstname'];
-            $personData['surname'] = $POST_DATA['surname'];
-            $personData['gender'] = $POST_DATA['gender'];
-            $personData['description'] = $POST_DATA['description'];
-            person_edit($personData, $POST_ID);
+            $resultArray = [];
 
-            $playableData['calculated'] = 1;
-            $playableData['personality'] = $POST_DATA['personality'];
-            $playableData['appearance'] = $POST_DATA['appearance'];
-            person_edit_playable($playableData, $POST_ID);
+            $POST_DATA['calculated'] = 1;
+
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,$POST_DATA);
+
+            checkError($resultArray);
             break;
 
-        case 'person--edit':
-            person_edit($POST_DATA, $POST_HASH);
-            break;
+        case 'person--edit--description':
+            $resultArray = [];
 
-        case 'person--attribute--doctrine':
-            person_attribute_add($POST_DATA, $POST_ID);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,$POST_DATA);
 
-            if(!$POST_ERROR) {
-                person_edit(['point_supernatural' => 0], $POST_HASH);
-
-                if(!$POST_ERROR) {
-                    if(isset($_POST['post--experience'])) {
-                        $key = 'attribute_id__'.$_POST['post--experience'];
-                        $value = intval($_POST['post--points']);
-
-                        person_attribute_add([$key => $value], $POST_ID, true);
-                    }
-                }
-            }
+            checkError($resultArray);
             break;
 
         case 'person--attribute--edit':
-            person_attribute_add($POST_DATA, $POST_ID, true);
+            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
             break;
 
         case 'person--attribute--money':
-            person_attribute_edit($POST_DATA, $POST_ID, true);
-
-            if(!$POST_ERROR) {
-                person_edit_creation(['point_money' => 0], $POST_ID);
-            }
-            break;
-
-        case 'person--attribute--power':
-            person_attribute_edit($POST_DATA, $POST_ID, true);
-
-            if(!$POST_ERROR) {
-                person_edit(['point_power' => 0], $POST_HASH);
-            }
+            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_money' => 0]);
+            checkError($resultArray);
             break;
 
         case 'person--attribute--skill':
-            person_attribute_add($POST_DATA, $POST_ID);
+            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
 
-            if(!$POST_ERROR) {
-                person_edit_creation(['point_skill' => 0], $POST_ID);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_skill' => 0]);
 
-                if(!$POST_ERROR) {
-                    if(isset($_POST['post--experience'])) {
-                        $key = 'attribute_id__'.$_POST['post--experience'];
-                        $value = intval($_POST['post--points']);
-
-                        person_attribute_add([$key => $value], $POST_ID, true);
-                    }
-                }
+            if(isset($_POST['post--experience'])) {
+                $resultArray[] = $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'attribute_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
             }
-            break;
-
-        case 'person--augmentation--add':
-            person_augmentation_add($POST_DATA, $POST_ID);
-            break;
-
-        case 'person--bionic--add':
-            person_bionic_add($POST_DATA, $POST_ID);
             break;
 
         case 'person--characteristic--gift':
-            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
-            person_has_add('characteristic', $post);
-
-            if(!$POST_ERROR) {
-                person_attribute_from_has('characteristic', $POST_DATA['characteristic'], $POST_ID);
-
-                if(!$POST_ERROR) {
-                    $calc = intval($_POST['post--points']) - 1;
-                    person_edit_creation(['point_gift' => $calc], $POST_ID);
-                }
-            }
+            $calc = intval($_POST['post--points']) - 1;
+            $resultArray = [];
+            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/characteristic',$POST_DATA);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_gift' => $calc]);
+            checkError($resultArray);
             break;
 
         case 'person--characteristic--imperfection':
-            $post = ['person_id' => $POST_ID, 'characteristic_id' => $POST_DATA['characteristic']];
-            person_has_add('characteristic', $post);
+            $calc = intval($_POST['post--points']) - 1;
+            $resultArray = [];
+            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/characteristic',$POST_DATA);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_imperfection' => $calc]);
+            checkError($resultArray);
+            break;
 
-            if(!$POST_ERROR) {
-                person_attribute_from_has('characteristic', $POST_DATA['characteristic'], $POST_ID);
+        case 'person--characteristic--custom':
+            break;
 
-                if(!$POST_ERROR) {
-                    $calc = intval($_POST['post--points']) - 1;
-                    person_edit_creation(['point_imperfection' => $calc], $POST_ID);
-                }
+        case 'person--characteristic--delete':
+            $curl->delete('person/id/'.$POST_ID.'/characteristic/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            break;
+
+        case 'person--expertise':
+            person_expertise_post($POST_DATA, $POST_ID, $POST_SECRET);
+
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_expertise' => 0]);
+
+            if(isset($_POST['post--experience'])) {
+                $resultArray[] = $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'attribute_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
             }
             break;
 
-        case 'person--delete--has':
-            person_has_delete($POST_CONTEXT, $POST_THING, $POST_ID);
+        case 'person--expertise--custom':
             break;
 
-        case 'person--equip':
-            $post = ['equipped' => $POST_EXTRA];
-            person_has_edit($POST_CONTEXT, $POST_ID, $POST_THING, $post);
-            break;
-
-        case 'person--expertise--add':
-            person_expertise_add($POST_DATA, $POST_ID);
-
-            if(!$POST_ERROR) {
-                person_edit_creation(['point_expertise' => 0], $POST_ID);
-
-                if(isset($_POST['post--experience'])) {
-                    $key = 'attribute_id__'.$_POST['post--experience'];
-                    $value = intval($_POST['post--points']);
-
-                    person_attribute_add([$key => $value], $POST_ID, true);
-                }
-            }
-            break;
-
-        case 'person--expertise--doctrine':
-            $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
-            person_expertise_add($post, $POST_ID);
-            break;
-
-        case 'person--feature--edit':
-            if($POST_CONTEXT == 'species') {
-                person_edit(['species_id' => $POST_DATA['species']], $POST_HASH);
-                person_attribute_from_has('species-attribute', $POST_DATA['species'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if($POST_CONTEXT == 'background') {
-                person_edit(['background_id' => $POST_DATA['background']], $POST_HASH);
-                person_attribute_from_has('background-attribute', $POST_DATA['background'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if($POST_CONTEXT == 'nature') {
-                person_edit(['nature_id' => $POST_DATA['nature']], $POST_HASH);
-                person_attribute_from_has('nature', $POST_DATA['nature'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if($POST_CONTEXT == 'identity') {
-                person_edit(['identity_id' => $POST_DATA['identity']], $POST_HASH);
-                person_attribute_from_has('identity', $POST_DATA['identity'], $POST_ID, $POST_DATA['current_id']);
-            }
-
-            if($POST_CONTEXT == 'focus') {
-                person_edit(['focus_id' => $POST_DATA['focus']], $POST_HASH);
-                person_attribute_from_has('focus', $POST_DATA['focus'], $POST_ID, $POST_DATA['current_id']);
-            }
-
+        case 'person--expertise--delete':
+            $curl->delete('person/id/'.$POST_ID.'/expertise/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
             break;
 
         case 'person--focus':
-            person_edit_playable($POST_DATA, $POST_ID);
-            person_attribute_from_has('focus', $POST_DATA['focus_id'], $POST_ID);
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/focus',$POST_DATA);
+            checkError($resultArray);
             break;
 
         case 'person--identity':
-            person_edit_playable($POST_DATA, $POST_ID);
-            person_attribute_from_has('identity', $POST_DATA['identity_id'], $POST_ID);
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/identity',$POST_DATA);
+            checkError($resultArray);
             break;
 
         case 'person--manifestation':
-            person_edit_playable($POST_DATA, $POST_ID);
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/manifestation',$POST_DATA);
+            checkError($resultArray);
             break;
 
-        case 'person--milestone--add':
-            $post = ['person_id' => $POST_ID, 'milestone_id' => $POST_DATA['milestone']];
-            person_has_add('milestone', $post);
+        case 'person--manifestation--doctrine':
+            person_attribute_post($POST_DATA, $POST_ID, $POST_SECRET);
 
-            if(!$POST_ERROR) {
-                person_attribute_from_has('milestone', $POST_DATA['milestone'], $POST_ID);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_supernatural' => 0]);
 
-                $calc = intval($_POST['post--points']) - 1;
-                person_edit_creation(['point_milestone' => $calc], $POST_ID);
+            if(isset($_POST['post--experience'])) {
+                $resultArray[] = $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'attribute_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
             }
             break;
 
+        case 'person--manifestation--expertise':
+            $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
+            person_expertise_post($post, $POST_ID, $POST_SECRET);
+            break;
+
+        case 'person--manifestation--power':
+            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
+
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_power' => 0]);
+            checkError($resultArray);
+            break;
+
+        case 'person--milestone':
+            $calc = intval($_POST['post--points']) - 1;
+            $resultArray = [];
+            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/milestone',$POST_DATA);
+            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_milestone' => $calc]);
+            checkError($resultArray);
+            break;
+
+        case 'person--milestone--custom':
+            break;
+
+        case 'person--milestone--delete':
+            $curl->delete('person/id/'.$POST_ID.'/milestone/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            break;
+
         case 'person--nature':
-            person_edit_playable($POST_DATA, $POST_ID);
-            person_attribute_from_has('nature', $POST_DATA['nature_id'], $POST_ID);
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/nature',$POST_DATA);
+            checkError($resultArray);
             break;
 
-        case 'person--protection--add':
-            person_protection_add($POST_DATA, $POST_ID);
+        case 'person--protection':
+            person_protection_post($POST_DATA, $POST_ID, $POST_SECRET);
             break;
 
-        case 'person--weapon--add':
-            person_weapon_add($POST_DATA, $POST_ID);
+        case 'person--protection--custom':
             break;
 
-        case 'person--wound--add':
-            $returnId = world_wound_add($POST_DATA, $POST_CONTEXT);
-            person_wound_add($POST_DATA, $POST_ID, $POST_CONTEXT, $returnId);
+        case 'person--protection--equip':
+            $curl->put('person/id/'.$POST_ID.'/protection/'.$POST_CONTEXT.'/equip/'.$POST_EXTRA,['secret' => $POST_SECRET]);
             break;
 
-        case 'person--wound--aid':
-            $post = ['aid' => $POST_DATA['value']];
-            person_has_edit('wound', $POST_ID, $POST_DATA['id'], $post);
+        case 'person--protection--delete':
+            $curl->delete('person/id/'.$POST_ID.'/protection/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            break;
+
+        case 'person--species':
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/species',$POST_DATA);
+            checkError($resultArray);
+            break;
+
+        case 'person--weapon':
+            person_weapon_post($POST_DATA, $POST_ID, $POST_SECRET);
+            break;
+
+        case 'person--weapon--custom':
+            break;
+
+        case 'person--weapon--equip':
+            $curl->put('person/id/'.$POST_ID.'/weapon/'.$POST_CONTEXT.'/equip/'.$POST_EXTRA,['secret' => $POST_SECRET]);
+            break;
+
+        case 'person--weapon--delete':
+            $curl->delete('person/id/'.$POST_ID.'/weapon/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            break;
+
+        case 'person--wound':
+            print_r($POST_DATA);
+            $resultArray = [];
+            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/'.$POST_CONTEXT,$POST_DATA);
+            checkError($resultArray);
             break;
 
         case 'person--wound--heal':
-            $post = ['heal' => $POST_DATA['value']];
-            person_has_edit($POST_CONTEXT, $POST_ID, $POST_DATA['id'], $post);
+            $resultArray = [];
+            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$POST_CONTEXT2.'/heal/'.$POST_EXTRA,$POST_DATA);
+            checkError($resultArray);
             break;
     }
 }
 
 function switch_story($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER, $POST_ERROR;
+    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER, $POST_ERROR;
 
     switch($do) {
         default: break;
@@ -1418,18 +1087,18 @@ function switch_story($do) {
 
             if(!$POST_ERROR) {
                 $POST_ID = $result['id'];
-                $POST_HASH = $result['hash'];
+                $POST_SECRET = $result['hash'];
 
                 if($POST_USER) {
-                    user_save_story($POST_USER, $POST_ID, $POST_HASH);
+                    user_save_story($POST_USER, $POST_ID, $POST_SECRET);
                 }
 
-                cookie_add('story',$POST_ID,$POST_HASH);
+                cookie_add('story',$POST_ID,$POST_SECRET);
             }
             break;
 
         case 'story--edit':
-            story_edit($POST_DATA, $POST_HASH);
+            story_edit($POST_DATA, $POST_SECRET);
             break;
 
         case 'story--person--add':
@@ -1443,7 +1112,7 @@ function switch_story($do) {
 }
 
 function switch_user($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER;
 
     switch($do) {
         default: break;
@@ -1485,13 +1154,13 @@ function switch_user($do) {
             break;
 
         case 'user--save--person':
-            user_save_person($POST_USER, $POST_ID, $POST_HASH);
+            user_save_person($POST_USER, $POST_ID, $POST_SECRET);
             break;
     }
 }
 
 function switch_world($do) {
-    global $POST_DATA, $POST_ID, $POST_HASH, $POST_CONTEXT, $POST_USER;
+    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER;
 
     switch($do) {
         default: break;
@@ -1500,16 +1169,16 @@ function switch_world($do) {
             $result = world_postWorld($POST_DATA);
 
             $POST_ID = $result['id'];
-            $POST_HASH = $result['hash'];
+            $POST_SECRET = $result['hash'];
             $resultName = $result['name'];
 
             if($POST_USER) {
-                user_save_world($POST_USER, $POST_ID, $POST_HASH); // todo save world to user
+                user_save_world($POST_USER, $POST_ID, $POST_SECRET); // todo save world to user
             }
             break;
 
         case 'world--put':
-            world_putWorld($POST_DATA, $POST_HASH);
+            world_putWorld($POST_DATA, $POST_SECRET);
             break;
 
         case 'world--has':
@@ -1534,11 +1203,12 @@ function switch_world($do) {
 
         case 'world--augmentation':
             world_has($POST_DATA, $POST_ID, 'augmentation');
-            world_putWorld(['calculated' => 1], $POST_HASH);
+            world_putWorld(['calculated' => 1], $POST_SECRET);
             break;
     }
 }
 
+/** MAIN SWITCH */
 
 if(isset($POST_DO) && isset($POST_RETURN)) {
     $POST_DATA = [];
@@ -1552,6 +1222,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
         if($explode[0] != 'post') {
             $POST_DATA[$explode[1]] = $value;
         }
+    }
+
+    if(isset($POST_SECRET)) {
+        $POST_DATA['secret'] = $POST_SECRET;
     }
 
     $topSwitch = explode('--', $POST_DO)[0];
@@ -1582,6 +1256,7 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
     }
 }
 
+/** END */
 
 $r = isset($POST_RETURN)
     ? '/'.$POST_RETURN
@@ -1591,20 +1266,22 @@ $i = isset($POST_ID)
     ? '/'.$POST_ID
     : null;
 
-$h = isset($POST_HASH)
-    ? '/'.$POST_HASH
+$h = isset($POST_SECRET)
+    ? '/'.$POST_SECRET
+    : null;
+
+$a = isset($POST_RETURNAFTER)
+    ? '/'.$POST_RETURNAFTER
     : null;
 
 $d = isset($POST_RETURNID)
     ? '#'.$POST_RETURNID
     : '#content';
 
-
 if(!$POST_ERROR) {
-    redirect($baseUrl.$r.$i.$h.$d);
+    //redirect($baseUrl.$r.$i.$h.$a.$d);
 } else {
     print_r($POST_ERROR);
 }
 
-
-echo '<a href="'.$baseUrl.$r.$i.$h.$d.'">'.$baseUrl.$r.$i.$h.$d.'</a>';
+echo '<a href="'.$baseUrl.$r.$i.$h.$a.$d.'">'.$baseUrl.$r.$i.$h.$a.$d.'</a>';

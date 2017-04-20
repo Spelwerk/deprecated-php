@@ -11,37 +11,32 @@ require_once('World.php');
 
 class Person {
 
-    var $id, $hash, $nickname, $firstname, $surname, $age, $gender, $occupation,
-        $description, $personality, $appearance;
+    var $id, $secret;
 
     var $popularity, $thumbsup, $thumbsdown;
 
-    var $isOwner, $isPlayable, $isCalculated, $isCheater, $isSupernatural;
+    var $nickname, $firstname, $surname, $age, $gender, $occupation,
+        $description, $personality, $appearance;
 
-    var $pointSupernatural, $pointPotential, $pointMoney, $pointSkill, $pointExpertise, $pointMilestone,
-        $pointGift, $pointImperfection, $pointRelationship;
+    var $isOwner, $isPlayable, $isCalculated, $isCheater, $isSupernatural;
 
     var $world, $species, $background, $nature, $identity, $manifestation, $focus;
 
-    public function __construct($playable, $id, $hash = null) {
+    public function __construct($id, $secret = null) {
         global $curl;
 
-        $get = $playable
-            ? 'person/playable/id/'.$id
-            : 'person/id/'.$id;
+        $data = $curl->get('person/id/'.$id)['data'][0];
 
-        $data = $curl->get($get)['data'][0];
-
-        $this->hash = isset($hash)
-            ? $hash
+        $this->secret = isset($secret)
+            ? $secret
             : null;
 
-        $this->isOwner = isset($hash) && $hash == $data['hash']
+        $this->isOwner = isset($secret) && $secret == $data['secret']
             ? true
             : false;
 
-        $this->isPlayable = $data['playable'];
-        $this->isCalculated = $data['calculated'];
+        $this->isPlayable = intval($data['playable']);
+        $this->isCalculated = intval($data['calculated']);
 
         $this->popularity = $data['popularity'];
         $this->thumbsup = $data['thumbsup'];
@@ -66,12 +61,22 @@ class Person {
             $this->appearance = $data['appearance'];
 
             $this->species = new Species($data['species_id']);
-            $this->speciesCustom = $data['species_custom'];
+
+            $this->species->description = isset($data['species_custom'])
+                ? $data['species_custom']
+                : $this->species->description;
 
             $this->background = isset($data['background_id'])
                 ? new Background($data['background_id'])
                 : null;
-            $this->backgroundCustom = $data['background_custom'];
+
+            if(isset($data['background_id'])) {
+                $this->background = new Background($data['background_id']);
+
+                $this->background->description = isset($data['background_custom'])
+                    ? $data['background_custom']
+                    : $this->background->description;
+            }
 
             $this->nature = isset($data['nature_id'])
                 ? new Nature($data['nature_id'])
@@ -88,24 +93,24 @@ class Person {
             $this->focus = isset($data['focus_id'])
                 ? new Focus($data['focus_id'])
                 : null;
+        }
 
-            if(!$this->isCalculated) {
-                $creation = $curl->get('person-creation/id/'.$this->id)['data'][0];
+        if(!$this->isCalculated) {
+            $creation = $curl->get('person-creation/id/'.$this->id)['data'][0];
 
-                $this->pointSupernatural = intval($creation['point_supernatural']);
-                $this->pointPower= intval($creation['point_power']);
-                $this->pointMoney = intval($creation['point_money']);
-                $this->pointSkill = intval($creation['point_skill']);
-                $this->pointExpertise = intval($creation['point_expertise']);
-                $this->pointMilestone = intval($creation['point_milestone']);
-                $this->pointGift = intval($creation['point_gift']);
-                $this->pointImperfection = intval($creation['point_imperfection']);
-                $this->pointRelationship = intval($creation['point_relationship']);
-            }
+            $this->pointSupernatural = intval($creation['point_supernatural']);
+            $this->pointPower= intval($creation['point_power']);
+            $this->pointMoney = intval($creation['point_money']);
+            $this->pointSkill = intval($creation['point_skill']);
+            $this->pointExpertise = intval($creation['point_expertise']);
+            $this->pointMilestone = intval($creation['point_milestone']);
+            $this->pointGift = intval($creation['point_gift']);
+            $this->pointImperfection = intval($creation['point_imperfection']);
+            $this->pointRelationship = intval($creation['point_relationship']);
         }
 
         $this->siteLink = $this->isOwner
-            ? '/play/person/id/'.$this->id.'/'.$this->hash
+            ? '/play/person/id/'.$this->id.'/'.$this->secret
             : '/play/person/id/'.$this->id;
     }
 
@@ -150,14 +155,20 @@ class Person {
         return $arrayList;
     }
 
-    public function getBionic($bodypart = null) {
+    public function getBionic($bodypart = null, $id = null) {
         global $curl;
 
         $arrayList = null;
 
+        $get = 'person-bionic/id/'.$this->id;
+
         $get = isset($bodypart)
             ? 'person-bionic/id/'.$this->id.'/bodypart/'.$bodypart
-            : 'person-bionic/id/'.$this->id;
+            : $get;
+
+        $get = isset($id)
+            ? 'person-bionic/id/'.$this->id.'/bionic/'.$id
+            : $get;
 
         $result = $curl->get($get);
 
@@ -316,24 +327,35 @@ class Person {
 
 
     function buildEditDescription($id, $title, $description, $icon) {
-        //todo build this
+        /* todo build this
+         * bionic
+         * characteristic
+         * expertise
+         * milestone
+         * protection
+         * weapon
+         */
     }
 
-    function buildRemoval($thing, $title, $icon, $context, $returnId = null) {
+    function buildRemoval($tableName, $tableId, $title, $icon, $returnId = null) {
         global $component, $form;
 
         $quick = $this->isOwner
-            ?   $form->quick('person--delete--has',$this->id,$this->hash,'play/person/id','delete',[
+            ?   $form->quick([
+                    'do' => 'person--'.$tableName.'--delete',
+                    'id' => $this->id,
+                    'secret' => $this->secret,
+                    'return' => 'play/person/id',
                     'returnid' => $returnId,
-                    'context' => $context,
-                    'thing' => $thing
+                    'context' => $tableId,
+                    'icon' => 'delete'
                 ])
             :   null;
 
         $component->listAction($title, $quick, ['icon' => $icon]);
     }
 
-    function buildEquip($thing, $title, $icon, $context, $equipped, $returnId = null) {
+    function buildEquip($tableName, $tableId, $title, $icon, $equipped, $returnId = null) {
         global $component, $form;
 
         $opacity = $equipped == 1
@@ -341,19 +363,23 @@ class Person {
             : ' sw-is-opacity';
 
         $img = $equipped == 1
-            ? 'equip-true'
-            : 'equip-false';
+            ? 'color/switch-true'
+            : 'color/switch-false';
 
         $flip = $equipped == 1
             ? 0
             : 1;
 
         $quick = $this->isOwner
-            ?   $form->quick('person--equip',$this->id,$this->hash,'play/person/id',$img,[
+            ?   $form->quick([
+                    'do' => 'person--'.$tableName.'--equip',
+                    'id' => $this->id,
+                    'secret' => $this->secret,
+                    'return' => 'play/person/id',
                     'returnid' => $returnId,
-                    'context' => $context,
-                    'thing' => $thing,
-                    'extra' => $flip
+                    'context' => $tableId,
+                    'extra' => $flip,
+                    'icon' => $img
                 ])
             :   null;
 
@@ -363,7 +389,7 @@ class Person {
         ]);
     }
 
-    function buildDiseaseSanity($context, $id, $title, $icon, $heal) {
+    function buildWound($context, $id, $title, $icon, $heal) {
         $labelHealed = $heal == 1
             ? ' (Healed)'
             : null;
@@ -388,80 +414,13 @@ class Person {
             '<input type="hidden" name="post--returnid" value="'.$context.'"/>'.
             '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
             '<input type="hidden" name="post--context" value="'.$context.'"/>'.
+            '<input type="hidden" name="post--context2" value="'.$id.'"/>'.
+            '<input type="hidden" name="post--extra" value="'.$flipHeal.'"/>'.
             '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-            '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-            '<input type="hidden" name="item--id" value="'.$id.'"/>'.
-            '<input type="hidden" name="item--value" value="'.$flipHeal.'"/>'.
-            '<input class="sw-u-action" type="image" src="/img/wound-heal-'.$context.'.png"/>'.
+            '<input type="hidden" name="post--secret" value="'.$this->secret.'"/>'.
+            '<input class="sw-u-action" type="image" src="/img/color/'.$context.'-heal.png"/>'.
             '</form>'.
             '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        );
-    }
-
-    function buildWound($id, $title, $icon, $heal, $aid) {
-        $labelAided = $aid == 1
-            ? ' (Aided)'
-            : null;
-
-        $labelHealed = $heal == 1
-            ? ' (Healed)'
-            : null;
-
-        $aidedAndHealed = $aid == 1 && $heal == 1
-            ? ' sw-is-opacity'
-            : null;
-
-        $flipAid = $aid == 1
-            ? 0
-            : 1;
-
-        $flipHeal = $heal == 1
-            ? 0
-            : 1;
-
-        $aidButton = $heal == 0
-            ?   '<div class="sw-c-list__action">'.
-                '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play/person/id"/>'.
-                '<input type="hidden" name="post--returnid" value="wound"/>'.
-                '<input type="hidden" name="post--do" value="person--wound--aid"/>'.
-                '<input type="hidden" name="post--context" value="wound"/>'.
-                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="item--id" value="'.$id.'"/>'.
-                '<input type="hidden" name="item--value" value="'.$flipAid.'"/>'.
-                '<input class="sw-u-action" type="image" src="/img/wound-aid.png"/>'.
-                '</form>'.
-                '</div>'
-            :   null;
-
-        $healButton = $aid == 1
-            ?   '<div class="sw-c-list__action">'.
-                '<form action="/post.php" method="post">'.
-                '<input type="hidden" name="post--return" value="play/person/id"/>'.
-                '<input type="hidden" name="post--returnid" value="wound"/>'.
-                '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
-                '<input type="hidden" name="post--context" value="wound"/>'.
-                '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-                '<input type="hidden" name="post--hash" value="'.$this->hash.'"/>'.
-                '<input type="hidden" name="item--id" value="'.$id.'"/>'.
-                '<input type="hidden" name="item--value" value="'.$flipHeal.'"/>'.
-                '<input class="sw-u-action" type="image" src="/img/wound-heal-wound.png"/>'.
-                '</form>'.
-                '</div>'
-            :   null;
-
-        echo(
-            '<div class="sw-c-list sw-u-even'.$aidedAndHealed.'">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-c-list__head">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$title.$labelAided.$labelHealed.'</div>'.
-            $aidButton.
-            $healButton.
             '</div>'.
             '</div>'.
             '</div>'
@@ -584,7 +543,7 @@ class Person {
                     $itemCount = $itemCount + $item->value;
                 }
 
-                $this->buildDiseaseSanity('disease', $item->id, $item->name, $item->icon, $item->heal);
+                $this->buildWound('disease', $item->id, $item->name, $item->icon, $item->heal);
             }
         }
 
@@ -717,8 +676,8 @@ class Person {
         $list = $this->getProtection();
 
         if(isset($list)) {
-            foreach($list as $protection) {
-                $this->buildEquip($protection->id, $protection->name, $protection->icon, 'protection', $protection->equipped, 'eq_protection');
+            foreach($list as $item) {
+                $this->buildEquip('protection', $item->id, $item->name, $item->icon, $item->equipped, 'eq_protection');
             }
         }
     }
@@ -739,7 +698,7 @@ class Person {
                     $itemCount = $itemCount + $item->value;
                 }
 
-                $this->buildDiseaseSanity('sanity', $item->id, $item->name, $item->icon, $item->heal);
+                $this->buildWound('sanity', $item->id, $item->name, $item->icon, $item->heal);
             }
         }
 
@@ -789,8 +748,8 @@ class Person {
         $list = $this->getWeapon();
 
         if(isset($list)) {
-            foreach($list as $weapon) {
-                $this->buildEquip($weapon->id, $weapon->name, $weapon->icon, 'weapon', $weapon->equipped, 'eq_weapon');
+            foreach($list as $item) {
+                $this->buildEquip('weapon', $item->id, $item->name, $item->icon, $item->equipped, 'eq_weapon');
             }
         }
     }
@@ -810,7 +769,7 @@ class Person {
                     $itemCount = $itemCount + $item->value;
                 }
 
-                $this->buildWound($item->id, $item->name, $item->icon, $item->heal, $item->aid);
+                $this->buildWound('wound', $item->id, $item->name, $item->icon, $item->heal);
             }
         }
 

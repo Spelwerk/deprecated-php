@@ -43,22 +43,16 @@ $component->title('Cheat '.$person->nickname);
 
         <?php
         $component->wrapStart();
-
         $component->h1('Cheat');
         $component->subtitle('There are options in this place that will let you change your person into something that is outside of the normal creation structure. Because of this we will remove your person from all public lists if you choose to move forward and cheat.');
-
-        $form->formStart();
-        $form->hidden('return', 'play', 'post');
-        $form->hidden('returnafter', 'cheat', 'post');
-        $form->hidden('do', 'person--edit', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
-        $form->hidden('cheated', 1, 'person');
-        $form->hidden('popularity', 0, 'person');
-        $form->hidden('thumbsup', 0, 'person');
-        $form->hidden('thumbsdown', 0, 'person');
+        $form->formStart([
+            'do' => 'person--cheat',
+            'id' => $person->id,
+            'secret' => $person->secret,
+            'return' => 'play/person/id',
+            'returnafter' => 'cheat'
+        ]);
         $form->formEnd(false, 'Cheat', true);
-
         $component->wrapEnd();
         ?>
 

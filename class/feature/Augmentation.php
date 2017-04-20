@@ -36,20 +36,6 @@ class Augmentation {
             ? intval($data['energy']) * intval($data['quality_energy'])
             : intval($data['energy']);
 
-        $this->bionicId = $data['bionic_id'];
-        $this->bionicName = $data['bionic_name'];
-
-        $this->bionic = [
-            'id' => $data['bionic_id'],
-            'name' => $data['bionic_name']
-        ];
-
-        $this->attribute = [
-            'id' => $data['attribute_id'],
-            'name' => $data['attribute_name'],
-            'value' => $data['attribute_value']
-        ];
-
         $this->weapon = [
             'id' => $data['weapon_id'],
             'name' => $data['weapon_name']

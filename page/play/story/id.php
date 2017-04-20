@@ -53,12 +53,13 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         <?php if($user->isActive && $userOwner != true): ?>
 
             <?php
-            $form->formStart();
-            $form->hidden('return', 'play', 'post');
-            $form->hidden('do', 'user--save--story', 'post');
-            $form->hidden('id', $story->id, 'post');
-            $form->hidden('hash', $story->hash, 'post');
-            $form->hidden('user', $user->id, 'post');
+            $form->formStart([
+                'do' => 'user--save--story',
+                'id' => $story->id,
+                'hash' => $story->hash,
+                'user' => $user->id,
+                'return' => 'play/story/id'
+            ]);
             $form->formEnd(false, 'Save this story');
             ?>
 

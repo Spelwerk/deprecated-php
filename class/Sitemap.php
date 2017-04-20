@@ -323,12 +323,12 @@ class Sitemap {
     }
 
     function switch_play_person_id_cheat() {
-        $switch = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
+        $switch = isset($this->command[6]) && $this->command[6] != null
+            ? $this->command[6]
             : null;
 
-        $context = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
+        $context = isset($this->command[7]) && $this->command[7] != null
+            ? $this->command[7]
             : null;
 
         switch($switch) {
@@ -386,6 +386,7 @@ class Sitemap {
 
             case 'augmentation':
                 $this->page = 'page/play/person/edit/augmentation.php';
+                $this->context = $context;
                 break;
 
             case 'bionic':

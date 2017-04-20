@@ -28,8 +28,8 @@ class Curl {
         return $this->curl('PUT',$route,$data,$token);
     }
 
-    public function delete($route, $token = null) {
-        return $this->curl('DELETE',$route,null,$token);
+    public function delete($route, $data = null, $token = null) {
+        return $this->curl('DELETE',$route,$data,$token);
     }
 
     public function user($route, $token) {
@@ -78,6 +78,9 @@ class Curl {
 
             case 'DELETE':
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                if($data) {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
                 break;
 
             default: break;

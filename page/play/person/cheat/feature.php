@@ -26,8 +26,15 @@ $component->title('Cheat '.$person->nickname);
 
         <?php
         $list = null;
+        $currentId = null;
 
-        $form->formStart();
+        $component->h2($sitemap->context);
+        $form->formStart([
+            'do' => 'person--'.$sitemap->context,
+            'id' => $person->id,
+            'secret' => $person->secret,
+            'return' => 'play/person/id'
+        ]);
 
         switch($sitemap->context)
         {
@@ -35,45 +42,36 @@ $component->title('Cheat '.$person->nickname);
 
             case 'species':
                 $list = $person->world->getSpecies();
-                $form->hidden('current_id', $person->species->id, 'person');
+                $currentId = $person->species->id;
                 break;
 
             case 'background':
                 $list = $person->world->getBackground($person->species->id);
-                $form->hidden('current_id', $person->background->id, 'person');
+                $currentId = $person->background->id;
                 break;
 
             case 'nature':
                 $list = $person->world->getNature();
-                $form->hidden('current_id', $person->nature->id, 'person');
+                $currentId = $person->nature->id;
                 break;
 
             case 'identity':
                 $list = $person->world->getIdentity();
-                $form->hidden('current_id', $person->identity->id, 'person');
+                $currentId = $person->identity->id;
                 break;
 
             case 'manifestation':
                 $list = $person->world->getManifestation();
-                $form->hidden('current_id', $person->manifestation->id, 'person');
+                $currentId = $person->manifestation->id;
                 break;
 
             case 'focus':
                 $list = $person->world->getFocus($person->manifestation->id);
-                $form->hidden('current_id', $person->focus->id, 'person');
+                $currentId = $person->focus->id;
                 break;
         }
-
-        $form->hidden('return', 'play', 'post');
-        $form->hidden('do', 'person--feature--edit', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
-        $form->hidden('context', $sitemap->context, 'post');
-
-        $component->h2($sitemap->context);
-
-        $system->radioList($sitemap->context, $list);
-
+        $form->hidden('extra', $currentId, 'post');
+        $system->radioList($sitemap->context.'_id', $list, null, $currentId);
         $form->formEnd();
         ?>
 

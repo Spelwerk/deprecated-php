@@ -10,7 +10,7 @@ global $user, $component, $curl;
 $component->title('Person');
 $component->linkAction('/play/person/new','Create Person','A person, or a character, is what you use to play the game.','/img/link-person-w.png');
 
-$result = $curl->get('person/short',null,['order-by' => '{"popularity":"DESC", "thumbsup":"DESC", "nickname":"ASC"}', 'limit-from' => 5]);
+$result = $curl->get('person/popular',null,['order-by' => '{"popularity":"DESC", "thumbsup":"DESC", "nickname":"ASC"}', 'limit-from' => 5]);
 
 $userList = $user->isActive
     ? $user->getPerson()
@@ -67,7 +67,7 @@ if($cookieList) {
 
                 $person = $curl->get('person/short/id/'.$item['person_id'])['data'][0];
 
-                $component->linkButton($link,$person['nickname'].' ('.$person['occupation'].') ('.$person['age'].')');
+                $component->linkButton($link,$person['nickname'].' ('.$person['occupation'].')');
             }
         }
     }
@@ -77,7 +77,7 @@ if($popularList) {
     $component->h1('Most Popular Persons');
 
     foreach($popularList as $person) {
-        $component->linkButton('/play/person/id/' . $person['id'], $person['nickname'] . ' (' . $person['occupation'] . ') (' . $person['age'] . ')');
+        $component->linkButton('/play/person/id/' . $person['id'], $person['firstname'].' "'.$person['nickname'].'" '.$person['surname'].' ('.$person['occupation'].')');
     }
 }
 ?>

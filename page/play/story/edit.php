@@ -22,17 +22,15 @@ $component->title('Edit '.$story->name);
 
     <?php
     $component->wrapStart();
-    $form->formStart();
-
-    $form->hidden('return', 'play/story/id', 'post');
-    $form->hidden('do', 'story--edit', 'post');
-    $form->hidden('id', $story->id, 'post');
-    $form->hidden('hash', $story->hash, 'post');
-
+    $form->formStart([
+        'do' => 'story--edit',
+        'id' => $story->id,
+        'hash' => $story->hash,
+        'return' => 'play/story/id'
+    ]);
     $form->varchar(true,'name','Name','The name of your story will make it easier to remember which one it is.',null,$story->name);
     $form->text(false,'description','Description', 'Describe your Story. This field can be added to in the future.',null,$story->description);
     $form->text(false,'plot','Plot','Describe the plot of your Story. This field can be added to in the future.',null,$story->plot);
-
     $form->formEnd();
     $component->wrapEnd();
     ?>

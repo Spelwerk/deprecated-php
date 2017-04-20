@@ -27,11 +27,12 @@ $component->title('Cheat '.$person->nickname);
 
         $component->h2($attribute->name);
         $component->wrapStart();
-        $form->formStart();
-        $form->hidden('return', 'play', 'post');
-        $form->hidden('do', 'person--attribute--edit', 'post');
-        $form->hidden('id', $person->id, 'post');
-        $form->hidden('hash', $person->hash, 'post');
+        $form->formStart([
+            'do' => 'person--attribute--edit',
+            'id' => $person->id,
+            'secret' => $person->secret,
+            'return' => 'play/person/id'
+        ]);
         $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
         $form->formEnd();
         $component->wrapEnd();

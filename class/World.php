@@ -27,7 +27,7 @@ require_once('feature/Wound.php');
 
 class World {
 
-    var $id, $hash, $popularity, $owner, $name, $description, $money;
+    var $id, $popularity, $name, $description, $money;
 
     var $isOwner, $isCalculated;
 
@@ -54,18 +54,14 @@ class World {
             ? $curl->get('world/id/'.$id)['data'][0]
             : $array;
 
-        $this->hash = isset($hash)
-            ? $hash
-            : null;
-
-        $this->isOwner = isset($hash) && $hash == $data['hash']
-            ? true
-            : false;
+        $this->isOwner = false;
 
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
         $this->money = $data['money_attribute_id'];
+
+        $this->popularity = $data['popularity'];
         $this->thumbsup = $data['thumbsup'];
         $this->thumbsdown = $data['thumbsdown'];
 
@@ -144,16 +140,12 @@ class World {
         return $arrayList;
     }
 
-    public function getAugmentation($bionic = null) {
+    public function getAugmentation($bionic) {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($bionic)
-            ? 'world-augmentation/id/'.$this->id.'/bionic/'.$bionic
-            : 'world-augmentation/id/'.$this->id;
-
-        $result = $curl->get($get);
+        $result = $curl->get('bionic-augmentation/id/'.$bionic);
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {

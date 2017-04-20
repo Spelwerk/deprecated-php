@@ -25,13 +25,12 @@ $component->title('Edit '.$story->name);
         <?php // todo add person from list of friends who are in the same world
         $component->h2('Add Person');
         $component->wrapStart();
-        $form->formStart();
-
-        $form->hidden('return', 'play/story/id', 'post');
-        $form->hidden('do', 'story--person--add', 'post');
-        $form->hidden('id', $story->id, 'post');
-        $form->hidden('hash', $story->hash, 'post');
-
+        $form->formStart([
+            'do' => 'story--person--add',
+            'id' => $story->id,
+            'hash' => $story->hash,
+            'return' => 'play/story/id'
+        ]);
         $form->varchar(false,'person_link','Full Link','You can paste the copied link from a friend into this field if you wish.',null,null,'https://spelwerk.com/play/story/id/{id}');
         $form->number(false,'person_id','Person ID','Type the ID for the story you wish to add into this story');
         //$form->varchar(false,'person_hash','Person Hash','DESC');

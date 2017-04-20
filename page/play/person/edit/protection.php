@@ -38,7 +38,7 @@ $component->title('Edit '.$person->nickname);
 
         if(isset($list)) {
             foreach($list as $item) {
-                $person->buildRemoval($item->id, $item->name, $item->icon, 'protection');
+                $person->buildRemoval('protection', $item->id, $item->name, $item->icon);
             }
         }
 

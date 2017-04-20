@@ -142,8 +142,8 @@ class Form {
 
             '<label for="item--'.$inputUnique.'--1">'.
             '<div class="sw-js-pick-item sw-c-pick__item">'.
-            '<div class="sw-js-pick-true sw-c-pick__icon sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-pick-false sw-c-pick__icon"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-pick-true sw-c-pick__icon sw-is-hidden"><img src="/img/color/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon"><img src="/img/color/radio-false.png"/></div>'.
             '<div class="sw-c-pick__text">'.$pickTrue.'</div>'.
             '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--1" value="1"'.$inputRequired.'/>'.
             '</div>'.
@@ -151,8 +151,8 @@ class Form {
 
             '<label for="item--'.$inputUnique.'--0">'.
             '<div class="sw-js-pick-item sw-c-pick__item">'.
-            '<div class="sw-js-pick-true sw-c-pick__icon"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-pick-false sw-c-pick__icon sw-is-hidden"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-pick-true sw-c-pick__icon"><img src="/img/color/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon sw-is-hidden"><img src="/img/color/radio-false.png"/></div>'.
             '<div class="sw-c-pick__text">'.$pickFalse.'</div>'.
             '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--0" value="0"'.$inputRequired.' checked/>'.
             '</div>'.
@@ -267,34 +267,69 @@ class Form {
 
     // SPECIAL
 
-    public function quick($postDo, $postId, $postHash, $postReturn, $postIcon, $options = null) {
-        $returnid = isset($options['returnid'])
+    public function quick($options = null) {
+        $postDo = isset($options['do'])
+            ? '<input type="hidden" name="post--do" value="'.$options['do'].'"/>'
+            : null;
+
+        $postId = isset($options['id'])
+            ? '<input type="hidden" name="post--id" value="'.$options['id'].'"/>'
+            : null;
+
+        $postHash = isset($options['secret'])
+            ? '<input type="hidden" name="post--secret" value="'.$options['secret'].'"/>'
+            : null;
+
+        $postUser = isset($options['user'])
+            ? '<input type="hidden" name="post--user" value="'.$options['user'].'"/>'
+            : null;
+
+        $postReturn = isset($options['return'])
+            ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
+            : null;
+
+        $postReturnId = isset($options['returnid'])
             ? '<input type="hidden" name="post--returnid" value="'.$options['returnid'].'"/>'
             : null;
 
-        $context = isset($options['context'])
+        $postReturnAfter = isset($options['returnafter'])
+            ? '<input type="hidden" name="post--returnafter" value="'.$options['returnafter'].'"/>'
+            : null;
+
+        $postContext = isset($options['context'])
             ? '<input type="hidden" name="post--context" value="'.$options['context'].'"/>'
             : null;
 
-        $thing = isset($options['thing'])
-            ? '<input type="hidden" name="post--thing" value="'.$options['thing'].'"/>'
+        $postContext2 = isset($options['context2'])
+            ? '<input type="hidden" name="post--context2" value="'.$options['context2'].'"/>'
             : null;
 
-        $extra = isset($options['extra'])
+        $postExtra = isset($options['extra'])
             ? '<input type="hidden" name="post--extra" value="'.$options['extra'].'"/>'
             : null;
 
+        $postExtra2 = isset($options['extra2'])
+            ? '<input type="hidden" name="post--extra2" value="'.$options['extra2'].'"/>'
+            : null;
+
+        $postIcon = isset($options['icon'])
+            ? '<input class="sw-u-action" type="image" src="/img/'.$options['icon'].'.png" alt="Submit" />'
+            : '<input class="sw-u-action" type="image" src="/img/missing_icon.png" alt="Submit" />';
+
         return
             '<form action="/post.php" method="post">'.
-            '<input type="hidden" name="post--do" value="'.$postDo.'"/>'.
-            '<input type="hidden" name="post--id" value="'.$postId.'"/>'.
-            '<input type="hidden" name="post--hash" value="'.$postHash.'"/>'.
-            '<input type="hidden" name="post--return" value="'.$postReturn.'"/>'.
-            $returnid.
-            $context.
-            $thing.
-            $extra.
-            '<input class="sw-u-action" type="image" src="/img/'.$postIcon.'.png" alt="Submit" />'.
+            $postDo.
+            $postId.
+            $postHash.
+            $postUser.
+            $postReturn.
+            $postReturnId.
+            $postReturnAfter.
+            $postContext.
+            $postContext2.
+            $postExtra.
+            $postExtra2.
+            $postIcon.
             '</form>';
     }
 
@@ -351,21 +386,33 @@ class Form {
     }
 
     public function radio($tableName, $label, $labelDescription = null, $uniqueId = null, $selected = false) {
-        $selected = $selected
-            ? ' selected'
-            : '';
+        if($selected) {
+            $jsRadioItem = ' sw-is-selected';
+            $jsRadioBody = null;
+            $jsRadioTrue = null;
+            $jsRadioFalse = ' sw-is-hidden';
+
+            $inputSelected = ' selected';
+        } else {
+            $jsRadioItem = null;
+            $jsRadioBody = ' sw-is-hidden';
+            $jsRadioTrue = ' sw-is-hidden';
+            $jsRadioFalse = null;
+
+            $inputSelected = null;
+        }
 
         echo(
-            '<div class="sw-js-radio-item sw-c-list">'.
+            '<div class="sw-js-radio-item sw-c-list'.$jsRadioItem.'">'.
             '<div class="sw-l-wrap">'.
             '<label for="item--'.$uniqueId.'">'.
-            '<input class="sw-js-radio sw-is-hidden" type="radio" name="item--'.$tableName.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$selected.'/>'.
+            '<input class="sw-js-radio sw-is-hidden" type="radio" name="item--'.$tableName.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$inputSelected.'/>'.
             '<div class="sw-c-list__head">'.
-            '<div class="sw-js-radio-true sw-c-list__select sw-is-hidden"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-radio-false sw-c-list__select"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-radio-true sw-c-list__select'.$jsRadioTrue.'"><img src="/img/radio-true.png"/></div>'.
+            '<div class="sw-js-radio-false sw-c-list__select'.$jsRadioFalse.'"><img src="/img/radio-false.png"/></div>'.
             '<div class="sw-js-radio-title sw-c-list__title">'.$label.'</div>'.
             '</div>'.
-            '<div class="sw-js-radio-body sw-c-list__body sw-is-hidden">'.
+            '<div class="sw-js-radio-body sw-c-list__body'.$jsRadioBody.'">'.
             '<div class="sw-js-radio-info sw-c-list__text">'.
             $labelDescription.
             '</div>'.
@@ -387,8 +434,8 @@ class Form {
             '<label for="item--'.$uniqueId.'">'.
             '<input class="sw-js-checkbox-input sw-is-hidden" type="checkbox" name="item--'.$uniqueId.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$selected.'/>'.
             '<div class="sw-c-list__head">'.
-            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/checkbox-true.png"/></div>'.
-            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/checkbox-false.png"/></div>'.
+            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/color/check-true.png"/></div>'.
+            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/color/check-false.png"/></div>'.
             '<div class="sw-c-list__title">'.$label.'</div>'.
             '</div>'.
             '<div class="sw-js-checkbox-body sw-c-list__body sw-is-hidden">'.
@@ -455,8 +502,8 @@ class Form {
             ? '<input type="hidden" name="post--id" value="'.$options['id'].'"/>'
             : null;
 
-        $postHash = isset($options['hash']) && $options['hash'] != null
-            ? '<input type="hidden" name="post--hash" value="'.$options['hash'].'"/>'
+        $postSecret = isset($options['secret']) && $options['secret'] != null
+            ? '<input type="hidden" name="post--secret" value="'.$options['secret'].'"/>'
             : null;
 
         $postUser = isset($options['user']) && $options['user'] != null
@@ -467,33 +514,43 @@ class Form {
             ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
             : null;
 
-        $postReturnId = isset($options['return']) && $options['return'] != null
-            ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
+        $postReturnId = isset($options['returnid']) && $options['returnid'] != null
+            ? '<input type="hidden" name="post--returnid" value="'.$options['returnid'].'"/>'
+            : null;
+
+        $postReturnAfter = isset($options['returnafter']) && $options['returnafter'] != null
+            ? '<input type="hidden" name="post--returnafter" value="'.$options['returnafter'].'"/>'
             : null;
 
         $postContext = isset($options['context']) && $options['context'] != null
             ? '<input type="hidden" name="post--context" value="'.$options['context'].'"/>'
             : null;
 
-        $postThing = isset($options['extra1']) && $options['extra1'] != null
-            ? '<input type="hidden" name="post--thing" value="'.$options['extra1'].'"/>'
+        $postContext2 = isset($options['context2']) && $options['context2'] != null
+            ? '<input type="hidden" name="post--context2" value="'.$options['context2'].'"/>'
             : null;
 
-        $postExtra = isset($options['extra2']) && $options['extra2'] != null
-            ? '<input type="hidden" name="post--extra" value="'.$options['extra2'].'"/>'
+        $postExtra = isset($options['extra']) && $options['extra'] != null
+            ? '<input type="hidden" name="post--extra" value="'.$options['extra'].'"/>'
+            : null;
+
+        $postExtra2 = isset($options['extra2']) && $options['extra2'] != null
+            ? '<input type="hidden" name="post--extra2" value="'.$options['extra2'].'"/>'
             : null;
 
         echo(
             '<form action="/'.$formAction.'" method="post">'.
             $postDo.
             $postId.
-            $postHash.
+            $postSecret.
             $postUser.
             $postReturn.
             $postReturnId.
+            $postReturnAfter.
             $postContext.
-            $postThing.
-            $postExtra
+            $postContext2.
+            $postExtra.
+            $postExtra2
         );
     }
 

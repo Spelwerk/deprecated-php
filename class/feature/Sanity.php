@@ -40,7 +40,7 @@ class Sanity {
             ? 2
             : 1;
 
-        $this->icon = '/img/wound-sanity.png';
+        $this->icon = '/img/color/sanity.png';
     }
 
 }

@@ -8,7 +8,7 @@
  */
 class Weapon {
 
-    var $id, $name, $description, $price, $hidden, $legal, $icon;
+    var $id, $name, $description, $price, $special, $legal, $icon;
 
     var $damageD12, $damageBonus, $criticalD12, $hand, $initiative, $hit, $distance, $equipped;
 
@@ -23,7 +23,7 @@ class Weapon {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
-        $this->hidden = $data['hidden'];
+        $this->special = $data['special'];
         $this->legal = $data['legal'];
         $this->icon = $data['icon_path'];
 

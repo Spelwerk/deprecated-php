@@ -21,15 +21,16 @@ $component->title('Add Sanity');
 
     <?php
     $component->wrapStart();
-    $form->formStart();
-    $form->hidden('return', 'play/person/id', 'post');
-    $form->hidden('returnid', 'sanity', 'post');
-    $form->hidden('do', 'person--wound--add', 'post');
-    $form->hidden('context', 'sanity', 'post');
-    $form->hidden('id', $person->id, 'post');
-    $form->hidden('hash', $person->hash, 'post');
+    $form->formStart([
+        'do' => 'person--wound',
+        'id' => $person->id,
+        'secret' => $person->secret,
+        'return' => 'play/person/id',
+        'returnid' => 'sanity',
+        'context' => 'sanity'
+    ]);
     $form->varchar(true, 'name', 'Short Description', 'Taking sanity damage is no easy thing. Every mind can only take so much pressure before breaking.');
-    $form->pick(true, 'double', 'Double Damage','Check this if you have suffered double damage.');
+    $form->pick(true, 'timestwo', 'Double Damage','Check this if you have suffered double damage.');
     $form->formEnd();
     $component->wrapEnd();
     ?>

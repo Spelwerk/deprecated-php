@@ -29,10 +29,6 @@ class Wound {
             ? $data['hidden']
             : null;
 
-        $this->aid = isset($data['aid'])
-            ? $data['aid']
-            : null;
-
         $this->heal = isset($data['heal'])
             ? $data['heal']
             : null;
@@ -45,6 +41,6 @@ class Wound {
             ? 2
             : 1;
 
-        $this->icon = '/img/wound-wound.png';
+        $this->icon = '/img/color/wound.png';
     }
 }

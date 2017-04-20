@@ -40,6 +40,6 @@ class Disease {
             ? 2
             : 1;
 
-        $this->icon = '/img/wound-disease.png';
+        $this->icon = '/img/color/disease.png';
     }
 }

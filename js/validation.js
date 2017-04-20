@@ -121,8 +121,8 @@ $(document).ready(function() {
 
         var buttonValueText = $(this).parents('.sw-js-purchase-item').find('.sw-js-purchase-value');
 
-        var purchaseMin = parseInt(buttonInput.attr('min'));
-        var purchaseMax = parseInt(buttonInput.attr('max'));
+        var purchaseMin = buttonInput.attr('min');
+        var purchaseMax = buttonInput.attr('max');
 
         if($(this).hasClass('sw-js-purchase-plus') && buttonInputValue !== purchaseMax) {
             var p = parseInt(pointsTextValue);
@@ -138,7 +138,7 @@ $(document).ready(function() {
             var p = parseInt(pointsTextValue);
             var i = parseInt(buttonInputValue);
 
-            pointsTextValue = parseInt(p+i);
+            pointsTextValue = p+i;
 
             buttonInputValue--;
         }
@@ -148,6 +148,8 @@ $(document).ready(function() {
 
         buttonValueText.text(buttonInputValue);
         buttonInput.val(buttonInputValue);
+
+        console.log(buttonInputValue);
 
         if(pointsTextValue >= 0 || pointsTextValue === 0) {
             if(pointsText.hasClass('sw-is-invalid')) {
@@ -233,6 +235,7 @@ $(window).scroll(function() {
             points.removeClass('sw-c-points--position');
         }
     }
+
 });
 
 function rollNumber(type, times) {
