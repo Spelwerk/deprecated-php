@@ -54,7 +54,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
             <?php
             $form->formStart([
-                'do' => 'user--save--story',
+                'do' => 'user--save',
+                'context' => 'story',
                 'id' => $story->id,
                 'hash' => $story->hash,
                 'user' => $user->id,

@@ -29,8 +29,6 @@ class User {
         $this->id = $data['id'];
         $this->email = $data['email'];
         $this->displayname = $data['displayname'];
-        $this->firstname = $data['firstname'];
-        $this->surname = $data['surname'];
 
         $this->isActive = isset($this->token)
             ? true

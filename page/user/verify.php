@@ -12,28 +12,36 @@ global $form, $component, $user, $sitemap;
 $component->title('Verify');
 
 $component->wrapStart();
-$form->formStart();
 
-if($sitemap->context == 'add') {
-    $form->varchar(true,'verification','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
-    $form->hidden('do','user--verify--add','post');
-    $form->hidden('return','user/me','post');
+if($sitemap->context == 'new') {
+    $form->formStart([
+        'do' => 'user--new--verify',
+        'return' => 'user/me'
+    ]);
+    $form->varchar(true,'secret','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
     $form->formEnd(false,'Verify');
+    $component->link('/user/new/timeout','Code has not appeared? Resend it here!');
 }
 
 if($sitemap->context == 'login') {
-    $form->varchar(true,'verification','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
-    $form->hidden('do','user--verify--login','post');
-    $form->hidden('return','user/me','post');
+    $form->formStart([
+        'do' => 'user--login--verify',
+        'return' => 'user/me'
+    ]);
+    $form->varchar(true,'secret','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
     $form->formEnd(false,'Verify');
+    $component->link('/user/login/reset','Code has not appeared? Resend it here!');
 }
 
 if($sitemap->context == 'reset') {
-    $form->varchar(true,'verification','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
+    $form->formStart([
+        'do' => 'user--reset--verify',
+        'return' => 'user/me'
+    ]);
+    $form->varchar(true,'secret','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
     $form->password(true,'password','Password','Type your new password here.');
-    $form->hidden('do','user--verify--reset','post');
-    $form->hidden('return','user/me','post');
     $form->formEnd(true,'Verify');
+    $component->link('/user/login/reset','Code has not appeared? Resend it here!');
 }
 
 $component->wrapEnd();

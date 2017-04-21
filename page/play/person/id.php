@@ -55,7 +55,8 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
 
                 if($userOwner != true) {
                     $form->formStart([
-                        'do' => 'user--save--person',
+                        'do' => 'user--save',
+                        'context' => 'person',
                         'id' => $person->id,
                         'secret' => $person->secret,
                         'return' => 'play/person/id',

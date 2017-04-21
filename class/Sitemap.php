@@ -546,7 +546,7 @@ class Sitemap {
                 $this->page = 'page/user/verify.php';
                 $this->context = $context;
                 $this->hash = $hash;
-                $this->menuLink = 'Login';
+                $this->menuLink = 'Me';
                 break;
 
             case 'me':
@@ -554,10 +554,6 @@ class Sitemap {
                 $this->menuLink = 'Me';
                 break;
         }
-    }
-
-    function switch_user_me() {
-
     }
 }
 

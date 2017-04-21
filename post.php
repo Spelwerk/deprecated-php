@@ -7,11 +7,14 @@
  */
 
 require_once('class/Curl.php');
+require_once('class/User.php');
 require_once('php/config.php');
 
 $curl = new Curl($config_curl);
+$user = new User();
 
 $POST_ERROR = null;
+$USER_TOKEN = $user->token;
 
 $POST_DO = isset($_POST['post--do'])
     ? $_POST['post--do']
@@ -53,12 +56,6 @@ $POST_EXTRA2 = isset($_POST['post--extra2'])
     ? $_POST['post--extra2']
     : null;
 
-$POST_USER = isset($_POST['post--user'])
-    ? $_POST['post--user']
-    : null;
-
-$USER_TOKEN = null;
-
 function redirect($url) {
     ob_start();
     header('Location: '.$url, true, 303);
@@ -92,45 +89,12 @@ function cookie_add($type, $id, $secret) {
     setcookie($cookieName, serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
 }
 
-function explode_key_value($postData) {
-    $return = [];
-
-    foreach($postData as $key => $value) {
-        $explode = explode('__', $key);
-
-        if(isset($explode[1])) {
-            $return[$explode[0]] = $explode[1];
-
-            $return['value'] = $value;
-        } else {
-            $return[$key] = $value;
-        }
-    }
-
-    return $return;
-}
 
 
 
-function unsetUser() {
-    unset($_COOKIE['sw_user_token']);
+/** MANIFESTATION */
 
-    setcookie('sw_user_token', '', time() - 3600, '/');
-
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
-    }
-}
-
-function setUser($token) {
-    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
-}
-
-
+// todo REWORK
 
 function manifestation_post($postData) {
     global $curl;
@@ -380,33 +344,9 @@ function person_weapon_post($postData, $personId, $personSecret) {
     checkError($resultArray);
 }
 
-// OBSOLETE?
-
-function person_has_edit($table, $personId, $tableId, $post) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->put('person-'.$table.'/id/'.$personId.'/id/'.$tableId, $post);
-
-    checkError($resultArray);
-}
-
-function person_wound_add($postData, $personId, $contextRoute, $woundId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $idName = $contextRoute.'_id';
-
-    $post = ['person_id' => $personId, $idName => $woundId, 'timestwo' => $postData['double']];
-
-    $resultArray[] = $curl->post('person-'.$contextRoute, $post);
-
-    checkError($resultArray);
-}
-
 /** STORY */
+
+// todo REWORK
 
 function story_add($postData) {
     global $curl;
@@ -486,157 +426,55 @@ function story_has_delete($table, $thingId, $personId) {
     checkError($resultArray);
 }
 
-/** USER */
+// USER
 
-function user_add($postData) {
+function user_set($route, $postData) {
     global $curl;
 
-    unsetUser();
-
-    $result = $curl->post('user', $postData);
+    $result = $curl->post($route,$postData);
 
     $token = isset($result['token'])
         ? $result['token']
         : null;
 
-    setUser($token);
+    user_unset();
+    user_set_token($token);
 }
 
-function user_add_verify($postData) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->post('user/verify', $postData);
-
-    checkError($resultArray);
+function user_set_token($token) {
+    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
 }
 
-function user_add_timeout($postData) {
+function user_save($postContext, $userId, $saveId, $saveSecret, $saveOwner) {
     global $curl;
 
-    $resultArray = null;
+    $contextRoute = 'user-'.$postContext;
+    $contextUnderscore = $postContext.'_id';
 
-    $resultArray[] = $curl->post('user/verify/again', $postData);
+    $post = isset($saveSecret)
+        ? ['user_id' => $userId, $contextUnderscore => $saveId, 'owner' => $saveOwner, 'secret' => $saveSecret]
+        : ['user_id' => $userId, $contextUnderscore => $saveId, 'owner' => $saveOwner];
 
-    checkError($resultArray);
+    $curl->post($contextRoute,$post);
 }
 
-function user_login($postData) {
-    global $curl;
+function user_unset() {
+    unset($_COOKIE['sw_user_token']);
 
-    unsetUser();
+    setcookie('sw_user_token', '', time() - 3600, '/');
 
-    if($postData['email'] && $postData['password']) {
-        $result = $curl->post('user/login/password', $postData);
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
     }
-
-    $token = isset($result['token'])
-        ? $result['token']
-        : null;
-
-    setUser($token);
 }
 
-function user_login_email($postData) {
-    global $curl;
+// WORLD
 
-    $resultArray[] = null;
-
-    if($postData['email']) {
-        $resultArray[] = $curl->post('user/login/mail/start', $postData);
-    }
-
-    checkError($resultArray);
-}
-
-function user_login_email_verify($postData) {
-    global $curl;
-
-    unsetUser();
-
-    if($postData['verification']) {
-        $result = $curl->post('user/login/mail/verify', $postData);
-    }
-
-    $token = isset($result['token'])
-        ? $result['token']
-        : null;
-
-    setUser($token);
-}
-
-function user_reset($postData) {
-    global $curl;
-
-    $resultArray = null;
-
-    if($postData['email']) {
-        $resultArray[] = $curl->put('user/password/start', $postData);
-    }
-
-    checkError($resultArray);
-}
-
-function user_reset_verify($postData) {
-    global $curl;
-
-    $resultArray = null;
-
-    if($postData['hash'] && $postData['password']) {
-        $resultArray[] = $curl->put('user/password/set', $postData);
-    }
-
-    checkError($resultArray);
-}
-
-function user_save_person($userId, $personId, $personSecret) {
-    global $curl;
-
-    $resultArray = null;
-
-    $post = isset($personSecret)
-        ? ['user_id' => $userId, 'person_id' => $personId, 'hash' => $personSecret]
-        : ['user_id' => $userId, 'person_id' => $personId];
-
-    $resultArray[] = $curl->post('user-person', $post);
-
-    cookie_person_add($personId, $personSecret);
-
-    checkError($resultArray);
-}
-
-function user_save_story($userId, $storyId, $storySecret) {
-    global $curl;
-
-    $resultArray = null;
-
-    $post = isset($storySecret)
-        ? ['user_id' => $userId, 'story_id' => $storyId, 'hash' => $storySecret]
-        : ['user_id' => $userId, 'story_id' => $storyId];
-
-    $resultArray[] = $curl->post('user-story', $post);
-
-    cookie_person_add($storyId, $storySecret);
-
-    checkError($resultArray);
-}
-
-function user_save_world($userId, $worldId, $worldSecret) {
-    global $curl;
-
-    $resultArray = null;
-
-    $post = isset($worldSecret)
-        ? ['user_id' => $userId, 'world_id' => $worldId, 'hash' => $worldSecret]
-        : ['user_id' => $userId, 'world_id' => $worldId];
-
-    $resultArray[] = $curl->post('user-world', $post);
-
-    checkError($resultArray);
-}
-
-/** WORLD */
+// todo REWORK
 
 function world_postWorld($postData) {
     global $curl;
@@ -814,7 +652,7 @@ function world_wound_add($postData, $contextRoute) {
 /** SWITCHES */
 
 function switch_manifestation($do) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER;
+    global $curl, $POST_ID, $POST_SECRET, $POST_USER, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
     switch($do) {
         default: break;
@@ -1076,7 +914,7 @@ function switch_person($do) {
 }
 
 function switch_story($do) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER, $POST_ERROR;
+    global $curl, $POST_ID, $POST_SECRET, $POST_USER, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
     switch($do) {
         default: break;
@@ -1111,55 +949,63 @@ function switch_story($do) {
 }
 
 function switch_user($do) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER;
+    global $curl, $POST_ID, $POST_SECRET, $POST_USER, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2, $USER_TOKEN;
 
     switch($do) {
         default: break;
 
-        case 'user--add':
-            user_add($POST_DATA);
+        case 'user--new':
+            user_set('user',$POST_DATA);
             break;
 
-        case 'user--add--timeout':
-            user_add_timeout($POST_DATA);
+        case 'user--new--verify':
+            user_set('user/verify',$POST_DATA);
             break;
 
-        case 'user--login':
-            user_login($POST_DATA);
+        case 'user--new--timeout':
+            $curl->post('user/verify/again',$POST_DATA);
+            break;
+
+        case 'user--login--password':
+            user_set('user/login/password',$POST_DATA);
             break;
 
         case 'user--login--email':
-            user_login_email($POST_DATA);
+            $curl->post('user/login/email',$POST_DATA);
+            break;
+
+        case 'user--login--verify':
+            user_set('user/login/verify',$POST_DATA);
             break;
 
         case 'user--reset':
-            user_reset($POST_DATA);
+            $curl->post('user/reset/email',$POST_DATA);
             break;
 
-        case 'user--verify--add':
-            user_add_verify($POST_DATA);
+        case 'user--reset--verify':
+            user_set('user/reset/verify',$POST_DATA);
             break;
 
-        case 'user--verify--login':
-            user_login_email_verify($POST_DATA);
+        case 'user--edit':
+            $curl->put('user/id/'.$POST_USER,$POST_DATA,$USER_TOKEN);
             break;
 
-        case 'user--verify--reset':
-            user_reset_verify($POST_DATA);
+        case 'user--admin':
+            $curl->put('user/id/'.$POST_USER.'/admin',$POST_DATA,$USER_TOKEN);
             break;
 
         case 'user--logout':
-            unsetUser();
+            user_unset();
             break;
 
-        case 'user--save--person':
-            user_save_person($POST_USER, $POST_ID, $POST_SECRET);
+        case 'user--save':
+            user_save($POST_CONTEXT, $POST_USER, $POST_ID, $POST_SECRET, $POST_EXTRA);
             break;
     }
 }
 
 function switch_world($do) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_USER;
+    global $curl, $POST_ID, $POST_SECRET, $POST_USER, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
     switch($do) {
         default: break;

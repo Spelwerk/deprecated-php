@@ -366,8 +366,8 @@ class System {
             '<label for="post--checkall">'.
             '<input class="sw-js-checkbox-all sw-is-hidden" type="checkbox" name="post--checkall" id="post--checkall" value="0"/>'.
             '<div class="sw-c-list__head">'.
-            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/checkbox-true.png"/></div>'.
-            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/checkbox-false.png"/></div>'.
+            '<div class="sw-js-checkbox-true sw-c-list__select sw-is-hidden"><img src="/img/check-true.png"/></div>'.
+            '<div class="sw-js-checkbox-false sw-c-list__select"><img src="/img/check-false.png"/></div>'.
             '<div class="sw-c-list__title">Check All</div>'.
             '</div>'.
             '</div>'.
