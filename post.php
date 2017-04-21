@@ -904,8 +904,8 @@ function switch_person($do) {
             checkError($resultArray);
             break;
 
-        case 'person--attribute--edit':
-            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
+        case 'person--attribute':
+            person_attribute_post($POST_DATA, $POST_ID, $POST_SECRET);
             break;
 
         case 'person--attribute--money':
@@ -999,7 +999,6 @@ function switch_person($do) {
 
         case 'person--manifestation--power':
             person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
-
             $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_power' => 0]);
             checkError($resultArray);
             break;
@@ -1279,7 +1278,7 @@ $d = isset($POST_RETURNID)
     : '#content';
 
 if(!$POST_ERROR) {
-    //redirect($baseUrl.$r.$i.$h.$a.$d);
+    redirect($baseUrl.$r.$i.$h.$a.$d);
 } else {
     print_r($POST_ERROR);
 }

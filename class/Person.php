@@ -428,6 +428,20 @@ class Person {
     }
 
 
+
+    public function makeAttributeList() {
+        $list = [];
+
+        $list[] = $this->getAttribute(null,$this->world->experience)[0];
+        $list[] = $this->getAttribute(null,$this->world->damage)[0];
+
+        if($this->isSupernatural) {
+            $list[] = $this->getAttribute(null,$this->manifestation->powerAttribute)[0];
+        }
+
+        $this->makeCard($list);
+    }
+
     public function makeAugmentation() {
         global $component;
 

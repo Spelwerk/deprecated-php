@@ -87,7 +87,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         $component->p('This is '.$person->firstname.' "'.$person->nickname.'" '.$person->surname.'. '.$person->firstname.' is a '.$person->occupation);
 
         if($person->isPlayable && $person->isCalculated) {
-            $component->p($person->firstname.' is '.$person->age.' years old. '.$person->firstname.' is a '.$person->gender);
+            $component->p($person->firstname.' is '.$person->age.' years old. '.$person->firstname.'\'s gender is '.$person->gender);
         }
 
         $component->sectionEnd();
@@ -155,12 +155,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
             $component->h2('Features');
             $person->makeFeatures();
             $person->makeExpertiseList();
-
-            if($person->isSupernatural) {
-                $person->makeCard($person->getAttribute($person->world->attributePower));
-            }
-
-            $person->makeCard($person->getAttribute($person->world->attributeExperience));
+            $person->makeAttributeList();
 
             if($person->isOwner) {
                 $component->linkButton($person->siteLink.'/edit', 'Level Up', '/img/arrow-up.png');

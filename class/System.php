@@ -87,7 +87,7 @@ class System {
 
                 $this->person_rollAttribute(
                     $person,
-                    $person->manifestation->power,
+                    $person->manifestation->powerAttribute,
                     $person->pointPower,
                     'manifestation--power'
                 );
@@ -698,7 +698,7 @@ class System {
         $idList = [];
         $expList = [];
 
-        $personPower = $curl->get('person-attribute/id/'.$person->id.'/attribute/'.$person->manifestation->power)['data'][0]['value'];
+        $personPower = $curl->get('person-attribute/id/'.$person->id.'/attribute/'.$person->manifestation->powerAttribute)['data'][0]['value'];
 
         $form->formStart([
             'do' => 'person--manifestation--doctrine',

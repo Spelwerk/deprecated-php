@@ -28,7 +28,7 @@ $component->title('Cheat '.$person->nickname);
         $component->h2($attribute->name);
         $component->wrapStart();
         $form->formStart([
-            'do' => 'person--attribute--edit',
+            'do' => 'person--attribute',
             'id' => $person->id,
             'secret' => $person->secret,
             'return' => 'play/person/id'

@@ -10,7 +10,7 @@ class Manifestation {
 
     var $id, $name, $description, $icon;
 
-    var $disciplineAttributeType, $skillAttributeType, $expertiseType, $power;
+    var $disciplineAttributeType, $skillAttributeType, $expertiseType, $powerAttribute;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -30,6 +30,6 @@ class Manifestation {
         $this->disciplineAttributeType = $data['attributetype_id'];
         $this->skillAttributeType = $data['skill_attributetype_id'];
         $this->expertiseType = $data['expertisetype_id'];
-        $this->power = $data['power_attribute_id'];
+        $this->powerAttribute = $data['power_attribute_id'];
     }
 }

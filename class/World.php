@@ -71,10 +71,9 @@ class World {
         $this->attributeBody = 1;
         $this->attributeCombat = 2;
         $this->attributeConsumable = 8;
-        $this->attributeDamage = 3;
-        $this->attributeExperience = 9;
-        $this->attributePower = 7;
+        $this->attributeWound = 3;
         $this->attributeProtection = 4;
+        $this->attributeDamage = 5;
         $this->attributeReputation = 6;
 
         $this->attributeSkill = $data['skill_attributetype_id'];
@@ -104,6 +103,7 @@ class World {
             ? $data['supernatural_name']
             : null;
 
+        $this->damage = 4;
         $this->experience = 22;
 
         $this->tolerance = 1;
