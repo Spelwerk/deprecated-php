@@ -28,7 +28,7 @@ if(!$sitemap->context) {
 if($sitemap->context == 'email') {
     $form->formStart([
         'do' => 'user--login--email',
-        'return' => 'user/me'
+        'return' => 'user/sent'
     ]);
     $form->email(true,'email','Email','We will send you an email with a secure Verification Code that you will use to verify.');
     $form->formEnd(false,'Login');
@@ -37,7 +37,7 @@ if($sitemap->context == 'email') {
 if($sitemap->context == 'reset') {
     $form->formStart([
         'do' => 'user--reset',
-        'return' => 'user/login'
+        'return' => 'user/sent'
     ]);
 
     $form->email(true,'email','Email','We will send you an email with a secure Verification Code that you will use to reset your password.');

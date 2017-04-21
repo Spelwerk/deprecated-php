@@ -76,7 +76,16 @@ function checkError($resultArray) {
 }
 
 function cookie_add($type, $id, $secret) {
-    $cookieName = 'sw_'.$type.'_list';
+    global $cookieArray;
+
+    $cookieName = null;
+
+    foreach($cookieArray as $key => $value) {
+        if($key == $type) {
+            $cookieName = $value;
+        }
+    }
+
     $cookieId = $type.'_id';
     $cookieSecret = $type.'_hash';
 
@@ -442,7 +451,11 @@ function user_set($route, $postData) {
 }
 
 function user_set_token($token) {
-    setcookie('sw_user_token', $token, time() + (86400 * 30), "/");
+    global $cookieArray;
+
+    $cookieName = $cookieArray['token'];
+
+    setcookie($cookieName, $token, time() + (86400 * 30), "/");
 }
 
 function user_save($postContext, $userId, $saveId, $saveSecret, $saveOwner) {
@@ -459,9 +472,13 @@ function user_save($postContext, $userId, $saveId, $saveSecret, $saveOwner) {
 }
 
 function user_unset() {
-    unset($_COOKIE['sw_user_token']);
+    global $cookieArray;
 
-    setcookie('sw_user_token', '', time() - 3600, '/');
+    $cookieName = $cookieArray['token'];
+
+    unset($_COOKIE[$cookieName]);
+
+    setcookie($cookieName, '', time() - 3600, '/');
 
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();

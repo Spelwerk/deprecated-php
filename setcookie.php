@@ -7,7 +7,9 @@
  */
 require_once('php/config.php');
 
-setcookie('sw_cookie_policy', '1', time() + (9 * 365 * 24 * 60 * 60));
+global $cookieArray;
+
+setcookie($cookieArray['policy'], '1', time() + (9 * 365 * 24 * 60 * 60));
 
 ob_start();
 header('Location: '.$baseUrl.$_GET['return'], true, 303);

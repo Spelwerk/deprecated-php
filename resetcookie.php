@@ -7,7 +7,11 @@
  */
 require_once('php/config.php');
 
-setcookie('sw_person_list', '', time() -2000); setcookie('sw_world_list', '', time() -2000);
+global $cookieArray;
+
+foreach($cookieArray as $key => $value) {
+    setcookie($value, '', time() -2000);
+}
 
 ob_start();
 header('Location: '.$baseUrl.$_GET['return'], true, 303);

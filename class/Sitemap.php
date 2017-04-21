@@ -523,6 +523,7 @@ class Sitemap {
         switch($switch) {
             default:
                 $this->page = 'page/user/user.php';
+                $this->menuLink = 'Login';
                 break;
 
             case 'new':
@@ -546,7 +547,12 @@ class Sitemap {
                 $this->page = 'page/user/verify.php';
                 $this->context = $context;
                 $this->hash = $hash;
-                $this->menuLink = 'Me';
+                $this->menuLink = 'Login';
+                break;
+
+            case 'sent':
+                $this->page = 'page/user/sent.php';
+                $this->menuLink = 'Login';
                 break;
 
             case 'me':

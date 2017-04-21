@@ -13,7 +13,7 @@ $component->subtitle('Press the button below if you wish to logout of this user.
 $component->wrapStart();
 $form->formStart([
     'do' => 'user--logout',
-    'return' => 'user'
+    'return' => 'user/login'
 ]);
 $form->formEnd(false,'Logout');
 ?>

@@ -5,7 +5,7 @@
  * Date: 04/04/2017
  * Time: 22:31
  */
-global $user, $component, $curl;
+global $user, $component, $curl, $cookieArray;
 
 $component->title('Person');
 $component->linkAction('/play/person/new','Create Person','A person, or a character, is what you use to play the game.','/img/link-person-w.png');
@@ -16,8 +16,8 @@ $userList = $user->isActive
     ? $user->getPerson()
     : null;
 
-$cookieList = isset($_COOKIE['sw_person_list'])
-    ? unserialize($_COOKIE['sw_person_list'])
+$cookieList = isset($_COOKIE[$cookieArray['person']])
+    ? unserialize($_COOKIE[$cookieArray['person']])
     : null;
 
 $popularList = isset($result['data'])

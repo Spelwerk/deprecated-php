@@ -45,7 +45,7 @@ $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 <body>
 
 <?php
-if(!isset($_COOKIE['sw_cookie_policy'])) {
+if(!isset($_COOKIE[$cookieArray['policy']])) {
     require_once('php/cookiepolicy.php');
 }
 ?>

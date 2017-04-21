@@ -5,7 +5,7 @@
  * Date: 05/04/2017
  * Time: 09:13
  */
-global $user, $component, $curl;
+global $user, $component, $curl, $cookieArray;
 
 $component->title('Story');
 $component->linkAction('/play/story/new','Create Story','Text about stories.','/img/link-story-w.png');
@@ -14,8 +14,8 @@ $userList = $user->isActive
     ? $user->getPerson()
     : null;
 
-$cookieList = isset($_COOKIE['sw_story_list'])
-    ? unserialize($_COOKIE['sw_story_list'])
+$cookieList = isset($_COOKIE[$cookieArray['story']])
+    ? unserialize($_COOKIE[$cookieArray['story']])
     : null;
 
 $filterList = null;

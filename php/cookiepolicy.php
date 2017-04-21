@@ -8,7 +8,6 @@
 
 ?>
 
-<div class="sw-l-cookiepolicy">
-    <h2>We use cookies</h2>
-    <a class="sw-c-link sw-c-link--dangerous" href="../setcookie.php?return=<?php echo $_SERVER['REQUEST_URI']; ?>">OK</a>
-</div>
+<a class="sw-c-cookiepolicy" href="../setcookie.php?return=<?php echo $_SERVER['REQUEST_URI']; ?>">
+    This page uses cookies to function properly.<br/>Click here to confirm.
+</a>

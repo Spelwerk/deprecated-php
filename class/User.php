@@ -12,10 +12,10 @@ class User {
     var $id, $email, $displayname, $firstname, $surname, $token, $permissions;
 
     public function __construct() {
-        global $curl;
+        global $curl, $cookieArray;
 
-        $this->token = isset($_COOKIE['sw_user_token'])
-            ? $_COOKIE['sw_user_token']
+        $this->token = isset($_COOKIE[$cookieArray['token']])
+            ? $_COOKIE[$cookieArray['token']]
             : null;
 
         $result = isset($this->token)
