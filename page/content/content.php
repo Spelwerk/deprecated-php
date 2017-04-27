@@ -8,6 +8,6 @@
 global $component;
 
 $component->title('Content');
-$component->h1('Sorry');
-$component->subtitle('This page has not been finished yet.');
+$component->h1('Create');
+$component->linkButton('/content/world/new','New World');
 ?>

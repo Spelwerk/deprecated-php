@@ -8,10 +8,8 @@
 global $sitemap, $component;
 
 require_once('./class/Person.php');
-require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
-$system = new System();
 
 $component->title('Edit '.$person->nickname);
 ?>
@@ -30,7 +28,7 @@ $component->title('Edit '.$person->nickname);
     $component->p('Once attached. Augmentations cannot be removed.');
     $component->wrapEnd();
 
-    $system->person_checkAugmentation($person, $sitemap->context);
+    $person->postAugmentation($sitemap->context);
     ?>
 
     <script src="/js/validation.js"></script>

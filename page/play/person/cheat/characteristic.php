@@ -58,12 +58,12 @@ $component->title('Cheat '.$person->nickname);
         <?php
         $list = $person->getCharacteristic();
 
-        $component->h2('Characteristic');
+        $component->h2('Gift');
 
         $component->wrapStart();
 
         foreach($list as $item) {
-            $person->buildRemoval($item->id, $item->name, $item->icon, 'characteristic');
+            $person->buildRemoval($item->id, $item->name, $item->icon, 'Gift');
         }
 
         $component->linkButton($person->siteLink.'/cheat/characteristic/gift','Add Gift');

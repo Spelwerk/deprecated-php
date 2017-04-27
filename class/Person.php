@@ -3,24 +3,13 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 2016-11-10
- * Time: 09:09
+ * Date: 2016-11-16
+ * Time: 16:49
  */
 
 require_once('World.php');
 
 class Person {
-
-    var $id, $secret;
-
-    var $popularity, $thumbsup, $thumbsdown;
-
-    var $nickname, $firstname, $surname, $age, $gender, $occupation,
-        $description, $personality, $appearance;
-
-    var $isOwner, $isPlayable, $isCalculated, $isCheater, $isSupernatural;
-
-    var $world, $species, $background, $nature, $identity, $manifestation, $focus;
 
     public function __construct($id, $secret = null) {
         global $curl;
@@ -49,6 +38,9 @@ class Person {
         $this->occupation = $data['occupation'];
         $this->gender = $data['gender'];
         $this->description = $data['description'];
+        $this->drive = $data['drive'];
+        $this->pride = $data['pride'];
+        $this->problem = $data['problem'];
 
         $this->world = new World($data['world_id']);
 
@@ -96,7 +88,7 @@ class Person {
         }
 
         if(!$this->isCalculated) {
-            $creation = $curl->get('person-creation/id/'.$this->id)['data'][0];
+            $creation = $curl->get('person/id/'.$this->id.'/creation')['data'][0];
 
             $this->pointSupernatural = intval($creation['point_supernatural']);
             $this->pointPower= intval($creation['point_power']);
@@ -114,6 +106,7 @@ class Person {
             : '/play/person/id/'.$this->id;
     }
 
+    // GET
 
     public function getAttribute($type = null, $id = null) {
         global $curl;
@@ -121,8 +114,8 @@ class Person {
         $arrayList = null;
 
         $get = isset($type)
-            ? 'person-attribute/id/'.$this->id.'/type/'.$type
-            : 'person-attribute/id/'.$this->id.'/attribute/'.$id;
+            ? 'person/id/'.$this->id.'/attribute/type/'.$type
+            : 'person/id/'.$this->id.'/attribute/id/'.$id;
 
         $result = $curl->get($get);
 
@@ -141,8 +134,8 @@ class Person {
         $arrayList = null;
 
         $get = isset($bionic)
-            ? 'person-augmentation/id/'.$this->id.'/bionic/'.$bionic
-            : 'person-augmentation/id/'.$this->id;
+            ? 'person/id/'.$this->id.'/augmentation/bionic/'.$bionic
+            : 'person/id/'.$this->id.'/augmentation';
 
         $result = $curl->get($get);
 
@@ -155,20 +148,14 @@ class Person {
         return $arrayList;
     }
 
-    public function getBionic($bodypart = null, $id = null) {
+    public function getBionic($id = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = 'person-bionic/id/'.$this->id;
-
-        $get = isset($bodypart)
-            ? 'person-bionic/id/'.$this->id.'/bodypart/'.$bodypart
-            : $get;
-
         $get = isset($id)
-            ? 'person-bionic/id/'.$this->id.'/bionic/'.$id
-            : $get;
+            ? 'person/id/'.$this->id.'/bionic/id/'.$id
+            : 'person/id/'.$this->id.'/bionic';
 
         $result = $curl->get($get);
 
@@ -186,31 +173,11 @@ class Person {
 
         $arrayList = null;
 
-        $result = $curl->get('person-disease/id/'.$this->id);
+        $result = $curl->get('person/id/'.$this->id.'/disease');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
                 $arrayList[] = new Disease(null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
-    public function getCharacteristic($gift = null) {
-        global $curl;
-
-        $arrayList = null;
-
-        $get = isset($gift)
-            ? 'person-characteristic/id/'.$this->id.'/gift/'.$gift
-            : 'person-characteristic/id/'.$this->id;
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Characteristic(null, $array);
             }
         }
 
@@ -223,8 +190,8 @@ class Person {
         $arrayList = null;
 
         $get = isset($type)
-            ? 'person-expertise/id/'.$this->id.'/type/'.$type
-            : 'person-expertise/id/'.$this->id;
+            ? 'person/id/'.$this->id.'/expertise/type/'.$type
+            : 'person/id/'.$this->id.'/expertise';
 
         $result = $curl->get($get);
 
@@ -237,12 +204,44 @@ class Person {
         return $arrayList;
     }
 
+    public function getGift() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('person/id/'.$this->id.'/gift');
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Gift(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getImperfection() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('person/id/'.$this->id.'/imperfection');
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Imperfection(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getMilestone() {
         global $curl;
 
         $arrayList = null;
 
-        $result = $curl->get('person-milestone/id/'.$this->id);
+        $result = $curl->get('person/id/'.$this->id.'/milestone');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -259,8 +258,8 @@ class Person {
         $arrayList = null;
 
         $get = isset($equipped)
-            ? 'person-protection/id/'.$this->id.'/equipped/'.$equipped
-            : 'person-protection/id/'.$this->id;
+            ? 'person/id/'.$this->id.'/protection/equipped/'.$equipped
+            : 'person/id/'.$this->id.'/protection';
 
         $result = $curl->get($get);
 
@@ -278,7 +277,7 @@ class Person {
 
         $arrayList = null;
 
-        $result = $curl->get('person-sanity/id/'.$this->id);
+        $result = $curl->get('person/id/'.$this->id.'/sanity');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -289,14 +288,16 @@ class Person {
         return $arrayList;
     }
 
+    public function getSoftware() {} // todo
+
     public function getWeapon($equipped = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($equipped)
-            ? 'person-weapon/id/'.$this->id.'/equipped/'.$equipped
-            : 'person-weapon/id/'.$this->id;
+            ? 'person/id/'.$this->id.'/weapon/equipped/'.$equipped
+            : 'person/id/'.$this->id.'/weapon';
 
         $result = $curl->get($get);
 
@@ -314,7 +315,7 @@ class Person {
 
         $arrayList = null;
 
-        $result = $curl->get('person-wound/id/'.$this->id);
+        $result = $curl->get('person/id/'.$this->id.'/wound');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -325,6 +326,570 @@ class Person {
         return $arrayList;
     }
 
+    // POST
+
+    public function postAttribute($attributeId) {
+
+    }
+
+    public function postAugmentation($bionicId) {
+        global $system, $form, $component;
+
+        $bionic = $this->getBionic($bionicId)[0];
+        $augmentationList = $this->world->getAugmentation($bionicId);
+        $idList = $system->idList($this->getAugmentation());
+
+        $component->h2($bionic->name);
+
+        $form->formStart([
+            'do' => 'person--augmentation',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id',
+            'context' => $bionicId
+        ]);
+
+        $system->checkboxList($augmentationList, $idList);
+        $system->checkboxAll();
+        $form->formEnd();
+    }
+
+    public function postBackground() {
+        global $component;
+
+        $component->linkAction('#','Bookmark this Person','The framework for your character has been created in our database. Time to bookmark so you can return whenever you want!','/img/link-bookmark-w.png',true,'sw-js-bookmark');
+
+        $component->h1('Background');
+        $component->subtitle('You will select <span>1</span> background from which you will gain a few attribute and skill changes.');
+
+        $this->radioList('background_id', $this->world->getBackground($this->species->id), [
+            'do' => 'background',
+            'roll' => 'Background'
+        ]);
+    }
+
+    public function postBionic() {
+        global $system, $form;
+
+        $bionicList = $this->world->getBionic();
+        $idList = $system->idList($this->getBionic());
+
+        $form->formStart([
+            'do' => 'person--bionic',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        $system->checkboxList($bionicList, $idList);
+
+        $system->checkboxAll();
+        $form->formEnd();
+    }
+
+    public function postDescription() {
+        global $form, $component;
+
+        $component->h1('Name & Details');
+
+        $component->wrapStart();
+        $form->formStart([
+            'do' => 'person--describe',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+        $form->varchar(true, 'firstname', 'First Name');
+        $form->varchar(true, 'surname', 'Surname');
+        $form->varchar(true, 'drive', 'Drive', 'What drives your character forward?');
+        $form->varchar(true, 'pride', 'Pride', 'What is the thing your character is most proud of?');
+        $form->varchar(true, 'problem', 'Problem', 'What kind of problem does your character fight with?');
+        $form->varchar(true, 'gender', 'Gender');
+        $form->text(false, 'description', 'Description', 'Describe your character.');
+        $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
+        $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
+        $form->formEnd();
+        $component->wrapEnd();
+    }
+
+    public function postDisease() {
+
+    }
+
+    public function postDoctrine($cheat = false) {
+        global $component, $curl, $form;
+
+        $component->h1($this->manifestation->name);
+
+        $exp = $this->getAttribute(null, $this->world->experience)[0];
+        $pts = $this->pointSupernatural;
+
+        $points = intval($exp->value + $pts);
+
+        $supernaturalList = $this->world->getAttribute($this->manifestation->disciplineAttributeType, $this->species->id);
+        $expertiseList = $this->getExpertise();
+        $currentList = $this->getAttribute($this->manifestation->disciplineAttributeType);
+        $idList = [];
+        $expList = [];
+
+        $personPower = $curl->get('person/id/'.$this->id.'/attribute/id/'.$this->manifestation->powerAttribute)['data'][0]['value'];
+
+        $form->formStart([
+            'do' => 'person--manifestation--doctrine',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        if($cheat) {
+            echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
+        } else {
+            $form->points($points);
+            $form->hidden('experience', $this->world->experience, 'post');
+        }
+
+        if(count($currentList) != null) {
+            foreach($currentList as $current) {
+                $idList[] = $current->id;
+
+                $maximum = $personPower > $current->maximum
+                    ? $current->maximum
+                    : $personPower;
+
+                $form->purchase('attribute_id', $current->name, $current->description, $current->icon, $current->id, 0, $maximum, $current->value);
+            }
+        }
+
+        foreach($expertiseList as $expertise) {
+            $expList[] = $expertise->attribute['id'];
+        }
+
+        foreach($supernaturalList as $supernatural) {
+            if(in_array($supernatural->id, $expList) && !in_array($supernatural->id, $idList)) {
+
+                $maximum = $personPower > $supernatural->maximum
+                    ? $current->maximum
+                    : $personPower;
+
+                $form->purchase('attribute_id', $supernatural->name, $supernatural->description, $supernatural->id, 0, $maximum);
+            }
+        }
+
+        $form->formEnd();
+    }
+
+    public function postDoctrineRadio() {
+        global $component;
+
+        $component->h1('Doctrine');
+
+        $this->radioList('expertise_id', $this->world->getExpertise($this->manifestation->expertiseType), [
+            'do' => 'manifestation--expertise'
+        ]);
+    }
+
+    public function postExpertise($cheat = false) {
+        global $component, $form, $curl;
+
+        $component->h1('Expertise');
+
+        $exp = $this->getAttribute(null, $this->world->experience)[0];
+        $pts = $this->pointExpertise;
+
+        $points = intval($exp->value + $pts);
+
+        $typeList = $curl->get('expertisetype')['data'];
+        $skillList = $this->getAttribute($this->world->attributeSkill);
+        $currentList = $this->getExpertise();
+        $idList = [];
+
+        $form->formStart([
+            'do' => 'person--expertise',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        if($cheat) {
+            echo('<span class="sw-js-points-text sw-is-hidden">9999</span>');
+        } else {
+            $form->points($points);
+            $form->hidden('experience', $this->world->experience, 'post');
+        }
+
+        if(count($currentList) != null) {
+            foreach($currentList as $current) {
+                $idList[] = $current->id;
+
+                $skillVal = 0;
+
+                foreach($skillList as $skill) {
+                    if($skill->id == $current->skill['id']) {
+                        $skillVal = $skill->value;
+                    }
+                }
+
+                $math1 = $skillVal - $current->skill['required'];
+                $math2 = floor($math1 / $current->skill['increment']);
+
+                $calculatedMax = $current->maximum < $math2
+                    ? $current->maximum
+                    : $math2 + 1;
+
+                if($calculatedMax != 0) {
+                    $form->purchase('expertise_id', $current->name, $current->description, $current->icon, $current->id, 0, $calculatedMax, $current->level);
+                }
+            }
+        }
+
+        foreach($typeList as $type) {
+            foreach($skillList as $skill) {
+                if($skill->value >= $type['skill_attribute_required']) {
+                    $expertiseList = $this->world->getExpertise($type['id'], $skill->id, $this->species->id);
+
+                    $math1 = $skill->value - $type['skill_attribute_required'];
+                    $math2 = floor($math1 / $type['skill_attribute_increment']);
+
+                    if(isset($expertiseList)) {
+                        foreach($expertiseList as $expertise) {
+                            if(!in_array($expertise->id, $idList)) {
+                                $calculatedMax = $expertise->maximum < $math2
+                                    ? $expertise->maximum
+                                    : $math2 + 1;
+
+                                $form->purchase('expertise_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $form->formEnd();
+    }
+
+    public function postFocus() {
+        global $component;
+
+        $component->h1('Focus');
+
+        $this->radioList('focus_id', $this->world->getFocus($this->manifestation->id), [
+            'do' => 'focus',
+            'roll' => 'Focus'
+        ]);
+    }
+
+    public function postGift() {
+        global $component, $system, $form;
+
+        $component->h1('Gift');
+        $component->subtitle('Get <span>'.$this->pointGift.'</span> gift that sets your character aside from others.');
+
+        $list = null;
+
+        if($this->isSupernatural) {
+            $list = $this->world->getGift($this->species->id, $this->manifestation->id);
+        } else {
+            $list = $this->world->getGift($this->species->id);
+        }
+
+        $idList = $system->idList($this->getGift());
+
+        $form->formStart([
+            'do' => 'person--gift',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+        $form->points($this->pointGift);
+        $form->randomRadio('Gift');
+        $form->viewStart();
+        $system->radioList('gift_id',$list, $idList);
+        $form->viewEnd();
+        $form->formEnd();
+    }
+
+    public function postIdentity() {
+        global $component;
+
+        $component->h1('Identity');
+
+        $this->radioList('identity_id', $this->world->getManifestation(), [
+            'do' => 'identity'
+        ]);
+    }
+
+    public function postImperfection() {
+        global $component, $system, $form;
+
+        $component->h1('Imperfection');
+        $component->subtitle('Get <span>'.$this->pointImperfection.'</span> imperfection that sets your character aside from others.');
+
+        $list = null;
+
+        if($this->isSupernatural) {
+            $list = $this->world->getImperfection($this->species->id, $this->manifestation->id);
+        } else {
+            $list = $this->world->getImperfection($this->species->id);
+        }
+
+        $idList = $system->idList($this->getImperfection());
+
+        $form->formStart([
+            'do' => 'person--imperfection',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+        $form->points($this->pointImperfection);
+        $form->randomRadio('Imperfection');
+        $form->viewStart();
+        $system->radioList('imperfection_id',$list, $idList);
+        $form->viewEnd();
+        $form->formEnd();
+    }
+
+    public function postManifestation() {
+        global $component;
+
+        $component->h1('Manifestation');
+
+        $this->radioList('manifestation_id', $this->world->getManifestation(), [
+            'do' => 'manifestation',
+            'roll' => 'Manifestation'
+        ]);
+    }
+
+    public function postMilestone() {
+        global $component, $system, $form;
+
+        $component->h1('Milestone');
+        $component->subtitle('Get <span>'.$this->pointMilestone.'</span> milestones that have happened to your character.');
+
+        $list = null;
+
+        if($this->isSupernatural) {
+            $list = $this->world->getMilestone($this->background->id, $this->species->id, $this->manifestation->id);
+        } else {
+            $list = $this->world->getMilestone($this->background->id, $this->species->id);
+        }
+
+        $idList = $system->idList($this->getMilestone());
+
+        $form->formStart([
+            'do' => 'person--milestone',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+        $form->points($this->pointMilestone);
+        $form->randomRadio('milestone');
+        $form->viewStart();
+        $system->radioList('milestone_id',$list, $idList);
+        $form->viewEnd();
+        $form->formEnd();
+    }
+
+    public function postMoney() {
+        global $component;
+
+        $component->h1('Money');
+        $component->subtitle('You will be rolling <span class="sw-js-points-text">'.$this->pointMoney.'</span> dice to either improve or impair your financial status.');
+
+        $this->rollAttribute('attribute--money', $this->world->money, $this->pointMoney);
+    }
+
+    public function postNature() {
+        global $component;
+
+        $component->h1('Nature');
+
+        $this->radioList('nature_id', $this->world->getNature(), [
+            'do' => 'nature'
+        ]);
+    }
+
+    public function postPotential() {
+        global $component;
+
+        $component->h1('Potential');
+
+        $this->rollAttribute('manifestation--power', $this->manifestation->powerAttribute, $this->pointPower);
+    }
+
+    public function postProtection() {
+        global $system, $form, $curl, $component;
+
+        $typeList = $curl->get('protectiontype')['data'];
+        $idList = $this->idList($this->getProtection());
+
+        $form->formStart([
+            'do' => 'person--protection',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        foreach($typeList as $type) {
+            $protectionList = $this->world->getProtection($type['id']);
+
+            $component->h4($type['name']);
+            $system->checkboxList($protectionList, $idList);
+        }
+
+        $system->checkboxAll();
+        $form->formEnd();
+    }
+
+    public function postSanity() {
+
+    }
+
+    public function postSkill($cheat = false) {
+        global $component, $form;
+
+        $component->h1('Skill');
+        $component->subtitle('You will be using <span>'.$this->pointSkill.'</span> points to purchase Skills. Try to get at least 1 above 4, and a couple above 2.');
+
+        $currentList = $this->getAttribute($this->world->attributeSkill);
+
+        $form->formStart([
+            'do' => 'person--attribute--skill',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        if($cheat) {
+            echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
+        } else {
+            $form->points($this->pointSkill);
+            $form->hidden('experience', $this->world->experience, 'post');
+        }
+
+        foreach($currentList as $current) {
+            $form->purchase('attribute_id', $current->name, $current->description, $current->icon, $current->id, 0, $current->maximum, $current->value);
+        }
+
+        $form->formEnd();
+    }
+
+    public function postSoftware() {
+
+    }
+
+    public function postWeapon() {
+        global $system, $form;
+
+        $idList = $system->idList($this->getWeapon());
+        $weaponList = $this->world->getWeapon();
+
+        $form->formStart([
+            'do' => 'person--weapon',
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        $system->checkboxList($weaponList, $idList);
+        $system->checkboxAll();
+        $form->formEnd(false);
+    }
+
+    public function postWound() {
+
+    }
+
+    // CREATE
+
+    public function create() {
+        global $component;
+
+        $component->title($this->nickname);
+
+        if(!isset($this->background)) {
+            $this->postBackground();
+        } else if($this->isSupernatural && !isset($this->manifestation)) {
+            $this->postManifestation();
+        } else if($this->isSupernatural && isset($this->manifestation) && !isset($this->focus)) {
+            $this->postFocus();
+        } else if($this->isSupernatural && isset($this->manifestation) && isset($this->focus) && $this->getExpertise($this->manifestation->expertiseType) == null) {
+            $this->postDoctrineRadio();
+        } else if($this->isSupernatural && $this->pointPower > 0) {
+            $this->postPotential();
+        } else if($this->pointMoney > 0) {
+            $this->postMoney();
+        } else if(!isset($this->nature)) {
+            $this->postNature();
+        } else if(!isset($this->identity)) {
+            $this->postIdentity();
+        } else if($this->pointGift > 0) {
+            $this->postGift();
+        } else if($this->pointImperfection > 0) {
+            $this->postImperfection();
+        } else if($this->pointMilestone > 0) {
+            $this->postMilestone();
+        } else if($this->pointSkill > 0) {
+            $this->postSkill();
+        } else if($this->pointExpertise > 0) {
+            $this->postExpertise();
+        } else if($this->isSupernatural && $this->pointSupernatural > 0) {
+            $this->postDoctrine();
+        } else if(!isset($this->firstname) || !isset($this->surname) || !isset($this->gender)) {
+            $this->postDescription();
+        }
+    }
+
+    private function rollAttribute($do, $attributeId, $points) {
+        global $component, $curl, $form;
+
+        $attribute = $curl->get('attribute/id/'.$attributeId)['data'][0];
+
+        $component->wrapStart();
+        $form->formStart([
+            'do' => 'person--'.$do,
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+        $form->points($points);
+        $form->randomNumber($attribute['name'], $points);
+        $form->viewStart();
+        $form->number(true, 'attribute_id', $attribute['name'], $attribute['description'], $attribute['id'], null, $attribute['maximum']);
+        $form->viewEnd();
+        $form->formEnd();
+        $component->wrapEnd();
+    }
+
+    private function radioList($tableId, $list, $options) {
+        global $system, $form;
+
+        $do = isset($options['do'])
+            ? $options['do']
+            : 'edit';
+
+        $form->formStart([
+            'do' => 'person--'.$do,
+            'id' => $this->id,
+            'secret' => $this->secret,
+            'return' => 'play/person/id'
+        ]);
+
+        if(isset($options['roll'])) {
+            $form->randomRadio($options['roll']);
+            $form->viewStart();
+        }
+
+        $system->radioList($tableId, $list);
+
+        if(isset($withRoll)) {
+            $form->viewEnd();
+        }
+
+        $form->formEnd();
+    }
+
+    // BUILD
 
     function buildEditDescription($id, $title, $description, $icon) {
         /* todo build this
@@ -427,7 +992,7 @@ class Person {
         );
     }
 
-
+    // MAKE
 
     public function makeAttributeList() {
         $list = [];
@@ -799,4 +1364,5 @@ class Person {
             echo('</div>');
         }
     }
+
 }

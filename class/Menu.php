@@ -40,7 +40,6 @@ class Menu {
         $menuContent = new MenuList('Content',true);
         $menuContent->add('Content', '/content',true);
         $menuContent->add('About', '/content/about',true);
-        $menuContent->add('Create', '/content/create',true);
         $menuContent->add('Manage', '/content/manage',true);
 
         $menuAdmin = new MenuList('Admin', true, true);

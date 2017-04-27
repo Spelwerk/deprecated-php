@@ -11,11 +11,13 @@ class Sitemap {
 
     var $requestURI, $scriptName, $command;
 
-    var $page, $id, $hash, $context, $unique, $thing;
+    var $page, $id, $hash, $context, $unique, $thing, $do;
 
     var $menuID, $menuLink;
 
     var $isAdmin, $isUser;
+
+    var $command0, $command1, $command2, $command3, $command4, $command5, $command6, $command7, $command8, $command9;
 
     public function __construct($user = null) {
         $this->requestURI = explode('/', $_SERVER['REQUEST_URI']);
@@ -29,6 +31,46 @@ class Sitemap {
 
         $this->command = array_values($this->requestURI);
 
+        $this->command0 = isset($this->command[0]) && $this->command[0] != null
+            ? $this->command[0]
+            : null;
+
+        $this->command1 = isset($this->command[1]) && $this->command[1] != null
+            ? $this->command[1]
+            : null;
+
+        $this->command2 = isset($this->command[2]) && $this->command[2] != null
+            ? $this->command[2]
+            : null;
+
+        $this->command3 = isset($this->command[3]) && $this->command[3] != null
+            ? $this->command[3]
+            : null;
+
+        $this->command4 = isset($this->command[4]) && $this->command[4] != null
+            ? $this->command[4]
+            : null;
+
+        $this->command5 = isset($this->command[5]) && $this->command[5] != null
+            ? $this->command[5]
+            : null;
+
+        $this->command6 = isset($this->command[6]) && $this->command[6] != null
+            ? $this->command[6]
+            : null;
+
+        $this->command7 = isset($this->command[7]) && $this->command[7] != null
+            ? $this->command[7]
+            : null;
+
+        $this->command8 = isset($this->command[8]) && $this->command[8] != null
+            ? $this->command[8]
+            : null;
+
+        $this->command9 = isset($this->command[9]) && $this->command[9] != null
+            ? $this->command[9]
+            : null;
+
         $this->switch_top();
 
         if($this->isAdmin && $user && !$user->isAdmin) {
@@ -41,9 +83,7 @@ class Sitemap {
     }
 
     function switch_top() {
-        $switch = isset($this->command[0]) && $this->command[0] != null
-            ? $this->command[0]
-            : null;
+        $switch = $this->command0;
 
         switch($switch) {
             default:
@@ -84,9 +124,7 @@ class Sitemap {
     }
 
     function switch_admin() {
-        $switch = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
+        $switch = $this->command1;
 
         switch($switch) {
             default:
@@ -117,9 +155,7 @@ class Sitemap {
     }
 
     function switch_admin_content() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch ($switch) {
             default:
@@ -129,9 +165,7 @@ class Sitemap {
     }
 
     function switch_admin_person() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch ($switch) {
             default:
@@ -141,9 +175,7 @@ class Sitemap {
     }
 
     function switch_admin_story() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch ($switch) {
             default:
@@ -153,9 +185,7 @@ class Sitemap {
     }
 
     function switch_admin_user() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch ($switch) {
             default:
@@ -165,9 +195,7 @@ class Sitemap {
     }
 
     function switch_content() {
-        $switch = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
+        $switch = $this->command1;
 
         switch($switch) {
             default:
@@ -180,34 +208,107 @@ class Sitemap {
                 $this->menuLink = 'About';
                 break;
 
-            case 'create':
-                $this->page = 'page/content/create.php';
-                $this->menuLink = 'Create';
+            case 'manage':
+                $this->page = 'page/content/manage.php';
+                $this->menuLink = 'Manage';
                 break;
 
-            case 'manage':
-                $this->switch_content_manage();
+            case 'world':
+                $this->switch_content_world();
                 $this->menuLink = 'Manage';
                 break;
         }
     }
 
-    function switch_content_manage() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+    function switch_content_world() {
+        $switch = $this->command2;
+        $id = $this->command3;
 
         switch ($switch) {
             default:
-                $this->page = 'page/content/manage/manage.php';
+                $this->page = 'page/content/world/new.php';
+                break;
+
+            case 'id':
+                $this->switch_content_world_id();
+                $this->id = $id;
+                break;
+        }
+    }
+
+    function switch_content_world_id() {
+        $switch = $this->command4;
+        $context = $this->command5;
+
+        switch ($switch) {
+            default:
+                $this->page = 'page/content/world/id.php';
+                break;
+
+            case 'attribute':
+                $this->page = 'page/content/world/has/attribute.php';
+                $this->context = $context;
+                break;
+
+            case 'background':
+                $this->page = 'page/content/world/has/background.php';
+                $this->context = $context;
+                break;
+
+            case 'bionic':
+                $this->page = 'page/content/world/has/bionic.php';
+                $this->context = $context;
+                break;
+
+            case 'expertise':
+                $this->page = 'page/content/world/has/expertise.php';
+                $this->context = $context;
+                break;
+
+            case 'gift':
+                $this->page = 'page/content/world/has/gift.php';
+                $this->context = $context;
+                break;
+
+            case 'imperfection':
+                $this->page = 'page/content/world/has/imperfection.php';
+                $this->context = $context;
+                break;
+
+            case 'manifestation':
+                $this->page = 'page/content/world/has/manifestation.php';
+                $this->context = $context;
+                break;
+
+            case 'milestone':
+                $this->page = 'page/content/world/has/milestone.php';
+                $this->context = $context;
+                break;
+
+            case 'protection':
+                $this->page = 'page/content/world/has/protection.php';
+                $this->context = $context;
+                break;
+
+            case 'skill':
+                $this->page = 'page/content/world/has/skill.php';
+                $this->context = $context;
+                break;
+
+            case 'species':
+                $this->page = 'page/content/world/has/species.php';
+                $this->context = $context;
+                break;
+
+            case 'weapon':
+                $this->page = 'page/content/world/has/weapon.php';
+                $this->context = $context;
                 break;
         }
     }
 
     function switch_play() {
-        $switch = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
+        $switch = $this->command1;
 
         switch($switch) {
             default:
@@ -233,9 +334,7 @@ class Sitemap {
     }
 
     function switch_play_companion() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch($switch) {
             default:
@@ -251,9 +350,7 @@ class Sitemap {
     }
 
     function switch_play_person() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch($switch) {
             default:
@@ -271,17 +368,9 @@ class Sitemap {
     }
 
     function switch_play_person_id() {
-        $id = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
-
-        $hash = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
-            : null;
-
-        $switch = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
-            : null;
+        $id = $this->command3;
+        $hash = $this->command4;
+        $switch = $this->command5;
 
         switch($switch) {
             default:
@@ -323,13 +412,8 @@ class Sitemap {
     }
 
     function switch_play_person_id_cheat() {
-        $switch = isset($this->command[6]) && $this->command[6] != null
-            ? $this->command[6]
-            : null;
-
-        $context = isset($this->command[7]) && $this->command[7] != null
-            ? $this->command[7]
-            : null;
+        $switch = $this->command6;
+        $context = $this->command7;
 
         switch($switch) {
             default:
@@ -341,7 +425,7 @@ class Sitemap {
                 $this->unique = $context;
                 break;
 
-            case 'characteristic':
+            case 'Gift':
                 $this->page = 'page/play/person/cheat/characteristic.php';
                 $this->context = $context;
                 break;
@@ -371,13 +455,8 @@ class Sitemap {
     }
 
     function switch_play_person_id_edit() {
-        $switch = isset($this->command[6]) && $this->command[6] != null
-            ? $this->command[6]
-            : null;
-
-        $context = isset($this->command[7]) && $this->command[7] != null
-            ? $this->command[7]
-            : null;
+        $switch = $this->command6;
+        $context = $this->command7;
 
         switch($switch) {
             default:
@@ -435,9 +514,7 @@ class Sitemap {
     }
 
     function switch_play_story() {
-        $switch = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
+        $switch = $this->command2;
 
         switch($switch) {
             default:
@@ -455,21 +532,10 @@ class Sitemap {
     }
 
     function switch_play_story_id() {
-        $id = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
-
-        $hash = isset($this->command[4]) && $this->command[4] != null
-            ? $this->command[4]
-            : null;
-
-        $switch = isset($this->command[5]) && $this->command[5] != null
-            ? $this->command[5]
-            : null;
-
-        $context = isset($this->command[6]) && $this->command[6] != null
-            ? $this->command[6]
-            : null;
+        $id = $this->command3;
+        $hash = $this->command4;
+        $switch = $this->command5;
+        $context = $this->command6;
 
         switch($switch) {
             default:
@@ -508,17 +574,9 @@ class Sitemap {
     }
 
     function switch_user() {
-        $switch = isset($this->command[1]) && $this->command[1] != null
-            ? $this->command[1]
-            : null;
-
-        $context = isset($this->command[2]) && $this->command[2] != null
-            ? $this->command[2]
-            : null;
-
-        $hash = isset($this->command[3]) && $this->command[3] != null
-            ? $this->command[3]
-            : null;
+        $switch = $this->command1;
+        $context = $this->command2;
+        $hash = $this->command3;
 
         switch($switch) {
             default:
@@ -562,13 +620,3 @@ class Sitemap {
         }
     }
 }
-
-/*
-
-/content
-/content/{thing}
-/content/{thing}/add
-/content/{thing}/id/{id}
-/content/{thing}/id/{id}/{hash}
-
- */

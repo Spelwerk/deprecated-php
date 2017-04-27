@@ -179,9 +179,11 @@ class Form {
             : null;
 
         echo(
-            '<label class="sw-c-input__label" for="item--'.$uniqueName.'">'.$labelName.$labelRequired.'</label>'.
+            '<label for="item--'.$uniqueName.'">'.
+            '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
+            '</label>'.
             '<select class="sw-c-input__item" name="item--'.$uniqueName.'" id="item--'.$uniqueName.'"'.$inputRequired.'>'.
-            '<option disabled selected> -- select an option -- </option>'
+            '<option value="" disabled selected> -- select an option -- </option>'
         );
 
         foreach($list as $item) {
@@ -506,10 +508,6 @@ class Form {
             ? '<input type="hidden" name="post--secret" value="'.$options['secret'].'"/>'
             : null;
 
-        $postUser = isset($options['user']) && $options['user'] != null
-            ? '<input type="hidden" name="post--user" value="'.$options['user'].'"/>'
-            : null;
-
         $postReturn = isset($options['return']) && $options['return'] != null
             ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
             : null;
@@ -543,7 +541,6 @@ class Form {
             $postDo.
             $postId.
             $postSecret.
-            $postUser.
             $postReturn.
             $postReturnId.
             $postReturnAfter.

@@ -26,7 +26,7 @@ $component->title('Cheat '.$person->nickname);
         $component->wrapStart();
 
         $component->linkButton($person->siteLink.'/cheat/attribute','Attribute');
-        $component->linkButton($person->siteLink.'/cheat/characteristic','Characteristic');
+        $component->linkButton($person->siteLink.'/cheat/characteristic', 'Gift');
         $component->linkButton($person->siteLink.'/cheat/expertise','Expertise');
         $component->linkButton($person->siteLink.'/cheat/feature','Feature');
         $component->linkButton($person->siteLink.'/cheat/milestone','Milestone');

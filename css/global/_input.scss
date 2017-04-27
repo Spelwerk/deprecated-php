@@ -1,10 +1,17 @@
-input[type=text], input[type=number], input[type=email], input[type=password], textarea {
+input[type=text], input[type=number], input[type=email], input[type=password], select, textarea {
   @include padding(0.5rem);
   @include font(2rem);
   
   width: 100%;
+}
 
+input[type=text], input[type=number], input[type=email], input[type=password], textarea, select, option {
   &:required {
+    &:disabled {
+      background-color: $color-red-highlight;
+      border: 1px solid $color-red-border;
+    }
+
     &:invalid {
       background-color: $color-red-highlight;
       border: 1px solid $color-red-border;

@@ -24,31 +24,16 @@ class Milestone {
         $this->id = $data['id'];
         $this->name = $data['name'];
 
-        $this->description = isset($data['milestone_custom'])
-            ? $data['milestone_custom']
+        $this->description = isset($data['custom'])
+            ? $data['custom']
             : $data['description'];
 
         $this->backgroundId = $data['background_id'];
-        $this->backgroundName = $data['background_name'];
-
         $this->speciesId = $data['species_id'];
-        $this->speciesName = $data['species_name'];
-
         $this->manifestationId = $data['manifestation_id'];
-        $this->manifestationName = $data['manifestation_name'];
+        $this->attributeId = $data['attribute_id'];
+        $this->loyaltyId = $data['loyalty_id'];
 
         $this->icon = '/img/person/milestone.png';
-
-        $this->attribute = [
-            'id' => $data['attribute_id'],
-            'name' => $data['attribute_name'],
-            'value' => $data['attribute_value']
-        ];
-
-        $this->loyalty = [
-            'id' => $data['loyalty_id'],
-            'name' => $data['loyalty_name'],
-            'occupation' => $data['loyalty_occupation']
-        ];
     }
 }

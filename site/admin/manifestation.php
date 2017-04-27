@@ -67,8 +67,6 @@ if(isset($sitemap->id)) {
     <?php
     global $form, $curl;
 
-    $attribute = $curl->get('attribute/type/'.$manifestation->skillAttributeType)['data'];
-
     $form->genericStart();
     $form->hidden('return', 'admin/manifestation', 'post');
     $form->hidden('do', 'manifestation--discipline', 'post');
@@ -76,8 +74,8 @@ if(isset($sitemap->id)) {
 
     $form->varchar(true, 'name');
     $form->text(false, 'description');
-    $form->select(false, 'attribute_id', $attribute, 'skill attribute');
 
+    $form->hidden('attribute_id', $manifestation->skillAttribute);
     $form->hidden('attributetype_id', $manifestation->disciplineAttributeType);
     $form->hidden('expertisetype_id', $manifestation->expertiseType);
 

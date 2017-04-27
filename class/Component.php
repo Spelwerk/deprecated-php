@@ -215,4 +215,14 @@ class Component {
             '</div>'
         );
     }
+
+    // RETURN
+
+    public function returnButton($href) {
+        echo('<div class="sw-l-quicklink">');
+
+        $this->linkQuick($href,'Return','/img/return.png');
+
+        echo('</div>');
+    }
 }

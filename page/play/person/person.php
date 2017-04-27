@@ -41,7 +41,7 @@ if($userList) {
                 ? 'play/person/id/'.$item['person_id'].'/'.$item['person_hash']
                 : 'play/person/id/'.$item['person_id'];
 
-            $person = $curl->get('person/short/id/'.$item['person_id'])['data'][0];
+            $person = $curl->get('person/id/'.$item['person_id'].'/short')['data'][0];
 
             $component->linkButton($link,$person['nickname'].' ('.$person['occupation'].') ('.$person['age'].')');
         }
@@ -65,7 +65,7 @@ if($cookieList) {
                     ? '/play/person/id/'.$item['person_id'].'/'.$item['person_hash']
                     : '/play/person/id/'.$item['person_id'];
 
-                $person = $curl->get('person/short/id/'.$item['person_id'])['data'][0];
+                $person = $curl->get('person/id/'.$item['person_id'].'/short')['data'][0];
 
                 $component->linkButton($link,$person['nickname'].' ('.$person['occupation'].')');
             }

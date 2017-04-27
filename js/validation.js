@@ -199,6 +199,7 @@ $(document).ready(function() {
             $(this).parents('form').find('.sw-js-checkbox-item').removeClass('sw-is-selected');
             $(this).parents('form').find('.sw-js-checkbox-true').addClass('sw-is-hidden');
             $(this).parents('form').find('.sw-js-checkbox-false').removeClass('sw-is-hidden');
+            $(this).parents('form').find('.sw-js-checkbox-body').addClass('sw-is-hidden');
         }
 
         $(this).parents('form').find('.sw-js-submit').removeClass('sw-is-unclickable').addClass('sw-is-clickable').prop('disabled', false);

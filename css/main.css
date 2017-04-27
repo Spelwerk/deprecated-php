@@ -253,20 +253,27 @@ body {
 button:hover, input[type=submit], a {
   cursor: pointer; }
 
-input[type=text], input[type=number], input[type=email], input[type=password], textarea {
+input[type=text], input[type=number], input[type=email], input[type=password], select, textarea {
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-family: robotoregular, sans-serif;
   font-size: 2rem;
   width: 100%; }
-  input[type=text]:required:invalid, input[type=number]:required:invalid, input[type=email]:required:invalid, input[type=password]:required:invalid, textarea:required:invalid {
-    background-color: #ffcdd2;
-    border: 1px solid #EF9A9A; }
-  input[type=text]:required:valid, input[type=number]:required:valid, input[type=email]:required:valid, input[type=password]:required:valid, textarea:required:valid {
-    background-color: #dcedc8;
-    border: 1px solid #C5E1A5; }
-  input[type=text]:optional, input[type=number]:optional, input[type=email]:optional, input[type=password]:optional, textarea:optional {
-    background: #ffffff;
-    border: 1px solid #dddddd; }
+
+input[type=text]:required:disabled, input[type=number]:required:disabled, input[type=email]:required:disabled, input[type=password]:required:disabled, textarea:required:disabled, select:required:disabled, option:required:disabled {
+  background-color: #ffcdd2;
+  border: 1px solid #EF9A9A; }
+
+input[type=text]:required:invalid, input[type=number]:required:invalid, input[type=email]:required:invalid, input[type=password]:required:invalid, textarea:required:invalid, select:required:invalid, option:required:invalid {
+  background-color: #ffcdd2;
+  border: 1px solid #EF9A9A; }
+
+input[type=text]:required:valid, input[type=number]:required:valid, input[type=email]:required:valid, input[type=password]:required:valid, textarea:required:valid, select:required:valid, option:required:valid {
+  background-color: #dcedc8;
+  border: 1px solid #C5E1A5; }
+
+input[type=text]:optional, input[type=number]:optional, input[type=email]:optional, input[type=password]:optional, textarea:optional, select:optional, option:optional {
+  background: #ffffff;
+  border: 1px solid #dddddd; }
 
 input[type=submit] {
   margin-left: auto;
@@ -960,7 +967,7 @@ span {
   background-color: #eeeeee !important; }
 
 .sw-is-selected {
-  background-color: #7cb342 !important; }
+  background-color: #dcedc8 !important; }
 
 .sw-is-valid {
   color: #33691b !important; }

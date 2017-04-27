@@ -7,10 +7,10 @@
  */
 global $sitemap, $user, $form, $component;
 
-require_once('./class/Person.php');
+require_once('./class/World.php');
 require_once('./class/System.php');
 
-$person = null;
+$system = new System();
 
 $world = isset($_POST['item--world_id'])
     ? new World($_POST['item--world_id'])
@@ -20,8 +20,7 @@ $species = isset($_POST['item--species_id'])
     ? new Species($_POST['item--species_id'])
     : null;
 
-$system = new System();
-$system->createPerson($person, $world, $species);
+$system->createPerson($world, $species);
 ?>
 
 <script src="/js/validation.js"></script>

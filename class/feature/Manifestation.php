@@ -28,7 +28,7 @@ class Manifestation {
             : $data['description'];
 
         $this->disciplineAttributeType = $data['attributetype_id'];
-        $this->skillAttributeType = $data['skill_attributetype_id'];
+        $this->skillAttribute = $data['skill_attribute_id'];
         $this->expertiseType = $data['expertisetype_id'];
         $this->powerAttribute = $data['power_attribute_id'];
     }

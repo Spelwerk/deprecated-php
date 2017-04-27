@@ -8,6 +8,6 @@
 global $component;
 
 $component->title('Manage Content');
-$component->h1('Sorry');
-$component->subtitle('This page has not been finished yet.');
+$component->h1('Content');
+$component->subtitle('This is where we will have lists of your content, for you to "delete" and handle.');
 ?>

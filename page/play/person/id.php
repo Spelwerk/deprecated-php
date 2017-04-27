@@ -26,10 +26,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
     <?php if($person->isPlayable && $sitemap->hash && !$person->isCalculated): ?>
 
         <?php
-        require_once('./class/System.php');
-
-        $system = new System();
-        $system->createPerson($person);
+        $person->create();
         ?>
 
         <script src="/js/validation.js"></script>

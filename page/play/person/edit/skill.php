@@ -26,7 +26,7 @@ $component->title('Edit '.$person->nickname);
     $exp = $person->getAttribute(null, $person->world->experience)[0];
 
     $component->h2('Purchase Skill');
-    $system->person_purchaseSkill($person, $exp->value);
+    $person->postSkill();
     ?>
 
     <script src="/js/validation.js"></script>

@@ -14,11 +14,13 @@ require_once('class/Form.php');
 require_once('class/Menu.php');
 require_once('class/Sitemap.php');
 require_once('class/User.php');
+require_once('class/System.php');
 
 $component = new Component();
 $curl = new Curl($config_curl);
 $form = new Form();
 $user = new User();
+$system = new System();
 
 $menu = new Menu($user);
 $sitemap = new Sitemap($user);
