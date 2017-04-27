@@ -36,7 +36,7 @@ if(isset($sitemap->id)) {
     $component->returnButton($world->siteLink);
     $component->h1('Gift');
 
-    $list = $world->getGift();
+    $list = $world->getGift('/special');
 
     if($list[0]) {
         foreach($list as $item) {

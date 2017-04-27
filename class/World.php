@@ -103,18 +103,14 @@ class World {
 
     // GET
 
-    public function getAttribute($type = null, $species = null) {
+    public function getAttribute($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = 'world/id/'.$this->id.'/attribute';
-
-        if(isset($type)) {
-            $get = isset($species)
-                ? 'world/id/'.$this->id.'/attribute/type/'.$type.'/species/'.$species
-                : 'world/id/'.$this->id.'/attribute/type/'.$type;
-        }
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/attribute'.$override
+            : 'world/id/'.$this->id.'/attribute';
 
         $result = $curl->get($get);
 
@@ -151,7 +147,7 @@ class World {
         }
 
         return $arrayList;
-    }
+    } // todo override
 
     public function getBackground($species = null) {
         global $curl;
@@ -171,38 +167,16 @@ class World {
         }
 
         return $arrayList;
-    }
+    } // todo override
 
-    public function getExpertise($type = null, $skill = null, $species = null, $manifestation = null) {
+    public function getExpertise($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = 'world/id/'.$this->id.'/expertise';
-
-        if(isset($type) && isset($skill) && isset($species) && isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/expertise/type/'.$type.'/skill/'.$skill.'/species/'.$species.'/manifestation/'.$manifestation;
-        }
-
-        if(isset($type) && isset($skill) && isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/expertise/type/'.$type.'/skill/'.$skill.'/species/'.$species;
-        }
-
-        if(isset($type) && isset($skill) && !isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/expertise/type/'.$type.'/skill/'.$skill;
-        }
-
-        if(isset($type) && !isset($skill) && !isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/expertise/type/'.$type;
-        }
-
-        if(!isset($type) && isset($skill) && !isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/expertise/special/skill/'.$type;
-        }
-
-        if(!isset($type) && isset($skill) && isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/expertise/special/skill/'.$type.'/species/'.$species;
-        }
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/expertise'.$override
+            : 'world/id/'.$this->id.'/expertise';
 
         $result = $curl->get($get);
 
@@ -223,20 +197,14 @@ class World {
         return $system->getFocus($override);
     }
 
-    public function getGift($species = null, $manifestation = null) {
+    public function getGift($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = 'world/id/'.$this->id.'/gift';
-
-        if(isset($species) && isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/gift/species/'.$species.'/manifestation'.$manifestation;
-        }
-
-        if(isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/gift/species/'.$species;
-        }
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/gift'.$override
+            : 'world/id/'.$this->id.'/gift';
 
         $result = $curl->get($get);
 
@@ -273,7 +241,7 @@ class World {
         }
 
         return $arrayList;
-    }
+    } // todo override
 
     public function getIdentity() {
         global $system;
@@ -325,7 +293,7 @@ class World {
         }
 
         return $arrayList;
-    }
+    } // todo override
 
     public function getNature() {
         global $system;
@@ -351,7 +319,7 @@ class World {
         }
 
         return $arrayList;
-    }
+    } // todo override
 
     public function getSpecies() {
         global $curl;
@@ -387,7 +355,7 @@ class World {
         }
 
         return $arrayList;
-    }
+    } // todo override
 
     // POST
 
@@ -470,7 +438,7 @@ class World {
 
         $component->h2('Normal Expertises');
 
-        $skillArray = $this->getAttribute($this->attributeSkill);
+        $skillArray = $this->getAttribute('/type/'.$this->attributeSkill);
         $idList = $system->idList($this->getExpertise());
 
         $form->formStart([
@@ -501,7 +469,7 @@ class World {
         $list = $system->getGift($override);
         $idList = $system->idList($this->getGift());
 
-        $skillArray = $this->getAttribute($this->attributeSkill);
+        $skillArray = $this->getAttribute('/type/'.$this->attributeSkill);
 
         $form->formStart([
             'do' => 'world--has--add',
@@ -514,7 +482,7 @@ class World {
         $system->checkboxList($list, $idList);
 
         foreach($skillArray as $skill) {
-            $override = '/special/skill/'.$skill->id;
+            $override = '/skill/'.$skill->id.'/special';
 
             $list = $system->getGift($override);
 
@@ -528,9 +496,7 @@ class World {
     public function postImperfection() {
         global $system;
 
-        $override = '/special';
-
-        $this->checkList('imperfection', $system->getImperfection($override), $system->idList($this->getImperfection()));
+        $this->checkList('imperfection', $system->getImperfection(), $system->idList($this->getImperfection()));
     }
 
     public function postManifestation() {
@@ -583,7 +549,7 @@ class World {
         $override = '/type/'.$this->attributeSkill.'/special';
 
         $list = $system->getAttribute($override);
-        $idList = $system->idList($this->getAttribute($this->attributeSkill));
+        $idList = $system->idList($this->getAttribute('/type/'.$this->attributeSkill));
 
         $form->formStart([
             'do' => 'world--skill',
@@ -624,15 +590,15 @@ class World {
     }
 
     public function deleteExpertise() {
-        $this->checkList('expertise', $this->getExpertise(), null, 'delete');
+        $this->checkList('expertise', $this->getExpertise('/special'), null, 'delete');
     }
 
     public function deleteGift() {
-        $this->checkList('gift', $this->getGift(), null, 'delete');
+        $this->checkList('gift', $this->getGift('/special'), null, 'delete');
     }
 
     public function deleteImperfection() {
-        $this->checkList('imperfection', $this->getImperfection(), null, 'delete');
+        $this->checkList('imperfection', $this->getImperfection('/special'), null, 'delete');
     }
 
     public function deleteManifestation() {
@@ -658,7 +624,7 @@ class World {
             'context' => 'attribute'
         ]);
 
-        $system->checkboxList($this->getAttribute($this->attributeSkill));
+        $system->checkboxList($this->getAttribute('/type/'.$this->attributeSkill.'/special'));
         $system->checkboxAll();
 
         $form->formEnd();

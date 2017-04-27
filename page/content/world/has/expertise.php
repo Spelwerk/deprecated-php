@@ -36,7 +36,7 @@ if(isset($sitemap->id)) {
     $component->returnButton($world->siteLink);
     $component->h1('Expertise');
 
-    $list = $world->getExpertise();
+    $list = $world->getExpertise('/special');
 
     if($list[0]) {
         foreach($list as $item) {

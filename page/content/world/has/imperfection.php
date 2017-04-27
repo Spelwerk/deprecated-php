@@ -36,7 +36,7 @@ if(isset($sitemap->id)) {
     $component->returnButton($world->siteLink);
     $component->h1('Imperfection');
 
-    $list = $world->getImperfection();
+    $list = $world->getImperfection('/special');
 
     if($list[0]) {
         foreach($list as $item) {

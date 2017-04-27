@@ -426,7 +426,9 @@ class Person {
 
         $points = intval($exp->value + $pts);
 
-        $supernaturalList = $this->world->getAttribute($this->manifestation->disciplineAttributeType, $this->species->id);
+        $override = '/type/'.$this->manifestation->disciplineAttributeType.'/species/'.$this->species->id;
+
+        $supernaturalList = $this->world->getAttribute($override);
         $expertiseList = $this->getExpertise();
         $currentList = $this->getAttribute($this->manifestation->disciplineAttributeType);
         $idList = [];
@@ -483,7 +485,9 @@ class Person {
 
         $component->h1('Doctrine');
 
-        $this->radioList('expertise_id', $this->world->getExpertise($this->manifestation->expertiseType), [
+        $override = '/type/'.$this->manifestation->expertiseType;
+
+        $this->radioList('expertise_id', $this->world->getExpertise($override), [
             'do' => 'manifestation--expertise'
         ]);
     }
@@ -545,7 +549,10 @@ class Person {
         foreach($typeList as $type) {
             foreach($skillList as $skill) {
                 if($skill->value >= $type['skill_attribute_required']) {
-                    $expertiseList = $this->world->getExpertise($type['id'], $skill->id, $this->species->id);
+
+                    $override = '/type/'.$type['id'].'/skill/'.$skill->id.'/species/'.$this->species->id;
+
+                    $expertiseList = $this->world->getExpertise($override);
 
                     $math1 = $skill->value - $type['skill_attribute_required'];
                     $math2 = floor($math1 / $type['skill_attribute_increment']);
@@ -588,10 +595,12 @@ class Person {
         $list = null;
 
         if($this->isSupernatural) {
-            $list = $this->world->getGift($this->species->id, $this->manifestation->id);
+            $override = '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id;
         } else {
-            $list = $this->world->getGift($this->species->id);
+            $override = '/species/'.$this->species->id;
         }
+
+        $list = $this->world->getGift($override);
 
         $idList = $system->idList($this->getGift());
 
@@ -628,10 +637,12 @@ class Person {
         $list = null;
 
         if($this->isSupernatural) {
-            $list = $this->world->getImperfection($this->species->id, $this->manifestation->id);
+            $override = '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id;
         } else {
-            $list = $this->world->getImperfection($this->species->id);
+            $override = '/species/'.$this->species->id;
         }
+
+        $list = $this->world->getImperfection($override);
 
         $idList = $system->idList($this->getImperfection());
 
