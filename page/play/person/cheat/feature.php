@@ -46,7 +46,7 @@ $component->title('Cheat '.$person->nickname);
                 break;
 
             case 'background':
-                $list = $person->world->getBackground($person->species->id);
+                $list = $person->world->getBackground('/species/'.$person->species->id);
                 $currentId = $person->background->id;
                 break;
 

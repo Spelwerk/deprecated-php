@@ -982,6 +982,10 @@ function switch_world($do) {
         case 'world--skill':
             world_skill_post();
             break;
+
+        case 'world--calculated':
+            $curl->put('world/id/'.$POST_ID,['calculated' => 1],$USER_TOKEN);
+            break;
     }
 }
 

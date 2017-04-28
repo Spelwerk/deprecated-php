@@ -16,19 +16,31 @@ if(isset($sitemap->id)) {
 
     $component->title($world->name);
 
-    $component->h1('Lists');
-    $component->linkButton($world->siteLink.'/attribute','Attribute');
-    $component->linkButton($world->siteLink.'/background','Background');
-    $component->linkButton($world->siteLink.'/bionic','Bionic');
-    $component->linkButton($world->siteLink.'/expertise','Expertise');
-    $component->linkButton($world->siteLink.'/gift','Gift');
-    $component->linkButton($world->siteLink.'/imperfection','Imperfection');
-    $component->linkButton($world->siteLink.'/manifestation','Manifestation');
-    $component->linkButton($world->siteLink.'/milestone','Milestone');
-    $component->linkButton($world->siteLink.'/protection','Protection');
-    $component->linkButton($world->siteLink.'/skill','Skill');
-    $component->linkButton($world->siteLink.'/species','Species');
-    $component->linkButton($world->siteLink.'/weapon','Weapon');
+    $world->create();
+
+    if($world->isCalculated) {
+        $component->h1('Lists');
+        $component->linkButton($world->siteLink.'/attribute','Attribute');
+        $component->linkButton($world->siteLink.'/background','Background');
+
+        if($world->existsBionic) {
+            $component->linkButton($world->siteLink.'/bionic','Bionic');
+        }
+
+        $component->linkButton($world->siteLink.'/expertise','Expertise');
+        $component->linkButton($world->siteLink.'/gift','Gift');
+        $component->linkButton($world->siteLink.'/imperfection','Imperfection');
+
+        if($world->existsSupernatural) {
+            $component->linkButton($world->siteLink.'/manifestation','Manifestation');
+        }
+
+        $component->linkButton($world->siteLink.'/milestone','Milestone');
+        $component->linkButton($world->siteLink.'/protection','Protection');
+        $component->linkButton($world->siteLink.'/skill','Skill');
+        $component->linkButton($world->siteLink.'/species','Species');
+        $component->linkButton($world->siteLink.'/weapon','Weapon');
+    }
 }
 ?>
 

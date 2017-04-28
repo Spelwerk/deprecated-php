@@ -362,7 +362,7 @@ class Person {
         $component->h1('Background');
         $component->subtitle('You will select <span>1</span> background from which you will gain a few attribute and skill changes.');
 
-        $this->radioList('background_id', $this->world->getBackground($this->species->id), [
+        $this->radioList('background_id', $this->world->getBackground('/species/'.$this->species->id), [
             'do' => 'background',
             'roll' => 'Background'
         ]);
@@ -678,13 +678,15 @@ class Person {
         $component->subtitle('Get <span>'.$this->pointMilestone.'</span> milestones that have happened to your character.');
 
         $list = null;
+        $override = null;
 
         if($this->isSupernatural) {
-            $list = $this->world->getMilestone($this->background->id, $this->species->id, $this->manifestation->id);
+            $override = '/background/'.$this->background->id.'/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id;
         } else {
-            $list = $this->world->getMilestone($this->background->id, $this->species->id);
+            $override = '/background/'.$this->background->id.'/species/'.$this->species->id;
         }
 
+        $list = $this->world->getMilestone($override);
         $idList = $system->idList($this->getMilestone());
 
         $form->formStart([
@@ -742,7 +744,7 @@ class Person {
         ]);
 
         foreach($typeList as $type) {
-            $protectionList = $this->world->getProtection($type['id']);
+            $protectionList = $this->world->getProtection('/type/'.$type['id']);
 
             $component->h4($type['name']);
             $system->checkboxList($protectionList, $idList);

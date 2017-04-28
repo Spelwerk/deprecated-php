@@ -129,13 +129,13 @@ class World {
         return $system->getAugmentation('bionic/id/'.$bionic.'/augmentation');
     }
 
-    public function getBionic($bodypart = null) {
+    public function getBionic($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($bodypart)
-            ? 'world/id/'.$this->id.'/bionic/bodypart/'.$bodypart
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/bionic'.$override
             : 'world/id/'.$this->id.'/bionic';
 
         $result = $curl->get($get);
@@ -147,15 +147,15 @@ class World {
         }
 
         return $arrayList;
-    } // todo override
+    }
 
-    public function getBackground($species = null) {
+    public function getBackground($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($species)
-            ? 'world/id/'.$this->id.'/background/species/'.$species
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/background'.$override
             : 'world/id/'.$this->id.'/background';
 
         $result = $curl->get($get);
@@ -167,7 +167,7 @@ class World {
         }
 
         return $arrayList;
-    } // todo override
+    }
 
     public function getExpertise($override = null) {
         global $curl;
@@ -217,20 +217,14 @@ class World {
         return $arrayList;
     }
 
-    public function getImperfection($species = null, $manifestation = null) {
+    public function getImperfection($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = 'world/id/'.$this->id.'/imperfection';
-
-        if(isset($species) && isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/imperfection/species/'.$species.'/manifestation'.$manifestation;
-        }
-
-        if(isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/imperfection/species/'.$species;
-        }
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/imperfection'.$override
+            : 'world/id/'.$this->id.'/imperfection';
 
         $result = $curl->get($get);
 
@@ -241,7 +235,7 @@ class World {
         }
 
         return $arrayList;
-    } // todo override
+    }
 
     public function getIdentity() {
         global $system;
@@ -265,24 +259,14 @@ class World {
         return $arrayList;
     }
 
-    public function getMilestone($background = null, $species = null, $manifestation = null) {
+    public function getMilestone($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = 'world/id/'.$this->id.'/milestone';
-
-        if(isset($background) && isset($species) && isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/milestone/background/'.$background.'/species/'.$species.'/manifestation'.$manifestation;
-        }
-
-        if(isset($background) && isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/milestone/background/'.$background.'/species/'.$species;
-        }
-
-        if(isset($background) && !isset($species) && !isset($manifestation)) {
-            $get = 'world/id/'.$this->id.'/milestone/background/'.$background;
-        }
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/milestone'.$override
+            : 'world/id/'.$this->id.'/milestone';
 
         $result = $curl->get($get);
 
@@ -293,7 +277,7 @@ class World {
         }
 
         return $arrayList;
-    } // todo override
+    }
 
     public function getNature() {
         global $system;
@@ -301,13 +285,13 @@ class World {
         return $system->getNature();
     }
 
-    public function getProtection($type = null) {
+    public function getProtection($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($type)
-            ? 'world/id/'.$this->id.'/protection/type/'.$type
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/protection'.$override
             : 'world/id/'.$this->id.'/protection';
 
         $result = $curl->get($get);
@@ -319,7 +303,7 @@ class World {
         }
 
         return $arrayList;
-    } // todo override
+    }
 
     public function getSpecies() {
         global $curl;
@@ -337,13 +321,13 @@ class World {
         return $arrayList;
     }
 
-    public function getWeapon($group = null) {
+    public function getWeapon($override = null) {
         global $curl;
 
         $arrayList = null;
 
-        $get = isset($group)
-            ? 'world/id/'.$this->id.'/weapon/group/'.$group
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/weapon'.$override
             : 'world/id/'.$this->id.'/weapon';
 
         $result = $curl->get($get);
@@ -355,7 +339,7 @@ class World {
         }
 
         return $arrayList;
-    } // todo override
+    }
 
     // POST
 
@@ -434,9 +418,7 @@ class World {
     }
 
     public function postExpertise() {
-        global $system, $form, $component;
-
-        $component->h2('Normal Expertises');
+        global $system, $form;
 
         $skillArray = $this->getAttribute('/type/'.$this->attributeSkill);
         $idList = $system->idList($this->getExpertise());
@@ -638,11 +620,117 @@ class World {
         $this->checkList('weapon', $this->getWeapon(), null, 'delete');
     }
 
-    // CREATE
+    // VERIFY
 
     public function create() {
+        global $curl, $component, $form;
 
+        if(!$this->isCalculated) {
+            $component->h1('Creating '.$this->name);
+            $component->subtitle('It is recommended to add data in the order of the buttons, as many tables are dependent on each other');
+
+            $readyToCalculate = true;
+            $speciesEmpty = false;
+            $manifestationEmpty = false;
+
+            $speciesRoute = 'species';
+            $manifestationRoute = 'manifestation';
+
+            $defaultRoutes = [
+                'skill' => 'attribute/type/'.$this->attributeSkill.'/special',
+                'background' => 'background',
+                'expertise' => 'expertise/special',
+                'gift' => 'gift/special',
+                'imperfection' => 'imperfection/special',
+                'milestone' => 'milestone',
+                'protection' => 'protection',
+                'weapon' => 'weapon'
+            ];
+
+            $bionicRoute = 'bionic';
+            //$softwareRoute = 'software';
+
+            $speciesResult = $curl->get($speciesRoute);
+
+            if(!$speciesResult['data']) {
+                $readyToCalculate = false;
+                $speciesEmpty = true;
+            } else {
+                if(count($speciesResult) == 0) {
+                    $readyToCalculate = false;
+                    $speciesEmpty = true;
+                }
+            }
+
+            if($speciesEmpty) {
+                $component->linkButton($this->siteLink.'/species/add','Add data to species',true);
+            }
+
+            if($this->existsSupernatural) {
+                $result = $curl->get($manifestationRoute);
+
+                if(!$result['data']) {
+                    $readyToCalculate = false;
+                    $manifestationEmpty = true;
+                } else {
+                    if(count($result) == 0) {
+                        $readyToCalculate = false;
+                        $manifestationEmpty = true;
+                    }
+                }
+
+                if($manifestationEmpty) {
+                    $component->linkButton($this->siteLink.'/manifestation/add','Add data to manifestation',true);
+                }
+            }
+
+            if(!$speciesEmpty && !$manifestationEmpty) {
+                foreach($defaultRoutes as $key => $route) {
+                    $result = $curl->get('world/id/'.$this->id.'/'.$route);
+
+                    $empty = false;
+
+                    if(!$result['data']) {
+                        $readyToCalculate = false;
+                        $empty = true;
+                    } else {
+                        if(count($result) == 0) {
+                            $readyToCalculate = false;
+                            $empty = true;
+                        }
+                    }
+
+                    if($empty) {
+                        $component->linkButton($this->siteLink.'/'.$key.'/add','Add data to '.$key,true);
+                    }
+                }
+
+                if($this->existsBionic) {
+                    $result = $curl->get($bionicRoute);
+
+                    if(!$result['data']) {
+                        $readyToCalculate = false;
+                    } else {
+                        if(count($result) == 0) {
+                            $readyToCalculate = false;
+                        }
+                    }
+                }
+            }
+
+
+            if($readyToCalculate) {
+                $form->formStart([
+                    'do' => 'world--calculated',
+                    'id' => $this->id,
+                    'return' => 'content/world/id'
+                ]);
+                $form->formEnd(false,'This world is ready to play. Press here!');
+            }
+        }
     }
+
+    // PRIVATE
 
     private function checkList($hasTableName, $list, $idList = null, $do = null) {
         global $form, $system;
