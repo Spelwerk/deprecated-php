@@ -47,52 +47,52 @@ $component->title('Cheat '.$person->nickname);
         $component->h2('Attribute');
         $component->h3('Body');
 
-        foreach($person->getAttribute($person->world->attributeBody) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->bodyAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         $component->h3('Combat');
 
-        foreach($person->getAttribute($person->world->attributeCombat) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->combatAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         $component->h3('Consumable');
 
-        foreach($person->getAttribute($person->world->attributeConsumable) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->consumableAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         $component->h3('Damage');
 
-        foreach($person->getAttribute($person->world->attributeDamage) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->damageAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         if($person->isSupernatural) {
             $component->h3('Power');
 
-            foreach($person->getAttribute($person->world->attributePower) as $object) {
-                $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+            foreach($person->getAttribute($person->manifestation->powerAttribute) as $object) {
+                $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
             }
         }
 
         $component->h3('Protection');
 
-        foreach($person->getAttribute($person->world->attributeProtection) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->protectionAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         $component->h3('Reputation');
 
-        foreach($person->getAttribute($person->world->attributeReputation) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->reputationAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         $component->h3('Wound');
 
-        foreach($person->getAttribute($person->world->attributeWound) as $object) {
-            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id,$object->name);
+        foreach($person->getAttribute($person->world->woundAttributeType) as $object) {
+            $component->linkButton($person->siteLink.'/cheat/attribute/'.$object->id, $object->name);
         }
 
         $component->wrapEnd();

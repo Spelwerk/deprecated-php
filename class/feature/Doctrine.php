@@ -3,24 +3,25 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 2016-12-03
- * Time: 15:37
+ * Date: 2017-05-04
+ * Time: 17:32
  */
 
-class Focus {
-
+class Doctrine {
     var $id, $canon, $name, $description, $icon;
 
     var $manifestation;
 
-    var $attribute, $attributeValue;
+    var $value;
 
     public function __construct($id = null, $array = null) {
         global $curl;
 
         $data = isset($id)
-            ? $curl->get('focus/id/'.$id)['data'][0]
+            ? $curl->get('doctrine/id/'.$id)['data'][0]
             : $array;
+
+        $defaults = $curl->get('system/doctrine');
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
@@ -28,9 +29,10 @@ class Focus {
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
+        $this->maximum = $defaults['maximum'];
+
         $this->manifestation = $data['manifestation_id'];
 
-        $this->attribute = $data['attribute_id'];
-        $this->attributeValue = $data['attribute_value'];
+        $this->value = $data['value'];
     }
 }

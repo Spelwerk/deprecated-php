@@ -12,20 +12,14 @@ require_once('./class/Person.php');
 $person = new Person($sitemap->id, $sitemap->hash);
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
-
-    <?php
+if($person->isOwner) {
     $component->returnButton($person->siteLink);
-    $component->wrapStart();
-    $component->h2('Add Bionic');
-    $component->p('Once attached. Bionics cannot be removed.');
-    $component->wrapEnd();
+    $component->h2('Bionic');
+    $component->subtitle('Once attached. Bionics cannot be removed.');
 
     $person->postBionic();
-    ?>
+}
+?>
 
-    <script src="/js/validation.js"></script>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

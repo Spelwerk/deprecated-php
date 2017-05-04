@@ -12,9 +12,9 @@ require_once('Weapon.php');
 
 class Species {
 
-    var $id, $name, $description, $isPlayable, $maxAge, $icon;
+    var $id, $canon, $playable, $name, $description, $icon;
 
-    var $multiplySkill, $multiplyExpertise;
+    var $maxAge, $multiplySkill, $multiplyExpertise;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -24,23 +24,18 @@ class Species {
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
+        $this->playable = $data['playable'];
         $this->name = $data['name'];
-        $this->icon = $data['icon_path'];
-
-        $this->description = isset($data['species_custom'])
-            ? $data['species_custom']
+        $this->description = isset($data['custom'])
+            ? $data['custom']
             : $data['description'];
 
+        $this->icon = $data['icon'];
+
+        $this->maxAge = $data['max_age'];
         $this->multiplySkill = intval($data['multiply_skill']);
         $this->multiplyExpertise = intval($data['multiply_expertise']);
-
-        $this->isPlayable = isset($data['playable'])
-            ? $data['playable']
-            : null;
-
-        $this->maxAge = isset($data['max_age'])
-            ? $data['max_age']
-            : null;
     }
 
     public function getAttribute() {
@@ -66,5 +61,4 @@ class Species {
 
         return $data;
     }
-
 }

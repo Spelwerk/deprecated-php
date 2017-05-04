@@ -11,7 +11,7 @@ require_once('./class/Person.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
 
-$attributeList = $person->getAttribute($person->world->attributeConsumable);
+$attributeList = $person->getAttribute($person->world->consumableAttributeType);
 $idList = null;
 
 foreach($attributeList as $attribute) {
@@ -19,29 +19,11 @@ foreach($attributeList as $attribute) {
 }
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php if(!$sitemap->context): ?>
-
-        <?php
-        $component->wrapStart();
-        foreach($attributeList as $attribute) {
-            $component->linkButton($person->siteLink.'/edit/consumable/'.$attribute->id,$attribute->name);
-        }
-        $component->wrapEnd();
-        ?>
-
-    <?php endif; ?>
-
-    <?php if(in_array($sitemap->context, $idList)): ?>
-
-        <?php
+    if($sitemap->context && in_array($sitemap->context, $idList)) {
         $attribute = $person->getAttribute(null, $sitemap->context)[0];
 
         $component->h2($attribute->name);
@@ -55,10 +37,15 @@ $component->title('Edit '.$person->nickname);
         $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
         $form->formEnd();
         $component->wrapEnd();
-        ?>
+    } else {
+        $component->h2('Consumable');
+        $component->wrapStart();
+        foreach($attributeList as $attribute) {
+            $component->linkButton($person->siteLink.'/edit/consumable/'.$attribute->id,$attribute->name);
+        }
+        $component->wrapEnd();
+    }
+}
+?>
 
-        <script src="/js/validation.js"></script>
-
-    <?php endif; ?>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

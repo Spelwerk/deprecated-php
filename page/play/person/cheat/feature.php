@@ -14,17 +14,11 @@ $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
 
 $component->title('Cheat '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php if($sitemap->context): ?>
-
-        <?php
+    if($sitemap->context) {
         $list = null;
         $currentId = null;
 
@@ -73,13 +67,7 @@ $component->title('Cheat '.$person->nickname);
         $form->hidden('extra', $currentId, 'post');
         $system->radioList($sitemap->context.'_id', $list, null, $currentId);
         $form->formEnd();
-        ?>
-
-        <script src="/js/validation.js"></script>
-
-    <?php else: ?>
-
-        <?php
+    } else {
         $component->wrapStart();
         $component->h2('Feature');
         $component->linkButton($person->siteLink.'/cheat/feature/species','Species');
@@ -93,8 +81,8 @@ $component->title('Cheat '.$person->nickname);
         }
 
         $component->wrapEnd();
-        ?>
+    }
+}
+?>
 
-    <?php endif; ?>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

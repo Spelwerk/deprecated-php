@@ -12,47 +12,27 @@ require_once('./class/Person.php');
 $person = new Person($sitemap->id, $sitemap->hash);
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <?php if($sitemap->context): ?>
+    $component->h2('Augmentation');
+    $component->subtitle('Once attached. Augmentations cannot be removed.');
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
-    $component->wrapStart();
-    $component->h2('Add Augmentation');
-    $component->p('Once attached. Augmentations cannot be removed.');
-    $component->wrapEnd();
-
-    $person->postAugmentation($sitemap->context);
-    ?>
-
-    <script src="/js/validation.js"></script>
-
-    <?php else: ?>
-
-        <div class="sw-l-quicklink">
-            <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-        </div>
-
-        <?php
+    if($sitemap->context == 'add') {
+        $person->postAugmentation($sitemap->context);
+    } else {
         $bionicList = $person->getBionic();
 
         $component->wrapStart();
-        $component->h2('Add Augmentation to a specific Bionic');
-        $component->p('Once attached. Augmentations cannot be removed.');
 
         foreach($bionicList as $bionic) {
             $component->linkButton($person->siteLink.'/edit/augmentation/'.$bionic->id,$bionic->name);
         }
 
         $component->wrapEnd();
-        ?>
+    }
+}
+?>
 
-    <?php endif; ?>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

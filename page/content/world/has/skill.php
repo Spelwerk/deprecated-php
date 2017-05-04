@@ -36,7 +36,7 @@ if(isset($sitemap->id)) {
     $component->returnButton($world->siteLink);
     $component->h1('Skill');
 
-    $override = '/type/'.$world->attributeSkill.'/special';
+    $override = '/type/'.$world->skillAttributeType.'/special';
 
     $list = $world->getAttribute($override);
 

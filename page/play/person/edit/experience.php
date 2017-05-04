@@ -12,16 +12,11 @@ require_once('./class/Person.php');
 $person = new Person($sitemap->id, $sitemap->hash);
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
-    $attribute = $person->getAttribute(null, $person->world->experience)[0];
+    $attribute = $person->getAttribute(null, $person->world->experienceAttribute)[0];
 
     $component->h2($attribute->name);
     $component->wrapStart();
@@ -35,8 +30,7 @@ $component->title('Edit '.$person->nickname);
 
     $form->formEnd();
     $component->wrapEnd();
-    ?>
+}
+?>
 
-    <script src="/js/validation.js"></script>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

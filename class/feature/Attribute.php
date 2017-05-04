@@ -7,11 +7,12 @@
  * Time: 18:58
  */
 
-class Attribute
-{
-    var $id, $name, $description, $protected, $icon, $value, $default, $maximum;
+class Attribute {
+    var $id, $canon, $name, $description, $icon;
 
-    var $type;
+    var $type, $maximum;
+
+    var $value;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -21,23 +22,14 @@ class Attribute
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
         $this->description = $data['description'];
+        $this->icon = $data['icon'];
+
+        $this->type = $data['attributetype_id'];
         $this->maximum = $data['maximum'];
-        $this->protected = $data['protected'];
-        $this->icon = $data['icon_path'];
 
-        $this->value = isset($data['value'])
-            ? $data['value']
-            : null;
-
-        $this->default = isset($data['default'])
-            ? $data['default']
-            : null;
-
-        $this->type = [
-            'id' => $data['attributetype_id'],
-            'name' => $data['attributetype_name'],
-        ];
+        $this->value = $data['value'];
     }
 }

@@ -22,30 +22,20 @@ class Weapon {
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
+        $this->species = $data['species'];
+        $this->augmentation = $data['augmentation'];
         $this->name = $data['name'];
-        $this->special = $data['special'];
-        $this->legal = $data['legal'];
-        $this->icon = $data['icon_path'];
-
-        $this->description = isset($data['weapon_custom'])
-            ? $data['weapon_custom']
+        $this->description = isset($data['custom'])
+            ? $data['custom']
             : $data['description'];
-
-        $this->hand = isset($data['hand'])
-            ? $data['hand']
-            : null;
-
-        $this->icon = isset($data['icon_path'])
-            ? $data['icon_path']
-            : '/img/missing_icon.png';
-
-        $this->equipped = isset($data['equipped'])
-            ? $data['equipped']
-            : null;
 
         $this->price = isset($data['quality_price'])
             ? intval($data['price']) * intval($data['quality_price'])
             : intval($data['price']);
+
+        $this->legal = $data['legal'];
+        $this->icon = $data['icon'];
 
         $this->damageD12 = isset($data['quality_damage_d12'])
             ? intval($data['damage_d12']) + intval($data['quality_damage_d12'])
@@ -59,6 +49,8 @@ class Weapon {
             ? intval($data['critical_d12']) + intval($data['quality_critical_d12'])
             : intval($data['critical_d12']);
 
+        $this->hand = $data['hand'];
+
         $this->initiative = isset($data['quality_initiative'])
             ? intval($data['initiative']) + intval($data['quality_initiative'])
             : intval($data['initiative']);
@@ -71,50 +63,21 @@ class Weapon {
             ? intval($data['distance']) + intval($data['quality_distance'])
             : intval($data['distance']);
 
-        $this->type = [
-            'id' => $data['weapontype_id'],
-            'name' => $data['weapontype_name']
-        ];
+        $this->type = $data['weapontype_id'];
+        $this->group = $data['weapongroup_id'];
 
-        $this->group = [
-            'id' => $data['weapongroup_id'],
-            'name' => $data['weapongroup_name']
-        ];
+        $this->special = $data['special'];
 
-        $this->skillValue = isset($data['skill_attribute_value'])
-            ? $data['skill_attribute_value']
+        $this->skill = $data['skill_id'];
+        $this->skillValue = $data['skill_value'];
+
+        $this->expertise = $data['expertise_id'];
+        $this->expertiseLevel = $data['expertise_level'];
+
+        $this->damage = $data['damage_id'];
+
+        $this->equipped = isset($data['equipped'])
+            ? $data['equipped']
             : null;
-
-        $this->expertiseLevel = isset($data['expertise_level'])
-            ? $data['expertise_level']
-            : null;
-
-        if(isset($data['skill_attribute_id'])) {
-            $this->skill = [
-                'id' => $data['skill_attribute_id'],
-                'name' => $data['skill_attribute_name']
-            ];
-        }
-
-        if(isset($data['expertise_id'])) {
-            $this->expertise = [
-                'id' => $data['expertise_id'],
-                'name' => $data['expertise_name']
-            ];
-        }
-
-        if(isset($data['damage_attribute_id'])) {
-            $this->damage = [
-                'id' => $data['damage_attribute_id'],
-                'name' => $data['damage_attribute_name'],
-            ];
-        }
-
-        if(isset($data['quality_id'])) {
-            $this->quality = [
-                'id' => $data['quality_id'],
-                'name' => $data['quality_name'],
-            ];
-        }
     }
 }

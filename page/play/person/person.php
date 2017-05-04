@@ -30,21 +30,15 @@ if($userList) {
     $component->h1('Your saved persons');
 
     foreach($userList as $item) {
-        if(isset($item['person_id'])) {
-            $filterList[] = $item['person_id'];
+        $filterList[] = $item['id'];
 
-            $isOwner = isset($item['person_hash'])
-                ? true
-                : false;
+        $isOwner = $item['owner'];
 
-            $link = $isOwner
-                ? 'play/person/id/'.$item['person_id'].'/'.$item['person_hash']
-                : 'play/person/id/'.$item['person_id'];
+        $link = $isOwner
+            ? 'play/person/id/'.$item['id'].'/'.$item['secret']
+            : 'play/person/id/'.$item['id'];
 
-            $person = $curl->get('person/id/'.$item['person_id'].'/short')['data'][0];
-
-            $component->linkButton($link,$person['nickname'].' ('.$person['occupation'].') ('.$person['age'].')');
-        }
+        $component->linkButton($link,$item['nickname'].' ('.$item['occupation'].')');
     }
 }
 
@@ -81,3 +75,4 @@ if($popularList) {
     }
 }
 ?>
+

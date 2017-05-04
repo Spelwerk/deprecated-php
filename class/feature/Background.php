@@ -6,13 +6,13 @@
  * Date: 2016-12-03
  * Time: 15:09
  */
+
 class Background {
+    var $id, $canon, $name, $description, $icon;
 
-    var $id, $name, $description, $icon;
+    var $species;
 
-    // todo background has attribute
-
-    // todo background has asset
+    var $manifestation;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -22,11 +22,17 @@ class Background {
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
-        $this->icon = $data['icon_path'];
+        $this->description = $data['description'];
+        $this->icon = $data['icon'];
 
-        $this->description = isset($data['background_custom'])
-            ? $data['background_custom']
-            : $data['description'];
+        $this->species = $data['species_id'];
+
+        $this->manifestation = $data['manifestation_id'];
     }
 }
+
+// todo has attribute
+
+// todo has asset

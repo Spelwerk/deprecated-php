@@ -7,26 +7,21 @@
  * Time: 19:41
  */
 class Sanity {
+    var $id, $canon, $name, $icon;
 
-    var $id, $name, $popularity, $hidden, $aid, $heal, $lethal, $icon;
+    var $heal, $lethal;
 
     public function __construct($id = null, $array = null) {
         global $curl;
 
         $data = isset($id)
-            ? $curl->get('wound/id/'.$id)['data'][0]
+            ? $curl->get('sanity/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
-
-        $this->popularity = isset($data['popularity'])
-            ? $data['popularity']
-            : null;
-
-        $this->hidden = isset($data['hidden'])
-            ? $data['hidden']
-            : null;
+        $this->icon = '/img/color/sanity.png';
 
         $this->heal = isset($data['heal'])
             ? $data['heal']
@@ -39,8 +34,5 @@ class Sanity {
         $this->value = $this->double
             ? 2
             : 1;
-
-        $this->icon = '/img/color/sanity.png';
     }
-
 }

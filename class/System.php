@@ -158,8 +158,8 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'augmentation'.$override
-            : 'augmentation';
+            ? 'focus'.$override
+            : 'focus';
 
         $result = $curl->get($get);
 
@@ -345,7 +345,7 @@ class System {
             $form->number(true, 'age', 'Age', 'Deciding age is important, as it determines many important things for the creation of your character. While you can change age at a later stage, the system will not take that into account after creation.', null, 5, $species->maxAge);
             $form->varchar(true, 'occupation', 'Occupation', 'The occupation of your character is your secondary simple identifier.');
 
-            if($world->existsSupernatural) {
+            if($world->supernaturalExists) {
                 $form->pick(true, 'supernatural', $world->supernaturalName, 'In this world, your character can have supernatural ('.$world->supernaturalName.') abilities. Choose yes if this is the case.');
             } else {
                 $form->hidden('supernatural', 0);
@@ -389,6 +389,8 @@ class System {
 
     public function createWorld() {
         global $component, $form, $curl;
+
+        $component->title('Create World');
 
         $moneyAttribute = $curl->get('attribute/type/8')['data'];
         $skillAttributeType = $curl->get('attributetype/skill')['data'];
@@ -516,24 +518,24 @@ class System {
     }
 
     function selectWorld($action) {
-        global $form, $curl, $user, $component;
+        global $form, $curl, $user;
 
         $list = null;
 
         if($user) {
-            $userList = $curl->get('user-world/id/'.$user->id.'/calculated');
+            $userList = $curl->get('user/id/'.$user->id.'/world/calculated');
 
             if(isset($userList['data'])) {
                 foreach($userList['data'] as $item) {
-                    $list[] = new World($item['world_id']);
+                    $list[] = new World($item['id']);
                 }
             }
         }
 
-        $worldList = $curl->get('world')['data']; // todo remove template
+        $worldList = $curl->get('world')['data'];
 
         foreach($worldList as $item) {
-            $list[] = new World(null, null, $item);
+            $list[] = new World(null, $item);
         }
 
         $form->formStart(['action' => $action]);

@@ -12,23 +12,18 @@ require_once('./class/Person.php');
 $person = new Person($sitemap->id, $sitemap->hash);
 
 $component->title('Cheat '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php if($person->isCheater): ?>
-
-        <?php
+    if($person->isCheater) {
         $component->wrapStart();
 
         $component->linkButton($person->siteLink.'/cheat/attribute','Attribute');
-        $component->linkButton($person->siteLink.'/cheat/characteristic', 'Gift');
         $component->linkButton($person->siteLink.'/cheat/expertise','Expertise');
         $component->linkButton($person->siteLink.'/cheat/feature','Feature');
+        $component->linkButton($person->siteLink.'/cheat/gift', 'Gift');
+        $component->linkButton($person->siteLink.'/cheat/imperfection', 'Imperfection');
         $component->linkButton($person->siteLink.'/cheat/milestone','Milestone');
         $component->linkButton($person->siteLink.'/cheat/skill','Skill');
 
@@ -37,11 +32,7 @@ $component->title('Cheat '.$person->nickname);
         }
 
         $component->wrapEnd();
-        ?>
-
-    <?php else: ?>
-
-        <?php
+    } else {
         $component->wrapStart();
         $component->h1('Cheat');
         $component->subtitle('There are options in this place that will let you change your person into something that is outside of the normal creation structure. Because of this we will remove your person from all public lists if you choose to move forward and cheat.');
@@ -54,8 +45,6 @@ $component->title('Cheat '.$person->nickname);
         ]);
         $form->formEnd(false, 'Cheat', true);
         $component->wrapEnd();
-        ?>
-
-    <?php endif; ?>
-
-<?php endif; ?>
+    }
+}
+?>

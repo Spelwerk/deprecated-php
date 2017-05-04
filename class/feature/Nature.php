@@ -6,11 +6,11 @@
  * Date: 2016-12-03
  * Time: 17:31
  */
-class Nature {
 
+class Nature {
     var $id, $name, $description, $icon;
 
-    var $attribute;
+    var $attribute, $attributeValue;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -22,12 +22,9 @@ class Nature {
         $this->id = $data['id'];
         $this->name = $data['name'];
         $this->description = $data['description'];
-        $this->icon = $data['icon_path'];
+        $this->icon = $data['icon'];
 
-        $this->attribute = [
-            'id' => $data['attribute_id'],
-            'name' => $data['attribute_name'],
-            'value' => $data['attribute_value']
-        ];
+        $this->attribute = $data['attribute_id'];
+        $this->attributeValue = $data['attribute_value'];
     }
 }

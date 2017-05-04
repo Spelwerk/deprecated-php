@@ -11,15 +11,9 @@ require_once('./class/Person.php');
 $person = new Person($sitemap->id, $sitemap->hash);
 
 $component->title('Add Disease');
-?>
 
-<?php if($person->isOwner): ?>
-
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
     $component->wrapStart();
     $form->formStart([
         'do' => 'person--wound',
@@ -33,8 +27,7 @@ $component->title('Add Disease');
     $form->pick(true, 'timestwo', 'Double Damage','Check this if you have suffered double damage.');
     $form->formEnd();
     $component->wrapEnd();
-    ?>
+}
+?>
 
-    <script src="/js/validation.js"></script>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

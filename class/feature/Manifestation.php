@@ -6,11 +6,13 @@
  * Date: 2016-12-03
  * Time: 17:32
  */
+
 class Manifestation {
+    var $id, $canon, $name, $description, $icon;
 
-    var $id, $name, $description, $icon;
+    var $power;
 
-    var $disciplineAttributeType, $skillAttributeType, $expertiseType, $powerAttribute;
+    var $skill;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -20,16 +22,16 @@ class Manifestation {
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
-        $this->icon = $data['icon_path'];
-
-        $this->description = isset($data['manifestation_custom'])
-            ? $data['manifestation_custom']
+        $this->description = isset($data['custom'])
+            ? $data['custom']
             : $data['description'];
 
-        $this->disciplineAttributeType = $data['attributetype_id'];
-        $this->skillAttribute = $data['skill_attribute_id'];
-        $this->expertiseType = $data['expertisetype_id'];
-        $this->powerAttribute = $data['power_attribute_id'];
+        $this->icon = $data['icon'];
+
+        $this->power = $data['power'];
+
+        $this->skill = $data['skill'];
     }
 }

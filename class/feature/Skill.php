@@ -3,24 +3,24 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 2016-12-03
- * Time: 15:37
+ * Date: 2017-05-04
+ * Time: 17:32
  */
-
-class Focus {
-
+class Skill {
     var $id, $canon, $name, $description, $icon;
 
-    var $manifestation;
+    var $species;
 
-    var $attribute, $attributeValue;
+    var $value;
 
     public function __construct($id = null, $array = null) {
         global $curl;
 
         $data = isset($id)
-            ? $curl->get('focus/id/'.$id)['data'][0]
+            ? $curl->get('skill/id/'.$id)['data'][0]
             : $array;
+
+        $defaults = $curl->get('system/skill');
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
@@ -28,9 +28,10 @@ class Focus {
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
-        $this->manifestation = $data['manifestation_id'];
+        $this->maximum = $defaults['maximum'];
 
-        $this->attribute = $data['attribute_id'];
-        $this->attributeValue = $data['attribute_value'];
+        $this->species = $data['species_id'];
+
+        $this->value = $data['value'];
     }
 }

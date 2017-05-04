@@ -12,24 +12,19 @@ require_once('./class/Person.php');
 $person = new Person($sitemap->id, $sitemap->hash);
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
     $component->wrapStart();
 
     //$component->linkButton($person->siteLink.'/edit/asset','Asset');
 
-    if($person->world->existsAugmentation) {
+    if($person->world->augmentationExists) {
         $component->linkButton($person->siteLink.'/edit/augmentation','Augmentation');
     }
 
-    if($person->world->existsBionic) {
+    if($person->world->bionicExists) {
         $component->linkButton($person->siteLink.'/edit/bionic','Bionic');
     }
 
@@ -41,7 +36,7 @@ $component->title('Edit '.$person->nickname);
     $component->linkButton($person->siteLink.'/edit/protection','Protection');
     $component->linkButton($person->siteLink.'/edit/skill','Skill');
 
-    if($person->world->existsSoftware) {
+    if($person->world->softwareExists) {
         //$component->linkButton('/play/' . $person->id . '/' . $person->hash . '/edit/software', 'Software');
     }
 
@@ -53,6 +48,5 @@ $component->title('Edit '.$person->nickname);
     $component->linkButton($person->siteLink.'/cheat','Cheat',true);
 
     $component->wrapEnd();
-    ?>
-
-<?php endif; ?>
+}
+?>

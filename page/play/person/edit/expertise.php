@@ -8,27 +8,20 @@
 global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
-require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
-$system = new System();
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
-
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
-    $exp = $person->getAttribute(null, $person->world->experience)[0];
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
     $component->h2('Purchase Expertise');
-    $system->person_purchaseExpertise($person, $exp->value);
-    ?>
 
-    <script src="/js/validation.js"></script>
+    $exp = $person->getAttribute(null, $person->world->experienceAttribute)[0];
 
-<?php endif; ?>
+    $person->postExpertise();
+}
+?>
+
+<script src="/js/validation.js"></script>

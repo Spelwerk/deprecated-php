@@ -23,7 +23,7 @@ if(isset($sitemap->id)) {
         $component->linkButton($world->siteLink.'/attribute','Attribute');
         $component->linkButton($world->siteLink.'/background','Background');
 
-        if($world->existsBionic) {
+        if($world->bionicExists) {
             $component->linkButton($world->siteLink.'/bionic','Bionic');
         }
 
@@ -31,7 +31,7 @@ if(isset($sitemap->id)) {
         $component->linkButton($world->siteLink.'/gift','Gift');
         $component->linkButton($world->siteLink.'/imperfection','Imperfection');
 
-        if($world->existsSupernatural) {
+        if($world->supernaturalExists) {
             $component->linkButton($world->siteLink.'/manifestation','Manifestation');
         }
 

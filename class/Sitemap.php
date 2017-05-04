@@ -425,11 +425,6 @@ class Sitemap {
                 $this->unique = $context;
                 break;
 
-            case 'Gift':
-                $this->page = 'page/play/person/cheat/characteristic.php';
-                $this->context = $context;
-                break;
-
             case 'doctrine':
                 $this->page = 'page/play/person/cheat/doctrine.php';
                 break;
@@ -440,6 +435,16 @@ class Sitemap {
 
             case 'feature':
                 $this->page = 'page/play/person/cheat/feature.php';
+                $this->context = $context;
+                break;
+
+            case 'gift':
+                $this->page = 'page/play/person/cheat/gift.php';
+                $this->context = $context;
+                break;
+
+            case 'imperfection':
+                $this->page = 'page/play/person/cheat/imperfection.php';
                 $this->context = $context;
                 break;
 

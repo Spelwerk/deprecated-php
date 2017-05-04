@@ -9,14 +9,9 @@ global $sitemap, $user, $form, $component;
 
 require_once('./class/Person.php');
 
-$person = null;
 $userOwner = null;
 
-if(isset($sitemap->id) && isset($sitemap->hash)) {
-    $person = new Person($sitemap->id, $sitemap->hash);
-} else if (isset($sitemap->id)) {
-    $person = new Person($sitemap->id);
-}
+$person = new Person($sitemap->id, $sitemap->hash);
 ?>
 
 <div class="sw-js-person-name sw-is-hidden"><?php echo($person->nickname); ?></div>
@@ -70,7 +65,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
                 $component->linkQuick($person->siteLink.'/edit/weapon','Weapon','/img/weapon.png');
                 $component->linkQuick($person->siteLink.'/edit/protection','Protection','/img/armor.png');
 
-                if($person->world->existsBionic) {
+                if($person->world->bionicExists) {
                     $component->linkQuick($person->siteLink.'/edit/bionic','Bionic','/img/bionic.png');
                 }
 
@@ -93,7 +88,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
         if($person->isPlayable && $person->isCalculated) {
             $component->sectionStart();
             $component->h2('Skill');
-            $person->makeButton($person->getAttribute($person->world->attributeSkill), 'skill');
+            $person->makeButton($person->getAttribute($person->world->skillAttributeType), 'skill');
             $person->makeExpertise();
             $person->makeSupernatural();
 
@@ -101,11 +96,11 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
             $person->makeButton($person->getWeapon(1), 'weapon');
 
             $component->h2('Consumable');
-            $person->makeButton($person->getAttribute($person->world->attributeConsumable), 'consumable');
+            $person->makeButton($person->getAttribute($person->world->consumableAttributeType), 'consumable');
 
             $component->h2('Attribute');
-            $person->makeButton($person->getAttribute($person->world->attributeReputation), 'skill');
-            $person->makeButton($person->getAttribute($person->world->attributeCombat), 'skill');
+            $person->makeButton($person->getAttribute($person->world->reputationAttributeType), 'skill');
+            $person->makeButton($person->getAttribute($person->world->combatAttributeType), 'skill');
 
             $component->sectionEnd();
 
@@ -174,7 +169,7 @@ if(isset($sitemap->id) && isset($sitemap->hash)) {
                 $component->link($person->siteLink.'/edit/protection','Edit Protection');
             }
 
-            if($person->world->existsBionic) {
+            if($person->world->bionicExists) {
                 $component->h3('Bionic','eq_bionic');
                 $person->makeList($person->getBionic());
 

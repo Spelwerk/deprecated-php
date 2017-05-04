@@ -6,13 +6,17 @@
  * Date: 2016-12-02
  * Time: 07:28
  */
-class Bionic
-{
-    var $id, $name, $description, $legal, $price, $energy, $icon;
 
-    var $bodypart, $attribute, $quality;
+class Bionic {
+    var $id, $canon, $name, $description, $price, $energy, $legal, $icon;
 
-    public function __construct($id = null, $array = null, $quality = null) {
+    var $bodypart;
+
+    var $attribute, $attributeValue;
+
+    var $quality;
+
+    public function __construct($id = null, $array = null) {
         global $curl;
 
         $data = isset($id)
@@ -20,12 +24,10 @@ class Bionic
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
-        $this->legal = $data['legal'];
-        $this->icon = $data['icon_path'];
-
-        $this->description = isset($data['bionic_custom'])
-            ? $data['bionic_custom']
+        $this->description = isset($data['custom'])
+            ? $data['custom']
             : $data['description'];
 
         $this->price = isset($data['quality_price'])
@@ -36,22 +38,16 @@ class Bionic
             ? intval($data['energy']) * intval($data['quality_energy'])
             : intval($data['energy']);
 
-        $this->bodypart = [
-            'id' => $data['bodypart_id'],
-            'name' => $data['bodypart_name']
-        ];
+        $this->legal = $data['legal'];
+        $this->icon = $data['icon'];
 
-        $this->attribute = [
-            'id' => $data['attribute_id'],
-            'name' => $data['attribute_name'],
-            'value' => $data['attribute_value']
-        ];
+        $this->bodypart = $data['bodypart_id'];
 
-        if(isset($data['quality_id'])) {
-            $this->quality = [
-                'id' => $data['quality_id'],
-                'name' => $data['quality_name'],
-            ];
-        }
+        $this->attribute = $data['attribute_id'];
+        $this->attributeValue = $data['attribute_value'];
+
+        $this->quality = $data['quality_id'];
     }
 }
+
+// todo has augmentation

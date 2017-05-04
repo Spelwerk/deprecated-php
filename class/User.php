@@ -43,7 +43,7 @@ class User {
     public function getPerson() {
         global $curl;
 
-        $result = $curl->get('user-person/id/'.$this->id);
+        $result = $curl->get('user/id/'.$this->id.'/person');
 
         $data = isset($result['data'])
             ? $result['data']
@@ -67,7 +67,7 @@ class User {
     public function getWorld() {
         global $curl;
 
-        $result = $curl->get('user-world/id/'.$this->id);
+        $result = $curl->get('user/id/'.$this->id.'/world');
 
         $data = isset($result['data'])
             ? $result['data']

@@ -3,13 +3,13 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 15/02/2017
- * Time: 11:16
+ * Date: 05/04/2017
+ * Time: 19:41
  */
-
 class Wound {
+    var $id, $canon, $name, $icon;
 
-    var $id, $name, $popularity, $hidden, $aid, $heal, $lethal, $icon;
+    var $heal, $lethal;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -19,15 +19,9 @@ class Wound {
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
-
-        $this->popularity = isset($data['popularity'])
-            ? $data['popularity']
-            : null;
-
-        $this->hidden = isset($data['hidden'])
-            ? $data['hidden']
-            : null;
+        $this->icon = '/img/color/wound.png';
 
         $this->heal = isset($data['heal'])
             ? $data['heal']
@@ -40,7 +34,5 @@ class Wound {
         $this->value = $this->double
             ? 2
             : 1;
-
-        $this->icon = '/img/color/wound.png';
     }
 }

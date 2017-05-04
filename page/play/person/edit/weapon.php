@@ -8,33 +8,20 @@
 global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
-require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
-$system = new System();
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
+    $component->h2('Weapon');
 
-    <?php if($sitemap->context == 'add'): ?>
-
-        <?php
-        $component->h2('Add Weapon');
-        $system->person_checkWeapon($person);
-        ?>
-
-    <?php else: ?>
-
-        <?php
+    if($sitemap->context == 'add') {
+        $person->postWeapon();
+    } else {
         $list = $person->getWeapon();
-
-        $component->h2('Weapon');
 
         if(isset($list)) {
             foreach($list as $item) {
@@ -43,10 +30,8 @@ $component->title('Edit '.$person->nickname);
         }
 
         $component->linkButton($person->siteLink.'/edit/weapon/add','Add');
-        ?>
+    }
+}
+?>
 
-    <?php endif; ?>
-
-    <script src="/js/validation.js"></script>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

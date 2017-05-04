@@ -6,11 +6,21 @@
  * Date: 2016-12-03
  * Time: 15:15
  */
+
 class Expertise {
+    var $id, $canon, $name, $description, $icon;
 
-    var $id, $name, $description, $special, $level, $dice, $maximum, $icon;
+    var $level, $bonus;
 
-    var $type, $skill, $species, $manifestation, $attribute;
+    var $required, $increment, $maximum;
+
+    var $skill;
+
+    var $species;
+
+    var $manifestation;
+
+    var $doctrine;
 
     public function __construct($id = null, $array = null, $skill = null) {
         global $curl;
@@ -19,45 +29,32 @@ class Expertise {
             ? $curl->get('expertise/id/'.$id)['data'][0]
             : $array;
 
-        $this->id = $data['id'];
-        $this->name = $data['name'];
-        $this->special = $data['special'];
-        $this->icon = $data['icon_path'];
-        $this->maximum = $data['maximum'];
-        $this->species = $data['species_id'];
-        $this->manifestation = $data['manifestation_id'];
+        $defaults = $curl->get('system/expertise');
 
-        $this->description = isset($data['expertise_custom'])
-            ? $data['expertise_custom']
+        $this->id = $data['id'];
+        $this->canon = $data['canon'];
+        $this->name = $data['name'];
+        $this->description = isset($data['custom'])
+            ? $data['custom']
             : $data['description'];
 
-        $this->level = isset($data['level'])
-            ? $data['level']
-            : null;
+        $this->icon = $data['icon'];
 
-        $this->type = [
-            'id' => $data['expertisetype_id'],
-            'name' => $data['expertisetype_name']
-        ];
+        $this->level = $data['level'];
+        $this->bonus = $data['bonus'];
 
-        $this->skill = [
-            'id' => $data['skill_attribute_id'],
-            'name' => $data['skill_attribute_name'],
-            'required' => $data['skill_attribute_required'], // when you can get level 1
-            'increment' => $data['skill_attribute_increment'], // when you can get next levels
-            'startsat' => $data['startsat'] // bonus starts at
-        ];
+        $this->required = $defaults['required'];
+        $this->increment = $defaults['increment'];
+        $this->maximum = $defaults['maximum'];
+        $this->start = isset($data['manifestation_id'])
+            ? 0
+            : 1;
 
-        $this->dice = intval($data['startsat']) + intval($this->level) - 1;
+        $this->skill = $data['skill_id'];
+        $this->species = $data['species_id'];
+        $this->manifestation = $data['manifestation_id'];
+        $this->doctrine = $data['doctrine_id'];
 
-        $this->skillValue = isset($data['skill_attribute_value'])
-            ? $data['skill_attribute_value']
-            : null;
-
-        $this->attribute = [
-            'id' => $data['give_attribute_id'],
-            'name' => $data['give_attribute_name'],
-            'value' => $this->level
-        ];
+        $this->dice = intval($this->start) + intval($this->level) - 1;
     }
 }

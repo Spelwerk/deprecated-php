@@ -14,15 +14,9 @@ $person = new Person($sitemap->id, $sitemap->hash);
 $system = new System();
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
-
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
     $component->h2('Description');
     $component->wrapStart();
     $form->formStart([
@@ -46,8 +40,7 @@ $component->title('Edit '.$person->nickname);
     $form->text(false, 'background_custom', 'Background', 'Customize your background description if you wish.',null,$person->background->description);
     $form->formEnd();
     $component->wrapEnd();
-    ?>
+}
+?>
 
-    <script src="/js/validation.js"></script>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

@@ -8,34 +8,19 @@
 global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
-require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
-$system = new System();
 
 $component->title('Edit '.$person->nickname);
-?>
 
-<?php if($person->isOwner): ?>
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
 
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
+    $component->h2('Protection');
 
-    <?php if($sitemap->context == 'add'): ?>
-
-        <?php
-        $component->h2('Add Protection');
-        $system->person_checkProtection($person);
-        ?>
-
-    <?php else: ?>
-
-        <?php
-        $list = $person->getProtection();
-
-        $component->h2('Protection');
-
+    if($sitemap->context == 'add') {
+        $person->postProtection();
+    } else {
         if(isset($list)) {
             foreach($list as $item) {
                 $person->buildRemoval('protection', $item->id, $item->name, $item->icon);
@@ -43,10 +28,8 @@ $component->title('Edit '.$person->nickname);
         }
 
         $component->linkButton($person->siteLink.'/edit/protection/add','Add');
-        ?>
-
-    <?php endif; ?>
+    }
+}
+?>
 
 <script src="/js/validation.js"></script>
-
-<?php endif; ?>

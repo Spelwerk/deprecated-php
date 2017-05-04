@@ -28,12 +28,39 @@ require_once('feature/Wound.php');
 
 class World {
 
+    var $id, $canon, $name, $description;
+
+    var $isOwner, $isCalculated;
+
+    var $popularity, $thumbsup, $thumbsdown;
+
+    var $bodyAttributeType, $combatAttributeType, $consumableAttributeType, $damageAttributeType,
+        $protectionAttributeType, $reputationAttributeType, $skillAttributeType, $woundAttributeType;
+
+    var $attributeExpertiseType, $diceExpertiseType;
+
+    var $augmentationExists, $bionicExists, $softwareExists, $supernaturalExists;
+
+    var $splitSupernatural, $splitSkill, $splitExpertise, $splitMilestone, $splitRelationship;
+
+    var $maxGift, $maxImperfection, $maxSupernatural, $maxSkill, $maxExpertise, $maxMilestone, $maxRelationship;
+
+    var $supernaturalName;
+
+    var $damageAttribute, $diseaseAttribute, $experienceAttribute, $moneyAttribute, $resilienceAttribute,
+        $sanityAttribute, $staminaAttribute, $toleranceAttribute, $traumaAttribute;
+
+    var $siteLink;
+
+
     public function __construct($id = null, $array = null) {
         global $curl, $user;
 
         $data = isset($id)
             ? $curl->get('world/id/'.$id,$user->token)['data'][0]
             : $array;
+
+        $defaults = $curl->get('system/attribute');
 
         $this->isOwner = isset($data['owner'])
             ? $data['owner']
@@ -45,29 +72,32 @@ class World {
         $this->canon = $data['canon'];
         $this->name = $data['name'];
         $this->description = $data['description'];
-        $this->money = $data['money_attribute_id'];
 
-        $this->popularity = $data['popularity'];
-        $this->thumbsup = $data['thumbsup'];
-        $this->thumbsdown = $data['thumbsdown'];
+        $this->bodyAttributeType = $defaults['type']['body'];
+        $this->combatAttributeType = $defaults['type']['combat'];
+        $this->consumableAttributeType = $defaults['type']['consumable'];
+        $this->damageAttributeType = $defaults['type']['damage'];
+        $this->energyAttributeType = $defaults['type']['energy'];
+        $this->experienceAttributeType = $defaults['type']['experience'];
+        $this->protectionAttributeType = $defaults['type']['protection'];
+        $this->powerAttributeType = $defaults['type']['power'];
+        $this->reputationAttributeType = $defaults['type']['reputation'];
+        $this->woundAttributeType = $defaults['type']['wound'];
 
-        // Hard Coded values for the System // todo add all these to database?
-        $this->attributeBody = 1;
-        $this->attributeCombat = 2;
-        $this->attributeConsumable = 8;
-        $this->attributeWound = 3;
-        $this->attributeProtection = 4;
-        $this->attributeDamage = 5;
-        $this->attributeReputation = 6;
+        $this->damageAttribute = $defaults['id']['damage'];
+        $this->diseaseAttribute = $defaults['id']['disease'];
+        $this->experienceAttribute = $defaults['id']['experience'];
+        $this->moneyAttribute = $defaults['id']['money'];
+        $this->resilienceAttribute = $defaults['id']['resilience'];
+        $this->sanityAttribute = $defaults['id']['sanity'];
+        $this->staminaAttribute = $defaults['id']['stamina'];
+        $this->toleranceAttribute = $defaults['id']['tolerance'];
+        $this->traumaAttribute = $defaults['id']['trauma'];
 
-        $this->attributeSkill = $data['skill_attributetype_id'];
-        $this->expertiseAttribute = $data['attribute_expertisetype_id'];
-        $this->expertiseDice = $data['dice_expertisetype_id'];
-
-        $this->existsBionic = $data['bionic'];
-        $this->existsAugmentation = $data['augmentation'];
-        $this->existsSoftware = $data['software'];
-        $this->existsSupernatural = $data['supernatural'];
+        $this->augmentationExists = $data['augmentation'];
+        $this->bionicExists = $data['bionic'];
+        $this->softwareExists = $data['software'];
+        $this->supernaturalExists = $data['supernatural'];
 
         $this->splitSupernatural = intval($data['split_supernatural']);
         $this->splitSkill = intval($data['split_skill']);
@@ -86,17 +116,6 @@ class World {
         $this->supernaturalName = isset($data['supernatural_name'])
             ? $data['supernatural_name']
             : null;
-
-        $this->damage = 4;
-        $this->experience = 22;
-
-        $this->tolerance = 1;
-        $this->stamina = 2;
-        $this->resilience = 3;
-
-        $this->sanity = 7;
-        $this->disease = 8;
-        $this->trauma = 9;
 
         $this->siteLink = '/content/world/id/'.$this->id;
     }
@@ -169,6 +188,26 @@ class World {
         return $arrayList;
     }
 
+    public function getDoctrine($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/doctrine'.$override
+            : 'world/id/'.$this->id.'/doctrine';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Doctrine(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getExpertise($override = null) {
         global $curl;
 
@@ -192,9 +231,7 @@ class World {
     public function getFocus($manifestation) {
         global $system;
 
-        $override = 'focus/manifestation/'.$manifestation;
-
-        return $system->getFocus($override);
+        return $system->getFocus('/manifestation/'.$manifestation);
     }
 
     public function getGift($override = null) {
@@ -299,6 +336,26 @@ class World {
         if(isset($result['data'])) {
             foreach ($result['data'] as $array) {
                 $arrayList[] = new Protection(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getSkill($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/skill'.$override
+            : 'world/id/'.$this->id.'/skill';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Skill(null, $array);
             }
         }
 
@@ -418,9 +475,9 @@ class World {
     }
 
     public function postExpertise() {
-        global $system, $form;
+        global $system, $form, $component;
 
-        $skillArray = $this->getAttribute('/type/'.$this->attributeSkill);
+        $skillArray = $this->getAttribute('/type/'.$this->skillAttributeType);
         $idList = $system->idList($this->getExpertise());
 
         $form->formStart([
@@ -436,7 +493,10 @@ class World {
 
             $list = $system->getExpertise($override);
 
-            $system->checkboxList($list,$idList);
+            if($list) {
+                $component->h2($skill->name);
+                $system->checkboxList($list,$idList);
+            }
         }
 
         $system->checkboxAll();
@@ -451,7 +511,7 @@ class World {
         $list = $system->getGift($override);
         $idList = $system->idList($this->getGift());
 
-        $skillArray = $this->getAttribute('/type/'.$this->attributeSkill);
+        $skillArray = $this->getAttribute('/type/'.$this->skillAttributeType);
 
         $form->formStart([
             'do' => 'world--has--add',
@@ -528,10 +588,10 @@ class World {
     public function postSkill() {
         global $system, $form;
 
-        $override = '/type/'.$this->attributeSkill.'/special';
+        $override = '/type/'.$this->skillAttributeType.'/special';
 
         $list = $system->getAttribute($override);
-        $idList = $system->idList($this->getAttribute('/type/'.$this->attributeSkill));
+        $idList = $system->idList($this->getAttribute('/type/'.$this->skillAttributeType));
 
         $form->formStart([
             'do' => 'world--skill',
@@ -606,7 +666,7 @@ class World {
             'context' => 'attribute'
         ]);
 
-        $system->checkboxList($this->getAttribute('/type/'.$this->attributeSkill.'/special'));
+        $system->checkboxList($this->getAttribute('/type/'.$this->skillAttributeType.'/special'));
         $system->checkboxAll();
 
         $form->formEnd();
@@ -627,64 +687,33 @@ class World {
 
         if(!$this->isCalculated) {
             $component->h1('Creating '.$this->name);
-            $component->subtitle('It is recommended to add data in the order of the buttons, as many tables are dependent on each other');
 
             $readyToCalculate = true;
-            $speciesEmpty = false;
-            $manifestationEmpty = false;
-
-            $speciesRoute = 'species';
-            $manifestationRoute = 'manifestation';
 
             $defaultRoutes = [
-                'skill' => 'attribute/type/'.$this->attributeSkill.'/special',
                 'background' => 'background',
                 'expertise' => 'expertise/special',
                 'gift' => 'gift/special',
                 'imperfection' => 'imperfection/special',
                 'milestone' => 'milestone',
                 'protection' => 'protection',
-                'weapon' => 'weapon'
+                'weapon' => 'weapon',
             ];
 
-            $bionicRoute = 'bionic';
-            //$softwareRoute = 'software';
+            $sResult = $this->getSpecies();
+            $mResult = $this->getManifestation();
+            $kResult = $this->getAttribute('/type/'.$this->skillAttributeType.'/special');
 
-            $speciesResult = $curl->get($speciesRoute);
-
-            if(!$speciesResult['data']) {
+            if(!$sResult) {
+                $component->linkButton($this->siteLink.'/species/add','Add species',true);
                 $readyToCalculate = false;
-                $speciesEmpty = true;
+            } else if($this->supernaturalExists && !$mResult) {
+                $component->linkButton($this->siteLink.'/manifestation/add','Add manifestations',true);
+                $readyToCalculate = false;
+            } else if(!$kResult) {
+                $component->linkButton($this->siteLink.'/skill/add','Add skills',true);
+                $readyToCalculate = false;
             } else {
-                if(count($speciesResult) == 0) {
-                    $readyToCalculate = false;
-                    $speciesEmpty = true;
-                }
-            }
-
-            if($speciesEmpty) {
-                $component->linkButton($this->siteLink.'/species/add','Add data to species',true);
-            }
-
-            if($this->existsSupernatural) {
-                $result = $curl->get($manifestationRoute);
-
-                if(!$result['data']) {
-                    $readyToCalculate = false;
-                    $manifestationEmpty = true;
-                } else {
-                    if(count($result) == 0) {
-                        $readyToCalculate = false;
-                        $manifestationEmpty = true;
-                    }
-                }
-
-                if($manifestationEmpty) {
-                    $component->linkButton($this->siteLink.'/manifestation/add','Add data to manifestation',true);
-                }
-            }
-
-            if(!$speciesEmpty && !$manifestationEmpty) {
                 foreach($defaultRoutes as $key => $route) {
                     $result = $curl->get('world/id/'.$this->id.'/'.$route);
 
@@ -701,23 +730,19 @@ class World {
                     }
 
                     if($empty) {
-                        $component->linkButton($this->siteLink.'/'.$key.'/add','Add data to '.$key,true);
+                        $component->linkButton($this->siteLink.'/'.$key.'/add','Add '.$key.'s');
                     }
                 }
 
-                if($this->existsBionic) {
-                    $result = $curl->get($bionicRoute);
+                if($this->bionicExists) {
+                    $bResult = $this->getBionic();
 
-                    if(!$result['data']) {
+                    if(!$bResult) {
+                        $component->linkButton($this->siteLink.'/bionic/add','Add bionics');
                         $readyToCalculate = false;
-                    } else {
-                        if(count($result) == 0) {
-                            $readyToCalculate = false;
-                        }
                     }
                 }
             }
-
 
             if($readyToCalculate) {
                 $form->formStart([

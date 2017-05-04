@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: jonn
- * Date: 15/02/2017
- * Time: 15:06
+ * Date: 2017-04-28
+ * Time: 10:57
  */
 global $sitemap, $form, $component;
 
@@ -15,20 +15,20 @@ $component->title('Cheat '.$person->nickname);
 
 if($person->isOwner) {
     $component->returnButton($person->siteLink);
-    $component->h2('Milestone');
+    $component->h2('Gift');
 
-    if ($sitemap->context == 'add') {
-        $person->postMilestone(1);
+    if($sitemap->context == 'add') {
+        $person->postImperfection(true);
     } else {
-        $list = $person->getMilestone();
-
         $component->wrapStart();
 
-        foreach ($list as $item) {
-            $person->buildRemoval($item->id, $item->name, $item->icon, 'milestone');
+        $list = $person->getImperfection();
+
+        foreach($list as $item) {
+            $person->buildRemoval($item->id, $item->name, $item->icon, 'imperfection');
         }
 
-        $component->linkButton($person->siteLink . '/cheat/milestone/add', 'Add Milestone');
+        $component->linkButton($person->siteLink.'/cheat/imperfection/add','Add Imperfection');
         $component->wrapEnd();
     }
 }

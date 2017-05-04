@@ -8,25 +8,16 @@
 global $sitemap, $form, $component;
 
 require_once('./class/Person.php');
-require_once('./class/System.php');
 
 $person = new Person($sitemap->id, $sitemap->hash);
-$system = new System();
 
 $component->title('Cheat '.$person->nickname);
+
+if($person->isOwner) {
+    $component->returnButton($person->siteLink);
+    $component->h2('Doctrine');
+    $person->postDoctrine(true);
+}
 ?>
 
-<?php if($person->isOwner): ?>
-
-    <div class="sw-l-quicklink">
-        <?php $component->linkQuick($person->siteLink,'Return','/img/return.png'); ?>
-    </div>
-
-    <?php
-    $component->h2('Edit Skills');
-    $system->person_purchaseDiscipline($person, 999, true);
-    ?>
-
-    <script src="/js/validation.js"></script>
-
-<?php endif; ?>
+<script src="/js/validation.js"></script>

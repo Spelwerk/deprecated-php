@@ -6,7 +6,13 @@
  * Date: 2017-04-25
  * Time: 21:20
  */
+
 class Imperfection {
+    var $id, $canon, $name, $description, $icon;
+
+    var $species;
+
+    var $manifestation;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -16,26 +22,16 @@ class Imperfection {
             : $array;
 
         $this->id = $data['id'];
+        $this->canon = $data['canon'];
         $this->name = $data['name'];
-
-        $this->icon = '/img/person/characteristic-imperfection.png';
-
         $this->description = isset($data['custom'])
             ? $data['custom']
             : $data['description'];
 
-        if(isset($data['species_id'])) {
-            $this->species = [
-                'id' => $data['species_id'],
-                'name' => $data['species_name']
-            ];
-        }
+        $this->icon = '/img/color/imperfection.png';
 
-        if(isset($data['manifestation_id'])) {
-            $this->manifestation = [
-                'id' => $data['manifestation_id'],
-                'name' => $data['manifestation_name']
-            ];
-        }
+        $this->species = $data['species_id'];
+
+        $this->manifestation = $data['manifestation_id'];
     }
 }

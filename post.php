@@ -301,25 +301,22 @@ function person_bionic_post($postData, $personId, $personSecret) {
     checkError($resultArray);
 }
 
-function person_expertise_post($postData, $personId, $personSecret) {
-    global $curl;
+function person_expertise_post($postData) {
+    global $curl, $POST_ID, $POST_SECRET;
 
     $postArray = [];
-    $resultArray = [];
 
     foreach($postData as $key => $value) {
         $explode = explode('__', $key);
 
         if(isset($explode[1]) && $explode[0] == 'expertise_id') {
-            $postArray[] = ['secret' => $personSecret, 'expertise_id' => $explode[1], 'level' => $value];
+            $postArray[] = ['secret' => $POST_SECRET, 'expertise_id' => $explode[1], 'level' => $value];
         }
     }
 
     foreach($postArray as $post) {
-        $resultArray[] = $curl->post('person/id/'.$personId.'/expertise',$post);
+        $curl->post('person/id/'.$POST_ID.'/expertise',$post);
     }
-
-    checkError($resultArray);
 }
 
 function person_protection_post($postData, $personId, $personSecret) {
@@ -621,12 +618,10 @@ function switch_person($do) {
     switch($do) {
         default: break;
 
-        // New API
-
         case 'person--post':
             $POST_DATA['playable'] = 1;
 
-            $result = $curl->post('person',$POST_DATA);
+            $result = $curl->post('person',$POST_DATA,$USER_TOKEN);
             $POST_ID = $result['id'];
             $POST_SECRET = $result['secret'];
 
@@ -638,9 +633,7 @@ function switch_person($do) {
             break;
 
         case 'person--background':
-            $resultArray = [];
-            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/background',$POST_DATA);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/background',$POST_DATA);
             break;
 
         case 'person--bionic':
@@ -722,7 +715,7 @@ function switch_person($do) {
             break;
 
         case 'person--expertise':
-            person_expertise_post($POST_DATA, $POST_ID, $POST_SECRET);
+            person_expertise_post($POST_DATA);
 
             $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_expertise' => 0]);
 
@@ -777,22 +770,21 @@ function switch_person($do) {
         case 'person--manifestation--doctrine':
             person_attribute_post($POST_DATA, $POST_ID, $POST_SECRET);
 
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_supernatural' => 0]);
+            $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_supernatural' => 0]);
 
             if(isset($_POST['post--experience'])) {
-                $resultArray[] = $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'attribute_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
+                $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'attribute_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
             }
             break;
 
         case 'person--manifestation--expertise':
             $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
-            person_expertise_post($post, $POST_ID, $POST_SECRET);
+            person_expertise_post($post);
             break;
 
         case 'person--manifestation--power':
             person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_power' => 0]);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_power' => 0]);
             break;
 
         case 'person--milestone':
@@ -1058,7 +1050,7 @@ $d = isset($POST_RETURNID)
     : '#content';
 
 if(!$POST_ERROR) {
-    redirect($baseUrl.$r.$i.$h.$a.$d);
+    //redirect($baseUrl.$r.$i.$h.$a.$d);
 } else {
     print_r($POST_ERROR);
 }
