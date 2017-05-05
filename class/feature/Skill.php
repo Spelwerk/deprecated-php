@@ -32,6 +32,6 @@ class Skill {
 
         $this->species = $data['species_id'];
 
-        $this->value = $data['value'];
+        $this->value = isset($data['value']) ? $data['value'] : 0;
     }
 }

@@ -36,9 +36,28 @@ if(isset($sitemap->id)) {
     $component->returnButton($world->siteLink);
     $component->h1('Expertise');
 
-    $list = $world->getExpertise('/special');
+    $skillArray = $world->getSkill();
+    $manifestationArray = $world->getManifestation();
 
-    if($list[0]) {
+    foreach($skillArray as $skill) {
+        $list = $world->getExpertise('/skill/'.$skill->id);
+
+        if(!$list) continue;
+
+        $component->h2($skill->name);
+
+        foreach($list as $item) {
+            $component->listItem($item->name, $item->description, $item->icon);
+        }
+    }
+
+    foreach($manifestationArray as $manifestation) {
+        $list = $world->getExpertise('/manifestation/'.$manifestation->id);
+
+        if(!$list) continue;
+
+        $component->h2($manifestation->name);
+
         foreach($list as $item) {
             $component->listItem($item->name, $item->description, $item->icon);
         }

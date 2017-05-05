@@ -543,7 +543,7 @@ function world_attribute_post() {
         $explode = explode('__', $key);
 
         if(isset($explode[1]) && $explode[0] == 'attribute') {
-            $postArray[] = ['attribute_id' => $explode[1], 'default_value' => $value];
+            $postArray[] = ['insert_id' => $explode[1], 'value' => $value];
         }
     }
 
@@ -562,31 +562,15 @@ function world_skill_post() {
 
     foreach($POST_DATA as $key => $value) {
         if($key == $value) {
-            $postArray[] = ['attribute_id' => $key, 'default_value' => 0];
+            $postArray[] = ['insert_id' => $key];
         }
     }
 
     foreach($postArray as $post) {
-        $resultArray[] = $curl->post('world/id/'.$POST_ID.'/attribute', $post, $USER_TOKEN);
+        $resultArray[] = $curl->post('world/id/'.$POST_ID.'/skill', $post, $USER_TOKEN);
     }
 
     checkError($resultArray);
-}
-
-// todo REWORK
-
-function world_wound_add($postData, $contextRoute) {
-    global $curl;
-
-    $resultArray = null;
-
-    $post = ['name' => $postData['name']];
-
-    $resultArray[] = $curl->post($contextRoute, $post);
-
-    checkError($resultArray);
-
-    return $resultArray[0]['id'];
 }
 
 /** SWITCHES */
@@ -756,9 +740,7 @@ function switch_person($do) {
             break;
 
         case 'person--identity':
-            $resultArray = [];
-            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/identity',$POST_DATA);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/identity',$POST_DATA);
             break;
 
         case 'person--manifestation':
@@ -845,16 +827,11 @@ function switch_person($do) {
             break;
 
         case 'person--wound':
-            print_r($POST_DATA);
-            $resultArray = [];
-            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/'.$POST_CONTEXT,$POST_DATA);
-            checkError($resultArray);
+            $curl->post('person/id/'.$POST_ID.'/'.$POST_CONTEXT,$POST_DATA);
             break;
 
         case 'person--wound--heal':
-            $resultArray = [];
-            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$POST_CONTEXT2.'/heal/'.$POST_EXTRA,$POST_DATA);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$POST_CONTEXT2.'/heal/'.$POST_EXTRA,$POST_DATA);
             break;
     }
 }
@@ -945,7 +922,7 @@ function switch_user($do) {
 }
 
 function switch_world($do) {
-    global $curl, $POST_ID, $POST_SECRET, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
+    global $curl, $POST_ID, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
     switch($do) {
         default: break;

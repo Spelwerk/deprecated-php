@@ -14,8 +14,6 @@ class Bionic {
 
     var $attribute, $attributeValue;
 
-    var $quality;
-
     public function __construct($id = null, $array = null) {
         global $curl;
 
@@ -45,8 +43,6 @@ class Bionic {
 
         $this->attribute = $data['attribute_id'];
         $this->attributeValue = $data['attribute_value'];
-
-        $this->quality = $data['quality_id'];
     }
 }
 

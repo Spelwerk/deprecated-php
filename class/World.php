@@ -12,6 +12,7 @@ require_once('feature/Augmentation.php');
 require_once('feature/Bionic.php');
 require_once('feature/Background.php');
 require_once('feature/Disease.php');
+require_once('feature/Doctrine.php');
 require_once('feature/Expertise.php');
 require_once('feature/Focus.php');
 require_once('feature/Gift.php');
@@ -22,6 +23,7 @@ require_once('feature/Milestone.php');
 require_once('feature/Nature.php');
 require_once('feature/Protection.php');
 require_once('feature/Sanity.php');
+require_once('feature/Skill.php');
 require_once('feature/Species.php');
 require_once('feature/Weapon.php');
 require_once('feature/Wound.php');
@@ -57,7 +59,7 @@ class World {
         global $curl, $user;
 
         $data = isset($id)
-            ? $curl->get('world/id/'.$id,$user->token)['data'][0]
+            ? $curl->get('world/id/'.$id, $user->token)['data'][0]
             : $array;
 
         $defaults = $curl->get('system/attribute');
@@ -145,7 +147,7 @@ class World {
     public function getAugmentation($bionic) {
         global $system;
 
-        return $system->getAugmentation('bionic/id/'.$bionic.'/augmentation');
+        return $system->getBionic('/id/'.$bionic.'/augmentation');
     }
 
     public function getBionic($override = null) {
@@ -465,8 +467,41 @@ class World {
     }
 
     public function postBackground() {
-        global $system;
-        $this->checkList('background', $system->getBackground(), $system->idList($this->getBackground()));
+        global $system, $form;
+
+        $idList = $system->idList($this->getBackground());
+
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+
+        $form->formStart([
+            'do' => 'world--has--add',
+            'return' => 'content/world/id',
+            'returnafter' => 'background',
+            'id' => $this->id,
+            'context' => 'background'
+        ]);
+
+        $system->checkboxList($system->getBackground(), $idList);
+
+        foreach($speciesArray as $species) {
+            $list = $system->getBackground('/species/'.$species->id, $idList);
+
+            if(!$list) continue;
+
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $system->getBackground('/manifestation/'.$manifestation->id, $idList);
+
+            if(!$list) continue;
+
+            $system->checkboxList($list, $idList);
+        }
+
+        $system->checkboxAll();
+        $form->formEnd();
     }
 
     public function postBionic() {
@@ -477,8 +512,10 @@ class World {
     public function postExpertise() {
         global $system, $form, $component;
 
-        $skillArray = $this->getAttribute('/type/'.$this->skillAttributeType);
         $idList = $system->idList($this->getExpertise());
+
+        $skillArray = $this->getSkill();
+        $manifestationArray = $this->getManifestation();
 
         $form->formStart([
             'do' => 'world--has--add',
@@ -489,14 +526,21 @@ class World {
         ]);
 
         foreach($skillArray as $skill) {
-            $override = '/skill/'.$skill->id.'/special';
+            $list = $system->getExpertise('/skill/'.$skill->id);
 
-            $list = $system->getExpertise($override);
+            if(!$list) continue;
 
-            if($list) {
-                $component->h2($skill->name);
-                $system->checkboxList($list,$idList);
-            }
+            $component->h2($skill->name);
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $system->getExpertise('/manifestation/'.$manifestation->id);
+
+            if(!$list) continue;
+
+            $component->h2($manifestation->name);
+            $system->checkboxList($list, $idList);
         }
 
         $system->checkboxAll();
@@ -504,14 +548,13 @@ class World {
     }
 
     public function postGift() {
-        global $system, $form;
+        global $system, $form, $component;
 
-        $override = '/special';
-
-        $list = $system->getGift($override);
         $idList = $system->idList($this->getGift());
 
-        $skillArray = $this->getAttribute('/type/'.$this->skillAttributeType);
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+        $skillArray = $this->getSkill();
 
         $form->formStart([
             'do' => 'world--has--add',
@@ -521,13 +564,31 @@ class World {
             'context' => 'gift'
         ]);
 
-        $system->checkboxList($list, $idList);
+        $system->checkboxList($system->getGift(), $idList);
 
         foreach($skillArray as $skill) {
-            $override = '/skill/'.$skill->id.'/special';
+            $list = $system->getGift('/skill/'.$skill->id);
 
-            $list = $system->getGift($override);
+            if(!$list) continue;
 
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($speciesArray as $species) {
+            $list = $system->getGift('/species/'.$species->id, $idList);
+
+            if(!$list) continue;
+
+            $component->h2($species->name);
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $system->getGift('/manifestation/'.$manifestation->id, $idList);
+
+            if(!$list) continue;
+
+            $component->h2($manifestation->name);
             $system->checkboxList($list, $idList);
         }
 
@@ -536,9 +597,43 @@ class World {
     }
 
     public function postImperfection() {
-        global $system;
+        global $system, $form, $component;
 
-        $this->checkList('imperfection', $system->getImperfection(), $system->idList($this->getImperfection()));
+        $idList = $system->idList($this->getImperfection());
+
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+
+        $form->formStart([
+            'do' => 'world--has--add',
+            'return' => 'content/world/id',
+            'returnafter' => 'imperfection',
+            'id' => $this->id,
+            'context' => 'imperfection'
+        ]);
+
+        $system->checkboxList($system->getImperfection(), $idList);
+
+        foreach($speciesArray as $species) {
+            $list = $system->getImperfection('/species/'.$species->id, $idList);
+
+            if(!$list) continue;
+
+            $component->h2($species->name);
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $system->getImperfection('/manifestation/'.$manifestation->id, $idList);
+
+            if(!$list) continue;
+
+            $component->h2($manifestation->name);
+            $system->checkboxList($list, $idList);
+        }
+
+        $system->checkboxAll();
+        $form->formEnd();
     }
 
     public function postManifestation() {
@@ -547,14 +642,14 @@ class World {
     }
 
     public function postMilestone() {
-        global $system, $form;
+        global $system, $form, $component;
 
-        $override = '/special';
-
-        $list = $system->getMilestone($override);
-        $idList = $system->idList($this->getMilestone());
+        $idList = $system->idList($this->getGift());
 
         $backgroundArray = $this->getBackground();
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+        $skillArray = $this->getSkill();
 
         $form->formStart([
             'do' => 'world--has--add',
@@ -564,16 +659,40 @@ class World {
             'context' => 'milestone'
         ]);
 
-        $system->checkboxList($list, $idList);
+        $system->checkboxList($system->getMilestone(), $idList);
 
-        if($backgroundArray[0]) {
-            foreach($backgroundArray as $background) {
-                $override = '/special/background/'.$background->id;
+        foreach($backgroundArray as $background) {
+            $list = $system->getMilestone('/background/'.$background->id);
 
-                $list = $system->getMilestone($override);
+            if(!$list) continue;
 
-                $system->checkboxList($list, $idList);
-            }
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($skillArray as $skill) {
+            $list = $system->getMilestone('/skill/'.$skill->id);
+
+            if(!$list) continue;
+
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($speciesArray as $species) {
+            $list = $system->getMilestone('/species/'.$species->id, $idList);
+
+            if(!$list) continue;
+
+            $component->h2($species->name);
+            $system->checkboxList($list, $idList);
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $system->getMilestone('/manifestation/'.$manifestation->id, $idList);
+
+            if(!$list) continue;
+
+            $component->h2($manifestation->name);
+            $system->checkboxList($list, $idList);
         }
 
         $system->checkboxAll();
@@ -586,29 +705,15 @@ class World {
     }
 
     public function postSkill() {
-        global $system, $form;
+        global $system;
 
-        $override = '/type/'.$this->skillAttributeType.'/special';
-
-        $list = $system->getAttribute($override);
-        $idList = $system->idList($this->getAttribute('/type/'.$this->skillAttributeType));
-
-        $form->formStart([
-            'do' => 'world--skill',
-            'return' => 'content/world/id',
-            'returnafter' => 'skill',
-            'id' => $this->id,
-        ]);
-
-        $system->checkboxList($list, $idList);
-        $system->checkboxAll();
-        $form->formEnd();
+        $this->checkList('skill', $system->getSkill(), $system->idList($this->getSkill()));
     }
 
     public function postSpecies() {
         global $system;
 
-        $override = '/playable/1';
+        $override = '/playable';
 
         $this->checkList('species', $system->getSpecies($override), $system->idList($this->getSpecies()));
     }
@@ -616,9 +721,7 @@ class World {
     public function postWeapon() {
         global $system;
 
-        $override = '/special/0';
-
-        $this->checkList('weapon', $system->getWeapon($override), $system->idList($this->getWeapon()));
+        $this->checkList('weapon', $system->getWeapon(), $system->idList($this->getWeapon()));
     }
 
     // DELETE
@@ -692,17 +795,17 @@ class World {
 
             $defaultRoutes = [
                 'background' => 'background',
-                'expertise' => 'expertise/special',
-                'gift' => 'gift/special',
-                'imperfection' => 'imperfection/special',
+                'expertise' => 'expertise',
+                'gift' => 'gift',
+                'imperfection' => 'imperfection',
                 'milestone' => 'milestone',
-                'protection' => 'protection',
+                //'protection' => 'protection',
                 'weapon' => 'weapon',
             ];
 
             $sResult = $this->getSpecies();
             $mResult = $this->getManifestation();
-            $kResult = $this->getAttribute('/type/'.$this->skillAttributeType.'/special');
+            $kResult = $this->getSkill();
 
             if(!$sResult) {
                 $component->linkButton($this->siteLink.'/species/add','Add species',true);

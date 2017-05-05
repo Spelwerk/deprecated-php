@@ -40,15 +40,13 @@ class Expertise {
 
         $this->icon = $data['icon'];
 
-        $this->level = $data['level'];
-        $this->bonus = $data['bonus'];
+        $this->level = isset($data['level']) ? $data['level'] : 0;
+        $this->bonus = isset($data['bonus']) ? $data['bonus'] : 0;
 
-        $this->required = $defaults['required'];
+        $this->required = isset($data['doctrine_id']) ? 2 : $defaults['required'];
         $this->increment = $defaults['increment'];
-        $this->maximum = $defaults['maximum'];
-        $this->start = isset($data['manifestation_id'])
-            ? 0
-            : 1;
+        $this->maximum = isset($data['doctrine_id']) ? 4 : $defaults['maximum'];
+        $this->start = isset($data['doctrine_id']) ? 0 : $defaults['start'];
 
         $this->skill = $data['skill_id'];
         $this->species = $data['species_id'];

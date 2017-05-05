@@ -12,7 +12,7 @@ class Weapon {
 
     var $damageD12, $damageBonus, $criticalD12, $hand, $initiative, $hit, $distance, $equipped;
 
-    var $type, $group, $skill, $quality, $damage, $expertise;
+    var $type, $group, $skill, $damage, $expertise;
 
     public function __construct($id = null, $array = null) {
         global $curl;
@@ -69,10 +69,10 @@ class Weapon {
         $this->special = $data['special'];
 
         $this->skill = $data['skill_id'];
-        $this->skillValue = $data['skill_value'];
+        $this->skillValue = isset($data['skill_value']) ? $data['skill_value'] : null;
 
         $this->expertise = $data['expertise_id'];
-        $this->expertiseLevel = $data['expertise_level'];
+        $this->expertiseLevel = isset($data['expertise_level']) ? $data['expertise_level'] : null;
 
         $this->damage = $data['damage_id'];
 

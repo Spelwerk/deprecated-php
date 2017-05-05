@@ -30,8 +30,8 @@ class Manifestation {
 
         $this->icon = $data['icon'];
 
-        $this->power = $data['power'];
+        $this->power = $data['power_id'];
 
-        $this->skill = $data['skill'];
+        $this->skill = $data['skill_id'];
     }
 }

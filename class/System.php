@@ -92,6 +92,26 @@ class System {
         return $arrayList;
     }
 
+    public function getDoctrine($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'doctrine'.$override
+            : 'doctrine';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Doctrine(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getGift($override = null) {
         global $curl;
 
@@ -292,6 +312,26 @@ class System {
         return $arrayList;
     }
 
+    public function getSkill($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'skill'.$override
+            : 'skill';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Skill(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getWeapon($override = null) {
         global $curl;
 
@@ -388,14 +428,9 @@ class System {
     }
 
     public function createWorld() {
-        global $component, $form, $curl;
+        global $component, $form;
 
         $component->title('Create World');
-
-        $moneyAttribute = $curl->get('attribute/type/8')['data'];
-        $skillAttributeType = $curl->get('attributetype/skill')['data'];
-        $attributeExpertiseType = $curl->get('expertisetype/attribute')['data'];
-        $diceExpertiseType = $curl->get('expertisetype/dice')['data'];
 
         $form->formStart([
             'do' => 'world--post',
@@ -414,14 +449,6 @@ class System {
         $form->pick(true,'augmentation','Augmentation');
         $form->pick(true,'software','Software');
         $form->pick(true,'supernatural','Supernatural');
-        $component->wrapEnd();
-
-        $component->h2('Types');
-        $component->wrapStart();
-        $form->select(true,'skill_attributetype_id',$skillAttributeType,'Attribute Type for Skills');
-        $form->select(true,'attribute_expertisetype_id',$attributeExpertiseType,'Expertise Type for Attributes');
-        $form->select(true,'dice_expertisetype_id',$diceExpertiseType,'Expertise Type for Dice');
-        $form->select(true,'money_attribute_id',$moneyAttribute,'Attribute for Money');
         $component->wrapEnd();
 
         $component->h2('Split Values');
