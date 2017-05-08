@@ -118,7 +118,7 @@ class Form {
         }
     }
 
-    public function pick($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $pickTrue = 'Yes', $pickFalse = 'No') {
+    public function pick($required, $uniqueName, $label = null, $labelDescription = null, $uniqueId = null, $pickTrue = 'Yes', $pickFalse = 'No', $value = null) {
         $labelName = isset($label)
             ? $label
             : $uniqueName;
@@ -135,6 +135,34 @@ class Form {
             ? $uniqueName.'__'.$uniqueId
             : $uniqueName;
 
+        $inputValue = isset($value)
+            ? $value
+            : false;
+
+        $radioTrueChecked = $inputValue == true
+            ? ' checked'
+            : null;
+
+        $radioTrueHiddenTrue = $inputValue == false
+            ? ' sw-is-hidden'
+            : null;
+
+        $radioTrueHiddenFalse = $inputValue == true
+            ? ' sw-is-hidden'
+            : null;
+
+        $radioFalseHiddenTrue = $inputValue == true
+            ? ' sw-is-hidden'
+            : null;
+
+        $radioFalseHiddenFalse = $inputValue == false
+            ? ' sw-is-hidden'
+            : null;
+
+        $radioFalseChecked = $inputValue == false
+            ? ' checked'
+            : null;
+
         echo(
             '<div class="sw-c-input__title">'.$labelName.$labelRequired.'</div>'.
 
@@ -142,19 +170,19 @@ class Form {
 
             '<label for="item--'.$inputUnique.'--1">'.
             '<div class="sw-js-pick-item sw-c-pick__item">'.
-            '<div class="sw-js-pick-true sw-c-pick__icon sw-is-hidden"><img src="/img/color/radio-true.png"/></div>'.
-            '<div class="sw-js-pick-false sw-c-pick__icon"><img src="/img/color/radio-false.png"/></div>'.
+            '<div class="sw-js-pick-true sw-c-pick__icon'.$radioTrueHiddenTrue.'"><img src="/img/color/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon'.$radioTrueHiddenFalse.'"><img src="/img/color/radio-false.png"/></div>'.
             '<div class="sw-c-pick__text">'.$pickTrue.'</div>'.
-            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--1" value="1"'.$inputRequired.'/>'.
+            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--1" value="1"'.$inputRequired.$radioTrueChecked.'/>'.
             '</div>'.
             '</label>'.
 
             '<label for="item--'.$inputUnique.'--0">'.
             '<div class="sw-js-pick-item sw-c-pick__item">'.
-            '<div class="sw-js-pick-true sw-c-pick__icon"><img src="/img/color/radio-true.png"/></div>'.
-            '<div class="sw-js-pick-false sw-c-pick__icon sw-is-hidden"><img src="/img/color/radio-false.png"/></div>'.
+            '<div class="sw-js-pick-true sw-c-pick__icon'.$radioFalseHiddenTrue.'"><img src="/img/color/radio-true.png"/></div>'.
+            '<div class="sw-js-pick-false sw-c-pick__icon'.$radioFalseHiddenFalse.'"><img src="/img/color/radio-false.png"/></div>'.
             '<div class="sw-c-pick__text">'.$pickFalse.'</div>'.
-            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--0" value="0"'.$inputRequired.' checked/>'.
+            '<input class="sw-js-pick-input sw-is-hidden" type="radio" name="item--'.$inputUnique.'" id="item--'.$inputUnique.'--0" value="0"'.$inputRequired.$radioFalseChecked.'/>'.
             '</div>'.
             '</label>'.
             '</div>'
@@ -410,8 +438,8 @@ class Form {
             '<label for="item--'.$uniqueId.'">'.
             '<input class="sw-js-radio sw-is-hidden" type="radio" name="item--'.$tableName.'" id="item--'.$uniqueId.'" value="'.$uniqueId.'"'.$inputSelected.'/>'.
             '<div class="sw-c-list__head">'.
-            '<div class="sw-js-radio-true sw-c-list__select'.$jsRadioTrue.'"><img src="/img/radio-true.png"/></div>'.
-            '<div class="sw-js-radio-false sw-c-list__select'.$jsRadioFalse.'"><img src="/img/radio-false.png"/></div>'.
+            '<div class="sw-js-radio-true sw-c-list__select'.$jsRadioTrue.'"><img src="/img/color/radio-true.png"/></div>'.
+            '<div class="sw-js-radio-false sw-c-list__select'.$jsRadioFalse.'"><img src="/img/color/radio-false.png"/></div>'.
             '<div class="sw-js-radio-title sw-c-list__title">'.$label.'</div>'.
             '</div>'.
             '<div class="sw-js-radio-body sw-c-list__body'.$jsRadioBody.'">'.

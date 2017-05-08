@@ -11,7 +11,13 @@ class Sitemap {
 
     var $requestURI, $scriptName, $command;
 
-    var $page, $id, $hash, $context, $unique, $thing, $do;
+    var $page, $id, $hash, $thing, $do;
+
+    var $context, $context2, $context3;
+
+    var $extra, $extra2, $extra3;
+
+    var $unique;
 
     var $menuID, $menuLink;
 
@@ -89,25 +95,15 @@ class Sitemap {
             default:
                 $this->page = 'page/home.php';
                 $this->menuID = 'Home';
-                $this->menuLink = 'Home';
                 break;
 
-            case 'about':
-                $this->page = 'page/about.php';
+            case 'info':
+                $this->page = 'page/info.php';
                 $this->menuID = 'Home';
-                $this->menuLink = 'About';
-                break;
-
-            case 'admin':
-                $this->switch_admin();
-                $this->isUser = true;
-                $this->isAdmin = true;
-                $this->menuID = 'Admin';
                 break;
 
             case 'content':
                 $this->switch_content();
-                $this->isUser = true;
                 $this->menuID = 'Content';
                 break;
 
@@ -123,186 +119,51 @@ class Sitemap {
         }
     }
 
-    function switch_admin() {
-        $switch = $this->command1;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/admin/admin.php';
-                $this->menuLink = 'Admin';
-                break;
-
-            case 'content':
-                $this->switch_admin_content();
-                $this->menuLink = 'Content';
-                break;
-
-            case 'person':
-                $this->switch_admin_person();
-                $this->menuLink = 'Person';
-                break;
-
-            case 'story':
-                $this->switch_admin_story();
-                $this->menuLink = 'Story';
-                break;
-
-            case 'user':
-                $this->switch_admin_user();
-                $this->menuLink = 'User';
-                break;
-        }
-    }
-
-    function switch_admin_content() {
-        $switch = $this->command2;
-
-        switch ($switch) {
-            default:
-                $this->page = 'page/admin/content/content.php';
-                break;
-        }
-    }
-
-    function switch_admin_person() {
-        $switch = $this->command2;
-
-        switch ($switch) {
-            default:
-                $this->page = 'page/admin/person/person.php';
-                break;
-        }
-    }
-
-    function switch_admin_story() {
-        $switch = $this->command2;
-
-        switch ($switch) {
-            default:
-                $this->page = 'page/admin/story/story.php';
-                break;
-        }
-    }
-
-    function switch_admin_user() {
-        $switch = $this->command2;
-
-        switch ($switch) {
-            default:
-                $this->page = 'page/admin/user/user.php';
-                break;
-        }
-    }
-
     function switch_content() {
-        $switch = $this->command1;
-
-        switch($switch) {
+        switch($this->command1)
+        {
             default:
-                $this->page = 'page/content/content.php';
-                $this->menuLink = 'Content';
+                $this->page = 'site/content/index.php';
                 break;
 
-            case 'about':
-                $this->page = 'page/content/about.php';
-                $this->menuLink = 'About';
-                break;
-
-            case 'manage':
-                $this->page = 'page/content/manage.php';
-                $this->menuLink = 'Manage';
-                break;
-
-            case 'world':
-                $this->switch_content_world();
-                $this->menuLink = 'Manage';
-                break;
-        }
-    }
-
-    function switch_content_world() {
-        $switch = $this->command2;
-        $id = $this->command3;
-
-        switch ($switch) {
-            default:
-                $this->page = 'page/content/world/new.php';
-                break;
-
-            case 'id':
-                $this->switch_content_world_id();
-                $this->id = $id;
-                break;
-        }
-    }
-
-    function switch_content_world_id() {
-        $switch = $this->command4;
-        $context = $this->command5;
-
-        switch ($switch) {
-            default:
-                $this->page = 'page/content/world/id.php';
-                break;
-
-            case 'attribute':
-                $this->page = 'page/content/world/has/attribute.php';
-                $this->context = $context;
-                break;
-
-            case 'background':
-                $this->page = 'page/content/world/has/background.php';
-                $this->context = $context;
-                break;
-
-            case 'bionic':
-                $this->page = 'page/content/world/has/bionic.php';
-                $this->context = $context;
+            case 'create':
+                $this->page = 'site/content/create.php';
+                $this->context = $this->command2;
                 break;
 
             case 'expertise':
-                $this->page = 'page/content/world/has/expertise.php';
-                $this->context = $context;
-                break;
-
-            case 'gift':
-                $this->page = 'page/content/world/has/gift.php';
-                $this->context = $context;
+                $this->page = 'site/content/expertise/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'imperfection':
-                $this->page = 'page/content/world/has/imperfection.php';
-                $this->context = $context;
-                break;
-
-            case 'manifestation':
-                $this->page = 'page/content/world/has/manifestation.php';
-                $this->context = $context;
-                break;
-
-            case 'milestone':
-                $this->page = 'page/content/world/has/milestone.php';
-                $this->context = $context;
-                break;
-
-            case 'protection':
-                $this->page = 'page/content/world/has/protection.php';
-                $this->context = $context;
+                $this->page = 'site/content/imperfection/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'skill':
-                $this->page = 'page/content/world/has/skill.php';
-                $this->context = $context;
+                $this->page = 'site/content/skill/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'species':
-                $this->page = 'page/content/world/has/species.php';
-                $this->context = $context;
+                $this->page = 'site/content/species/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
-            case 'weapon':
-                $this->page = 'page/content/world/has/weapon.php';
-                $this->context = $context;
+            case 'world':
+                $this->page = 'site/content/world/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
         }
     }
@@ -316,11 +177,6 @@ class Sitemap {
                 $this->menuLink = 'Play';
                 break;
 
-            case 'companion':
-                $this->switch_play_companion();
-                $this->menuLink = 'Companion';
-                break;
-
             case 'person':
                 $this->switch_play_person();
                 $this->menuLink = 'Person';
@@ -329,22 +185,6 @@ class Sitemap {
             case 'story':
                 $this->switch_play_story();
                 $this->menuLink = 'Story';
-                break;
-        }
-    }
-
-    function switch_play_companion() {
-        $switch = $this->command2;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/companion/companion.php';
-                break;
-
-            case 'add':
-                break;
-
-            case 'id':
                 break;
         }
     }

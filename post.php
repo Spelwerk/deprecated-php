@@ -514,25 +514,6 @@ function world_has_post() {
     checkError($resultArray);
 }
 
-function world_has_delete() {
-    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $curl;
-
-    $postArray = [];
-    $resultArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        if($key == $value) {
-            $postArray[] = $key;
-        }
-    }
-
-    foreach($postArray as $post) {
-        $resultArray[] = $curl->delete('world/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$post, null, $USER_TOKEN);
-    }
-
-    checkError($resultArray);
-}
-
 function world_attribute_post() {
     global $POST_DATA, $USER_TOKEN, $POST_ID, $curl;
 
@@ -573,7 +554,64 @@ function world_skill_post() {
     checkError($resultArray);
 }
 
+// TABLE
+
+function table_has_delete($tableName) {
+    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $curl;
+
+    $postArray = [];
+
+    foreach($POST_DATA as $key => $value) {
+        if($key == $value) {
+            $postArray[] = $key;
+        }
+    }
+
+    foreach($postArray as $post) {
+        $curl->delete($tableName.'/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$post, null, $USER_TOKEN);
+    }
+}
+
 /** SWITCHES */
+
+function switch_basic($do) {
+    global $curl, $POST_ID, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
+
+    switch($do)
+    {
+        default: break;
+
+        case 'basic--expertise--post':
+            $result = $curl->post('expertise', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'basic--gift--post':
+            $result = $curl->post('gift', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'basic--imperfection--post':
+            $result = $curl->post('imperfection', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'basic--milestone--post':
+            $result = $curl->post('milestone', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'basic--skill--post':
+            $result = $curl->post('skill', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'basic--weapon--post':
+            $result = $curl->post('weapon', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+    }
+}
 
 function switch_manifestation($do) {
     global $curl, $POST_ID, $POST_SECRET, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
@@ -605,7 +643,12 @@ function switch_person($do) {
         case 'person--post':
             $POST_DATA['playable'] = 1;
 
+            print_r($POST_DATA);
+
             $result = $curl->post('person',$POST_DATA,$USER_TOKEN);
+
+            print_r($result);
+
             $POST_ID = $result['id'];
             $POST_SECRET = $result['secret'];
 
@@ -836,6 +879,27 @@ function switch_person($do) {
     }
 }
 
+function switch_species($do) {
+    global $curl, $POST_ID, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
+
+    switch($do) {
+        default: break;
+
+        case 'species--post':
+            $result = $curl->post('species', $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'species--attribute':
+            $curl->post('species/id/'.$POST_ID.'/attribute', $POST_DATA, $USER_TOKEN);
+            break;
+
+        case 'species--has--delete':
+            table_has_delete('species');
+            break;
+    }
+}
+
 function switch_story($do) {
     global $curl, $POST_ID, $POST_SECRET, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
@@ -945,7 +1009,7 @@ function switch_world($do) {
             break;
 
         case 'world--has--delete':
-            world_has_delete();
+            table_has_delete('world');
             break;
 
         case 'world--skill':
@@ -982,12 +1046,20 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
     {
         default: break;
 
+        case 'basic':
+            switch_basic($POST_DO);
+            break;
+
         case 'manifestation':
             switch_manifestation($POST_DO);
             break;
 
         case 'person':
             switch_person($POST_DO);
+            break;
+
+        case 'species':
+            switch_species($POST_DO);
             break;
 
         case 'story':

@@ -179,8 +179,8 @@ class Component {
             '<div class="sw-js-list-head sw-c-list__head">'.
             '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
             '<div class="sw-c-list__title">'.$title.'</div>'.
-            '<div class="sw-js-list-chevron-up sw-c-list__action sw-is-hidden"><img src="/img/chevron-up.png"/></div>'.
-            '<div class="sw-js-list-chevron-down sw-c-list__action"><img src="/img/chevron-down.png"/></div>'.
+            '<div class="sw-js-list-chevron-up sw-c-list__action sw-is-hidden"><img src="/img/color/chevron-down.png"/></div>'.
+            '<div class="sw-js-list-chevron-down sw-c-list__action"><img src="/img/color/chevron-right.png"/></div>'.
             '</div>'.
             '<div class="sw-js-list-body sw-c-list__body sw-is-hidden">'.
             '<div class="sw-c-list__text">'.

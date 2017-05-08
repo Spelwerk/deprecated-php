@@ -1,11 +1,30 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-11-23
- * Time: 14:14
- */
+require_once('feature/Attribute.php');
+require_once('feature/Augmentation.php');
+require_once('feature/Bionic.php');
+require_once('feature/Background.php');
+require_once('feature/Disease.php');
+require_once('feature/Doctrine.php');
+require_once('feature/Expertise.php');
+require_once('feature/Focus.php');
+require_once('feature/Gift.php');
+require_once('feature/Imperfection.php');
+require_once('feature/Identity.php');
+require_once('feature/Manifestation.php');
+require_once('feature/Milestone.php');
+require_once('feature/Nature.php');
+require_once('feature/Protection.php');
+require_once('feature/Sanity.php');
+require_once('feature/Skill.php');
+require_once('feature/Species.php');
+require_once('feature/Weapon.php');
+require_once('feature/Wound.php');
+
+require_once('World.php');
+require_once('Person.php');
+require_once('Story.php');
+
 class System {
 
     public function __construct() {}
@@ -352,7 +371,76 @@ class System {
         return $arrayList;
     }
 
+    public function getWorld($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'world'.$override
+            : 'world';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new World(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     // CREATE
+
+    public function createAugmentation() {} //todo
+
+    public function createBackground() {} //todo
+
+    public function createBionic() {} //todo
+
+    public function createExpertise() {
+        global $curl, $component, $form;
+
+        $component->title('Create Expertise');
+
+        $list = $curl->get('skill')['data'];
+
+        $form->formStart([
+            'do' => 'basic--expertise--post',
+            'return' => 'content/expertise'
+        ]);
+        $component->wrapStart();
+        $form->select(true,'skill_id',$list,'Skill','All expertises are tied to a skill.');
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    public function createGift() {} //todo
+
+    public function createImperfection() {
+        global $component, $form;
+
+        $component->title('Create Imperfection');
+
+        $form->formStart([
+            'do' => 'basic--imperfection--post',
+            'return' => 'content/imperfection'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    public function createManifestation() {} //todo
+
+    public function createMilestone() {} //todo
 
     public function createPerson($world = null, $species = null) {
         global $component, $form;
@@ -396,6 +484,51 @@ class System {
         }
     }
 
+    public function createProtection() {} //todo
+
+    public function createSkill() {
+        global $component, $form;
+
+        $component->title('Create Skill');
+
+        $form->formStart([
+            'do' => 'basic--skill--post',
+            'return' => 'content/skill'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    public function createSpecies() {
+        global $component, $form;
+
+        $form->formStart([
+            'do' => 'species--post',
+            'return' => 'content/species'
+        ]);
+
+        $component->h2('Basic Information');
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->pick(true,'playable','Playable','Select this if the species you\'re creating is playable by other people.',null,'Playable','Creature',true);
+        $form->number(false,'max_age','Maximum Age','What is the maximum age your species can live?',null,1,9001,100);
+        $component->wrapEnd();
+
+        $component->h2('Multiplication');
+        $component->subtitle('During person/character creation, a person will multiply age with a value to receive points. With what value? This is useful for species that won\'t live long, but mature quickly.');
+        $component->wrapStart();
+        $form->number(false,'multiply_skill','Multiplying Skill','Increase this if your species should receive bonuses to skill',null,1,16,1);
+        $form->number(false,'multiply_expertise','Multiplying Expertise','Increase this if your species should receive bonuses to expertises',null,1,16,1);
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
     public function createStory($world = null) {
         global $component, $form;
 
@@ -427,6 +560,8 @@ class System {
         }
     }
 
+    public function createWeapon() {} //todo
+
     public function createWorld() {
         global $component, $form;
 
@@ -434,7 +569,7 @@ class System {
 
         $form->formStart([
             'do' => 'world--post',
-            'return' => 'content/world/id'
+            'return' => 'content/world'
         ]);
         $component->h2('Basic Information');
         $component->wrapStart();
@@ -474,6 +609,66 @@ class System {
         $component->wrapEnd();
 
         $form->formEnd();
+    }
+
+    // LIST
+
+    public function listAugmentation() {} //todo
+
+    public function listBackground() {} //todo
+
+    public function listBionic() {} //todo
+
+    public function listExpertise() {} //todo
+
+    public function listGift() {} //todo
+
+    public function listImperfection() {
+        global $component;
+
+        $list = $this->getImperfection();
+
+        foreach($list as $item) {
+            $component->linkButton('/content/imperfection/'.$item->id, $item->name);
+        }
+    }
+
+    public function listManifestation() {} //todo
+
+    public function listMilestone() {} //todo
+
+    public function listProtection() {} //todo
+
+    public function listSkill() {
+        global $component;
+
+        $list = $this->getSkill();
+
+        foreach($list as $item) {
+            $component->linkButton('/content/skill/'.$item->id, $item->name);
+        }
+    }
+
+    public function listSpecies() {
+        global $component;
+
+        $list = $this->getSpecies();
+
+        foreach($list as $item) {
+            $component->linkButton('/content/species/'.$item->id, $item->name);
+        }
+    }
+
+    public function listWeapon() {} //todo
+
+    public function listWorld() {
+        global $component;
+
+        $list = $this->getWorld();
+
+        foreach($list as $item) {
+            $component->linkButton('/content/world/'.$item->id, $item->name);
+        }
     }
 
     // SYSTEM
@@ -544,6 +739,23 @@ class System {
         echo('</section>');
     }
 
+    function checkList($tableName, $tableId, $relationName, $do, $list, $idList = null) {
+        global $form, $system;
+
+        $form->formStart([
+            'do' => $tableName.'--has--'.$do,
+            'return' => 'content/'.$tableName,
+            'returnafter' => $relationName,
+            'id' => $tableId,
+            'context' => $relationName
+        ]);
+
+        $system->checkboxList($list, $idList);
+        $system->checkboxAll();
+
+        $form->formEnd();
+    }
+
     function selectWorld($action) {
         global $form, $curl, $user;
 
@@ -579,5 +791,28 @@ class System {
         $this->radioList('species_id', $list);
         $form->hidden('world_id', $world->id);
         $form->formEnd();
+    }
+
+    function verifyOwner($data) {
+        global $user;
+
+        if($user->isAdmin) return true;
+
+        $result = isset($data['owner']) ? $data['owner'] : null;
+
+        return $result;
+    }
+
+    function listRelation($list, $relationName, $siteLink) {
+        global $component;
+
+        if($list[0]) {
+            foreach($list as $item) {
+                $component->listItem($item->name, $item->description, $item->icon);
+            }
+        }
+
+        $component->linkButton($siteLink.'/'.$relationName.'/add','Add');
+        $component->linkButton($siteLink.'/'.$relationName.'/delete','Delete',true);
     }
 }

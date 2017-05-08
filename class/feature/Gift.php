@@ -18,12 +18,16 @@ class Gift {
 
     var $skill, $skillValue;
 
+    var $isOwner;
+
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('gift/id/'.$id)['data'][0]
+            ? $curl->get('gift/id/'.$id, $user->token)['data'][0]
             : $array;
+
+        $this->isOwner = $system->verifyOwner($data);
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];

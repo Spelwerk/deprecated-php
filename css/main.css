@@ -472,12 +472,13 @@ input[type=submit] {
   display: table-cell;
   width: 3.6rem;
   vertical-align: middle;
-  opacity: 0.6; }
+  opacity: 0.9; }
   .sw-c-list__select:hover {
     opacity: 1; }
   .sw-c-list__select img {
-    height: 2rem;
-    width: 2rem; }
+    height: 1.8rem;
+    width: 1.8rem;
+    vertical-align: middle; }
 
 .sw-c-list__title {
   display: table-cell;

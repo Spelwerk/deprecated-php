@@ -7,27 +7,6 @@
  * Time: 16:49
  */
 
-require_once('feature/Attribute.php');
-require_once('feature/Augmentation.php');
-require_once('feature/Bionic.php');
-require_once('feature/Background.php');
-require_once('feature/Disease.php');
-require_once('feature/Doctrine.php');
-require_once('feature/Expertise.php');
-require_once('feature/Focus.php');
-require_once('feature/Gift.php');
-require_once('feature/Imperfection.php');
-require_once('feature/Identity.php');
-require_once('feature/Manifestation.php');
-require_once('feature/Milestone.php');
-require_once('feature/Nature.php');
-require_once('feature/Protection.php');
-require_once('feature/Sanity.php');
-require_once('feature/Skill.php');
-require_once('feature/Species.php');
-require_once('feature/Weapon.php');
-require_once('feature/Wound.php');
-
 class World {
 
     var $id, $canon, $name, $description;
@@ -54,19 +33,16 @@ class World {
 
     var $siteLink;
 
-
     public function __construct($id = null, $array = null) {
-        global $curl, $user;
+        global $curl, $system, $user;
 
         $data = isset($id)
             ? $curl->get('world/id/'.$id, $user->token)['data'][0]
             : $array;
 
-        $defaults = $curl->get('system/attribute');
+        $this->isOwner = $system->verifyOwner($data);
 
-        $this->isOwner = isset($data['owner'])
-            ? $data['owner']
-            : false;
+        $defaults = $curl->get('system/attribute');
 
         $this->isCalculated = $data['calculated'];
 
@@ -86,15 +62,21 @@ class World {
         $this->reputationAttributeType = $defaults['type']['reputation'];
         $this->woundAttributeType = $defaults['type']['wound'];
 
+        $this->ammunitionAttribute = $defaults['id']['ammunition'];
         $this->damageAttribute = $defaults['id']['damage'];
         $this->diseaseAttribute = $defaults['id']['disease'];
         $this->experienceAttribute = $defaults['id']['experience'];
+        $this->honorAttribute = $defaults['id']['honor'];
+        $this->infamyAttribute = $defaults['id']['infamy'];
         $this->moneyAttribute = $defaults['id']['money'];
+        $this->rationsAttribute = $defaults['id']['rations'];
         $this->resilienceAttribute = $defaults['id']['resilience'];
         $this->sanityAttribute = $defaults['id']['sanity'];
+        $this->speedAttribute = $defaults['id']['speed'];
         $this->staminaAttribute = $defaults['id']['stamina'];
         $this->toleranceAttribute = $defaults['id']['tolerance'];
         $this->traumaAttribute = $defaults['id']['trauma'];
+        $this->initiativeAttribute = $defaults['id']['initiative'];
 
         $this->augmentationExists = $data['augmentation'];
         $this->bionicExists = $data['bionic'];
@@ -119,8 +101,133 @@ class World {
             ? $data['supernatural_name']
             : null;
 
-        $this->siteLink = '/content/world/id/'.$this->id;
+        $this->siteLink = '/content/world/'.$this->id;
     }
+
+    public function put(){} //todo
+
+    public function view() {
+        global $form, $component, $curl;
+
+        $component->returnButton('/content/world');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Has Bionic: '.$this->bionicExists);
+        $component->p('Has Supernatural: '.$this->supernaturalExists);
+
+        $component->p('Split Supernatural: '.$this->splitSupernatural);
+        $component->p('Split Skill: '.$this->splitSkill);
+        $component->p('Split Expertise: '.$this->splitExpertise);
+        $component->p('Split Milestone: '.$this->splitMilestone);
+        $component->p('Split Relationship: '.$this->splitRelationship);
+
+        $component->p('Maximum Gift: '.$this->maxGift);
+        $component->p('Maximum Imperfection: '.$this->maxImperfection);
+        $component->p('Maximum Supernatural: '.$this->maxSupernatural);
+        $component->p('Maximum Skill: '.$this->maxSkill);
+        $component->p('Maximum Expertise: '.$this->maxExpertise);
+        $component->p('Maximum Milestone: '.$this->maxMilestone);
+        $component->p('Maximum Relationship: '.$this->maxRelationship);
+
+        if($this->isOwner) {
+
+            if(!$this->isCalculated) {
+                $component->h1('Creating '.$this->name);
+
+                $readyToCalculate = true;
+
+                $defaultRoutes = [
+                    'background' => 'background',
+                    'expertise' => 'expertise',
+                    'gift' => 'gift',
+                    'imperfection' => 'imperfection',
+                    'milestone' => 'milestone',
+                    //'protection' => 'protection',
+                    'weapon' => 'weapon',
+                ];
+
+                $sResult = $this->getSpecies();
+                $mResult = $this->getManifestation();
+                $kResult = $this->getSkill();
+
+                if(!$sResult) {
+                    $component->linkButton($this->siteLink.'/species/add','Add species',true);
+                    $readyToCalculate = false;
+                } else if($this->supernaturalExists && !$mResult) {
+                    $component->linkButton($this->siteLink.'/manifestation/add','Add manifestations',true);
+                    $readyToCalculate = false;
+                } else if(!$kResult) {
+                    $component->linkButton($this->siteLink.'/skill/add','Add skills',true);
+                    $readyToCalculate = false;
+                } else {
+                    foreach($defaultRoutes as $key => $route) {
+                        $result = $curl->get('world/id/'.$this->id.'/'.$route);
+
+                        $empty = false;
+
+                        if(!$result['data']) {
+                            $readyToCalculate = false;
+                            $empty = true;
+                        } else {
+                            if(count($result) == 0) {
+                                $readyToCalculate = false;
+                                $empty = true;
+                            }
+                        }
+
+                        if($empty) {
+                            $component->linkButton($this->siteLink.'/'.$key.'/add','Add '.$key.'s');
+                        }
+                    }
+
+                    if($this->bionicExists) {
+                        $bResult = $this->getBionic();
+
+                        if(!$bResult) {
+                            $component->linkButton($this->siteLink.'/bionic/add','Add bionics');
+                            $readyToCalculate = false;
+                        }
+                    }
+                }
+
+                if($readyToCalculate) {
+                    $form->formStart([
+                        'do' => 'world--calculated',
+                        'id' => $this->id,
+                        'return' => 'content/world'
+                    ]);
+                    $form->formEnd(false,'This world is ready to play. Press here!');
+                }
+            } else {
+                $component->h1('Lists');
+                $component->linkButton($this->siteLink.'/attribute','Attribute');
+                $component->linkButton($this->siteLink.'/background','Background');
+
+                if($this->bionicExists) {
+                    $component->linkButton($this->siteLink.'/bionic','Bionic');
+                }
+
+                $component->linkButton($this->siteLink.'/expertise','Expertise');
+                $component->linkButton($this->siteLink.'/gift','Gift');
+                $component->linkButton($this->siteLink.'/imperfection','Imperfection');
+
+                if($this->supernaturalExists) {
+                    $component->linkButton($this->siteLink.'/manifestation','Manifestation');
+                }
+
+                $component->linkButton($this->siteLink.'/milestone','Milestone');
+                $component->linkButton($this->siteLink.'/protection','Protection');
+                $component->linkButton($this->siteLink.'/skill','Skill');
+                $component->linkButton($this->siteLink.'/species','Species');
+                $component->linkButton($this->siteLink.'/weapon','Weapon');
+            }
+
+        }
+    }
+
+    public function delete() {} //todo
 
     // GET
 
@@ -409,58 +516,58 @@ class World {
         $form->formStart([
             'do' => 'world--attribute',
             'id' => $this->id,
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'attribute'
         ]);
 
-        $id1 = $curl->get('world/id/'.$this->id.'/attribute/value/1')['data'][0]['default_value'];
-        $id2 = $curl->get('world/id/'.$this->id.'/attribute/value/2')['data'][0]['default_value'];
-        $id3 = $curl->get('world/id/'.$this->id.'/attribute/value/3')['data'][0]['default_value'];
-        $id9 = $curl->get('world/id/'.$this->id.'/attribute/value/9')['data'][0]['default_value'];
-        $id8 = $curl->get('world/id/'.$this->id.'/attribute/value/8')['data'][0]['default_value'];
-        $id7 = $curl->get('world/id/'.$this->id.'/attribute/value/7')['data'][0]['default_value'];
-        $id4 = $curl->get('world/id/'.$this->id.'/attribute/value/4')['data'][0]['default_value'];
-        $id5 = $curl->get('world/id/'.$this->id.'/attribute/value/5')['data'][0]['default_value'];
-        $id6 = $curl->get('world/id/'.$this->id.'/attribute/value/6')['data'][0]['default_value'];
-        $id16 = $curl->get('world/id/'.$this->id.'/attribute/value/16')['data'][0]['default_value'];
-        $id17 = $curl->get('world/id/'.$this->id.'/attribute/value/17')['data'][0]['default_value'];
-        $id19 = $curl->get('world/id/'.$this->id.'/attribute/value/19')['data'][0]['default_value'];
-        $id20 = $curl->get('world/id/'.$this->id.'/attribute/value/20')['data'][0]['default_value'];
-        $id21 = $curl->get('world/id/'.$this->id.'/attribute/value/21')['data'][0]['default_value'];
+        $tolerance = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->toleranceAttribute)['data'][0]['value'];
+        $stamina = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->staminaAttribute)['data'][0]['value'];
+        $resilience = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->resilienceAttribute)['data'][0]['value'];
+        $trauma = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->traumaAttribute)['data'][0]['value'];
+        $disease = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->diseaseAttribute)['data'][0]['value'];
+        $sanity = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->sanityAttribute)['data'][0]['value'];
+        $damage = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->damageAttribute)['data'][0]['value'];
+        $initiative = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->initiativeAttribute)['data'][0]['value'];
+        $speed = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->speedAttribute)['data'][0]['value'];
+        $honor = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->honorAttribute)['data'][0]['value'];
+        $infamy = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->infamyAttribute)['data'][0]['value'];
+        $money = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->moneyAttribute)['data'][0]['value'];
+        $ammunition = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->ammunitionAttribute)['data'][0]['value'];
+        $rations = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->rationsAttribute)['data'][0]['value'];
 
         $component->h2('Wounds');
         $component->subtitle('This section contains the different kinds of wounds a person can take.');
         $component->wrapStart();
-        $form->number(true,'attribute','Tolerance','Designates the default value for a person\'s resistance against Trauma attacks.',1,0,96,$id1);
-        $form->number(true,'attribute','Stamina','Designates the default value for a person\'s resistance against Diseases and Poison.',2,0,96,$id2);
-        $form->number(true,'attribute','Resilience','Designates the default value for a person\'s resistance against falling into madness and losing sanity.',3,0,96,$id3);
+        $form->number(true,'attribute','Tolerance','Designates the default value for a person\'s resistance against Trauma attacks.',1,0,96,$tolerance);
+        $form->number(true,'attribute','Stamina','Designates the default value for a person\'s resistance against Diseases and Poison.',2,0,96,$stamina);
+        $form->number(true,'attribute','Resilience','Designates the default value for a person\'s resistance against falling into madness and losing sanity.',3,0,96,$resilience);
 
-        $form->number(true,'attribute','Trauma','Designates the default amount of Trauma wounds a person can handle before being incapacitated.',9,0,96,$id9);
-        $form->number(true,'attribute','Disease','Designates the default amount of Diseases a person can handle before being incapacitated.',8,0,96,$id8);
-        $form->number(true,'attribute','Sanity','Designates the default amount of Sanity hits a person can handle before being incapacitated.',7,0,96,$id7);
+        $form->number(true,'attribute','Trauma','Designates the default amount of Trauma wounds a person can handle before being incapacitated.',9,0,96,$trauma);
+        $form->number(true,'attribute','Disease','Designates the default amount of Diseases a person can handle before being incapacitated.',8,0,96,$disease);
+        $form->number(true,'attribute','Sanity','Designates the default amount of Sanity hits a person can handle before being incapacitated.',7,0,96,$sanity);
         $component->wrapEnd();
 
         $component->h2('Combat');
         $component->subtitle('This section contains the three base attributes for combat.');
         $component->wrapStart();
-        $form->number(true,'attribute','Damage','Default damage bonus you will get to your attacks.',4,0,96,$id4);
-        $form->number(true,'attribute','Initiative','Default value for initiative, which handles a person\'s order of fighting.',5,0,96,$id5);
-        $form->number(true,'attribute','Speed','Default value for speed which, which handles a person\'s ability to chase down, or avoid chasers.',6,0,96,$id6);
+        $form->number(true,'attribute','Damage','Default damage bonus you will get to your attacks.',4,0,96,$damage);
+        $form->number(true,'attribute','Initiative','Default value for initiative, which handles a person\'s order of fighting.',5,0,96,$initiative);
+        $form->number(true,'attribute','Speed','Default value for speed which, which handles a person\'s ability to chase down, or avoid chasers.',6,0,96,$speed);
         $component->wrapEnd();
 
         $component->h2('Reputation');
         $component->subtitle('This section contains reputation attributes.');
         $component->wrapStart();
-        $form->number(true,'attribute','Honor','A person\'s positive reputation.',16,0,96,$id16);
-        $form->number(true,'attribute','Infamy','A person\'s negative reputation.',17,0,96,$id17);
+        $form->number(true,'attribute','Honor','A person\'s positive reputation.',16,0,96,$honor);
+        $form->number(true,'attribute','Infamy','A person\'s negative reputation.',17,0,96,$infamy);
         $component->wrapEnd();
 
         $component->h2('Consumable & Money');
         $component->subtitle('This section contains consumable and financial attributes.');
         $component->wrapStart();
-        $form->number(true,'attribute','Money','Default financial situation.',19,0,96,$id19);
-        $form->number(true,'attribute','Ammunition','Default ammunition.',20,0,96,$id20);
-        $form->number(true,'attribute','Rations','Default daily rations.',21,0,96,$id21);
+        $form->number(true,'attribute','Money','Default financial situation.',19,0,96,$money);
+        $form->number(true,'attribute','Ammunition','Default ammunition.',20,0,96,$ammunition);
+        $form->number(true,'attribute','Rations','Default daily rations.',21,0,96,$rations);
         $component->wrapEnd();
 
         $form->formEnd(false);
@@ -476,7 +583,7 @@ class World {
 
         $form->formStart([
             'do' => 'world--has--add',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'background',
             'id' => $this->id,
             'context' => 'background'
@@ -519,7 +626,7 @@ class World {
 
         $form->formStart([
             'do' => 'world--has--add',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'expertise',
             'id' => $this->id,
             'context' => 'expertise'
@@ -558,7 +665,7 @@ class World {
 
         $form->formStart([
             'do' => 'world--has--add',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'gift',
             'id' => $this->id,
             'context' => 'gift'
@@ -606,7 +713,7 @@ class World {
 
         $form->formStart([
             'do' => 'world--has--add',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'imperfection',
             'id' => $this->id,
             'context' => 'imperfection'
@@ -653,7 +760,7 @@ class World {
 
         $form->formStart([
             'do' => 'world--has--add',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'milestone',
             'id' => $this->id,
             'context' => 'milestone'
@@ -763,7 +870,7 @@ class World {
 
         $form->formStart([
             'do' => 'world--has--delete',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'returnafter' => 'skill',
             'id' => $this->id,
             'context' => 'attribute'
@@ -783,101 +890,113 @@ class World {
         $this->checkList('weapon', $this->getWeapon(), null, 'delete');
     }
 
-    // VERIFY
+    // LIST
 
-    public function create() {
-        global $curl, $component, $form;
+    public function listBackground() {
+        global $system;
 
-        if(!$this->isCalculated) {
-            $component->h1('Creating '.$this->name);
+        $system->listRelation($this->getBackground(), 'background', $this->siteLink);
+    }
 
-            $readyToCalculate = true;
+    public function listBionic() {
+        global $system;
 
-            $defaultRoutes = [
-                'background' => 'background',
-                'expertise' => 'expertise',
-                'gift' => 'gift',
-                'imperfection' => 'imperfection',
-                'milestone' => 'milestone',
-                //'protection' => 'protection',
-                'weapon' => 'weapon',
-            ];
+        $system->listRelation($this->getBionic(), 'bionic', $this->siteLink);
+    }
 
-            $sResult = $this->getSpecies();
-            $mResult = $this->getManifestation();
-            $kResult = $this->getSkill();
+    public function listExpertise() {
+        global $component;
 
-            if(!$sResult) {
-                $component->linkButton($this->siteLink.'/species/add','Add species',true);
-                $readyToCalculate = false;
-            } else if($this->supernaturalExists && !$mResult) {
-                $component->linkButton($this->siteLink.'/manifestation/add','Add manifestations',true);
-                $readyToCalculate = false;
-            } else if(!$kResult) {
-                $component->linkButton($this->siteLink.'/skill/add','Add skills',true);
-                $readyToCalculate = false;
-            } else {
-                foreach($defaultRoutes as $key => $route) {
-                    $result = $curl->get('world/id/'.$this->id.'/'.$route);
+        $skillArray = $this->getSkill();
+        $manifestationArray = $this->getManifestation();
 
-                    $empty = false;
+        if($skillArray[0]) {
+            foreach($skillArray as $skill) {
+                $list = $this->getExpertise('/skill/'.$skill->id);
 
-                    if(!$result['data']) {
-                        $readyToCalculate = false;
-                        $empty = true;
-                    } else {
-                        if(count($result) == 0) {
-                            $readyToCalculate = false;
-                            $empty = true;
-                        }
-                    }
+                if(!$list) continue;
 
-                    if($empty) {
-                        $component->linkButton($this->siteLink.'/'.$key.'/add','Add '.$key.'s');
-                    }
+                $component->h2($skill->name);
+
+                foreach($list as $item) {
+                    $component->listItem($item->name, $item->description, $item->icon);
                 }
-
-                if($this->bionicExists) {
-                    $bResult = $this->getBionic();
-
-                    if(!$bResult) {
-                        $component->linkButton($this->siteLink.'/bionic/add','Add bionics');
-                        $readyToCalculate = false;
-                    }
-                }
-            }
-
-            if($readyToCalculate) {
-                $form->formStart([
-                    'do' => 'world--calculated',
-                    'id' => $this->id,
-                    'return' => 'content/world/id'
-                ]);
-                $form->formEnd(false,'This world is ready to play. Press here!');
             }
         }
+
+        if($manifestationArray[0]) {
+            foreach($manifestationArray as $manifestation) {
+                $list = $this->getExpertise('/manifestation/'.$manifestation->id);
+
+                if(!$list) continue;
+
+                $component->h2($manifestation->name);
+
+                foreach($list as $item) {
+                    $component->listItem($item->name, $item->description, $item->icon);
+                }
+            }
+        }
+
+        $component->linkButton($this->siteLink.'/expertise/add','Add');
+        $component->linkButton($this->siteLink.'/expertise/delete','Delete',true);
+    }
+
+    public function listGift() {
+        global $system;
+
+        $system->listRelation($this->getGift(), 'gift', $this->siteLink);
+    }
+
+    public function listImperfection() {
+        global $system;
+
+        $system->listRelation($this->getImperfection(), 'imperfection', $this->siteLink);
+    }
+
+    public function listManifestation() {
+        global $system;
+
+        $system->listRelation($this->getManifestation(), 'manifestation', $this->siteLink);
+    }
+
+    public function listMilestone() {
+        global $system;
+
+        $system->listRelation($this->getMilestone(), 'milestone', $this->siteLink);
+    }
+
+    public function listProtection() {
+        global $system;
+
+        $system->listRelation($this->getProtection(), 'protection', $this->siteLink);
+    }
+
+    public function listSkill() {
+        global $system;
+
+        $system->listRelation($this->getSkill(), 'skill', $this->siteLink);
+    }
+
+    public function listSpecies() {
+        global $system;
+
+        $system->listRelation($this->getSpecies(), 'species', $this->siteLink);
+    }
+
+    public function listWeapon() {
+        global $system;
+
+        $system->listRelation($this->getWeapon(), 'weapon', $this->siteLink);
     }
 
     // PRIVATE
 
-    private function checkList($hasTableName, $list, $idList = null, $do = null) {
-        global $form, $system;
+    private function checkList($relationName, $list, $idList = null, $do = null) {
+        global $system;
 
-        $do = isset($do)
-            ? $do
-            : 'add';
+        $do = isset($do) ? $do : 'add';
 
-        $form->formStart([
-            'do' => 'world--has--'.$do,
-            'return' => 'content/world/id',
-            'returnafter' => $hasTableName,
-            'id' => $this->id,
-            'context' => $hasTableName
-        ]);
-
-        $system->checkboxList($list, $idList);
-        $system->checkboxAll();
-
-        $form->formEnd();
+        $system->checkList('world', $this->id, $relationName, $do, $list, $idList);
     }
 }

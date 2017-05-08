@@ -25,6 +25,16 @@ $system = new System();
 $menu = new Menu($user);
 $sitemap = new Sitemap($user);
 
+
+echo($sitemap->command0.'/');
+echo($sitemap->command1.'/');
+echo($sitemap->command2.'/');
+echo($sitemap->command3.'/');
+echo($sitemap->command4.'/');
+echo($sitemap->command5.'/');
+echo(' = '.$sitemap->page);
+
+
 $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 
 ?>
@@ -85,6 +95,9 @@ if(!isset($_COOKIE[$cookieArray['policy']])) {
 
     </div>
 </footer>
+
+<script src="/js/validation.js"></script>
+<script src="/js/play.js"></script>
 
 </body>
 </html>

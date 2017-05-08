@@ -13,12 +13,16 @@ class Skill {
 
     var $value;
 
+    var $isOwner;
+
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('skill/id/'.$id)['data'][0]
+            ? $curl->get('skill/id/'.$id, $user->token)['data'][0]
             : $array;
+
+        $this->isOwner = $system->verifyOwner($data);
 
         $defaults = $curl->get('system/skill');
 
@@ -34,4 +38,23 @@ class Skill {
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
     }
+
+    public function put() {} //todo
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/skill');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Species ID: '.$this->species); //todo api return name
+
+        if($this->isOwner) {
+            //$component->h1('Manage');
+            //todo link to put();
+            //todo link to delete();
+        }
+    } //todo
 }

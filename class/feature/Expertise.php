@@ -22,12 +22,16 @@ class Expertise {
 
     var $doctrine;
 
-    public function __construct($id = null, $array = null, $skill = null) {
-        global $curl;
+    var $isOwner;
+
+    public function __construct($id = null, $array = null) {
+        global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('expertise/id/'.$id)['data'][0]
+            ? $curl->get('expertise/id/'.$id, $user->token)['data'][0]
             : $array;
+
+        $this->isOwner = $system->verifyOwner($data);
 
         $defaults = $curl->get('system/expertise');
 
@@ -40,19 +44,43 @@ class Expertise {
 
         $this->icon = $data['icon'];
 
-        $this->level = isset($data['level']) ? $data['level'] : 0;
-        $this->bonus = isset($data['bonus']) ? $data['bonus'] : 0;
+        $this->level = isset($data['level']) ? $data['level'] : null;
+        $this->bonus = isset($data['bonus']) ? $data['bonus'] : null;
 
-        $this->required = isset($data['doctrine_id']) ? 2 : $defaults['required'];
-        $this->increment = $defaults['increment'];
-        $this->maximum = isset($data['doctrine_id']) ? 4 : $defaults['maximum'];
-        $this->start = isset($data['doctrine_id']) ? 0 : $defaults['start'];
+        $this->start = isset($data['doctrine_id']) ? $defaults['doctrine']['start'] : $defaults['default']['start'];
+        $this->required = isset($data['doctrine_id']) ? $defaults['doctrine']['required'] : $defaults['default']['required'];
+        $this->increment = isset($data['doctrine_id']) ? $defaults['doctrine']['increment'] : $defaults['default']['increment'];
+        $this->maximum = isset($data['doctrine_id']) ? $defaults['doctrine']['maximum'] : $defaults['default']['maximum'];
 
         $this->skill = $data['skill_id'];
+        $this->skillName = isset($data['skill_name']) ? $data['skill_name'] : null;
         $this->species = $data['species_id'];
+        $this->speciesName = isset($data['species_name']) ? $data['species_name'] : null;
         $this->manifestation = $data['manifestation_id'];
+        $this->manifestationName = isset($data['manifestation_name']) ? $data['manifestation_name'] : null;
         $this->doctrine = $data['doctrine_id'];
 
         $this->dice = intval($this->start) + intval($this->level) - 1;
+    }
+
+    public function put() {} //todo
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/expertise');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Skill: '.$this->skillName);
+        $component->p('Species: '.$this->speciesName);
+        $component->p('Manifestation: '.$this->manifestationName);
+
+        if($this->isOwner) {
+            //$component->h1('Manage');
+            //todo link to put();
+            //todo link to delete();
+        }
     }
 }

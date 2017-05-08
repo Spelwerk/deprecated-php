@@ -16,12 +16,16 @@ class Protection {
 
     var $quality, $bonus;
 
+    var $isOwner;
+
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('protection/id/'.$id)['data'][0]
+            ? $curl->get('protection/id/'.$id, $user->token)['data'][0]
             : $array;
+
+        $this->isOwner = $system->verifyOwner($data);
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];

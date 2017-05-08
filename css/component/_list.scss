@@ -28,14 +28,16 @@
 
     vertical-align: middle;
 
-    opacity: 0.6;
+    opacity: 0.9;
 
     &:hover {
       opacity: 1;
     }
 
     img {
-      @include size(2rem);
+      @include size(1.8rem);
+
+      vertical-align: middle;
     }
   }
 

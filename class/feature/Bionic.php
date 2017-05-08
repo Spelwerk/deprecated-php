@@ -14,12 +14,16 @@ class Bionic {
 
     var $attribute, $attributeValue;
 
+    var $isOwner;
+
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('bionic/id/'.$id)['data'][0]
+            ? $curl->get('bionic/id/'.$id, $user->token)['data'][0]
             : $array;
+
+        $this->isOwner = $system->verifyOwner($data);
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
