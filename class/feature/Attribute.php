@@ -28,8 +28,8 @@ class Attribute {
         $this->icon = $data['icon'];
 
         $this->type = $data['attributetype_id'];
-        $this->maximum = $data['maximum'];
+        $this->maximum = isset($data['maximum']) ? $data['maximum'] : 0;
 
-        $this->value = $data['value'];
+        $this->value = isset($data['value']) ? $data['value'] : 0;
     }
 }

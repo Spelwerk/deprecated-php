@@ -34,9 +34,184 @@ class Background {
         $this->species = $data['species_id'];
 
         $this->manifestation = $data['manifestation_id'];
+
+        $this->siteLink = '/content/background/'.$this->id;
+    }
+
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $form->formStart([
+                'do' => 'background--put',
+                'return' => 'content/background',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/background');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Species ID: '.$this->species); //todo api return name
+        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+
+        //todo foreach attribute/skill
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton($this->siteLink.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/attribute','Add Attribute');
+            $component->linkButton($this->siteLink.'/skill','Add Skill');
+            //todo link to delete();
+        }
+    }
+
+    // GET
+
+    public function getAttribute($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'background/id/'.$this->id.'/attribute'.$override
+            : 'background/id/'.$this->id.'/attribute';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Attribute(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getSkill($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'background/id/'.$this->id.'/skill'.$override
+            : 'background/id/'.$this->id.'/skill';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Skill(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    // POST
+
+    public function postAttribute() {
+        global $component, $form, $curl;
+
+        $component->h1('Add Attribute');
+        $form->formStart([
+            'do' => 'background--attribute',
+            'return' => 'content/background',
+            'returnafter' => 'attribute',
+            'id' => $this->id
+        ]);
+
+        $list = $curl->get('attribute/special/0')['data'];
+
+        $component->wrapStart();
+        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your species to have extra value in?');
+        $form->number(true,'value','Value',null,null,1,8,1);
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    public function postSkill() {
+        global $component, $form, $curl;
+
+        $component->h1('Add Skill');
+        $form->formStart([
+            'do' => 'background--skill',
+            'return' => 'content/background',
+            'returnafter' => 'skill',
+            'id' => $this->id
+        ]);
+
+        $list = $curl->get('skill')['data'];
+
+        $component->wrapStart();
+        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your species to have extra value in?');
+        $form->number(true,'value','Value',null,null,1,8,1);
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    // DELETE
+
+    public function deleteAttribute() {
+        $this->checkList('attribute', $this->getAttribute(), null, 'delete');
+    }
+
+    public function deleteSkill() {
+        $this->checkList('skill', $this->getAttribute(), null, 'delete');
+    }
+
+    // LIST
+
+    public function listAttribute() {
+        global $component;
+
+        $list = $this->getAttribute();
+
+        if($list[0]) {
+            foreach($list as $item) {
+                $component->listItem($item->name.' ('.$item->value.')', $item->description, $item->icon);
+            }
+        }
+
+        $component->linkButton($this->siteLink.'/attribute/add','Add');
+        $component->linkButton($this->siteLink.'/attribute/delete','Delete',true);
+    }
+
+    public function listSkill() {
+        global $component;
+
+        $list = $this->getSkill();
+
+        if($list[0]) {
+            foreach($list as $item) {
+                $component->listItem($item->name.' ('.$item->value.')', $item->description, $item->icon);
+            }
+        }
+
+        $component->linkButton($this->siteLink.'/skill/add','Add');
+        $component->linkButton($this->siteLink.'/skill/delete','Delete',true);
+    }
+
+    // PRIVATE
+
+    private function checkList($relationName, $list, $idList = null, $do = null) {
+        global $system;
+
+        $do = isset($do) ? $do : 'add';
+
+        $system->checkList('background', $this->id, $relationName, $do, $list, $idList);
     }
 }
-
-// todo has attribute
-
-// todo has asset

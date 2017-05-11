@@ -395,7 +395,22 @@ class System {
 
     public function createAugmentation() {} //todo
 
-    public function createBackground() {} //todo
+    public function createBackground() {
+        global $component, $form;
+
+        $component->title('Create Background');
+
+        $form->formStart([
+            'do' => 'background--post',
+            'return' => 'content/background'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
 
     public function createBionic() {} //todo
 
@@ -415,6 +430,32 @@ class System {
         $form->select(true,'skill_id',$list,'Skill','All expertises are tied to a skill.');
         $form->varchar(true,'name','Name');
         $form->text(false,'description','Description');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    public function createFocus() {
+        global $curl, $component, $form;
+
+        $component->title('Create Focus');
+
+        $manifestationList = $curl->get('manifestation')['data'];
+        $attributeList = $curl->get('attribute/special/0')['data'];
+
+        $form->formStart([
+            'do' => 'basic--post',
+            'return' => 'content/focus',
+            'context' => 'focus'
+        ]);
+        $component->wrapStart();
+        $form->select(true,'manifestation_id',$manifestationList,'Manifestation','All focuses are tied to a manifestation.');
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+
+        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
+        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
+
         $component->wrapEnd();
 
         $form->formEnd();
@@ -468,7 +509,35 @@ class System {
 
     public function createManifestation() {} //todo
 
-    public function createMilestone() {} //todo
+    public function createMilestone() {
+        global $curl, $component, $form;
+
+        $component->title('Create Milestone');
+
+        $skillList = $curl->get('skill')['data'];
+        $attributeList = $curl->get('attribute/special/0')['data'];
+
+        $form->formStart([
+            'do' => 'basic--post',
+            'return' => 'content/milestone',
+            'context' => 'milestone'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+
+        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
+        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
+
+        $form->select(false,'skill_id',$skillList,'Skill','If this gift increases a skill, which one?');
+        $form->number(false,'skill_value','Skill Value','Amount of points this gift will increase by.',null,0,16);
+
+        //todo add loyalty and relationship here
+
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
 
     public function createPerson($world = null, $species = null) {
         global $component, $form;
@@ -644,7 +713,22 @@ class System {
 
     public function listAugmentation() {} //todo
 
-    public function listBackground() {} //todo
+    public function listBackground() {
+        global $component, $user;
+
+        $userArray = $user->getBackground();
+        $list = $this->getBackground();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/background/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($list as $item) {
+            $component->linkButton('/content/background/'.$item->id, $item->name);
+        }
+    }
 
     public function listBionic() {} //todo
 
@@ -652,6 +736,9 @@ class System {
         global $component, $user;
 
         $userArray = $user->getExpertise();
+        $list = $this->getExpertise();
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
 
         if($userArray) {
             foreach($userArray as $item) {
@@ -659,13 +746,8 @@ class System {
             }
         }
 
-        $speciesArray = $this->getSpecies();
-        $manifestationArray = $this->getManifestation();
-
-        $list = $this->getExpertise();
-
         foreach($list as $item) {
-            $component->linkButton('/content/gift/'.$item->id, $item->name);
+            $component->linkButton('/content/expertise/'.$item->id, $item->name);
         }
 
         foreach($speciesArray as $species) {
@@ -689,22 +771,43 @@ class System {
         }
     }
 
+    public function listFocus() {
+        global $component, $user;
+
+        $userArray = $user->getFocus();
+        $manifestationArray = $this->getManifestation();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/focus/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $this->getFocus('/manifestation/'.$manifestation->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/focus/'.$item->id, $item->name);
+            }
+        }
+    }
+
     public function listGift() {
         global $component, $user;
 
         $userArray = $user->getGift();
+        $list = $this->getGift();
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+        $skillArray = $this->getSkill();
 
         if($userArray) {
             foreach($userArray as $item) {
                 $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
-
-        $speciesArray = $this->getSpecies();
-        $manifestationArray = $this->getManifestation();
-        $skillArray = $this->getSkill();
-
-        $list = $this->getGift();
 
         foreach($list as $item) {
             $component->linkButton('/content/gift/'.$item->id, $item->name);
@@ -745,14 +848,13 @@ class System {
         global $component, $user;
 
         $userArray = $user->getImperfection();
+        $list = $this->getImperfection();
 
         if($userArray) {
             foreach($userArray as $item) {
                 $component->linkButton('/content/imperfection/'.$item->id, $item->name);
             }
         }
-
-        $list = $this->getImperfection();
 
         foreach($list as $item) {
             $component->linkButton('/content/imperfection/'.$item->id, $item->name);
@@ -761,7 +863,66 @@ class System {
 
     public function listManifestation() {} //todo
 
-    public function listMilestone() {} //todo
+    public function listMilestone() {
+        global $component, $user;
+
+        $userArray = $user->getMilestone();
+        $list = $this->getMilestone();
+        $backgroundArray = $this->getBackground();
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+        $skillArray = $this->getSkill();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($list as $item) {
+            $component->linkButton('/content/milestone/'.$item->id, $item->name);
+        }
+
+        foreach($backgroundArray as $background) {
+            $list = $this->getMilestone('/background/'.$background->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($speciesArray as $species) {
+            $list = $this->getMilestone('/species/'.$species->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $this->getMilestone('/manifestation/'.$manifestation->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($skillArray as $skill) {
+            $list = $this->getMilestone('/skill/'.$skill->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
+            }
+        }
+    }
 
     public function listProtection() {} //todo
 
@@ -769,14 +930,13 @@ class System {
         global $component, $user;
 
         $userArray = $user->getSkill();
+        $list = $this->getSkill();
 
         if($userArray) {
             foreach($userArray as $item) {
                 $component->linkButton('/content/skill/'.$item->id, $item->name);
             }
         }
-
-        $list = $this->getSkill();
 
         foreach($list as $item) {
             $component->linkButton('/content/skill/'.$item->id, $item->name);
@@ -787,14 +947,13 @@ class System {
         global $component, $user;
 
         $userArray = $user->getSpecies();
+        $list = $this->getSpecies();
 
         if($userArray) {
             foreach($userArray as $item) {
                 $component->linkButton('/content/species/'.$item->id, $item->name);
             }
         }
-
-        $list = $this->getSpecies();
 
         foreach($list as $item) {
             $component->linkButton('/content/species/'.$item->id, $item->name);
@@ -807,14 +966,13 @@ class System {
         global $component, $user;
 
         $userArray = $user->getWorld();
+        $list = $this->getWorld();
 
         if($userArray) {
             foreach($userArray as $item) {
                 $component->linkButton('/content/world/'.$item->id, $item->name);
             }
         }
-
-        $list = $this->getWorld();
 
         foreach($list as $item) {
             $component->linkButton('/content/world/'.$item->id, $item->name);

@@ -38,7 +38,7 @@ class Species {
         global $form, $component;
 
         $form->formStart([
-            'do' => 'species--post',
+            'do' => 'species--put',
             'return' => 'content/species/id',
             'id' => $this->id
         ]);
@@ -74,6 +74,7 @@ class Species {
 
         if($this->isOwner) {
             $component->h1('Manage');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/attribute','Add Attribute');
             //$component->linkButton($species->siteLink.'/skill','Skill');
             //$component->linkButton($species->siteLink.'/expertise','Expertise');

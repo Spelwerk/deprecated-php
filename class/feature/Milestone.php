@@ -54,4 +54,45 @@ class Milestone {
         $this->loyalty = $data['loyalty_id'];
         $this->loyaltyOccupation = $data['loyalty_occupation'];
     }
+
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $form->formStart([
+                'do' => 'basic--put',
+                'return' => 'content/milestone',
+                'context' => 'milestone',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/milestone');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Background ID: '.$this->background); //todo api return name
+        $component->p('Species ID: '.$this->species); //todo api return name
+        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+        $component->p('Attribute ID: '.$this->attribute); //todo api return name
+        $component->p('Attribute Value: '.$this->attributeValue); //todo api return name
+        $component->p('Skill ID: '.$this->skill); //todo api return name
+        $component->p('Skill Value: '.$this->skillValue); //todo api return name
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton('/content/milestone/'.$this->id.'/edit','Edit');
+            //todo link to delete();
+        }
+    }
 }

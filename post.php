@@ -587,48 +587,36 @@ function switch_basic($do) {
             break;
 
         case 'basic--put':
-            print_r($POST_CONTEXT.'/id/'.$POST_ID); echo '<br>';
-            print_r($POST_DATA); echo '<br>';
-            print_r($USER_TOKEN); echo '<br>';
-
-            $result = $curl->put($POST_CONTEXT.'/id/'.$POST_ID, $POST_DATA, $USER_TOKEN);
-
-            print_r($result);
+            $curl->put($POST_CONTEXT.'/id/'.$POST_ID, $POST_DATA, $USER_TOKEN);
             break;
 
         case 'basic--delete':
             $curl->delete($POST_CONTEXT.'/id/'.$POST_ID, null, $USER_TOKEN);
             break;
+    }
+}
 
+function switch_background($do) {
+    global $curl, $POST_ID, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
-        case 'basic--expertise--post':
-            $result = $curl->post('expertise', $POST_DATA, $USER_TOKEN);
+    switch($do) {
+        default: break;
+
+        case 'background--post':
+            $result = $curl->post('background', $POST_DATA, $USER_TOKEN);
             $POST_ID = $result['id'];
             break;
 
-        case 'basic--gift--post':
-            $result = $curl->post('gift', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
+        case 'background--attribute':
+            $curl->post('background/id/'.$POST_ID.'/attribute', $POST_DATA, $USER_TOKEN);
             break;
 
-        case 'basic--imperfection--post':
-            $result = $curl->post('imperfection', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
+        case 'background--skill':
+            $curl->post('background/id/'.$POST_ID.'/skill', $POST_DATA, $USER_TOKEN);
             break;
 
-        case 'basic--milestone--post':
-            $result = $curl->post('milestone', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
-            break;
-
-        case 'basic--skill--post':
-            $result = $curl->post('skill', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
-            break;
-
-        case 'basic--weapon--post':
-            $result = $curl->post('weapon', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
+        case 'background--has--delete':
+            table_has_delete('species');
             break;
     }
 }
@@ -1068,6 +1056,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'basic':
             switch_basic($POST_DO);
+            break;
+
+        case 'background':
+            switch_background($POST_DO);
             break;
 
         case 'manifestation':

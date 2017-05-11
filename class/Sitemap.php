@@ -131,32 +131,47 @@ class Sitemap {
                 $this->context = $this->command2;
                 break;
 
+            case 'background':
+                $this->page = 'site/content/background/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
             case 'expertise':
                 $this->page = 'site/content/expertise/index.php';
                 $this->id = $this->command2;
                 $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'focus':
+                $this->page = 'site/content/focus/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
                 break;
 
             case 'gift':
                 $this->page = 'site/content/gift/index.php';
                 $this->id = $this->command2;
                 $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'imperfection':
                 $this->page = 'site/content/imperfection/index.php';
                 $this->id = $this->command2;
                 $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'milestone':
+                $this->page = 'site/content/milestone/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
                 break;
 
             case 'skill':
                 $this->page = 'site/content/skill/index.php';
                 $this->id = $this->command2;
                 $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'species':

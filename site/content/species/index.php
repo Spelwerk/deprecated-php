@@ -11,6 +11,10 @@ if($sitemap->id) {
             $species->view();
             break;
 
+        case 'edit':
+            $species->put();
+            break;
+
         case 'attribute':
             require_once('./site/content/species/attribute.php');
             break;
