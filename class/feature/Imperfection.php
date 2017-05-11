@@ -39,7 +39,39 @@ class Imperfection {
         $this->manifestation = $data['manifestation_id'];
     }
 
-    public function put() {} //todo
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
 
-    public function view() {} //todo
+            $form->formStart([
+                'do' => 'basic--put',
+                'return' => 'content/imperfection',
+                'context' => 'imperfection',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/imperfection');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Species ID: '.$this->species); //todo api return name
+        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton('/content/imperfection/'.$this->id.'/edit','Edit');
+            //todo link to delete();
+        }
+    }
 }

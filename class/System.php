@@ -71,26 +71,6 @@ class System {
         return $arrayList;
     }
 
-    public function getBionic($override = null) {
-        global $curl;
-
-        $arrayList = null;
-
-        $get = isset($override)
-            ? 'bionic'.$override
-            : 'bionic';
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Bionic(null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
     public function getBackground($override = null) {
         global $curl;
 
@@ -111,6 +91,26 @@ class System {
         return $arrayList;
     }
 
+    public function getBionic($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'bionic'.$override
+            : 'bionic';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Bionic(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getDoctrine($override = null) {
         global $curl;
 
@@ -125,46 +125,6 @@ class System {
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
                 $arrayList[] = new Doctrine(null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
-    public function getGift($override = null) {
-        global $curl;
-
-        $arrayList = null;
-
-        $get = isset($override)
-            ? 'gift'.$override
-            : 'gift';
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Gift(null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
-    public function getImperfection($override = null) {
-        global $curl;
-
-        $arrayList = null;
-
-        $get = isset($override)
-            ? 'imperfection'.$override
-            : 'imperfection';
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Imperfection(null, $array);
             }
         }
 
@@ -211,6 +171,26 @@ class System {
         return $arrayList;
     }
 
+    public function getGift($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'gift'.$override
+            : 'gift';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Gift(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getIdentity($override = null) {
         global $curl;
 
@@ -225,6 +205,26 @@ class System {
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
                 $arrayList[] = new Identity(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getImperfection($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'imperfection'.$override
+            : 'imperfection';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Imperfection(null, $array);
             }
         }
 
@@ -311,26 +311,6 @@ class System {
         return $arrayList;
     }
 
-    public function getSpecies($override = null) {
-        global $curl;
-
-        $arrayList = null;
-
-        $get = isset($override)
-            ? 'species'.$override
-            : 'species';
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Species(null, $array);
-            }
-        }
-
-        return $arrayList;
-    }
-
     public function getSkill($override = null) {
         global $curl;
 
@@ -345,6 +325,26 @@ class System {
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
                 $arrayList[] = new Skill(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getSpecies($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? 'species'.$override
+            : 'species';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Species(null, $array);
             }
         }
 
@@ -407,8 +407,9 @@ class System {
         $list = $curl->get('skill')['data'];
 
         $form->formStart([
-            'do' => 'basic--expertise--post',
-            'return' => 'content/expertise'
+            'do' => 'basic--post',
+            'return' => 'content/expertise',
+            'context' => 'expertise'
         ]);
         $component->wrapStart();
         $form->select(true,'skill_id',$list,'Skill','All expertises are tied to a skill.');
@@ -419,7 +420,33 @@ class System {
         $form->formEnd();
     }
 
-    public function createGift() {} //todo
+    public function createGift() {
+        global $curl, $component, $form;
+
+        $component->title('Create Gift');
+
+        $skillList = $curl->get('skill')['data'];
+        $attributeList = $curl->get('attribute/special/0')['data'];
+
+        $form->formStart([
+            'do' => 'basic--post',
+            'return' => 'content/gift',
+            'context' => 'gift'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+
+        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
+        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
+
+        $form->select(false,'skill_id',$skillList,'Skill','If this gift increases a skill, which one?');
+        $form->number(false,'skill_value','Skill Value','Amount of points this gift will increase by.',null,0,16);
+
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
 
     public function createImperfection() {
         global $component, $form;
@@ -427,8 +454,9 @@ class System {
         $component->title('Create Imperfection');
 
         $form->formStart([
-            'do' => 'basic--imperfection--post',
-            'return' => 'content/imperfection'
+            'do' => 'basic--post',
+            'return' => 'content/imperfection',
+            'context' => 'imperfection'
         ]);
         $component->wrapStart();
         $form->varchar(true,'name','Name');
@@ -492,8 +520,9 @@ class System {
         $component->title('Create Skill');
 
         $form->formStart([
-            'do' => 'basic--skill--post',
-            'return' => 'content/skill'
+            'do' => 'basic--post',
+            'return' => 'content/skill',
+            'context' => 'skill'
         ]);
         $component->wrapStart();
         $form->varchar(true,'name','Name');
@@ -619,12 +648,109 @@ class System {
 
     public function listBionic() {} //todo
 
-    public function listExpertise() {} //todo
+    public function listExpertise() {
+        global $component, $user;
 
-    public function listGift() {} //todo
+        $userArray = $user->getExpertise();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/expertise/'.$item->id, $item->name);
+            }
+        }
+
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+
+        $list = $this->getExpertise();
+
+        foreach($list as $item) {
+            $component->linkButton('/content/gift/'.$item->id, $item->name);
+        }
+
+        foreach($speciesArray as $species) {
+            $list = $this->getExpertise('/species/'.$species->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/expertise/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $this->getExpertise('/manifestation/'.$manifestation->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/expertise/'.$item->id, $item->name);
+            }
+        }
+    }
+
+    public function listGift() {
+        global $component, $user;
+
+        $userArray = $user->getGift();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
+            }
+        }
+
+        $speciesArray = $this->getSpecies();
+        $manifestationArray = $this->getManifestation();
+        $skillArray = $this->getSkill();
+
+        $list = $this->getGift();
+
+        foreach($list as $item) {
+            $component->linkButton('/content/gift/'.$item->id, $item->name);
+        }
+
+        foreach($skillArray as $skill) {
+            $list = $this->getGift('/skill/'.$skill->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($speciesArray as $species) {
+            $list = $this->getGift('/species/'.$species->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $this->getGift('/manifestation/'.$manifestation->id);
+
+            if(!$list) continue;
+
+            foreach($list as $item) {
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
+            }
+        }
+    }
 
     public function listImperfection() {
-        global $component;
+        global $component, $user;
+
+        $userArray = $user->getImperfection();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/imperfection/'.$item->id, $item->name);
+            }
+        }
 
         $list = $this->getImperfection();
 
@@ -640,7 +766,15 @@ class System {
     public function listProtection() {} //todo
 
     public function listSkill() {
-        global $component;
+        global $component, $user;
+
+        $userArray = $user->getSkill();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/skill/'.$item->id, $item->name);
+            }
+        }
 
         $list = $this->getSkill();
 
@@ -650,7 +784,15 @@ class System {
     }
 
     public function listSpecies() {
-        global $component;
+        global $component, $user;
+
+        $userArray = $user->getSpecies();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/species/'.$item->id, $item->name);
+            }
+        }
 
         $list = $this->getSpecies();
 
@@ -662,7 +804,15 @@ class System {
     public function listWeapon() {} //todo
 
     public function listWorld() {
-        global $component;
+        global $component, $user;
+
+        $userArray = $user->getWorld();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/world/'.$item->id, $item->name);
+            }
+        }
 
         $list = $this->getWorld();
 
@@ -721,8 +871,6 @@ class System {
     function radioList($tableName, $itemList, $idList = null, $currentId = null) {
         global $form;
 
-        echo('<section class="sw-l-padding">');
-
         if(isset($itemList)) {
             foreach($itemList as $item) {
                 $selected = false;
@@ -735,8 +883,6 @@ class System {
                 }
             }
         }
-
-        echo('</section>');
     }
 
     function checkList($tableName, $tableId, $relationName, $do, $list, $idList = null) {
@@ -757,39 +903,43 @@ class System {
     }
 
     function selectWorld($action) {
-        global $form, $curl, $user;
+        global $form, $user;
 
-        $list = null;
-
-        if($user) {
-            $userList = $curl->get('user/id/'.$user->id.'/world/calculated');
-
-            if(isset($userList['data'])) {
-                foreach($userList['data'] as $item) {
-                    $list[] = new World($item['id']);
-                }
-            }
-        }
-
-        $worldList = $curl->get('world')['data'];
-
-        foreach($worldList as $item) {
-            $list[] = new World(null, $item);
-        }
+        $worldList = $this->getWorld();
+        $idList = null;
 
         $form->formStart(['action' => $action]);
-        $this->radioList('world_id',$list);
+
+        if($user) {
+            $userList = $user->getWorld();
+
+            $this->radioList('world_id', $userList);
+
+            $idList = $this->idList($userList);
+        }
+
+        $this->radioList('world_id', $worldList, $idList);
         $form->formEnd();
     }
 
     function selectSpecies($action, $world) {
-        global $form;
+        global $form, $user;
 
-        $list = $world->getSpecies();
+        $speciesList = $world->getSpecies();
+        $idList = null;
 
         $form->formStart(['action' => $action]);
-        $this->radioList('species_id', $list);
+
+        if($user) {
+            $userList = $user->getSpecies();
+
+            $this->radioList('species_id', $userList);
+
+            $idList = $this->idList($userList);
+        }
+
         $form->hidden('world_id', $world->id);
+        $this->radioList('species_id', $speciesList, $idList);
         $form->formEnd();
     }
 

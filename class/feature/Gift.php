@@ -48,4 +48,44 @@ class Gift {
         $this->skill = $data['skill_id'];
         $this->skillValue = $data['skill_value'];
     }
+
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $form->formStart([
+                'do' => 'basic--put',
+                'return' => 'content/gift',
+                'context' => 'gift',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/gift');
+
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Species ID: '.$this->species); //todo api return name
+        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+        $component->p('Attribute ID: '.$this->attribute); //todo api return name
+        $component->p('Attribute Value: '.$this->attributeValue); //todo api return name
+        $component->p('Skill ID: '.$this->skill); //todo api return name
+        $component->p('Skill Value: '.$this->skillValue); //todo api return name
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton('/content/gift/'.$this->id.'/edit','Edit');
+            //todo link to delete();
+        }
+    }
 }

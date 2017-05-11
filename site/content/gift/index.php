@@ -1,25 +1,25 @@
 <?php global $form, $component, $curl, $sitemap, $system, $user;
 
 if($sitemap->id) {
-    $expertise = new Expertise($sitemap->id);
+    $gift = new Gift($sitemap->id);
 
-    $component->title($expertise->name);
+    $component->title($gift->name);
 
     switch($sitemap->context)
     {
         default:
-            $expertise->view();
+            $gift->view();
             break;
 
         case 'edit':
-            $expertise->put();
+            $gift->put();
             break;
     }
 } else {
-    $component->title('Expertise');
+    $component->title('Gift');
     $component->returnButton('/content');
-    $system->listExpertise();
+    $system->listGift();
     $component->h4('Create');
-    $component->linkButton('/content/create/expertise','Create New');
+    $component->linkButton('/content/create/gift','Create New');
 }
 ?>

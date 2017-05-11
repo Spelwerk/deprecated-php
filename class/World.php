@@ -599,12 +599,14 @@ class World {
             $system->checkboxList($list, $idList);
         }
 
-        foreach($manifestationArray as $manifestation) {
-            $list = $system->getBackground('/manifestation/'.$manifestation->id, $idList);
+        if($this->supernaturalExists) {
+            foreach($manifestationArray as $manifestation) {
+                $list = $system->getBackground('/manifestation/'.$manifestation->id, $idList);
 
-            if(!$list) continue;
+                if(!$list) continue;
 
-            $system->checkboxList($list, $idList);
+                $system->checkboxList($list, $idList);
+            }
         }
 
         $system->checkboxAll();
@@ -641,13 +643,15 @@ class World {
             $system->checkboxList($list, $idList);
         }
 
-        foreach($manifestationArray as $manifestation) {
-            $list = $system->getExpertise('/manifestation/'.$manifestation->id);
+        if($this->supernaturalExists) {
+            foreach($manifestationArray as $manifestation) {
+                $list = $system->getExpertise('/manifestation/'.$manifestation->id);
 
-            if(!$list) continue;
+                if(!$list) continue;
 
-            $component->h2($manifestation->name);
-            $system->checkboxList($list, $idList);
+                $component->h2($manifestation->name);
+                $system->checkboxList($list, $idList);
+            }
         }
 
         $system->checkboxAll();
@@ -690,13 +694,15 @@ class World {
             $system->checkboxList($list, $idList);
         }
 
-        foreach($manifestationArray as $manifestation) {
-            $list = $system->getGift('/manifestation/'.$manifestation->id, $idList);
+        if($this->supernaturalExists) {
+            foreach($manifestationArray as $manifestation) {
+                $list = $system->getGift('/manifestation/'.$manifestation->id, $idList);
 
-            if(!$list) continue;
+                if(!$list) continue;
 
-            $component->h2($manifestation->name);
-            $system->checkboxList($list, $idList);
+                $component->h2($manifestation->name);
+                $system->checkboxList($list, $idList);
+            }
         }
 
         $system->checkboxAll();
@@ -730,13 +736,15 @@ class World {
             $system->checkboxList($list, $idList);
         }
 
-        foreach($manifestationArray as $manifestation) {
-            $list = $system->getImperfection('/manifestation/'.$manifestation->id, $idList);
+        if($this->supernaturalExists) {
+            foreach($manifestationArray as $manifestation) {
+                $list = $system->getImperfection('/manifestation/'.$manifestation->id, $idList);
 
-            if(!$list) continue;
+                if(!$list) continue;
 
-            $component->h2($manifestation->name);
-            $system->checkboxList($list, $idList);
+                $component->h2($manifestation->name);
+                $system->checkboxList($list, $idList);
+            }
         }
 
         $system->checkboxAll();
@@ -793,13 +801,15 @@ class World {
             $system->checkboxList($list, $idList);
         }
 
-        foreach($manifestationArray as $manifestation) {
-            $list = $system->getMilestone('/manifestation/'.$manifestation->id, $idList);
+        if($this->supernaturalExists) {
+            foreach($manifestationArray as $manifestation) {
+                $list = $system->getMilestone('/manifestation/'.$manifestation->id, $idList);
 
-            if(!$list) continue;
+                if(!$list) continue;
 
-            $component->h2($manifestation->name);
-            $system->checkboxList($list, $idList);
+                $component->h2($manifestation->name);
+                $system->checkboxList($list, $idList);
+            }
         }
 
         $system->checkboxAll();

@@ -10,6 +10,10 @@ if($sitemap->id) {
         default:
             $imperfection->view();
             break;
+
+        case 'edit':
+            $imperfection->put();
+            break;
     }
 } else {
     $component->title('Imperfection');

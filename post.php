@@ -581,6 +581,26 @@ function switch_basic($do) {
     {
         default: break;
 
+        case 'basic--post':
+            $result = $curl->post($POST_CONTEXT, $POST_DATA, $USER_TOKEN);
+            $POST_ID = $result['id'];
+            break;
+
+        case 'basic--put':
+            print_r($POST_CONTEXT.'/id/'.$POST_ID); echo '<br>';
+            print_r($POST_DATA); echo '<br>';
+            print_r($USER_TOKEN); echo '<br>';
+
+            $result = $curl->put($POST_CONTEXT.'/id/'.$POST_ID, $POST_DATA, $USER_TOKEN);
+
+            print_r($result);
+            break;
+
+        case 'basic--delete':
+            $curl->delete($POST_CONTEXT.'/id/'.$POST_ID, null, $USER_TOKEN);
+            break;
+
+
         case 'basic--expertise--post':
             $result = $curl->post('expertise', $POST_DATA, $USER_TOKEN);
             $POST_ID = $result['id'];

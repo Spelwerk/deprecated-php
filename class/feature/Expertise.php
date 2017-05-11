@@ -63,7 +63,23 @@ class Expertise {
         $this->dice = intval($this->start) + intval($this->level) - 1;
     }
 
-    public function put() {} //todo
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $form->formStart([
+                'do' => 'basic--put',
+                'return' => 'content/expertise',
+                'context' => 'expertise',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
 
     public function view() {
         global $component;
@@ -78,8 +94,8 @@ class Expertise {
         $component->p('Manifestation: '.$this->manifestationName);
 
         if($this->isOwner) {
-            //$component->h1('Manage');
-            //todo link to put();
+            $component->h1('Manage');
+            $component->linkButton('/content/expertise/'.$this->id.'/edit','Edit');
             //todo link to delete();
         }
     }

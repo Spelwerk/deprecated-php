@@ -39,7 +39,23 @@ class Skill {
         $this->value = isset($data['value']) ? $data['value'] : 0;
     }
 
-    public function put() {} //todo
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $form->formStart([
+                'do' => 'basic--put',
+                'return' => 'content/skill',
+                'context' => 'skill',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
 
     public function view() {
         global $component;
@@ -52,9 +68,9 @@ class Skill {
         $component->p('Species ID: '.$this->species); //todo api return name
 
         if($this->isOwner) {
-            //$component->h1('Manage');
-            //todo link to put();
+            $component->h1('Manage');
+            $component->linkButton('/content/skill/'.$this->id.'/edit','Edit');
             //todo link to delete();
         }
-    } //todo
+    }
 }

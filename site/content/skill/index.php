@@ -10,6 +10,10 @@ if($sitemap->id) {
         default:
             $skill->view();
             break;
+
+        case 'edit':
+            $skill->put();
+            break;
     }
 } else {
     $component->title('Skill');
