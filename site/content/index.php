@@ -3,6 +3,7 @@
 $component->title('Content');
 
 $component->linkButton('/content/background','Background');
+$component->linkButton('/content/bionic','Bionic');
 $component->linkButton('/content/expertise','Expertise');
 $component->linkButton('/content/focus','Focus');
 $component->linkButton('/content/gift','Gift');

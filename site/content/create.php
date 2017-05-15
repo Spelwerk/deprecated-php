@@ -5,6 +5,7 @@ switch($sitemap->context)
     default:
         $component->title('Create');
         $component->linkButton('/content/create/background','Background');
+        $component->linkButton('/content/create/bionic','Bionic');
         $component->linkButton('/content/create/expertise','Expertise');
         $component->linkButton('/content/create/focus','Focus');
         $component->linkButton('/content/create/gift','Gift');
@@ -17,6 +18,10 @@ switch($sitemap->context)
 
     case 'background':
         $system->createBackground();
+        break;
+
+    case 'bionic':
+        $system->createBionic();
         break;
 
     case 'expertise':

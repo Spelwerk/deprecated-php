@@ -582,11 +582,12 @@ class World {
         $manifestationArray = $this->getManifestation();
 
         $form->formStart([
-            'do' => 'world--has--add',
+            'do' => 'basic--has--post',
             'return' => 'content/world',
             'returnafter' => 'background',
             'id' => $this->id,
-            'context' => 'background'
+            'context' => 'world',
+            'context2' => 'background'
         ]);
 
         $system->checkboxList($system->getBackground(), $idList);
@@ -627,11 +628,12 @@ class World {
         $manifestationArray = $this->getManifestation();
 
         $form->formStart([
-            'do' => 'world--has--add',
+            'do' => 'basic--has--post',
             'return' => 'content/world',
             'returnafter' => 'expertise',
             'id' => $this->id,
-            'context' => 'expertise'
+            'context' => 'world',
+            'context2' => 'expertise'
         ]);
 
         foreach($skillArray as $skill) {
@@ -668,11 +670,12 @@ class World {
         $skillArray = $this->getSkill();
 
         $form->formStart([
-            'do' => 'world--has--add',
+            'do' => 'basic--has--post',
             'return' => 'content/world',
             'returnafter' => 'gift',
             'id' => $this->id,
-            'context' => 'gift'
+            'context' => 'world',
+            'context2' => 'gift'
         ]);
 
         $system->checkboxList($system->getGift(), $idList);
@@ -718,11 +721,12 @@ class World {
         $manifestationArray = $this->getManifestation();
 
         $form->formStart([
-            'do' => 'world--has--add',
+            'do' => 'basic--has--post',
             'return' => 'content/world',
             'returnafter' => 'imperfection',
             'id' => $this->id,
-            'context' => 'imperfection'
+            'context' => 'world',
+            'context2' => 'imperfection'
         ]);
 
         $system->checkboxList($system->getImperfection(), $idList);
@@ -767,11 +771,12 @@ class World {
         $skillArray = $this->getSkill();
 
         $form->formStart([
-            'do' => 'world--has--add',
+            'do' => 'basic--has--post',
             'return' => 'content/world',
             'returnafter' => 'milestone',
             'id' => $this->id,
-            'context' => 'milestone'
+            'context' => 'world',
+            'context2' => 'milestone'
         ]);
 
         $system->checkboxList($system->getMilestone(), $idList);
@@ -818,6 +823,7 @@ class World {
 
     public function postProtection() {
         global $system;
+
         $this->checkList('protection', $system->getProtection(), $system->idList($this->getProtection()));
     }
 
@@ -879,11 +885,12 @@ class World {
         global $form, $system;
 
         $form->formStart([
-            'do' => 'world--has--delete',
+            'do' => 'basic--has--delete',
             'return' => 'content/world',
             'returnafter' => 'skill',
             'id' => $this->id,
-            'context' => 'attribute'
+            'context' => 'world',
+            'context2' => 'attribute'
         ]);
 
         $system->checkboxList($this->getAttribute('/type/'.$this->skillAttributeType.'/special'));
@@ -1005,8 +1012,8 @@ class World {
     private function checkList($relationName, $list, $idList = null, $do = null) {
         global $system;
 
-        $do = isset($do) ? $do : 'add';
+        $do = isset($do) ? $do : 'post';
 
-        $system->checkList('world', $this->id, $relationName, $do, $list, $idList);
+        $system->contentSelectList('world', $relationName, $do, $this->id, $list, $idList);
     }
 }

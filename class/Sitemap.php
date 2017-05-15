@@ -138,6 +138,13 @@ class Sitemap {
                 $this->extra = $this->command4;
                 break;
 
+            case 'bionic':
+                $this->page = 'site/content/bionic/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
             case 'expertise':
                 $this->page = 'site/content/expertise/index.php';
                 $this->id = $this->command2;

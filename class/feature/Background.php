@@ -43,8 +43,9 @@ class Background {
             global $component, $form;
 
             $form->formStart([
-                'do' => 'background--put',
+                'do' => 'basic--put',
                 'return' => 'content/background',
+                'context' => 'background',
                 'id' => $this->id
             ]);
             $component->wrapStart();
@@ -126,16 +127,18 @@ class Background {
 
         $component->h1('Add Attribute');
         $form->formStart([
-            'do' => 'background--attribute',
+            'do' => 'basic--has--value',
             'return' => 'content/background',
             'returnafter' => 'attribute',
+            'context' => 'background',
+            'context2' => 'attribute',
             'id' => $this->id
         ]);
 
         $list = $curl->get('attribute/special/0')['data'];
 
         $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your species to have extra value in?');
+        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your background to have extra value in?');
         $form->number(true,'value','Value',null,null,1,8,1);
         $component->wrapEnd();
 
@@ -147,16 +150,18 @@ class Background {
 
         $component->h1('Add Skill');
         $form->formStart([
-            'do' => 'background--skill',
+            'do' => 'basic--has--value',
             'return' => 'content/background',
             'returnafter' => 'skill',
+            'context' => 'background',
+            'context2' => 'skill',
             'id' => $this->id
         ]);
 
         $list = $curl->get('skill')['data'];
 
         $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your species to have extra value in?');
+        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your background to have extra value in?');
         $form->number(true,'value','Value',null,null,1,8,1);
         $component->wrapEnd();
 
@@ -166,11 +171,15 @@ class Background {
     // DELETE
 
     public function deleteAttribute() {
-        $this->checkList('attribute', $this->getAttribute(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('background','attribute','delete',$this->id,$this->getAttribute());
     }
 
     public function deleteSkill() {
-        $this->checkList('skill', $this->getAttribute(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('background','skill','delete',$this->id,$this->getSkill());
     }
 
     // LIST
@@ -203,15 +212,5 @@ class Background {
 
         $component->linkButton($this->siteLink.'/skill/add','Add');
         $component->linkButton($this->siteLink.'/skill/delete','Delete',true);
-    }
-
-    // PRIVATE
-
-    private function checkList($relationName, $list, $idList = null, $do = null) {
-        global $system;
-
-        $do = isset($do) ? $do : 'add';
-
-        $system->checkList('background', $this->id, $relationName, $do, $list, $idList);
     }
 }

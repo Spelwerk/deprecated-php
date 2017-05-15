@@ -401,8 +401,9 @@ class System {
         $component->title('Create Background');
 
         $form->formStart([
-            'do' => 'background--post',
-            'return' => 'content/background'
+            'do' => 'basic--post',
+            'return' => 'content/background',
+            'context' => 'background'
         ]);
         $component->wrapStart();
         $form->varchar(true,'name','Name');
@@ -412,7 +413,28 @@ class System {
         $form->formEnd();
     }
 
-    public function createBionic() {} //todo
+    public function createBionic() {
+        global $curl, $component, $form;
+
+        $component->title('Create Bionic');
+
+        $bodypartList = $curl->get('bodypart')['data'];
+
+        $form->formStart([
+            'do' => 'basic--post',
+            'return' => 'content/bionic',
+            'context' => 'bionic'
+        ]);
+        $component->wrapStart();
+        $form->select(true,'bodypart_id',$bodypartList,'Body Part','Reference to what area the bionic is.');
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->number(true,'energy','Energy','Amount of energy this bionic has in store to install extra augmentations.',null,0,16);
+        $form->pick(true,'legal','Legality','Will a person be arrested for using this bionic?',null,'Legal','Illegal');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
 
     public function createExpertise() {
         global $curl, $component, $form;
@@ -605,7 +627,7 @@ class System {
         global $component, $form;
 
         $form->formStart([
-            'do' => 'species--post',
+            'do' => 'basic--post',
             'return' => 'content/species'
         ]);
 
@@ -730,7 +752,22 @@ class System {
         }
     }
 
-    public function listBionic() {} //todo
+    public function listBionic() {
+        global $component, $user;
+
+        $userArray = $user->getBionic();
+        $list = $this->getBionic();
+
+        if($userArray) {
+            foreach($userArray as $item) {
+                $component->linkButton('/content/bionic/'.$item->id, $item->name);
+            }
+        }
+
+        foreach($list as $item) {
+            $component->linkButton('/content/bionic/'.$item->id, $item->name);
+        }
+    }
 
     public function listExpertise() {
         global $component, $user;
@@ -1055,6 +1092,24 @@ class System {
         ]);
 
         $system->checkboxList($list, $idList);
+        $system->checkboxAll();
+
+        $form->formEnd();
+    }
+
+    function contentSelectList($tableName, $relationName, $do, $tableId, $tableList, $idList = null) {
+        global $form, $system;
+
+        $form->formStart([
+            'do' => 'basic--has--'.$do,
+            'return' => 'content/'.$tableName,
+            'returnafter' => $relationName,
+            'id' => $tableId,
+            'context' => $tableName,
+            'context2' => $relationName
+        ]);
+
+        $system->checkboxList($tableList, $idList);
         $system->checkboxAll();
 
         $form->formEnd();

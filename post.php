@@ -556,8 +556,24 @@ function world_skill_post() {
 
 // TABLE
 
-function table_has_delete($tableName) {
-    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $curl;
+function table_has_post() {
+    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $POST_CONTEXT2, $curl;
+
+    $postArray = [];
+
+    foreach($POST_DATA as $key => $value) {
+        if($key == $value) {
+            $postArray[] = ['insert_id' => $key];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post, $USER_TOKEN);
+    }
+}
+
+function table_has_delete() {
+    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $POST_CONTEXT2, $curl;
 
     $postArray = [];
 
@@ -567,8 +583,8 @@ function table_has_delete($tableName) {
         }
     }
 
-    foreach($postArray as $post) {
-        $curl->delete($tableName.'/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$post, null, $USER_TOKEN);
+    foreach($postArray as $id) {
+        $curl->delete($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2.'/'.$id, null, $USER_TOKEN);
     }
 }
 
@@ -593,30 +609,17 @@ function switch_basic($do) {
         case 'basic--delete':
             $curl->delete($POST_CONTEXT.'/id/'.$POST_ID, null, $USER_TOKEN);
             break;
-    }
-}
 
-function switch_background($do) {
-    global $curl, $POST_ID, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
-
-    switch($do) {
-        default: break;
-
-        case 'background--post':
-            $result = $curl->post('background', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
+        case 'basic--has--post':
+            table_has_post();
             break;
 
-        case 'background--attribute':
-            $curl->post('background/id/'.$POST_ID.'/attribute', $POST_DATA, $USER_TOKEN);
+        case 'basic--has--delete':
+            table_has_delete();
             break;
 
-        case 'background--skill':
-            $curl->post('background/id/'.$POST_ID.'/skill', $POST_DATA, $USER_TOKEN);
-            break;
-
-        case 'background--has--delete':
-            table_has_delete('species');
+        case 'basic--has--value':
+            $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $POST_DATA, $USER_TOKEN);
             break;
     }
 }
@@ -719,7 +722,7 @@ function switch_person($do) {
             checkError($resultArray);
             break;
 
-        case 'person--attribute--skill':
+        case 'person--skill':
             person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
 
             $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_skill' => 0]);
@@ -887,27 +890,6 @@ function switch_person($do) {
     }
 }
 
-function switch_species($do) {
-    global $curl, $POST_ID, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
-
-    switch($do) {
-        default: break;
-
-        case 'species--post':
-            $result = $curl->post('species', $POST_DATA, $USER_TOKEN);
-            $POST_ID = $result['id'];
-            break;
-
-        case 'species--attribute':
-            $curl->post('species/id/'.$POST_ID.'/attribute', $POST_DATA, $USER_TOKEN);
-            break;
-
-        case 'species--has--delete':
-            table_has_delete('species');
-            break;
-    }
-}
-
 function switch_story($do) {
     global $curl, $POST_ID, $POST_SECRET, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
@@ -1012,18 +994,6 @@ function switch_world($do) {
             world_attribute_post();
             break;
 
-        case 'world--has--add':
-            world_has_post();
-            break;
-
-        case 'world--has--delete':
-            table_has_delete('world');
-            break;
-
-        case 'world--skill':
-            world_skill_post();
-            break;
-
         case 'world--calculated':
             $curl->put('world/id/'.$POST_ID,['calculated' => 1],$USER_TOKEN);
             break;
@@ -1060,6 +1030,10 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'background':
             switch_background($POST_DO);
+            break;
+
+        case 'bionic':
+            switch_bionic($POST_DO);
             break;
 
         case 'manifestation':

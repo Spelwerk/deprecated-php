@@ -82,8 +82,6 @@ class Species {
         }
     }
 
-    public function delete() {} //todo
-
     // GET
 
     public function getAttribute($override = null) {
@@ -161,9 +159,11 @@ class Species {
 
         $component->h1('Add Attribute');
         $form->formStart([
-            'do' => 'species--attribute',
+            'do' => 'basic--has--value',
             'return' => 'content/species',
             'returnafter' => 'attribute',
+            'context' => 'species',
+            'context2' => 'attribute',
             'id' => $this->id
         ]);
 
@@ -177,16 +177,24 @@ class Species {
         $form->formEnd();
     }
 
-    public function postExpertise() {} // todo
+    public function postExpertise() {} // todo create expertise in created skill specific for species
 
-    public function postSkill() {} // todo
+    public function postGift() {} // todo create gift specific for species
 
-    public function postWeapon() {} // todo
+    public function postImperfection() {} // todo create imperfection specific for species
+
+    public function postMilestone() {} // todo create milestone specific for species
+
+    public function postSkill() {} // todo create skill specific for species
+
+    public function postWeapon() {} // todo create weaponry specific for species
 
     // DELETE
 
     public function deleteAttribute() {
-        $this->checkList('attribute', $this->getAttribute(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('species','attribute','delete',$this->id,$this->getAttribute());
     }
 
     public function deleteExpertise() {} // todo
@@ -194,7 +202,9 @@ class Species {
     public function deleteSkill() {} // todo
 
     public function deleteWeapon() {
-        $this->checkList('weapon', $this->getWeapon(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('species','weapon','delete',$this->id,$this->getWeapon());
     }
 
     // LIST
@@ -212,15 +222,5 @@ class Species {
 
         $component->linkButton($this->siteLink.'/attribute/add','Add');
         $component->linkButton($this->siteLink.'/attribute/delete','Delete',true);
-    }
-
-    // PRIVATE
-
-    private function checkList($relationName, $list, $idList = null, $do = null) {
-        global $system;
-
-        $do = isset($do) ? $do : 'add';
-
-        $system->checkList('species', $this->id, $relationName, $do, $list, $idList);
     }
 }

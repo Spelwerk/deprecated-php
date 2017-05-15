@@ -781,7 +781,7 @@ class Person {
         $currentList = $this->getAttribute($this->world->skillAttributeType);
 
         $form->formStart([
-            'do' => 'person--attribute--skill',
+            'do' => 'person--skill',
             'id' => $this->id,
             'secret' => $this->secret,
             'return' => 'play/person/id'
