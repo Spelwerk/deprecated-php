@@ -18,6 +18,30 @@ if($sitemap->id) {
         case 'attribute':
             require_once('./site/content/species/attribute.php');
             break;
+
+        case 'background':
+            require_once('./site/content/species/background.php');
+            break;
+
+        case 'expertise':
+            require_once('./site/content/species/expertise.php');
+            break;
+
+        case 'gift':
+            require_once('./site/content/species/gift.php');
+            break;
+
+        case 'imperfection':
+            require_once('./site/content/species/imperfection.php');
+            break;
+
+        case 'milestone':
+            require_once('./site/content/species/milestone.php');
+            break;
+
+        case 'skill':
+            require_once('./site/content/species/skill.php');
+            break;
     }
 } else {
     $component->title('Species');

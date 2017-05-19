@@ -37,6 +37,6 @@ class Doctrine {
 
         $this->manifestation = $data['manifestation_id'];
 
-        $this->value = $data['value'];
+        $this->value = isset($data['value']) ? $data['value'] : 0;
     }
 }

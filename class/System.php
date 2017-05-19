@@ -395,10 +395,10 @@ class System {
 
     public function createAugmentation() {} //todo
 
-    public function createBackground() {
+    public function createBackground($species = null, $manifestation = null) {
         global $component, $form;
 
-        $component->title('Create Background');
+        $component->h1('Create Background');
 
         $form->formStart([
             'do' => 'basic--post',
@@ -410,13 +410,21 @@ class System {
         $form->text(false,'description','Description');
         $component->wrapEnd();
 
+        if($species) {
+            $form->hidden('species_id',$species);
+        }
+
+        if($manifestation) {
+            $form->hidden('manifestation_id',$manifestation);
+        }
+
         $form->formEnd();
     }
 
     public function createBionic() {
         global $curl, $component, $form;
 
-        $component->title('Create Bionic');
+        $component->h1('Create Bionic');
 
         $bodypartList = $curl->get('bodypart')['data'];
 
@@ -436,12 +444,19 @@ class System {
         $form->formEnd();
     }
 
-    public function createExpertise() {
+    public function createExpertise($species = null) {
         global $curl, $component, $form;
 
-        $component->title('Create Expertise');
+        $component->h1('Create Expertise');
 
-        $list = $curl->get('skill')['data'];
+        $list = null;
+        $route = 'skill';
+
+        if($species) {
+            $route = 'skill/species/'.$species;
+        }
+
+        $list = $curl->get($route)['data'];
 
         $form->formStart([
             'do' => 'basic--post',
@@ -454,42 +469,29 @@ class System {
         $form->text(false,'description','Description');
         $component->wrapEnd();
 
-        $form->formEnd();
-    }
-
-    public function createFocus() {
-        global $curl, $component, $form;
-
-        $component->title('Create Focus');
-
-        $manifestationList = $curl->get('manifestation')['data'];
-        $attributeList = $curl->get('attribute/special/0')['data'];
-
-        $form->formStart([
-            'do' => 'basic--post',
-            'return' => 'content/focus',
-            'context' => 'focus'
-        ]);
-        $component->wrapStart();
-        $form->select(true,'manifestation_id',$manifestationList,'Manifestation','All focuses are tied to a manifestation.');
-        $form->varchar(true,'name','Name');
-        $form->text(false,'description','Description');
-
-        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
-        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
-
-        $component->wrapEnd();
+        if($species) {
+            $form->hidden('species_id',$species);
+        }
 
         $form->formEnd();
     }
 
-    public function createGift() {
+    public function createGift($species = null, $manifestation = null) {
         global $curl, $component, $form;
 
-        $component->title('Create Gift');
+        $component->h1('Create Gift');
 
-        $skillList = $curl->get('skill')['data'];
+        $skillListPrimary = $curl->get('skill')['data'];
+        $skillListSpecies = [];
         $attributeList = $curl->get('attribute/special/0')['data'];
+
+        $skillList = null;
+
+        if($species) {
+            $skillListSpecies = $curl->get('skill/species/'.$species)['data'];
+        }
+
+        $skillList = array_merge($skillListPrimary, $skillListSpecies);
 
         $form->formStart([
             'do' => 'basic--post',
@@ -508,13 +510,21 @@ class System {
 
         $component->wrapEnd();
 
+        if($species) {
+            $form->hidden('species_id',$species);
+        }
+
+        if($manifestation) {
+            $form->hidden('manifestation_id',$manifestation);
+        }
+
         $form->formEnd();
     }
 
-    public function createImperfection() {
+    public function createImperfection($species = null, $manifestation = null) {
         global $component, $form;
 
-        $component->title('Create Imperfection');
+        $component->h1('Create Imperfection');
 
         $form->formStart([
             'do' => 'basic--post',
@@ -526,15 +536,41 @@ class System {
         $form->text(false,'description','Description');
         $component->wrapEnd();
 
+        if($species) {
+            $form->hidden('species_id',$species);
+        }
+
+        if($manifestation) {
+            $form->hidden('manifestation_id',$manifestation);
+        }
+
         $form->formEnd();
     }
 
-    public function createManifestation() {} //todo
+    public function createManifestation() {
+        global $component, $form;
 
-    public function createMilestone() {
+        $component->h1('Create Manifestation');
+
+        $form->formStart([
+            'do' => 'basic--post',
+            'return' => 'content/manifestation',
+            'context' => 'manifestation'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->varchar(true,'power','Power','A manifestation uses a power of some sort. What is the catalyst of your manifestation?');
+        $form->varchar(true,'skill','Skill','A manifestation needs to be controlled by something, a skill. What is the name of that skill?');
+        $component->wrapEnd();
+
+        $form->formEnd();
+    }
+
+    public function createMilestone($background = null, $species = null, $manifestation = null) {
         global $curl, $component, $form;
 
-        $component->title('Create Milestone');
+        $component->h1('Create Milestone');
 
         $skillList = $curl->get('skill')['data'];
         $attributeList = $curl->get('attribute/special/0')['data'];
@@ -558,6 +594,18 @@ class System {
 
         $component->wrapEnd();
 
+        if($species) {
+            $form->hidden('background_id',$background);
+        }
+
+        if($species) {
+            $form->hidden('species_id',$species);
+        }
+
+        if($manifestation) {
+            $form->hidden('manifestation_id',$manifestation);
+        }
+
         $form->formEnd();
     }
 
@@ -565,21 +613,21 @@ class System {
         global $component, $form;
 
         if(!isset($world) && !isset($species)) {
-            $component->title('Create');
-            $component->h1('Select World');
+            $component->h1('Create Person');
+            $component->h2('Select World');
             $component->subtitle('You will need to select a world in which your character exists.');
 
             $this->selectWorld('play/person/new');
 
         } else if(isset($world) && !isset($species)) {
-            $component->title('Create');
-            $component->h1('Select Species');
+            $component->h1('Create Person');
+            $component->h2('Select Species');
 
             $this->selectSpecies('play/person/new', $world);
 
         } else if(isset($world) && isset($species)) {
-            $component->title('Create');
-            $component->h1('Nickname, Age, and Occupation');
+            $component->h1('Create Person');
+            $component->h2('Nickname, Age, and Occupation');
 
             $component->wrapStart();
             $form->formStart([
@@ -605,10 +653,10 @@ class System {
 
     public function createProtection() {} //todo
 
-    public function createSkill() {
+    public function createSkill($species = null) {
         global $component, $form;
 
-        $component->title('Create Skill');
+        $component->h1('Create Skill');
 
         $form->formStart([
             'do' => 'basic--post',
@@ -620,11 +668,17 @@ class System {
         $form->text(false,'description','Description');
         $component->wrapEnd();
 
+        if($species) {
+            $form->hidden('species_id',$species);
+        }
+
         $form->formEnd();
     }
 
     public function createSpecies() {
         global $component, $form;
+
+        $component->h1('Create Species');
 
         $form->formStart([
             'do' => 'basic--post',
@@ -653,8 +707,8 @@ class System {
         global $component, $form;
 
         if(!isset($world)) {
-            $component->title('Create');
-            $component->h1('Select World');
+            $component->h1('Create Story');
+            $component->h2('Select World');
             $component->subtitle('You will need to select a world in which your story takes place. It will also enable the system to understand what persons you can add.');
 
             $this->selectWorld('play/story/new');
@@ -680,12 +734,12 @@ class System {
         }
     }
 
-    public function createWeapon() {} //todo
+    public function createWeapon($species = null) {} //todo
 
     public function createWorld() {
         global $component, $form;
 
-        $component->title('Create World');
+        $component->h1('Create World');
 
         $form->formStart([
             'do' => 'world--post',
@@ -742,10 +796,13 @@ class System {
         $list = $this->getBackground();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/background/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/background/'.$item->id, $item->name);
@@ -759,10 +816,13 @@ class System {
         $list = $this->getBionic();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/bionic/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/bionic/'.$item->id, $item->name);
@@ -778,10 +838,13 @@ class System {
         $manifestationArray = $this->getManifestation();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/expertise/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/expertise/'.$item->id, $item->name);
@@ -815,10 +878,13 @@ class System {
         $manifestationArray = $this->getManifestation();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/focus/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($manifestationArray as $manifestation) {
             $list = $this->getFocus('/manifestation/'.$manifestation->id);
@@ -841,10 +907,13 @@ class System {
         $skillArray = $this->getSkill();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/gift/'.$item->id, $item->name);
@@ -888,17 +957,38 @@ class System {
         $list = $this->getImperfection();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/imperfection/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/imperfection/'.$item->id, $item->name);
         }
     }
 
-    public function listManifestation() {} //todo
+    public function listManifestation() {
+        global $component, $user;
+
+        $userArray = $user->getManifestation();
+        $list = $this->getManifestation();
+
+        if($userArray) {
+            $component->h2('Your Content');
+            foreach($userArray as $item) {
+                $component->linkButton('/content/manifestation/'.$item->id, $item->name);
+            }
+        }
+
+        $component->h2('Canon');
+
+        foreach($list as $item) {
+            $component->linkButton('/content/manifestation/'.$item->id, $item->name);
+        }
+    }
 
     public function listMilestone() {
         global $component, $user;
@@ -911,10 +1001,13 @@ class System {
         $skillArray = $this->getSkill();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/milestone/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/milestone/'.$item->id, $item->name);
@@ -970,10 +1063,13 @@ class System {
         $list = $this->getSkill();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/skill/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/skill/'.$item->id, $item->name);
@@ -987,10 +1083,13 @@ class System {
         $list = $this->getSpecies();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/species/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/species/'.$item->id, $item->name);
@@ -1006,10 +1105,13 @@ class System {
         $list = $this->getWorld();
 
         if($userArray) {
+            $component->h2('Your Content');
             foreach($userArray as $item) {
                 $component->linkButton('/content/world/'.$item->id, $item->name);
             }
         }
+
+        $component->h2('Canon');
 
         foreach($list as $item) {
             $component->linkButton('/content/world/'.$item->id, $item->name);

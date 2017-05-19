@@ -151,12 +151,6 @@ class Sitemap {
                 $this->context = $this->command3;
                 break;
 
-            case 'focus':
-                $this->page = 'site/content/focus/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
-                break;
-
             case 'gift':
                 $this->page = 'site/content/gift/index.php';
                 $this->id = $this->command2;
@@ -167,6 +161,13 @@ class Sitemap {
                 $this->page = 'site/content/imperfection/index.php';
                 $this->id = $this->command2;
                 $this->context = $this->command3;
+                break;
+
+            case 'manifestation':
+                $this->page = 'site/content/manifestation/index.php';
+                $this->id = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'milestone':

@@ -38,8 +38,9 @@ class Species {
         global $form, $component;
 
         $form->formStart([
-            'do' => 'species--put',
-            'return' => 'content/species/id',
+            'do' => 'basic--put',
+            'return' => 'content/species',
+            'context' => 'species',
             'id' => $this->id
         ]);
 
@@ -75,10 +76,16 @@ class Species {
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            $component->linkButton($this->siteLink.'/attribute','Add Attribute');
-            //$component->linkButton($species->siteLink.'/skill','Skill');
-            //$component->linkButton($species->siteLink.'/expertise','Expertise');
-            //$component->linkButton($species->siteLink.'/weapon','Weapon');
+            $component->linkButton($this->siteLink.'/attribute','Attribute');
+            //$component->linkButton($this->siteLink.'/weapon','Weapon');
+
+            $component->h2('Create');
+            $component->linkButton($this->siteLink.'/background','Create Background');
+            $component->linkButton($this->siteLink.'/expertise','Create Expertise');
+            $component->linkButton($this->siteLink.'/gift','Create Gift');
+            $component->linkButton($this->siteLink.'/imperfection','Create Imperfection');
+            $component->linkButton($this->siteLink.'/milestone','Create Milestone');
+            $component->linkButton($this->siteLink.'/skill','Create Skill');
         }
     }
 
@@ -177,15 +184,41 @@ class Species {
         $form->formEnd();
     }
 
-    public function postExpertise() {} // todo create expertise in created skill specific for species
+    public function postBackground() {
+        global $system;
 
-    public function postGift() {} // todo create gift specific for species
+        $system->createBackground($this->id);
+    }
 
-    public function postImperfection() {} // todo create imperfection specific for species
+    public function postExpertise() {
+        global $system;
 
-    public function postMilestone() {} // todo create milestone specific for species
+        $system->createExpertise($this->id);
+    }
 
-    public function postSkill() {} // todo create skill specific for species
+    public function postGift() {
+        global $system;
+
+        $system->createGift($this->id);
+    }
+
+    public function postImperfection() {
+        global $system;
+
+        $system->createImperfection($this->id);
+    }
+
+    public function postMilestone() {
+        global $system;
+
+        $system->createMilestone(null,$this->id);
+    }
+
+    public function postSkill() {
+        global $system;
+
+        $system->createSkill($this->id);
+    }
 
     public function postWeapon() {} // todo create weaponry specific for species
 

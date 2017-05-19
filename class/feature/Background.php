@@ -72,8 +72,8 @@ class Background {
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            $component->linkButton($this->siteLink.'/attribute','Add Attribute');
-            $component->linkButton($this->siteLink.'/skill','Add Skill');
+            $component->linkButton($this->siteLink.'/attribute','Attribute');
+            $component->linkButton($this->siteLink.'/skill','Skill');
             //todo link to delete();
         }
     }

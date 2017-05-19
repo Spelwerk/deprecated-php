@@ -36,6 +36,8 @@ class Focus {
 
         $this->attribute = $data['attribute_id'];
         $this->attributeValue = $data['attribute_value'];
+
+        $this->siteLink = '/content/focus/'.$this->id;
     }
 
     public function put() {
@@ -70,7 +72,7 @@ class Focus {
 
         if($this->isOwner) {
             $component->h1('Manage');
-            $component->linkButton('/content/focus/'.$this->id.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();
         }
     }

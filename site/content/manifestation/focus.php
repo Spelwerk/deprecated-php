@@ -1,20 +1,20 @@
 <?php global $form, $component, $curl, $sitemap, $system, $user;
 
-global $species;
+global $manifestation;
 
-$component->returnButton($species->siteLink);
+$component->returnButton($manifestation->siteLink);
 switch($sitemap->extra)
 {
     default:
-        $species->listAttribute();
+        $manifestation->listFocus();
         break;
 
     case 'add':
-        $species->postAttribute();
+        $manifestation->postFocus();
         break;
 
     case 'delete':
-        $species->deleteAttribute();
+        $manifestation->deleteFocus();
         break;
 }
 ?>
