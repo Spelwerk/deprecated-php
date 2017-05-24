@@ -53,6 +53,8 @@ class Milestone {
 
         $this->loyalty = $data['loyalty_id'];
         $this->loyaltyOccupation = $data['loyalty_occupation'];
+
+        $this->siteLink = '/content/milestone/id/'.$this->id;
     }
 
     public function put() {
@@ -91,7 +93,7 @@ class Milestone {
 
         if($this->isOwner) {
             $component->h1('Manage');
-            $component->linkButton('/content/milestone/'.$this->id.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();
         }
     }

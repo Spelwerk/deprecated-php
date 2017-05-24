@@ -1,25 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $milestone = new Milestone($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Milestone');
+        $component->returnButton('/content');
+        $system->listMilestone();
+        $component->h4('Create');
+        $component->linkButton('/content/milestone/create','Create New');
+        break;
 
-    $component->title($milestone->name);
+    case 'create':
+        $system->createMilestone();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $milestone->view();
-            break;
-
-        case 'edit':
-            $milestone->put();
-            break;
-    }
-} else {
-    $component->title('Milestone');
-    $component->returnButton('/content');
-    $system->listMilestone();
-    $component->h4('Create');
-    $component->linkButton('/content/create/milestone','Create New');
+    case 'id':
+        require_once('./site/content/milestone/id.php');
+        break;
 }
 ?>

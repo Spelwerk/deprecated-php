@@ -25,7 +25,6 @@ class Menu {
         $this->addTab('Content', 'Content', '/img/tab-content.png',true);
         $this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
         $this->addTab('User', 'User', '/img/tab-user.png');
-        $this->addTab('Help', 'Help', '/img/tab-help.png');
 
         $menuHome = new MenuList('Home');
         $menuHome->add('Home', '/');
@@ -35,22 +34,13 @@ class Menu {
         $menuPlay->add('Play', '/play');
         $menuPlay->add('Person', '/play/person');
         $menuPlay->add('Story', '/play/story');
-        $menuPlay->add('Companion', '/play/companion',true);
 
         $menuContent = new MenuList('Content',true);
         $menuContent->add('Content', '/content',true);
         $menuContent->add('About', '/content/about',true);
-        $menuContent->add('Manage', '/content/manage',true);
 
         $menuAdmin = new MenuList('Admin', true, true);
         $menuAdmin->add('Admin', '/admin',true,true);
-        $menuAdmin->add('Content', '/admin/content',true,true);
-        $menuAdmin->add('Person', '/admin/person',true,true);
-        $menuAdmin->add('Story', '/admin/story',true,true);
-        $menuAdmin->add('User', '/admin/user',true,true);
-
-        $menuHelp = new MenuList('Help');
-        $menuHelp->add('Help', '#');
 
         $menuUser = new MenuList('User');
         if(!$user->isActive) {
@@ -63,7 +53,6 @@ class Menu {
 
         $this->addList($menuAdmin);
         $this->addList($menuContent);
-        $this->addList($menuHelp);
         $this->addList($menuHome);
         $this->addList($menuPlay);
         $this->addList($menuUser);

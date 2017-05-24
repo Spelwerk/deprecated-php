@@ -31,7 +31,7 @@ class Species {
         $this->multiplySkill = intval($data['multiply_skill']);
         $this->multiplyExpertise = intval($data['multiply_expertise']);
 
-        $this->siteLink = '/content/species/'.$this->id;
+        $this->siteLink = '/content/species/id/'.$this->id;
     }
 
     public function put() {

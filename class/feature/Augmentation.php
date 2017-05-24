@@ -47,6 +47,8 @@ class Augmentation {
         $this->weapon = $data['weapon_id'];
 
         $this->quality = isset($data['quality_id']) ? $data['quality_id'] : null;
+
+        $this->siteLink = '/content/augmentation/id/'.$this->id;
     }
 }
 

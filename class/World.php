@@ -101,10 +101,10 @@ class World {
             ? $data['supernatural_name']
             : null;
 
-        $this->siteLink = '/content/world/'.$this->id;
+        $this->siteLink = '/content/world/id/'.$this->id;
     }
 
-    public function put(){} //todo
+    public function put() {} //todo
 
     public function view() {
         global $form, $component, $curl;
@@ -194,10 +194,12 @@ class World {
 
                 if($readyToCalculate) {
                     $form->formStart([
-                        'do' => 'world--calculated',
-                        'id' => $this->id,
-                        'return' => 'content/world'
+                        'do' => 'basic--put',
+                        'return' => 'content/world',
+                        'context' => 'world',
+                        'id' => $this->id
                     ]);
+                    $form->hidden('calculated',1);
                     $form->formEnd(false,'This world is ready to play. Press here!');
                 }
             } else {
@@ -514,7 +516,7 @@ class World {
 
         $component->h1('Attribute Defaults');
         $form->formStart([
-            'do' => 'world--attribute',
+            'do' => 'basic--world--attribute',
             'id' => $this->id,
             'return' => 'content/world',
             'returnafter' => 'attribute'
@@ -616,7 +618,8 @@ class World {
 
     public function postBionic() {
         global $system;
-        $this->checkList('bionic', $system->getBionic(), $system->idList($this->getBionic()));
+
+        $system->contentSelectList('world', 'bionic', 'post', $this->id, $system->getBionic(), $system->idList($this->getBionic()));
     }
 
     public function postExpertise() {
@@ -757,7 +760,8 @@ class World {
 
     public function postManifestation() {
         global $system;
-        $this->checkList('manifestation', $system->getManifestation(), $system->idList($this->getManifestation()));
+
+        $system->contentSelectList('world', 'manifestation', 'post', $this->id, $system->getManifestation(), $system->idList($this->getManifestation()));
     }
 
     public function postMilestone() {
@@ -824,87 +828,94 @@ class World {
     public function postProtection() {
         global $system;
 
-        $this->checkList('protection', $system->getProtection(), $system->idList($this->getProtection()));
+        $system->contentSelectList('world', 'protection', 'post', $this->id, $system->getProtection(), $system->idList($this->getProtection()));
     }
 
     public function postSkill() {
         global $system;
 
-        $this->checkList('skill', $system->getSkill(), $system->idList($this->getSkill()));
+        $system->contentSelectList('world', 'skill', 'post', $this->id, $system->getSkill(), $system->idList($this->getSkill()));
     }
 
     public function postSpecies() {
         global $system;
 
-        $override = '/playable';
-
-        $this->checkList('species', $system->getSpecies($override), $system->idList($this->getSpecies()));
+        $system->contentSelectList('world', 'species', 'post', $this->id, $system->getSpecies('/playable'), $system->idList($this->getSpecies()));
     }
 
     public function postWeapon() {
         global $system;
 
-        $this->checkList('weapon', $system->getWeapon(), $system->idList($this->getWeapon()));
+        $system->contentSelectList('world', 'weapon', 'post', $this->id, $system->getWeapon(), $system->idList($this->getWeapon()));
     }
 
     // DELETE
 
     public function deleteBionic() {
-        $this->checkList('bionic', $this->getBionic(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'bionic', 'delete', $this->id, $this->getBionic());
     }
 
     public function deleteBackground() {
-        $this->checkList('background', $this->getBackground(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'background', 'delete', $this->id, $this->getBackground());
     }
 
     public function deleteExpertise() {
-        $this->checkList('expertise', $this->getExpertise('/special'), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'expertise', 'delete', $this->id, $this->getExpertise());
     }
 
     public function deleteGift() {
-        $this->checkList('gift', $this->getGift('/special'), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'gift', 'delete', $this->id, $this->getGift());
     }
 
     public function deleteImperfection() {
-        $this->checkList('imperfection', $this->getImperfection('/special'), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'imperfection', 'delete', $this->id, $this->getImperfection());
     }
 
     public function deleteManifestation() {
-        $this->checkList('manifestation', $this->getManifestation(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'manifestation', 'delete', $this->id, $this->getManifestation());
     }
 
     public function deleteMilestone() {
-        $this->checkList('milestone', $this->getMilestone(), null, 'milestone');
+        global $system;
+
+        $system->contentSelectList('world', 'milestone', 'delete', $this->id, $this->getMilestone());
     }
 
     public function deleteProtection() {
-        $this->checkList('protection', $this->getProtection(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'protection', 'delete', $this->id, $this->getProtection());
     }
 
     public function deleteSkill() {
-        global $form, $system;
 
-        $form->formStart([
-            'do' => 'basic--has--delete',
-            'return' => 'content/world',
-            'returnafter' => 'skill',
-            'id' => $this->id,
-            'context' => 'world',
-            'context2' => 'attribute'
-        ]);
+        global $system;
 
-        $system->checkboxList($this->getAttribute('/type/'.$this->skillAttributeType.'/special'));
-        $system->checkboxAll();
-
-        $form->formEnd();
+        $system->contentSelectList('world', 'skill', 'delete', $this->id, $this->getSkill());
     }
 
     public function deleteSpecies() {
-        $this->checkList('species', $this->getSpecies(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'species', 'delete', $this->id, $this->getSpecies());
     }
 
     public function deleteWeapon() {
-        $this->checkList('weapon', $this->getWeapon(), null, 'delete');
+        global $system;
+
+        $system->contentSelectList('world', 'weapon', 'delete', $this->id, $this->getWeapon());
     }
 
     // LIST
@@ -1005,15 +1016,5 @@ class World {
         global $system;
 
         $system->listRelation($this->getWeapon(), 'weapon', $this->siteLink);
-    }
-
-    // PRIVATE
-
-    private function checkList($relationName, $list, $idList = null, $do = null) {
-        global $system;
-
-        $do = isset($do) ? $do : 'post';
-
-        $system->contentSelectList('world', $relationName, $do, $this->id, $list, $idList);
     }
 }

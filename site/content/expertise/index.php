@@ -1,25 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $expertise = new Expertise($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Expertise');
+        $component->returnButton('/content');
+        $system->listExpertise();
+        $component->h4('Create');
+        $component->linkButton('/content/expertise/create','Create New');
+        break;
 
-    $component->title($expertise->name);
+    case 'create':
+        $system->createExpertise();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $expertise->view();
-            break;
-
-        case 'edit':
-            $expertise->put();
-            break;
-    }
-} else {
-    $component->title('Expertise');
-    $component->returnButton('/content');
-    $system->listExpertise();
-    $component->h4('Create');
-    $component->linkButton('/content/create/expertise','Create New');
+    case 'id':
+        require_once('./site/content/expertise/id.php');
+        break;
 }
 ?>

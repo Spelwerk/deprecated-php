@@ -61,6 +61,8 @@ class Expertise {
         $this->doctrine = $data['doctrine_id'];
 
         $this->dice = intval($this->start) + intval($this->level) - 1;
+
+        $this->siteLink = '/content/expertise/id/'.$this->id;
     }
 
     public function put() {
@@ -95,7 +97,7 @@ class Expertise {
 
         if($this->isOwner) {
             $component->h1('Manage');
-            $component->linkButton('/content/expertise/'.$this->id.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();
         }
     }

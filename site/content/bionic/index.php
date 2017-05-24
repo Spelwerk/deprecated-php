@@ -1,33 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $bionic = new Bionic($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Bionic');
+        $component->returnButton('/content');
+        $system->listBionic();
+        $component->h4('Create');
+        $component->linkButton('/content/bionic/create','Create New');
+        break;
 
-    $component->title($bionic->name);
+    case 'create':
+        $system->createBionic();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $bionic->view();
-            break;
-
-        case 'edit':
-            $bionic->put();
-            break;
-
-        case 'attribute':
-            require_once('./site/content/bionic/attribute.php');
-            break;
-
-        case 'augmentation':
-            require_once('./site/content/bionic/augmentation.php');
-            break;
-    }
-} else {
-    $component->title('Bionic');
-    $component->returnButton('/content');
-    $system->listBionic();
-    $component->h4('Create');
-    $component->linkButton('/content/create/bionic','Create New');
+    case 'id':
+        require_once('./site/content/bionic/id.php');
+        break;
 }
 ?>

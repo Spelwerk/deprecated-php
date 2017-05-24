@@ -38,7 +38,7 @@ class Manifestation {
 
         $this->skill = $data['skill_id'];
 
-        $this->siteLink = '/content/manifestation/'.$this->id;
+        $this->siteLink = '/content/manifestation/id/'.$this->id;
     }
 
     public function put() {

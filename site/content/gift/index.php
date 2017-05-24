@@ -1,25 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $gift = new Gift($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Gift');
+        $component->returnButton('/content');
+        $system->listGift();
+        $component->h4('Create');
+        $component->linkButton('/content/gift/create','Create New');
+        break;
 
-    $component->title($gift->name);
+    case 'create':
+        $system->createGift();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $gift->view();
-            break;
-
-        case 'edit':
-            $gift->put();
-            break;
-    }
-} else {
-    $component->title('Gift');
-    $component->returnButton('/content');
-    $system->listGift();
-    $component->h4('Create');
-    $component->linkButton('/content/create/gift','Create New');
+    case 'id':
+        require_once('./site/content/gift/id.php');
+        break;
 }
 ?>

@@ -47,6 +47,8 @@ class Gift {
 
         $this->skill = $data['skill_id'];
         $this->skillValue = $data['skill_value'];
+
+        $this->siteLink = '/content/gift/id/'.$this->id;
     }
 
     public function put() {
@@ -84,7 +86,7 @@ class Gift {
 
         if($this->isOwner) {
             $component->h1('Manage');
-            $component->linkButton('/content/gift/'.$this->id.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();
         }
     }

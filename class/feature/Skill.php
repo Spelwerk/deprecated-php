@@ -37,6 +37,8 @@ class Skill {
         $this->species = $data['species_id'];
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
+
+        $this->siteLink = '/content/skill/id/'.$this->id;
     }
 
     public function put() {
@@ -69,7 +71,7 @@ class Skill {
 
         if($this->isOwner) {
             $component->h1('Manage');
-            $component->linkButton('/content/skill/'.$this->id.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();
         }
     }

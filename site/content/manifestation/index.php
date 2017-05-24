@@ -1,49 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $manifestation = new Manifestation($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Manifestation');
+        $component->returnButton('/content');
+        $system->listManifestation();
+        $component->h4('Create');
+        $component->linkButton('/content/manifestation/create','Create New');
+        break;
 
-    $component->title($manifestation->name);
+    case 'create':
+        $system->createManifestation();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $manifestation->view();
-            break;
-
-        case 'edit':
-            $manifestation->put();
-            break;
-
-        case 'background':
-            require_once('./site/content/manifestation/background.php');
-            break;
-
-        case 'doctrine':
-            require_once('./site/content/manifestation/doctrine.php');
-            break;
-
-        case 'focus':
-            require_once('./site/content/manifestation/focus.php');
-            break;
-
-        case 'gift':
-            require_once('./site/content/manifestation/gift.php');
-            break;
-
-        case 'imperfection':
-            require_once('./site/content/manifestation/imperfection.php');
-            break;
-
-        case 'milestone':
-            require_once('./site/content/manifestation/milestone.php');
-            break;
-    }
-} else {
-    $component->title('Manifestation');
-    $component->returnButton('/content');
-    $system->listManifestation();
-    $component->h4('Create');
-    $component->linkButton('/content/create/manifestation','Create New');
+    case 'id':
+        require_once('./site/content/manifestation/id.php');
+        break;
 }
 ?>

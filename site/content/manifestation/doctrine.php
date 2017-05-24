@@ -3,7 +3,7 @@
 global $manifestation;
 
 $component->returnButton($manifestation->siteLink);
-switch($sitemap->extra)
+switch($sitemap->context2)
 {
     default:
         $manifestation->listDoctrine();

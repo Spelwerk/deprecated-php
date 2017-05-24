@@ -1,4 +1,4 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component;
 
 $component->title('Content');
 

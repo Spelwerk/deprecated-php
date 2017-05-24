@@ -1,25 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $skill = new Skill($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Skill');
+        $component->returnButton('/content');
+        $system->listSkill();
+        $component->h4('Create');
+        $component->linkButton('/content/skill/create','Create New');
+        break;
 
-    $component->title($skill->name);
+    case 'create':
+        $system->createSkill();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $skill->view();
-            break;
-
-        case 'edit':
-            $skill->put();
-            break;
-    }
-} else {
-    $component->title('Skill');
-    $component->returnButton('/content');
-    $system->listSkill();
-    $component->h4('Create');
-    $component->linkButton('/content/create/skill','Create New');
+    case 'id':
+        require_once('./site/content/skill/id.php');
+        break;
 }
 ?>

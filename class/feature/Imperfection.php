@@ -37,6 +37,8 @@ class Imperfection {
         $this->species = $data['species_id'];
 
         $this->manifestation = $data['manifestation_id'];
+
+        $this->siteLink = '/content/imperfection/id/'.$this->id;
     }
 
     public function put() {
@@ -70,7 +72,7 @@ class Imperfection {
 
         if($this->isOwner) {
             $component->h1('Manage');
-            $component->linkButton('/content/imperfection/'.$this->id.'/edit','Edit');
+            $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();
         }
     }

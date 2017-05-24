@@ -1,33 +1,20 @@
-<?php global $form, $component, $curl, $sitemap, $system, $user;
+<?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $background = new Background($sitemap->id);
+switch($sitemap->index) {
+    default:
+        $component->title('Background');
+        $component->returnButton('/content');
+        $system->listBackground();
+        $component->h4('Create');
+        $component->linkButton('/content/background/create','Create New');
+        break;
 
-    $component->title($background->name);
+    case 'create':
+        $system->createBackground();
+        break;
 
-    switch($sitemap->context)
-    {
-        default:
-            $background->view();
-            break;
-
-        case 'edit':
-            $background->put();
-            break;
-
-        case 'attribute':
-            require_once('./site/content/background/attribute.php');
-            break;
-
-        case 'skill':
-            require_once('./site/content/background/skill.php');
-            break;
-    }
-} else {
-    $component->title('Background');
-    $component->returnButton('/content');
-    $system->listBackground();
-    $component->h4('Create');
-    $component->linkButton('/content/create/background','Create New');
+    case 'id':
+        require_once('./site/content/background/id.php');
+        break;
 }
 ?>

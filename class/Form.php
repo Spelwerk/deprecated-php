@@ -371,7 +371,51 @@ class Form {
         echo('<input type="hidden" name="'.$inputType.'--'.$uniqueName.'" value="'.$value.'"/>');
     }
 
-    // LISTS
+    // LIST
+
+    public function radioList($itemList, $options = null) {
+        $idList = isset($options['idList'])
+            ? $options['idList']
+            : null;
+
+        $currentId = isset($options['currentId'])
+            ? $options['currentId']
+            : null;
+
+        $tableName = isset($options['tableName'])
+            ? $options['tableName']
+            : 'insert_id';
+
+        if(isset($itemList)) {
+            foreach($itemList as $item) {
+                $selected = false;
+
+                if(!$idList || !in_array($item->id, $idList)) {
+                    if($item->id == $currentId) {
+                        $selected = true;
+                    }
+
+                    $this->radio($tableName, $item->name, $item->description, $item->id, $selected);
+                }
+            }
+        }
+    }
+
+    public function checkboxList($itemList, $options = null) {
+        $idList = isset($options['idList'])
+            ? $options['idList']
+            : null;
+
+        if(isset($itemList)) {
+            foreach($itemList as $item) {
+                if(!$idList || !in_array($item->id, $idList)) {
+                    $this->checkbox($item->name, $item->description, $item->id);
+                }
+            }
+        }
+    }
+
+    // LIST COMPONENTS
 
     public function purchase($uniqueName, $label = null, $labelDescription = null, $labelIcon = null, $uniqueId = null, $minimum = null, $maximum = null, $value = null) {
         $labelName = isset($label)

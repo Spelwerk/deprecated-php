@@ -38,5 +38,7 @@ class Doctrine {
         $this->manifestation = $data['manifestation_id'];
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
+
+        $this->siteLink = '/content/doctrine/id/'.$this->id;
     }
 }

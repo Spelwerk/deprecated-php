@@ -11,7 +11,9 @@ class Sitemap {
 
     var $requestURI, $scriptName, $command;
 
-    var $page, $id, $hash, $thing, $do;
+    var $page, $id, $hash, $secret, $thing, $do;
+
+    var $index;
 
     var $context, $context2, $context3;
 
@@ -95,6 +97,7 @@ class Sitemap {
             default:
                 $this->page = 'page/home.php';
                 $this->menuID = 'Home';
+                $this->menuLink = 'Home';
                 break;
 
             case 'info':
@@ -120,80 +123,92 @@ class Sitemap {
     }
 
     function switch_content() {
+        $this->menuLink = 'Content';
+
         switch($this->command1)
         {
             default:
                 $this->page = 'site/content/index.php';
                 break;
 
-            case 'create':
-                $this->page = 'site/content/create.php';
-                $this->context = $this->command2;
-                break;
-
             case 'background':
                 $this->page = 'site/content/background/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'bionic':
                 $this->page = 'site/content/bionic/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'expertise':
                 $this->page = 'site/content/expertise/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'gift':
                 $this->page = 'site/content/gift/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'imperfection':
                 $this->page = 'site/content/imperfection/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'manifestation':
                 $this->page = 'site/content/manifestation/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'milestone':
                 $this->page = 'site/content/milestone/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'skill':
                 $this->page = 'site/content/skill/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'species':
                 $this->page = 'site/content/species/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
 
             case 'world':
                 $this->page = 'site/content/world/index.php';
-                $this->id = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->context = $this->command4;
+                $this->context2 = $this->command5;
                 break;
         }
     }
@@ -203,247 +218,30 @@ class Sitemap {
 
         switch($switch) {
             default:
-                $this->page = 'page/play/play.php';
                 $this->menuLink = 'Play';
+                $this->page = 'site/play/index.php';
                 break;
 
             case 'person':
-                $this->switch_play_person();
                 $this->menuLink = 'Person';
+                $this->page = 'site/play/person/index.php';
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->secret = $this->command4;
+                $this->context = $this->command5;
+                $this->context2 = $this->command6;
+                $this->context3 = $this->command7;
                 break;
 
             case 'story':
-                $this->switch_play_story();
                 $this->menuLink = 'Story';
-                break;
-        }
-    }
-
-    function switch_play_person() {
-        $switch = $this->command2;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/person/person.php';
-                break;
-
-            case 'new':
-                $this->page = 'page/play/person/new.php';
-                break;
-
-            case 'id':
-                $this->switch_play_person_id();
-                break;
-        }
-    }
-
-    function switch_play_person_id() {
-        $id = $this->command3;
-        $hash = $this->command4;
-        $switch = $this->command5;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/person/id.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'disease':
-                $this->page = 'page/play/person/wound/disease.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'cheat':
-                $this->switch_play_person_id_cheat();
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'edit':
-                $this->switch_play_person_id_edit();
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'sanity':
-                $this->page = 'page/play/person/wound/sanity.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'wound':
-                $this->page = 'page/play/person/wound/wound.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-        }
-    }
-
-    function switch_play_person_id_cheat() {
-        $switch = $this->command6;
-        $context = $this->command7;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/person/cheat/cheat.php';
-                break;
-
-            case 'attribute':
-                $this->page = 'page/play/person/cheat/attribute.php';
-                $this->unique = $context;
-                break;
-
-            case 'doctrine':
-                $this->page = 'page/play/person/cheat/doctrine.php';
-                break;
-
-            case 'expertise':
-                $this->page = 'page/play/person/cheat/expertise.php';
-                break;
-
-            case 'feature':
-                $this->page = 'page/play/person/cheat/feature.php';
-                $this->context = $context;
-                break;
-
-            case 'gift':
-                $this->page = 'page/play/person/cheat/gift.php';
-                $this->context = $context;
-                break;
-
-            case 'imperfection':
-                $this->page = 'page/play/person/cheat/imperfection.php';
-                $this->context = $context;
-                break;
-
-            case 'milestone':
-                $this->page = 'page/play/person/cheat/milestone.php';
-                $this->context = $context;
-                break;
-
-            case 'skill':
-                $this->page = 'page/play/person/cheat/skill.php';
-                break;
-        }
-    }
-
-    function switch_play_person_id_edit() {
-        $switch = $this->command6;
-        $context = $this->command7;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/person/edit/edit.php';
-                break;
-
-            case 'augmentation':
-                $this->page = 'page/play/person/edit/augmentation.php';
-                $this->context = $context;
-                break;
-
-            case 'bionic':
-                $this->page = 'page/play/person/edit/bionic.php';
-                break;
-
-            case 'consumable':
-                $this->page = 'page/play/person/edit/consumable.php';
-                $this->context = $context;
-                break;
-
-            case 'description':
-                $this->page = 'page/play/person/edit/description.php';
-                break;
-
-            case 'experience':
-                $this->page = 'page/play/person/edit/experience.php';
-                break;
-
-            case 'expertise':
-                $this->page = 'page/play/person/edit/expertise.php';
-                break;
-
-            case 'milestone':
-                $this->page = 'page/play/person/edit/milestone.php';
-                break;
-
-            case 'protection':
-                $this->page = 'page/play/person/edit/protection.php';
-                $this->context = $context;
-                break;
-
-            case 'skill':
-                $this->page = 'page/play/person/edit/skill.php';
-                break;
-
-            case 'supernatural':
-                $this->page = 'page/play/person/edit/supernatural.php';
-                break;
-
-            case 'weapon':
-                $this->page = 'page/play/person/edit/weapon.php';
-                $this->context = $context;
-                break;
-        }
-    }
-
-    function switch_play_story() {
-        $switch = $this->command2;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/story/story.php';
-                break;
-
-            case 'id':
-                $this->switch_play_story_id();
-                break;
-
-            case 'new':
-                $this->page = 'page/play/story/new.php';
-                break;
-        }
-    }
-
-    function switch_play_story_id() {
-        $id = $this->command3;
-        $hash = $this->command4;
-        $switch = $this->command5;
-        $context = $this->command6;
-
-        switch($switch) {
-            default:
-                $this->page = 'page/play/story/id.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'edit':
-                $this->page = 'page/play/story/edit.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                break;
-
-            case 'location':
-                $this->page = 'page/play/story/location.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->context = $context;
-                break;
-
-            case 'meeting':
-                $this->page = 'page/play/story/meeting.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->context = $context;
-                break;
-
-            case 'person':
-                $this->page = 'page/play/story/person.php';
-                $this->id = $id;
-                $this->hash = $hash;
-                $this->context = $context;
+                $this->page = 'site/play/story/index.php';
+                $this->index = $this->command2;
+                $this->id = $this->command3;
+                $this->secret = $this->command4;
+                $this->context = $this->command5;
+                $this->context2 = $this->command6;
+                $this->context3 = $this->command7;
                 break;
         }
     }

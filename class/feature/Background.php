@@ -35,7 +35,7 @@ class Background {
 
         $this->manifestation = $data['manifestation_id'];
 
-        $this->siteLink = '/content/background/'.$this->id;
+        $this->siteLink = '/content/background/id/'.$this->id;
     }
 
     public function put() {
@@ -74,7 +74,9 @@ class Background {
             $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/attribute','Attribute');
             $component->linkButton($this->siteLink.'/skill','Skill');
-            //todo link to delete();
+
+            $component->h2('Create');
+            $component->linkButton($this->siteLink.'/milestone','Create Milestone');
         }
     }
 
@@ -143,6 +145,12 @@ class Background {
         $component->wrapEnd();
 
         $form->formEnd();
+    }
+
+    public function postMilestone() {
+        global $system;
+
+        $system->createMilestone($this->id);
     }
 
     public function postSkill() {
