@@ -5,17 +5,17 @@ if($person->isOwner) {
     $list = null;
     $currentId = null;
 
-    if($sitemap->context2) {
-        $component->h2($sitemap->context2);
+    if($sitemap->extra2) {
+        $component->h2($sitemap->extra2);
         $form->formStart([
-            'do' => 'person--'.$sitemap->context2,
+            'do' => 'person--'.$sitemap->extra2,
             'id' => $person->id,
             'secret' => $person->secret,
             'return' => 'play/person/id'
         ]);
     }
 
-    switch($sitemap->context2)
+    switch($sitemap->extra2)
     {
         default:
             $component->wrapStart();
@@ -64,7 +64,7 @@ if($person->isOwner) {
             break;
     }
 
-    if($sitemap->context2) {
+    if($sitemap->extra2) {
         $form->hidden('extra', $currentId, 'post');
         $form->radioList($list, [
             'currentId' => $currentId

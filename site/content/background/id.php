@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $background = new Background($sitemap->id);
+if($sitemap->index) {
+    $background = new Background($sitemap->index);
 
     $component->title($background->name);
 

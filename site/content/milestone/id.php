@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $milestone = new Milestone($sitemap->id);
+if($sitemap->index) {
+    $milestone = new Milestone($sitemap->index);
 
     $component->title($milestone->name);
 

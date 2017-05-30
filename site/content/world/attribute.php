@@ -3,6 +3,5 @@
 global $world;
 
 $component->returnButton($world->siteLink);
-
 $world->postAttribute();
 ?>

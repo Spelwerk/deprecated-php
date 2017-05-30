@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $expertise = new Expertise($sitemap->id);
+if($sitemap->index) {
+    $expertise = new Expertise($sitemap->index);
 
     $component->title($expertise->name);
 

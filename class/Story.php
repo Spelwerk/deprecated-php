@@ -17,16 +17,16 @@ class Story {
 
     var $world;
 
-    public function __construct($id = null, $hash = null) {
+    public function __construct($id = null, $secret = null) {
         global $curl;
 
         $data = $curl->get('story/id/'.$id)['data'][0];
 
-        $this->hash = isset($hash)
-            ? $hash
+        $this->hash = isset($secret)
+            ? $secret
             : null;
 
-        $this->isOwner = isset($hash) && $hash == $data['hash']
+        $this->isOwner = isset($secret) && $secret == $data['secret']
             ? true
             : false;
 
@@ -35,22 +35,66 @@ class Story {
         $this->description = $data['description'];
         $this->plot = $data['plot'];
 
-        $this->world = isset($data['world_id'])
-            ? new World($data['world_id'])
-            : null;
+        $this->world = isset($data['world_id']) ? new World($data['world_id']) : null;
 
         $this->siteLink = $this->isOwner
             ? '/play/story/id/'.$this->id.'/'.$this->hash
             : '/play/story/id/'.$this->id;
     }
 
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $form->formStart([
+                'do' => 'basic--put',
+                'context' => 'story',
+                'return' => 'content/focus',
+                'id' => $this->id
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $form->text(false,'plot','Plot',null,null,$this->plot);
+            $component->wrapEnd();
+            $form->formEnd();
+        }
+    }
+
+    public function view() {
+        global $component;
+
+        $this->verifyUserOwnership();
+
+        $component->sectionStart();
+
+        $component->h1('Description');
+        $component->subtitle('World is: '.$this->world->name);
+        $component->p($this->description);
+
+        $component->h1('Plot');
+        $component->p($this->plot);
+
+        $component->h1('Roll');
+        $this->makeButton();
+
+        $component->h1('Weapon');
+        $this->makeWeapon();
+
+        $component->h1('Person');
+        $this->makePerson();
+
+        $component->sectionEnd();
+    }
+
+    // GET
 
     public function getPerson() {
         global $curl;
 
         $arrayList = null;
 
-        $result = $curl->get('story-person/id/'.$this->id);
+        $result = $curl->get('story/id/'.$this->id.'/person');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -66,7 +110,7 @@ class Story {
 
         $arrayList = null;
 
-        $result = $curl->get('story-location/id/'.$this->id);
+        $result = $curl->get('story/id/'.$this->id.'/location');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -82,7 +126,7 @@ class Story {
 
         $arrayList = null;
 
-        $result = $curl->get('story-meeting/id/'.$this->id);
+        $result = $curl->get('story/id/'.$this->id.'/meeting');
 
         if(isset($result['data'])) {
             foreach($result['data'] as $array) {
@@ -93,6 +137,7 @@ class Story {
         return $arrayList;
     }
 
+    // MAKE
 
     public function makeButton() {
         global $component;
@@ -155,6 +200,7 @@ class Story {
         $component->link('/play/story/id/'.$this->id.'/'.$this->hash.'/person/add','Add Person');
     }
 
+    // BUILD
 
     public function buildRemoval($thing, $title, $icon, $context) {
         global $component, $form;
@@ -167,5 +213,37 @@ class Story {
             : null;
 
         $component->listAction($title, $quick, ['icon' => $icon]);
+    }
+
+    // PRIVATE
+
+    private function verifyUserOwnership() {
+        global $form, $user;
+
+        $userOwner = false;
+
+        if($this->isOwner) {
+            $list = $user->getStory();
+
+            if($list) {
+                foreach($list as $p) {
+                    if($this->id == $p['story_id'] && $this->secret == $p['secret']) {
+                        $userOwner = true;
+                    }
+                }
+            }
+        }
+
+        if(!$userOwner) {
+            $form->formStart([
+                'do' => 'user--save',
+                'context' => 'story',
+                'return' => 'play/story',
+                'id' => $this->id,
+                'secret' => $this->secret,
+                'user' => $user-id
+            ]);
+            $form->formEnd(false, 'Save this story');
+        }
     }
 }

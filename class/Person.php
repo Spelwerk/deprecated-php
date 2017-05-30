@@ -495,8 +495,9 @@ class Person {
 
         $form->formStart([
             'do' => 'person--augmentation',
-            'return' => 'play/person/id',
-            'extra' => $bionicId,
+            'return' => 'play/person',
+            'context' => 'person',
+            'context2' => 'augmentation',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -504,6 +505,8 @@ class Person {
         $form->checkboxList($augmentationList, [
             'idList' => $idList
         ]);
+
+        $form->hidden('bionic_id', $bionicId);
 
         $system->checkboxAll();
         $form->formEnd();
@@ -530,7 +533,9 @@ class Person {
 
         $form->formStart([
             'do' => 'person--bionic',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
+            'context' => 'person',
+            'context2' => 'bionic',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -551,7 +556,7 @@ class Person {
         $component->wrapStart();
         $form->formStart([
             'do' => 'person--describe',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -590,7 +595,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--doctrine',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'context' => 'person',
             'context2' => 'doctrine',
             'id' => $this->id,
@@ -660,7 +665,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--expertise',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'context' => 'person',
             'context2' => 'expertise',
             'id' => $this->id,
@@ -756,7 +761,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--gift',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -802,7 +807,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--imperfection',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -856,7 +861,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--milestone',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -879,7 +884,7 @@ class Person {
         $component->h1('Money');
         $component->subtitle('You will be rolling <span class="sw-js-points-text">'.$this->pointMoney.'</span> dice to either improve or impair your financial status.');
 
-        $this->rollAttribute('attribute--money', $this->world->moneyAttribute, $this->pointMoney);
+        $this->rollAttribute('money', $this->world->moneyAttribute, $this->pointMoney);
     }
 
     public function postNature() {
@@ -895,7 +900,7 @@ class Person {
 
         $component->h1('Potential');
 
-        $this->rollAttribute('manifestation--power', $this->manifestation->powerAttribute, $this->pointPower);
+        $this->rollAttribute('power', $this->manifestation->powerAttribute, $this->pointPower);
     }
 
     public function postProtection() {
@@ -906,7 +911,9 @@ class Person {
 
         $form->formStart([
             'do' => 'person--protection',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
+            'context' => 'person',
+            'context2' => 'protection',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -940,7 +947,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--skill',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'context' => 'person',
             'context2' => 'skill',
             'id' => $this->id,
@@ -971,7 +978,9 @@ class Person {
 
         $form->formStart([
             'do' => 'person--weapon',
-            'return' => 'play/person/id',
+            'return' => 'play/person',
+            'context' => 'person',
+            'context2' => 'weapon',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -1005,7 +1014,7 @@ class Person {
                     'do' => 'person--'.$tableName.'--delete',
                     'id' => $this->id,
                     'secret' => $this->secret,
-                    'return' => 'play/person/id',
+                    'return' => 'play/person',
                     'returnid' => $returnId,
                     'context' => $tableId,
                     'icon' => 'delete'
@@ -1035,7 +1044,7 @@ class Person {
                     'do' => 'person--'.$tableName.'--equip',
                     'id' => $this->id,
                     'secret' => $this->secret,
-                    'return' => 'play/person/id',
+                    'return' => 'play/person',
                     'returnid' => $returnId,
                     'context' => $tableId,
                     'extra' => $flip,
@@ -1504,7 +1513,7 @@ class Person {
 
         $form->formStart([
             'do' => 'person--'.$do,
-            'return' => 'play/person/id',
+            'return' => 'play/person',
             'id' => $this->id,
             'secret' => $this->secret
         ]);
@@ -1530,10 +1539,12 @@ class Person {
 
         $component->wrapStart();
         $form->formStart([
-            'do' => 'person--'.$do,
+            'do' => 'person--attribute--'.$do,
+            'context' => 'person',
+            'context2' => 'attribute',
+            'return' => 'play/person',
             'id' => $this->id,
-            'secret' => $this->secret,
-            'return' => 'play/person'
+            'secret' => $this->secret
         ]);
         $form->points($points);
         $form->randomNumber($attribute['name'], $points);
@@ -1565,7 +1576,7 @@ class Person {
             $form->formStart([
                 'do' => 'user--save',
                 'context' => 'person',
-                'return' => 'play/person/id',
+                'return' => 'play/person',
                 'id' => $this->id,
                 'secret' => $this->secret,
                 'user' => $user-id
@@ -1573,6 +1584,4 @@ class Person {
             $form->formEnd(false, 'Save this person');
         }
     }
-
-
 }

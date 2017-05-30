@@ -1,16 +1,18 @@
 <?php global $component, $form, $person, $sitemap;
 
 if($person->isOwner) {
-    if(is_int($sitemap->context2)) {
-        $attribute = $person->getAttribute(null, $sitemap->context2)[0];
+    if(is_int($sitemap->extra2)) {
+        $attribute = $person->getAttribute(null, $sitemap->extra2)[0];
 
         $component->h2($attribute->name);
         $component->wrapStart();
         $form->formStart([
             'do' => 'person--attribute',
+            'context' => 'person',
+            'context2' => 'attribute',
+            'return' => 'play/person',
             'id' => $person->id,
-            'secret' => $person->secret,
-            'return' => 'play/person/id'
+            'secret' => $person->secret
         ]);
         $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
         $form->formEnd();

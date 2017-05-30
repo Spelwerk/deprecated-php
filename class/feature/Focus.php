@@ -37,7 +37,7 @@ class Focus {
         $this->attribute = $data['attribute_id'];
         $this->attributeValue = $data['attribute_value'];
 
-        $this->siteLink = '/content/focus/id/'.$this->id;
+        $this->siteLink = '/content/focus/'.$this->id;
     }
 
     public function put() {

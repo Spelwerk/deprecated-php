@@ -54,7 +54,7 @@ class Milestone {
         $this->loyalty = $data['loyalty_id'];
         $this->loyaltyOccupation = $data['loyalty_occupation'];
 
-        $this->siteLink = '/content/milestone/id/'.$this->id;
+        $this->siteLink = '/content/milestone/'.$this->id;
     }
 
     public function put() {

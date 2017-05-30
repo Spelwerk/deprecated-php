@@ -134,81 +134,71 @@ class Sitemap {
             case 'background':
                 $this->page = 'site/content/background/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'bionic':
                 $this->page = 'site/content/bionic/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'expertise':
                 $this->page = 'site/content/expertise/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'gift':
                 $this->page = 'site/content/gift/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'imperfection':
                 $this->page = 'site/content/imperfection/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'manifestation':
                 $this->page = 'site/content/manifestation/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'milestone':
                 $this->page = 'site/content/milestone/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'skill':
                 $this->page = 'site/content/skill/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'species':
                 $this->page = 'site/content/species/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
 
             case 'world':
                 $this->page = 'site/content/world/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->context = $this->command4;
-                $this->context2 = $this->command5;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
                 break;
         }
     }
@@ -226,22 +216,20 @@ class Sitemap {
                 $this->menuLink = 'Person';
                 $this->page = 'site/play/person/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->secret = $this->command4;
-                $this->context = $this->command5;
-                $this->context2 = $this->command6;
-                $this->context3 = $this->command7;
+                $this->secret = $this->command3;
+                $this->context = $this->command4;
+                $this->extra = $this->command5;
+                $this->extra2 = $this->command6;
                 break;
 
             case 'story':
                 $this->menuLink = 'Story';
                 $this->page = 'site/play/story/index.php';
                 $this->index = $this->command2;
-                $this->id = $this->command3;
-                $this->secret = $this->command4;
-                $this->context = $this->command5;
-                $this->context2 = $this->command6;
-                $this->context3 = $this->command7;
+                $this->secret = $this->command3;
+                $this->context = $this->command4;
+                $this->extra = $this->command5;
+                $this->extra2 = $this->command6;
                 break;
         }
     }

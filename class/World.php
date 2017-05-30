@@ -101,7 +101,7 @@ class World {
             ? $data['supernatural_name']
             : null;
 
-        $this->siteLink = '/content/world/id/'.$this->id;
+        $this->siteLink = '/content/world/'.$this->id;
     }
 
     public function put() {} //todo
@@ -516,10 +516,12 @@ class World {
 
         $component->h1('Attribute Defaults');
         $form->formStart([
-            'do' => 'basic--world--attribute',
-            'id' => $this->id,
+            'do' => 'basic--has--multiple--value--put',
+            'context' => 'world',
+            'context2' => 'attribute',
             'return' => 'content/world',
-            'returnafter' => 'attribute'
+            'returnafter' => 'attribute',
+            'id' => $this->id
         ]);
 
         $tolerance = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->toleranceAttribute)['data'][0]['value'];
@@ -537,39 +539,40 @@ class World {
         $ammunition = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->ammunitionAttribute)['data'][0]['value'];
         $rations = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->rationsAttribute)['data'][0]['value'];
 
+        echo $money;
+
         $component->h2('Wounds');
         $component->subtitle('This section contains the different kinds of wounds a person can take.');
         $component->wrapStart();
-        $form->number(true,'attribute','Tolerance','Designates the default value for a person\'s resistance against Trauma attacks.',1,0,96,$tolerance);
-        $form->number(true,'attribute','Stamina','Designates the default value for a person\'s resistance against Diseases and Poison.',2,0,96,$stamina);
-        $form->number(true,'attribute','Resilience','Designates the default value for a person\'s resistance against falling into madness and losing sanity.',3,0,96,$resilience);
-
-        $form->number(true,'attribute','Trauma','Designates the default amount of Trauma wounds a person can handle before being incapacitated.',9,0,96,$trauma);
-        $form->number(true,'attribute','Disease','Designates the default amount of Diseases a person can handle before being incapacitated.',8,0,96,$disease);
-        $form->number(true,'attribute','Sanity','Designates the default amount of Sanity hits a person can handle before being incapacitated.',7,0,96,$sanity);
+        $form->number(true,'insert_id','Tolerance','Designates the default value for a person\'s resistance against Trauma attacks.',$this->toleranceAttribute,0,96,$tolerance);
+        $form->number(true,'insert_id','Stamina','Designates the default value for a person\'s resistance against Diseases and Poison.',$this->staminaAttribute,0,96,$stamina);
+        $form->number(true,'insert_id','Resilience','Designates the default value for a person\'s resistance against falling into madness and losing sanity.',$this->resilienceAttribute,0,96,$resilience);
+        $form->number(true,'insert_id','Trauma','Designates the default amount of Trauma wounds a person can handle before being incapacitated.',$this->traumaAttribute,0,96,$trauma);
+        $form->number(true,'insert_id','Disease','Designates the default amount of Diseases a person can handle before being incapacitated.',$this->diseaseAttribute,0,96,$disease);
+        $form->number(true,'insert_id','Sanity','Designates the default amount of Sanity hits a person can handle before being incapacitated.',$this->sanityAttribute,0,96,$sanity);
         $component->wrapEnd();
 
         $component->h2('Combat');
         $component->subtitle('This section contains the three base attributes for combat.');
         $component->wrapStart();
-        $form->number(true,'attribute','Damage','Default damage bonus you will get to your attacks.',4,0,96,$damage);
-        $form->number(true,'attribute','Initiative','Default value for initiative, which handles a person\'s order of fighting.',5,0,96,$initiative);
-        $form->number(true,'attribute','Speed','Default value for speed which, which handles a person\'s ability to chase down, or avoid chasers.',6,0,96,$speed);
+        $form->number(true,'insert_id','Damage','Default damage bonus you will get to your attacks.',$this->damageAttribute,0,96,$damage);
+        $form->number(true,'insert_id','Initiative','Default value for initiative, which handles a person\'s order of fighting.',$this->initiativeAttribute,0,96,$initiative);
+        $form->number(true,'insert_id','Speed','Default value for speed which, which handles a person\'s ability to chase down, or avoid chasers.',$this->speedAttribute,0,96,$speed);
         $component->wrapEnd();
 
         $component->h2('Reputation');
         $component->subtitle('This section contains reputation attributes.');
         $component->wrapStart();
-        $form->number(true,'attribute','Honor','A person\'s positive reputation.',16,0,96,$honor);
-        $form->number(true,'attribute','Infamy','A person\'s negative reputation.',17,0,96,$infamy);
+        $form->number(true,'insert_id','Honor','A person\'s positive reputation.',$this->honorAttribute,0,96,$honor);
+        $form->number(true,'insert_id','Infamy','A person\'s negative reputation.',$this->infamyAttribute,0,96,$infamy);
         $component->wrapEnd();
 
         $component->h2('Consumable & Money');
         $component->subtitle('This section contains consumable and financial attributes.');
         $component->wrapStart();
-        $form->number(true,'attribute','Money','Default financial situation.',19,0,96,$money);
-        $form->number(true,'attribute','Ammunition','Default ammunition.',20,0,96,$ammunition);
-        $form->number(true,'attribute','Rations','Default daily rations.',21,0,96,$rations);
+        $form->number(true,'insert_id','Money','Default financial situation.',$this->moneyAttribute,0,96,$money);
+        $form->number(true,'insert_id','Ammunition','Default ammunition.',$this->ammunitionAttribute,0,96,$ammunition);
+        $form->number(true,'insert_id','Rations','Default daily rations.',$this->rationsAttribute,0,96,$rations);
         $component->wrapEnd();
 
         $form->formEnd(false);

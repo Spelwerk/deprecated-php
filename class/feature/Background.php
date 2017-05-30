@@ -35,7 +35,7 @@ class Background {
 
         $this->manifestation = $data['manifestation_id'];
 
-        $this->siteLink = '/content/background/id/'.$this->id;
+        $this->siteLink = '/content/background/'.$this->id;
     }
 
     public function put() {

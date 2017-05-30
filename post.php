@@ -88,342 +88,17 @@ function cookie_add($type, $id, $secret = null) {
         }
     }
 
-    $cookieId = $type.'_id';
-
-    $cookieSecret = isset($secret)
-        ? $type.'_hash'
-        : null;
-
     if(isset($_COOKIE[$cookieName])) {
         $cookie = unserialize($_COOKIE[$cookieName]);
     }
 
     $cookie[] = isset($secret)
-        ? [$cookieId => $id, $cookieSecret  => $secret]
-        : [$cookieId => $id];
+        ? ['id' => $id, 'secret'  => $secret]
+        : ['id' => $id];
 
     setcookie($cookieName, serialize($cookie), time() + (9 * 365 * 24 * 60 * 60));
 }
 
-
-
-
-/** MANIFESTATION */
-
-// todo REWORK
-
-function manifestation_post($postData) {
-    global $curl;
-
-    $postArray = null;
-    $resultArray = null;
-
-    // Attribute Type
-    $attributeTypePost = [
-        'name' => $postData['name'],
-        'protected' => 0,
-        'maximum' => $postData['attribute_maximum']
-    ];
-    $attributeTypeResult = $curl->post('attributetype', $attributeTypePost);
-    $attributeTypeId = $attributeTypeResult['id'];
-    $resultArray[] = $attributeTypeResult;
-
-    // Attribute for Power
-    $attributePost = [
-        'name' => $postData['attribute_power'],
-        'protected'  => 0,
-        'attributetype_id' => 7
-    ];
-    $attributeResult = $curl->post('attribute', $attributePost);
-    $attributeId = $attributeResult['id'];
-    $resultArray[] = $attributeResult;
-
-    // Expertise
-    $expertiseTypePost = [
-        'name' => $postData['name'],
-        'maximum' => $postData['expertise_maximum'],
-        'skill_attribute_required' => $postData['skill_attribute_required'],
-        'skill_attribute_increment' => $postData['skill_attribute_increment'],
-        'startsat' => $postData['startsat']
-    ];
-    $expertiseTypeResult = $curl->post('expertisetype', $expertiseTypePost);
-    $expertiseTypeId = $expertiseTypeResult['id'];
-    $resultArray[] = $expertiseTypeResult;
-
-    // Manifestation
-    $postArray['name'] = $postData['name'];
-    $postArray['description'] = $postData['description'];
-    $postArray['attributetype_id'] = $attributeTypeId;
-    $postArray['skill_attributetype_id'] = $postData['skill_attributetype_id'];
-    $postArray['expertisetype_id'] = $expertiseTypeId;
-    $postArray['power_attribute_id'] = $attributeId;
-
-    $result = $curl->post('manifestation', $postArray);
-    $resultArray[] = $result;
-
-    checkError($resultArray);
-
-    return $result;
-}
-
-function manifestation_discipline($postData, $manifestationId) {
-    global $curl;
-
-    $postArray = null;
-    $resultArray = null;
-
-    // Attribute Discipline (Give Attribute Id in Expertise)
-    $attributePost = [
-        'name' => $postData['name'],
-        'description' => $postData['description'],
-        'protected'  => 0,
-        'attributetype_id' => $postData['attributetype_id'],
-        'icon_id' => $postData['icon']
-    ];
-    $attributeResult = $curl->post('attribute', $attributePost);
-    $attributeId = $attributeResult['id'];
-    $resultArray[] = $attributeResult;
-
-    // Expertise Creation of Discipline
-    $expertisePost = [
-        'name' => $postData['name'],
-        'description' => $postData['description'],
-        'hidden'  => 0,
-        'expertisetype_id' => $postData['expertisetype_id'],
-        'manifestation_id' => $manifestationId,
-        'skill_attribute_id' => $postData['attribute_id'],
-        'give_attribute_id' => $attributeId
-    ];
-    $expertiseResult = $curl->post('expertise', $expertisePost);
-    $resultArray[] = $expertiseResult;
-
-    checkError($resultArray);
-}
-
-function manifestation_focus($postData, $manifestationId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $post = [
-        'name' => $postData['name'],
-        'description' => $postData['description'],
-        'attribute_id' => 3,
-        'attribute_value' => 1,
-        'manifestation_id' => $manifestationId,
-        'icon_id' => $postData['icon']
-    ];
-
-    $resultArray[] = $curl->post('attribute', $post);
-
-    checkError($resultArray);
-}
-
-/** PERSON */
-
-
-
-
-
-function person_attribute_post($postData, $personId, $personSecret) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_CONTEXT2, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        $explode = explode('__', $key);
-
-        if(isset($explode[1]) && $explode[0] == 'attribute_id') {
-            $postArray[] = ['secret' => $POST_SECRET, 'insert_id' => $explode[1], 'value' => $value];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->post('person/id/'.$POST_ID.'/attribute',$post);
-    }
-}
-
-function person_attribute_put($postData, $personId, $personSecret) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_CONTEXT2, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        $explode = explode('__', $key);
-
-        if(isset($explode[1]) && $explode[0] == 'attribute_id') {
-            $postArray[] = ['secret' => $POST_SECRET, 'insert_id' => $explode[1], 'value' => $value];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->put('person/id/'.$POST_ID.'/attribute',$post);
-    }
-}
-
-function person_augmentation_post() {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_EXTRA, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        if($key == $value) {
-            $postArray[] = ['secret' => $POST_SECRET, 'bionic_id' => $POST_EXTRA, 'insert_id' => $key];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->post('person/id/'.$POST_ID.'/augmentation',$post);
-    }
-}
-
-function person_bionic_post($postData, $personId, $personSecret) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_CONTEXT2, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        if($key == $value) {
-            $postArray[] = ['secret' => $POST_SECRET, 'insert_id' => $key];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->post('person/id/'.$POST_ID.'/bionic',$post);
-    }
-}
-
-function person_expertise_post($postData) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_CONTEXT2, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        $explode = explode('__', $key);
-
-        if(isset($explode[1]) && $explode[0] == 'expertise_id') {
-            $postArray[] = ['secret' => $POST_SECRET, 'insert_id' => $explode[1], 'value' => $value];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->post('person/id/'.$POST_ID.'/expertise',$post);
-    }
-}
-
-function person_protection_post($postData, $personId, $personSecret) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_CONTEXT2, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        if($key == $value) {
-            $postArray[] = ['secret' => $POST_SECRET, 'insert_id' => $key];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->post('person/id/'.$POST_ID.'/protection',$post);
-    }
-}
-
-function person_weapon_post($postData, $personId, $personSecret) {
-    global $POST_DATA, $POST_ID, $POST_SECRET, $curl;
-
-    $postArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        if($key == $value) {
-            $postArray[] = ['secret' => $POST_SECRET, 'insert_id' => $key];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $curl->post('person/id/'.$POST_ID.'/weapon',$post);
-    }
-}
-
-/** STORY */
-
-// todo REWORK
-
-function story_add($postData) {
-    global $curl;
-
-    $resultArray = null;
-
-    $result = $curl->post('story',$postData);
-    $resultArray = $result;
-
-    $storyId = $result['id'];
-    $storySecret = $result['hash'];
-
-    checkError($resultArray);
-
-    return [
-        'id' => $storyId,
-        'hash' => $storySecret
-    ];
-}
-
-function story_edit($postData, $storySecret) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->put('story/hash/'.$storySecret, $postData);
-
-    checkError($resultArray);
-}
-
-function story_person_add($postData, $storyId) {
-    global $curl;
-
-    $resultArray = null;
-    $personId = null;
-
-    if(isset($postData['person_link']) && $postData['person_link'] != null) {
-        $explode = explode('/',$postData['person_link']);
-
-        $count = count($explode) - 1;
-
-        $shouldBeInt = intval($explode[$count]);
-        $shouldBeId = $explode[$count-1] == 'id'
-            ? true
-            : false;
-
-        $shouldBePerson = $explode[$count-2] == 'person'
-            ? true
-            : false;
-
-        $shouldBePlay = $explode[$count-3] == 'play'
-            ? true
-            : false;
-
-        if($shouldBePlay && $shouldBePerson && $shouldBeId && $shouldBeInt) {
-            $personId = $shouldBeInt;
-        }
-    } else if(isset($postData['person_id']) && $postData['person_id'] != null) {
-        $personId = $postData['person_id'];
-    }
-
-    // todo add person hash
-    $post = ['story_id' => $storyId, 'person_id' => $personId];
-
-    $resultArray[] = $curl->post('story-person',$post);
-
-    checkError($resultArray);
-}
-
-function story_has_delete($table, $thingId, $personId) {
-    global $curl;
-
-    $resultArray = null;
-
-    $resultArray[] = $curl->delete('story-'.$table.'/id/'.$personId.'/id/'.$thingId);
-
-    checkError($resultArray);
-}
 
 // USER
 
@@ -479,29 +154,6 @@ function user_unset() {
     }
 }
 
-// WORLD
-
-function world_attribute_post() {
-    global $POST_DATA, $USER_TOKEN, $POST_ID, $curl;
-
-    $postArray = [];
-    $resultArray = [];
-
-    foreach($POST_DATA as $key => $value) {
-        $explode = explode('__', $key);
-
-        if(isset($explode[1]) && $explode[0] == 'attribute') {
-            $postArray[] = ['insert_id' => $explode[1], 'value' => $value];
-        }
-    }
-
-    foreach($postArray as $post) {
-        $resultArray[] = $curl->post('world/id/'.$POST_ID.'/attribute',$post,$USER_TOKEN);
-    }
-
-    checkError($resultArray);
-}
-
 // TABLE
 
 function table_has_post() {
@@ -536,6 +188,42 @@ function table_has_delete() {
     }
 }
 
+function table_has_value_post() {
+    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $POST_CONTEXT2, $curl;
+
+    $postArray = [];
+
+    foreach($POST_DATA as $key => $value) {
+        $explode = explode('__', $key);
+
+        if(isset($explode[1]) && $explode[0] == 'insert_id') {
+            $postArray[] = ['insert_id' => $explode[1], 'value' => $value];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post, $USER_TOKEN);
+    }
+}
+
+function table_has_value_put() {
+    global $POST_DATA, $USER_TOKEN, $POST_ID, $POST_CONTEXT, $POST_CONTEXT2, $curl;
+
+    $postArray = [];
+
+    foreach($POST_DATA as $key => $value) {
+        $explode = explode('__', $key);
+
+        if(isset($explode[1]) && $explode[0] == 'insert_id') {
+            $postArray[] = ['insert_id' => $explode[1], 'value' => $value];
+        }
+    }
+
+    foreach($postArray as $post) {
+        $curl->put($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post, $USER_TOKEN);
+    }
+}
+
 function table_secret_has_multiple_post() {
     global $POST_DATA, $POST_ID, $POST_SECRET, $POST_CONTEXT, $POST_CONTEXT2, $curl;
 
@@ -548,7 +236,7 @@ function table_secret_has_multiple_post() {
     }
 
     foreach($postArray as $post) {
-        $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2,$post);
+        $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post);
     }
 }
 
@@ -564,7 +252,7 @@ function table_secret_has_multiple_put() {
     }
 
     foreach($postArray as $post) {
-        $curl->put($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2,$post);
+        $curl->put($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post);
     }
 }
 
@@ -582,7 +270,7 @@ function table_secret_has_multiple_value_post() {
     }
 
     foreach($postArray as $post) {
-        $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2,$post);
+        $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post);
     }
 }
 
@@ -600,7 +288,7 @@ function table_secret_has_multiple_value_put() {
     }
 
     foreach($postArray as $post) {
-        $curl->put($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2,$post);
+        $curl->put($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $post);
     }
 }
 
@@ -630,16 +318,24 @@ function switch_basic($do) {
             table_has_post();
             break;
 
+        case 'basic--has--put':
+            table_has_post();
+            break;
+
         case 'basic--has--delete':
             table_has_delete();
             break;
 
-        case 'basic--has--value':
-            $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $POST_DATA, $USER_TOKEN);
+        case 'basic--has--multiple--value--post':
+            table_has_value_post();
             break;
 
-        case 'basic--world--attribute':
-            world_attribute_post();
+        case 'basic--has--multiple--value--put':
+            table_has_value_put();
+            break;
+
+        case 'basic--has--value':
+            $curl->post($POST_CONTEXT.'/id/'.$POST_ID.'/'.$POST_CONTEXT2, $POST_DATA, $USER_TOKEN);
             break;
     }
 }
@@ -651,22 +347,16 @@ function switch_person($do) {
         default: break;
 
         case 'person--post':
-            $POST_DATA['playable'] = 1;
-
-            print_r($POST_DATA);
-
             $result = $curl->post('person',$POST_DATA,$USER_TOKEN);
-
-            print_r($result);
 
             $POST_ID = $result['id'];
             $POST_SECRET = $result['secret'];
 
-            cookie_add('person',$POST_ID,$POST_SECRET);
+            cookie_add('person', $POST_ID, $POST_SECRET);
             break;
 
         case 'person--augmentation':
-            person_augmentation_post();
+            table_secret_has_multiple_post();
             break;
 
         case 'person--background':
@@ -674,51 +364,32 @@ function switch_person($do) {
             break;
 
         case 'person--bionic':
-            person_bionic_post($POST_DATA, $POST_ID, $POST_SECRET);
+            table_secret_has_multiple_post();
             break;
 
         case 'person--bionic--custom': // todo
             break;
 
         case 'person--cheat':
-            $resultArray = [];
-
-            $POST_DATA['cheated'] = 1;
-            $POST_DATA['popularity'] = 0;
-            $POST_DATA['thumbsup'] = 0;
-            $POST_DATA['thumbsdown'] = 0;
-
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,$POST_DATA);
-
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/cheat',$POST_DATA);
             break;
 
         case 'person--describe':
-            $resultArray = [];
-
             $POST_DATA['calculated'] = 1;
-
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,$POST_DATA);
-
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID,$POST_DATA);
             break;
 
         case 'person--edit--description':
-            $resultArray = [];
-
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,$POST_DATA);
-
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID,$POST_DATA);
             break;
 
         case 'person--attribute':
-            person_attribute_post($POST_DATA, $POST_ID, $POST_SECRET);
+            table_secret_has_multiple_value_put();
             break;
 
         case 'person--attribute--money':
-            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_money' => 0]);
-            checkError($resultArray);
+            table_secret_has_multiple_value_put();
+            $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_money' => 0]);
             break;
 
         case 'person--skill':
@@ -733,22 +404,18 @@ function switch_person($do) {
 
         case 'person--characteristic--gift':
             $calc = intval($_POST['post--points']) - 1;
-            $resultArray = [];
-            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/characteristic',$POST_DATA);
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_gift' => $calc]);
-            checkError($resultArray);
+            $curl->post('person/id/'.$POST_ID.'/characteristic', $POST_DATA);
+            $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_gift' => $calc]);
             break;
 
         case 'person--characteristic--imperfection':
             $calc = intval($_POST['post--points']) - 1;
-            $resultArray = [];
-            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/characteristic',$POST_DATA);
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_imperfection' => $calc]);
-            checkError($resultArray);
+            $curl->post('person/id/'.$POST_ID.'/characteristic', $POST_DATA);
+            $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_imperfection' => $calc]);
             break;
 
         case 'person--characteristic--delete':
-            $curl->delete('person/id/'.$POST_ID.'/characteristic/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            $curl->delete('person/id/'.$POST_ID.'/characteristic/'.$POST_CONTEXT, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--expertise':
@@ -757,7 +424,7 @@ function switch_person($do) {
             $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_expertise' => 0]);
 
             if(isset($_POST['post--experience'])) {
-                $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'insert_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
+                $curl->put('person/id/'.$POST_ID.'/attribute', ['secret' => $POST_SECRET, 'insert_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
             }
             break;
 
@@ -765,13 +432,11 @@ function switch_person($do) {
             break;
 
         case 'person--expertise--delete':
-            $curl->delete('person/id/'.$POST_ID.'/expertise/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            $curl->delete('person/id/'.$POST_ID.'/expertise/'.$POST_CONTEXT, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--focus':
-            $resultArray = [];
-            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/focus',$POST_DATA);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/focus', $POST_DATA);
             break;
 
         case 'person--gift': // todo
@@ -793,125 +458,108 @@ function switch_person($do) {
             break;
 
         case 'person--identity':
-            $curl->put('person/id/'.$POST_ID.'/identity',$POST_DATA);
+            $curl->put('person/id/'.$POST_ID.'/identity', $POST_DATA);
             break;
 
         case 'person--manifestation':
-            $resultArray = [];
-            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/manifestation',$POST_DATA);
-            checkError($resultArray);
+            $curl->post('person/id/'.$POST_ID.'/manifestation', $POST_DATA);
             break;
 
         case 'person--doctrine':
             table_secret_has_multiple_value_post();
 
             if(isset($_POST['post--experience'])) {
-                $curl->put('person/id/'.$POST_ID.'/attribute',['secret' => $POST_SECRET, 'insert_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
+                $curl->put('person/id/'.$POST_ID.'/attribute', ['secret' => $POST_SECRET, 'insert_id' => $_POST['post--experience'], 'value' => $_POST['post--points']]);
             }
             break;
 
         case 'person--manifestation--expertise':
-            $post = ['expertise_id__'.$POST_DATA['expertise_id'] => 1];
-            person_expertise_post($post);
+            $fakeIdVar = 'insert_id__'.$POST_DATA['insert_id'];
+
+            $POST_DATA = [$fakeIdVar => 1];
+
+            table_secret_has_multiple_value_post();
             break;
 
         case 'person--manifestation--power':
-            person_attribute_put($POST_DATA, $POST_ID, $POST_SECRET);
-            $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_power' => 0]);
+            table_secret_has_multiple_value_put();
+            $curl->put('person/id/'.$POST_ID, ['secret' => $POST_SECRET, 'point_power' => 0]);
             break;
 
         case 'person--milestone':
             $calc = intval($_POST['post--points']) - 1;
-            $resultArray = [];
-            $resultArray[] = $curl->post('person/id/'.$POST_ID.'/milestone',$POST_DATA);
-            $resultArray[] = $curl->put('person/id/'.$POST_ID,['secret' => $POST_SECRET, 'point_milestone' => $calc]);
-            checkError($resultArray);
+            $curl->post('person/id/'.$POST_ID.'/milestone',$POST_DATA);
+            $curl->put('person/id/'.$POST_ID, ['secret' => $POST_SECRET, 'point_milestone' => $calc]);
             break;
 
         case 'person--milestone--custom': // todo
             break;
 
         case 'person--milestone--delete':
-            $curl->delete('person/id/'.$POST_ID.'/milestone/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            $curl->delete('person/id/'.$POST_ID.'/milestone/'.$POST_CONTEXT, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--nature':
-            $resultArray = [];
-            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/nature',$POST_DATA);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/nature', $POST_DATA);
             break;
 
         case 'person--protection':
-            person_protection_post($POST_DATA, $POST_ID, $POST_SECRET);
+            table_secret_has_multiple_post();
             break;
 
         case 'person--protection--custom': // todo
             break;
 
         case 'person--protection--equip':
-            $curl->put('person/id/'.$POST_ID.'/protection/'.$POST_CONTEXT.'/equip/'.$POST_EXTRA,['secret' => $POST_SECRET]);
+            $curl->put('person/id/'.$POST_ID.'/protection/'.$POST_CONTEXT.'/equip/'.$POST_EXTRA, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--protection--delete':
-            $curl->delete('person/id/'.$POST_ID.'/protection/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            $curl->delete('person/id/'.$POST_ID.'/protection/'.$POST_CONTEXT, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--species':
-            $resultArray = [];
-            $resultArray[] = $curl->put('person/id/'.$POST_ID.'/species',$POST_DATA);
-            checkError($resultArray);
+            $curl->put('person/id/'.$POST_ID.'/species', $POST_DATA);
             break;
 
         case 'person--weapon':
-            person_weapon_post($POST_DATA, $POST_ID, $POST_SECRET);
+            table_secret_has_multiple_post();
             break;
 
         case 'person--weapon--custom': // todo
             break;
 
         case 'person--weapon--equip':
-            $curl->put('person/id/'.$POST_ID.'/weapon/'.$POST_CONTEXT.'/equip/'.$POST_EXTRA,['secret' => $POST_SECRET]);
+            $curl->put('person/id/'.$POST_ID.'/weapon/'.$POST_CONTEXT.'/equip/'.$POST_EXTRA, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--weapon--delete':
-            $curl->delete('person/id/'.$POST_ID.'/weapon/'.$POST_CONTEXT,['secret' => $POST_SECRET]);
+            $curl->delete('person/id/'.$POST_ID.'/weapon/'.$POST_CONTEXT, ['secret' => $POST_SECRET]);
             break;
 
         case 'person--wound':
-            $curl->post('person/id/'.$POST_ID.'/'.$POST_CONTEXT,$POST_DATA);
+            $curl->post('person/id/'.$POST_ID.'/'.$POST_CONTEXT, $POST_DATA);
             break;
 
         case 'person--wound--heal':
-            $curl->put('person/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$POST_CONTEXT2.'/heal/'.$POST_EXTRA,$POST_DATA);
+            $curl->put('person/id/'.$POST_ID.'/'.$POST_CONTEXT.'/'.$POST_CONTEXT2.'/heal/'.$POST_EXTRA, $POST_DATA);
             break;
     }
 }
 
 function switch_story($do) {
-    global $curl, $POST_ID, $POST_SECRET, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
+    global $curl, $POST_ID, $POST_SECRET, $USER_TOKEN, $POST_DATA, $POST_CONTEXT, $POST_CONTEXT2, $POST_EXTRA, $POST_EXTRA2;
 
     switch($do) {
         default: break;
 
-        case 'story--add':
-            $result = story_add($POST_DATA);
+        case 'story--post':
+            $result = $curl->post('story', $POST_DATA, $USER_TOKEN);
 
             $POST_ID = $result['id'];
             $POST_SECRET = $result['hash'];
 
-            cookie_add('story',$POST_ID,$POST_SECRET);
-            break;
-
-        case 'story--edit':
-            story_edit($POST_DATA, $POST_SECRET);
-            break;
-
-        case 'story--person--add':
-            story_person_add($POST_DATA, $POST_ID);
-            break;
-
-        case 'story--delete--has':
-            story_has_delete($POST_DATA['table'], $POST_DATA['id'], $POST_ID);
+            cookie_add('story', $POST_ID, $POST_SECRET);
             break;
     }
 }
@@ -1000,24 +648,8 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
             switch_basic($POST_DO);
             break;
 
-        case 'background':
-            switch_background($POST_DO);
-            break;
-
-        case 'bionic':
-            switch_bionic($POST_DO);
-            break;
-
-        case 'manifestation':
-            switch_manifestation($POST_DO);
-            break;
-
         case 'person':
             switch_person($POST_DO);
-            break;
-
-        case 'species':
-            switch_species($POST_DO);
             break;
 
         case 'story':
@@ -1026,10 +658,6 @@ if(isset($POST_DO) && isset($POST_RETURN)) {
 
         case 'user':
             switch_user($POST_DO);
-            break;
-
-        case 'world':
-            switch_world($POST_DO);
             break;
     }
 }

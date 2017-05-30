@@ -4,7 +4,7 @@ if($person->isOwner) {
     $component->h2('Augmentation');
     $component->subtitle('Once attached. Augmentations cannot be removed.');
 
-    if($sitemap->context2 == 'add') {
+    if($sitemap->extra2 == 'add') {
         $person->postAugmentation($sitemap->context);
     } else {
         $bionicList = $person->getBionic();

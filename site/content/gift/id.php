@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $gift = new Gift($sitemap->id);
+if($sitemap->index) {
+    $gift = new Gift($sitemap->index);
 
     $component->title($gift->name);
 

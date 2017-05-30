@@ -62,7 +62,7 @@ class Expertise {
 
         $this->dice = intval($this->start) + intval($this->level) - 1;
 
-        $this->siteLink = '/content/expertise/id/'.$this->id;
+        $this->siteLink = '/content/expertise/'.$this->id;
     }
 
     public function put() {

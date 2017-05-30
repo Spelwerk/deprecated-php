@@ -3,7 +3,7 @@
 if($person->isOwner) {
     $component->h2('Weapon');
 
-    if($sitemap->context2 == 'add') {
+    if($sitemap->extra2 == 'add') {
         $person->postWeapon();
     } else {
         $list = $person->getWeapon();

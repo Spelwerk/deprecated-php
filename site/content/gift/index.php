@@ -1,20 +1,16 @@
 <?php global $component, $sitemap, $system;
 
-switch($sitemap->index) {
-    default:
-        $component->title('Gift');
-        $component->returnButton('/content');
-        $system->listGift();
-        $component->h4('Create');
-        $component->linkButton('/content/gift/create','Create New');
-        break;
+$index = is_numeric($sitemap->index) && is_int($sitemap->index + 0) ? intval($sitemap->index) : $sitemap->index;
 
-    case 'create':
-        $system->createGift();
-        break;
-
-    case 'id':
-        require_once('./site/content/gift/id.php');
-        break;
+if(is_int($index)) {
+    require_once('./site/content/gift/id.php');
+} else if($index == 'create') {
+    $system->createGift();
+} else {
+    $component->title('Gift');
+    $component->returnButton('/content');
+    $system->listGift();
+    $component->h4('Create');
+    $component->linkButton('/content/gift/create','Create New');
 }
 ?>

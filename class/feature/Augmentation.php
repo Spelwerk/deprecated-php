@@ -48,7 +48,7 @@ class Augmentation {
 
         $this->quality = isset($data['quality_id']) ? $data['quality_id'] : null;
 
-        $this->siteLink = '/content/augmentation/id/'.$this->id;
+        $this->siteLink = '/content/augmentation/'.$this->id;
     }
 }
 

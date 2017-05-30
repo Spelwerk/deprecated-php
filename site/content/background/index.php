@@ -1,20 +1,16 @@
 <?php global $component, $sitemap, $system;
 
-switch($sitemap->index) {
-    default:
-        $component->title('Background');
-        $component->returnButton('/content');
-        $system->listBackground();
-        $component->h4('Create');
-        $component->linkButton('/content/background/create','Create New');
-        break;
+$index = is_numeric($sitemap->index) && is_int($sitemap->index + 0) ? intval($sitemap->index) : $sitemap->index;
 
-    case 'create':
-        $system->createBackground();
-        break;
-
-    case 'id':
-        require_once('./site/content/background/id.php');
-        break;
+if(is_int($index)) {
+    require_once('./site/content/background/id.php');
+} else if($index == 'create') {
+    $system->createBackground();
+} else {
+    $component->title('Background');
+    $component->returnButton('/content');
+    $system->listBackground();
+    $component->h4('Create');
+    $component->linkButton('/content/background/create','Create New');
 }
 ?>

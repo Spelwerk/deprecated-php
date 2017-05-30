@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $manifestation = new Manifestation($sitemap->id);
+if($sitemap->index) {
+    $manifestation = new Manifestation($sitemap->index);
 
     $component->title($manifestation->name);
 

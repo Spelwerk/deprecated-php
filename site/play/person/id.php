@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $person = new Person($sitemap->id, $sitemap->secret);
+if($sitemap->index) {
+    $person = new Person($sitemap->index, $sitemap->secret);
 
     $component->title($person->nickname);
 
@@ -20,15 +20,15 @@ if($sitemap->id) {
             break;
 
         case 'disease':
-            require_once('./site/content/person/disease.php');
+            require_once('./site/content/person/wound/disease.php');
             break;
 
         case 'sanity':
-            require_once('./site/content/person/sanity.php');
+            require_once('./site/content/person/wound/sanity.php');
             break;
 
         case 'wound':
-            require_once('./site/content/person/wound.php');
+            require_once('./site/content/person/wound/wound.php');
             break;
     }
 }

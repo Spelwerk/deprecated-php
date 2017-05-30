@@ -1,20 +1,16 @@
 <?php global $component, $sitemap, $system;
 
-switch($sitemap->index) {
-    default:
-        $component->title('Milestone');
-        $component->returnButton('/content');
-        $system->listMilestone();
-        $component->h4('Create');
-        $component->linkButton('/content/milestone/create','Create New');
-        break;
+$index = is_numeric($sitemap->index) && is_int($sitemap->index + 0) ? intval($sitemap->index) : $sitemap->index;
 
-    case 'create':
-        $system->createMilestone();
-        break;
-
-    case 'id':
-        require_once('./site/content/milestone/id.php');
-        break;
+if(is_int($index)) {
+    require_once('./site/content/milestone/id.php');
+} else if($index == 'create') {
+    $system->createMilestone();
+} else {
+    $component->title('Milestone');
+    $component->returnButton('/content');
+    $system->listMilestone();
+    $component->h4('Create');
+    $component->linkButton('/content/milestone/create','Create New');
 }
 ?>

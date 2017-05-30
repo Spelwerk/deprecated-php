@@ -402,7 +402,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/background/id',
+            'return' => 'content/background',
             'context' => 'background'
         ]);
         $component->wrapStart();
@@ -430,7 +430,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/bionic/id',
+            'return' => 'content/bionic',
             'context' => 'bionic'
         ]);
         $component->wrapStart();
@@ -460,7 +460,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/expertise/id',
+            'return' => 'content/expertise',
             'context' => 'expertise'
         ]);
         $component->wrapStart();
@@ -495,7 +495,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/gift/id',
+            'return' => 'content/gift',
             'context' => 'gift'
         ]);
         $component->wrapStart();
@@ -528,7 +528,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/imperfection/id',
+            'return' => 'content/imperfection',
             'context' => 'imperfection'
         ]);
         $component->wrapStart();
@@ -554,7 +554,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/manifestation/id',
+            'return' => 'content/manifestation',
             'context' => 'manifestation'
         ]);
         $component->wrapStart();
@@ -577,7 +577,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/milestone/id',
+            'return' => 'content/milestone',
             'context' => 'milestone'
         ]);
         $component->wrapStart();
@@ -609,7 +609,7 @@ class System {
         $form->formEnd();
     }
 
-    public function createPerson($world = null, $species = null) {
+    public function createPerson($world = null, $species = null, $playable = 1) {
         global $component, $form;
 
         if(!isset($world) && !isset($species)) {
@@ -629,7 +629,7 @@ class System {
             $component->wrapStart();
             $form->formStart([
                 'do' => 'person--post',
-                'return' => 'play/person/id'
+                'return' => 'play/person'
             ]);
             $form->hidden('world_id', $world->id);
             $form->hidden('species_id', $species->id);
@@ -642,6 +642,8 @@ class System {
             } else {
                 $form->hidden('supernatural', 0);
             }
+
+            $form->hidden('playable', $playable);
 
             $form->formEnd();
             $component->wrapEnd();
@@ -657,7 +659,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/skill/id',
+            'return' => 'content/skill',
             'context' => 'skill'
         ]);
         $component->wrapStart();
@@ -679,7 +681,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/species/id',
+            'return' => 'content/species',
             'context' => 'species'
         ]);
 
@@ -708,25 +710,18 @@ class System {
             $component->h1('Create Story');
             $component->h2('Select World');
             $component->subtitle('You will need to select a world in which your story takes place. It will also enable the system to understand what persons you can add.');
-
-            $this->selectWorld('play/story/new');
-
+            $this->selectWorld('play/story/create');
         } else {
-            $component->title('Create');
             $component->h1('Story Details');
-
             $component->wrapStart();
             $form->formStart([
                 'do' => 'story--add',
-                'return' => 'play/story/id',
+                'return' => 'play/story',
             ]);
-
             $form->hidden('world_id', $world->id);
-
             $form->varchar(true, 'name', 'Name', 'The name of your story will make it easier to remember which one it is.');
             $form->text(false, 'description', 'Description', 'Describe your Story. This field can be added to in the future.');
             $form->text(false, 'plot', 'Plot', 'Describe the plot of your Story. This field can be added to in the future.');
-
             $form->formEnd();
             $component->wrapEnd();
         }
@@ -741,7 +736,7 @@ class System {
 
         $form->formStart([
             'do' => 'basic--post',
-            'return' => 'content/world/id',
+            'return' => 'content/world',
             'context' => 'world'
         ]);
         $component->h2('Basic Information');
@@ -797,14 +792,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/background/id/'.$item->id, $item->name);
+                $component->linkButton('/content/background/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/background/id/'.$item->id, $item->name);
+            $component->linkButton('/content/background/'.$item->id, $item->name);
         }
     }
 
@@ -817,14 +812,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/bionic/id/'.$item->id, $item->name);
+                $component->linkButton('/content/bionic/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/bionic/id/'.$item->id, $item->name);
+            $component->linkButton('/content/bionic/'.$item->id, $item->name);
         }
     }
 
@@ -839,14 +834,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/expertise/id/'.$item->id, $item->name);
+                $component->linkButton('/content/expertise/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/expertise/id/'.$item->id, $item->name);
+            $component->linkButton('/content/expertise/'.$item->id, $item->name);
         }
 
         foreach($speciesArray as $species) {
@@ -855,7 +850,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/expertise/id/'.$item->id, $item->name);
+                $component->linkButton('/content/expertise/'.$item->id, $item->name);
             }
         }
 
@@ -865,7 +860,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/expertise/id/'.$item->id, $item->name);
+                $component->linkButton('/content/expertise/'.$item->id, $item->name);
             }
         }
     }
@@ -879,7 +874,7 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/focus/id/'.$item->id, $item->name);
+                $component->linkButton('/content/focus/'.$item->id, $item->name);
             }
         }
 
@@ -891,7 +886,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/focus/id/'.$item->id, $item->name);
+                $component->linkButton('/content/focus/'.$item->id, $item->name);
             }
         }
     }
@@ -908,14 +903,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/gift/id/'.$item->id, $item->name);
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/gift/id/'.$item->id, $item->name);
+            $component->linkButton('/content/gift/'.$item->id, $item->name);
         }
 
         foreach($skillArray as $skill) {
@@ -924,7 +919,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/gift/id/'.$item->id, $item->name);
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
 
@@ -934,7 +929,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/gift/id/'.$item->id, $item->name);
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
 
@@ -944,7 +939,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/gift/id/'.$item->id, $item->name);
+                $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
     }
@@ -958,14 +953,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/imperfection/id/'.$item->id, $item->name);
+                $component->linkButton('/content/imperfection/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/imperfection/id/'.$item->id, $item->name);
+            $component->linkButton('/content/imperfection/'.$item->id, $item->name);
         }
     }
 
@@ -978,14 +973,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/manifestation/id/'.$item->id, $item->name);
+                $component->linkButton('/content/manifestation/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/manifestation/id/'.$item->id, $item->name);
+            $component->linkButton('/content/manifestation/'.$item->id, $item->name);
         }
     }
 
@@ -1002,14 +997,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/milestone/id/'.$item->id, $item->name);
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/milestone/id/'.$item->id, $item->name);
+            $component->linkButton('/content/milestone/'.$item->id, $item->name);
         }
 
         foreach($backgroundArray as $background) {
@@ -1018,7 +1013,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/milestone/id/'.$item->id, $item->name);
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
             }
         }
 
@@ -1028,7 +1023,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/milestone/id/'.$item->id, $item->name);
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
             }
         }
 
@@ -1038,7 +1033,7 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/milestone/id/'.$item->id, $item->name);
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
             }
         }
 
@@ -1048,15 +1043,13 @@ class System {
             if(!$list) continue;
 
             foreach($list as $item) {
-                $component->linkButton('/content/milestone/id/'.$item->id, $item->name);
+                $component->linkButton('/content/milestone/'.$item->id, $item->name);
             }
         }
     }
 
     public function listPerson() {
         global $user, $component, $curl, $cookieArray;
-
-        $result = $curl->get('person/popular',null,['order-by' => '{"popularity":"DESC", "thumbsup":"DESC", "nickname":"ASC"}', 'limit-from' => 5]);
 
         $userList = $user->isActive
             ? $user->getPerson()
@@ -1066,11 +1059,7 @@ class System {
             ? unserialize($_COOKIE[$cookieArray['person']])
             : null;
 
-        $popularList = isset($result['data'])
-            ? $result['data']
-            : null;
-
-        $filterList = null;
+        $filterList = [];
 
         if($userList) {
             $component->h1('Your saved persons');
@@ -1078,11 +1067,9 @@ class System {
             foreach($userList as $item) {
                 $filterList[] = $item['id'];
 
-                $isOwner = $item['owner'];
-
-                $link = $isOwner
-                    ? 'play/person/id/'.$item['id'].'/'.$item['secret']
-                    : 'play/person/id/'.$item['id'];
+                $link = $item['owner']
+                    ? 'play/person/'.$item['id'].'/'.$item['secret']
+                    : 'play/person/'.$item['id'];
 
                 $component->linkButton($link,$item['nickname'].' ('.$item['occupation'].')');
             }
@@ -1092,32 +1079,17 @@ class System {
             $component->h1('Persons found in cookies');
 
             foreach($cookieList as $item) {
-                if($filterList && in_array($item['person_id'],$filterList)) {}
-                else {
-                    if(isset($item['person_id'])) {
-                        $filterList[] = $item['person_id'];
+                if(isset($item['id']) && !in_array($item['id'], $filterList)) {
+                    $filterList[] = $item['id'];
 
-                        $isOwner = isset($item['person_hash'])
-                            ? true
-                            : false;
+                    $link = isset($item['secret'])
+                        ? '/play/person/'.$item['id'].'/'.$item['secret']
+                        : '/play/person/'.$item['id'];
 
-                        $link = $isOwner
-                            ? '/play/person/id/'.$item['person_id'].'/'.$item['person_hash']
-                            : '/play/person/id/'.$item['person_id'];
+                    $person = $curl->get('person/id/'.$item['id'])['data'][0];
 
-                        $person = $curl->get('person/id/'.$item['person_id'].'/short')['data'][0];
-
-                        $component->linkButton($link,$person['nickname'].' ('.$person['occupation'].')');
-                    }
+                    $component->linkButton($link, $person['nickname'].' ('.$person['occupation'].')');
                 }
-            }
-        }
-
-        if($popularList) {
-            $component->h2('Most Popular Persons');
-
-            foreach($popularList as $person) {
-                $component->linkButton('/play/person/id/'.$person['id'], $person['firstname'].' "'.$person['nickname'].'" '.$person['surname'].' ('.$person['occupation'].')');
             }
         }
     }
@@ -1133,14 +1105,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/skill/id/'.$item->id, $item->name);
+                $component->linkButton('/content/skill/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/skill/id/'.$item->id, $item->name);
+            $component->linkButton('/content/skill/'.$item->id, $item->name);
         }
     }
 
@@ -1153,14 +1125,62 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/species/id/'.$item->id, $item->name);
+                $component->linkButton('/content/species/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/species/id/'.$item->id, $item->name);
+            $component->linkButton('/content/species/'.$item->id, $item->name);
+        }
+    }
+
+    public function listStory() {
+        global $user, $component, $curl, $cookieArray;
+
+        $userList = $user->isActive
+            ? $user->getStory()
+            : null;
+
+        $cookieList = isset($_COOKIE[$cookieArray['story']])
+            ? unserialize($_COOKIE[$cookieArray['story']])
+            : null;
+
+        $filterList = [];
+
+        if($userList) {
+            $component->h1('Your saved stories');
+
+            foreach($userList as $item) {
+                $filterList[] = $item['id'];
+
+                $link = $item['owner']
+                    ? 'play/story/'.$item['id'].'/'.$item['secret']
+                    : 'play/story/'.$item['id'];
+
+                $component->linkButton($link, $item['name']);
+            }
+        }
+
+        if($cookieList) {
+            $component->h1('Stories found in cookies');
+
+            foreach($cookieList as $item) {
+                if(isset($item['id']) && !in_array($item['id'], $filterList)) {
+                    if(isset($item['id'])) {
+                        $filterList[] = $item['id'];
+
+                        $link = isset($item['secret'])
+                            ? '/play/story/id/'.$item['id'].'/'.$item['secret']
+                            : '/play/story/id/'.$item['id'];
+
+                        $story = $curl->get('story/id/'.$item['id'])['data'][0];
+
+                        $component->linkButton($link, $story['name']);
+                    }
+                }
+            }
         }
     }
 
@@ -1175,14 +1195,14 @@ class System {
         if($userArray) {
             $component->h2('Your Content');
             foreach($userArray as $item) {
-                $component->linkButton('/content/world/id/'.$item->id, $item->name);
+                $component->linkButton('/content/world/'.$item->id, $item->name);
             }
         }
 
         $component->h2('Canon');
 
         foreach($list as $item) {
-            $component->linkButton('/content/world/id/'.$item->id, $item->name);
+            $component->linkButton('/content/world/'.$item->id, $item->name);
         }
     }
 

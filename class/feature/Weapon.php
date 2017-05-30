@@ -83,5 +83,7 @@ class Weapon {
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
             : null;
+
+        $this->siteLink = '/content/weapon/'.$this->id;
     }
 }

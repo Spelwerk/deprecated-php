@@ -38,7 +38,7 @@ class Imperfection {
 
         $this->manifestation = $data['manifestation_id'];
 
-        $this->siteLink = '/content/imperfection/id/'.$this->id;
+        $this->siteLink = '/content/imperfection/'.$this->id;
     }
 
     public function put() {

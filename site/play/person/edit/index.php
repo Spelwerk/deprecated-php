@@ -3,7 +3,7 @@
 if($person->isOwner) {
     $component->returnButton($person->siteLink);
 
-    switch($sitemap->context)
+    switch($sitemap->extra)
     {
         default:
             $component->wrapStart();

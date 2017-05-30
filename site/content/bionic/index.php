@@ -1,20 +1,16 @@
 <?php global $component, $sitemap, $system;
 
-switch($sitemap->index) {
-    default:
-        $component->title('Bionic');
-        $component->returnButton('/content');
-        $system->listBionic();
-        $component->h4('Create');
-        $component->linkButton('/content/bionic/create','Create New');
-        break;
+$index = is_numeric($sitemap->index) && is_int($sitemap->index + 0) ? intval($sitemap->index) : $sitemap->index;
 
-    case 'create':
-        $system->createBionic();
-        break;
-
-    case 'id':
-        require_once('./site/content/bionic/id.php');
-        break;
+if(is_int($index)) {
+    require_once('./site/content/bionic/id.php');
+} else if($index == 'create') {
+    $system->createBionic();
+} else {
+    $component->title('Bionic');
+    $component->returnButton('/content');
+    $system->listBionic();
+    $component->h4('Create');
+    $component->linkButton('/content/bionic/create','Create New');
 }
 ?>

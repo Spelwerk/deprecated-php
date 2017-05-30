@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $skill = new Skill($sitemap->id);
+if($sitemap->index) {
+    $skill = new Skill($sitemap->index);
 
     $component->title($skill->name);
 

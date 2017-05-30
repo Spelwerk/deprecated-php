@@ -43,7 +43,7 @@ class Bionic {
 
         $this->bodypart = $data['bodypart_id'];
 
-        $this->siteLink = '/content/bionic/id/'.$this->id;
+        $this->siteLink = '/content/bionic/'.$this->id;
     }
 
     public function put() {

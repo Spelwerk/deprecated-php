@@ -38,7 +38,7 @@ class Skill {
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
 
-        $this->siteLink = '/content/skill/id/'.$this->id;
+        $this->siteLink = '/content/skill/'.$this->id;
     }
 
     public function put() {

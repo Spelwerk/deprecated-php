@@ -3,7 +3,7 @@
 if($person->isOwner) {
     $component->h2('Gift');
 
-    if($sitemap->context2 == 'add') {
+    if($sitemap->extra2 == 'add') {
         $person->postGift(true);
     } else {
         $component->wrapStart();

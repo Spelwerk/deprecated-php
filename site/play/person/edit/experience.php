@@ -7,9 +7,11 @@ if($person->isOwner) {
     $component->wrapStart();
     $form->formStart([
         'do' => 'person--attribute',
+        'context' => 'person',
+        'context2' => 'attribute',
+        'return' => 'play/person',
         'id' => $person->id,
-        'secret' => $person->secret,
-        'return' => 'play/person/id'
+        'secret' => $person->secret
     ]);
     $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
 

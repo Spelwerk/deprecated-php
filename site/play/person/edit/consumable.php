@@ -8,16 +8,18 @@ if($person->isOwner) {
         $idList[] = $attribute->id;
     }
 
-    if($sitemap->context2 && in_array($sitemap->context2, $idList)) {
-        $attribute = $person->getAttribute(null, $sitemap->context2)[0];
+    if($sitemap->extra2 && in_array($sitemap->extra2, $idList)) {
+        $attribute = $person->getAttribute(null, $sitemap->extra2)[0];
 
         $component->h2($attribute->name);
         $component->wrapStart();
         $form->formStart([
             'do' => 'person--attribute',
+            'context' => 'person',
+            'context2' => 'attribute',
+            'return' => 'play/person',
             'id' => $person->id,
-            'secret' => $person->secret,
-            'return' => 'play/person/id'
+            'secret' => $person->secret
         ]);
         $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
         $form->formEnd();

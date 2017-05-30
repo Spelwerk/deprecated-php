@@ -48,7 +48,7 @@ class Gift {
         $this->skill = $data['skill_id'];
         $this->skillValue = $data['skill_value'];
 
-        $this->siteLink = '/content/gift/id/'.$this->id;
+        $this->siteLink = '/content/gift/'.$this->id;
     }
 
     public function put() {

@@ -46,5 +46,7 @@ class Protection {
             : null;
 
         $this->quality = $data['quality_id'];
+
+        $this->siteLink = '/content/protection/'.$this->id;
     }
 }

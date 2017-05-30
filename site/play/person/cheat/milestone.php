@@ -3,7 +3,7 @@
 if($person->isOwner) {
     $component->h2('Milestone');
 
-    if ($sitemap->context2 == 'add') {
+    if ($sitemap->extra2 == 'add') {
         $person->postMilestone();
     } else {
         $list = $person->getMilestone();

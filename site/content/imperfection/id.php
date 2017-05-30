@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $imperfection = new Imperfection($sitemap->id);
+if($sitemap->index) {
+    $imperfection = new Imperfection($sitemap->index);
 
     $component->title($imperfection->name);
 

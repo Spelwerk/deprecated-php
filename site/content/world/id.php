@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
-if($sitemap->id) {
-    $world = new World($sitemap->id);
+if($sitemap->index) {
+    $world = new World($sitemap->index);
 
     $component->title($world->name);
 

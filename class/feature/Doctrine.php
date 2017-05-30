@@ -39,6 +39,6 @@ class Doctrine {
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
 
-        $this->siteLink = '/content/doctrine/id/'.$this->id;
+        $this->siteLink = '/content/doctrine/'.$this->id;
     }
 }

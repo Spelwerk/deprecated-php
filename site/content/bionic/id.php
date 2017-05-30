@@ -1,7 +1,7 @@
 <?php global $form, $component, $curl, $sitemap, $system, $user;
 
-if($sitemap->id) {
-    $bionic = new Bionic($sitemap->id);
+if($sitemap->index) {
+    $bionic = new Bionic($sitemap->index);
 
     $component->title($bionic->name);
 
