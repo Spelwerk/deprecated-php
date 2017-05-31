@@ -712,10 +712,11 @@ class System {
             $component->subtitle('You will need to select a world in which your story takes place. It will also enable the system to understand what persons you can add.');
             $this->selectWorld('play/story/create');
         } else {
-            $component->h1('Story Details');
+            $component->h1('Create Story');
+            $component->h2('Details');
             $component->wrapStart();
             $form->formStart([
-                'do' => 'story--add',
+                'do' => 'story--post',
                 'return' => 'play/story',
             ]);
             $form->hidden('world_id', $world->id);

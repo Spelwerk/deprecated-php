@@ -1564,8 +1564,8 @@ class Person {
             $list = $user->getPerson();
 
             if($list) {
-                foreach($list as $p) {
-                    if($this->id == $p['person_id'] && $this->secret == $p['secret']) {
+                foreach($list as $item) {
+                    if($this->id == $item->id) {
                         $userOwner = true;
                     }
                 }
@@ -1578,8 +1578,7 @@ class Person {
                 'context' => 'person',
                 'return' => 'play/person',
                 'id' => $this->id,
-                'secret' => $this->secret,
-                'user' => $user-id
+                'secret' => $this->secret
             ]);
             $form->formEnd(false, 'Save this person');
         }

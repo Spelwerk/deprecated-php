@@ -123,17 +123,14 @@ function user_set_token($token) {
     setcookie($cookieName, $token, time() + (86400 * 30), "/");
 }
 
-function user_save($postContext, $userId, $saveId, $saveSecret, $saveOwner) {
-    global $curl;
+function user_save() {
+    global $POST_ID, $POST_SECRET, $POST_CONTEXT, $USER_TOKEN, $curl, $user;
 
-    $contextRoute = 'user-'.$postContext;
-    $contextUnderscore = $postContext.'_id';
+    $post = isset($POST_SECRET)
+        ? ['insert_id' => $POST_ID, 'secret' => $POST_SECRET]
+        : ['insert_id' => $POST_ID];
 
-    $post = isset($saveSecret)
-        ? ['user_id' => $userId, $contextUnderscore => $saveId, 'owner' => $saveOwner, 'secret' => $saveSecret]
-        : ['user_id' => $userId, $contextUnderscore => $saveId, 'owner' => $saveOwner];
-
-    $curl->post($contextRoute,$post);
+    $curl->post('user/id/'.$user->id.'/'.$POST_CONTEXT, $post, $USER_TOKEN);
 }
 
 function user_unset() {
@@ -557,7 +554,7 @@ function switch_story($do) {
             $result = $curl->post('story', $POST_DATA, $USER_TOKEN);
 
             $POST_ID = $result['id'];
-            $POST_SECRET = $result['hash'];
+            $POST_SECRET = $result['secret'];
 
             cookie_add('story', $POST_ID, $POST_SECRET);
             break;
@@ -615,7 +612,7 @@ function switch_user($do) {
             break;
 
         case 'user--save':
-            user_save($POST_CONTEXT, $user->id, $POST_ID, $POST_SECRET, $POST_EXTRA);
+            user_save();
             break;
     }
 }

@@ -274,8 +274,8 @@ class User {
         $result = $curl->get($get);
 
         if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Person($id['id']);
+            foreach ($result['data'] as $item) {
+                $arrayList[] = new Person($item['id'], $item['secret']);
             }
         }
 
@@ -354,8 +354,8 @@ class User {
         $result = $curl->get($get);
 
         if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Story($id['id']);
+            foreach ($result['data'] as $item) {
+                $arrayList[] = new Story($item['id'], $item['secret']);
             }
         }
 

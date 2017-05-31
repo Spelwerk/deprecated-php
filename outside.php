@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2017-04-21
- * Time: 14:21
- */
 require_once('class/Curl.php');
 require_once('php/config.php');
 $curl = new Curl($config_curl);

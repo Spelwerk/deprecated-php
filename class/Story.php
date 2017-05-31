@@ -11,7 +11,7 @@ require_once('World.php');
 
 class Story {
 
-    var $id, $hash, $name, $description, $plot;
+    var $id, $secret, $name, $description, $plot;
 
     var $isOwner;
 
@@ -22,7 +22,7 @@ class Story {
 
         $data = $curl->get('story/id/'.$id)['data'][0];
 
-        $this->hash = isset($secret)
+        $this->secret = isset($secret)
             ? $secret
             : null;
 
@@ -38,7 +38,7 @@ class Story {
         $this->world = isset($data['world_id']) ? new World($data['world_id']) : null;
 
         $this->siteLink = $this->isOwner
-            ? '/play/story/id/'.$this->id.'/'.$this->hash
+            ? '/play/story/id/'.$this->id.'/'.$this->secret
             : '/play/story/id/'.$this->id;
     }
 
@@ -197,7 +197,7 @@ class Story {
             }
         }
 
-        $component->link('/play/story/id/'.$this->id.'/'.$this->hash.'/person/add','Add Person');
+        $component->link('/play/story/id/'.$this->id.'/'.$this->secret.'/person/add','Add Person');
     }
 
     // BUILD
@@ -206,7 +206,7 @@ class Story {
         global $component, $form;
 
         $quick = $this->isOwner
-            ? $form->quick('story--delete--has',$this->id,$this->hash,'play/story/id','delete',[
+            ? $form->quick('story--delete--has',$this->id,$this->secret,'play/story/id','delete',[
                 'context' => $context,
                 'thing' => $thing
             ])
@@ -226,8 +226,8 @@ class Story {
             $list = $user->getStory();
 
             if($list) {
-                foreach($list as $p) {
-                    if($this->id == $p['story_id'] && $this->secret == $p['secret']) {
+                foreach($list as $item) {
+                    if($this->id == $item->id) {
                         $userOwner = true;
                     }
                 }
@@ -240,8 +240,7 @@ class Story {
                 'context' => 'story',
                 'return' => 'play/story',
                 'id' => $this->id,
-                'secret' => $this->secret,
-                'user' => $user-id
+                'secret' => $this->secret
             ]);
             $form->formEnd(false, 'Save this story');
         }
