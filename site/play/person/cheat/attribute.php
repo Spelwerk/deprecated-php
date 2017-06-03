@@ -11,8 +11,7 @@ if($person->isOwner) {
             'context' => 'person',
             'context2' => 'attribute',
             'return' => 'play/person',
-            'id' => $person->id,
-            'secret' => $person->secret
+            'id' => $person->id
         ]);
         $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
         $form->formEnd();

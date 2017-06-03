@@ -11,24 +11,18 @@ require_once('World.php');
 
 class Story {
 
-    var $id, $secret, $name, $description, $plot;
+    var $id, $name, $description, $plot;
 
     var $isOwner;
 
     var $world;
 
-    public function __construct($id = null, $secret = null) {
+    public function __construct($id = null) {
         global $curl;
 
         $data = $curl->get('story/id/'.$id)['data'][0];
 
-        $this->secret = isset($secret)
-            ? $secret
-            : null;
-
-        $this->isOwner = isset($secret) && $secret == $data['secret']
-            ? true
-            : false;
+        $this->isOwner = isset($data['owner']) ? $data['owner'] : false;
 
         $this->id = $data['id'];
         $this->name = $data['name'];
@@ -37,9 +31,7 @@ class Story {
 
         $this->world = isset($data['world_id']) ? new World($data['world_id']) : null;
 
-        $this->siteLink = $this->isOwner
-            ? '/play/story/id/'.$this->id.'/'.$this->secret
-            : '/play/story/id/'.$this->id;
+        $this->siteLink = '/play/story/id/'.$this->id;
     }
 
     public function put() {
@@ -197,7 +189,7 @@ class Story {
             }
         }
 
-        $component->link('/play/story/id/'.$this->id.'/'.$this->secret.'/person/add','Add Person');
+        $component->link($this->siteLink.'/person/add','Add Person');
     }
 
     // BUILD
@@ -206,7 +198,7 @@ class Story {
         global $component, $form;
 
         $quick = $this->isOwner
-            ? $form->quick('story--delete--has',$this->id,$this->secret,'play/story/id','delete',[
+            ? $form->quick('story--delete--has',$this->id,'play/story/id','delete',[
                 'context' => $context,
                 'thing' => $thing
             ])
@@ -239,8 +231,7 @@ class Story {
                 'do' => 'user--save',
                 'context' => 'story',
                 'return' => 'play/story',
-                'id' => $this->id,
-                'secret' => $this->secret
+                'id' => $this->id
             ]);
             $form->formEnd(false, 'Save this story');
         }

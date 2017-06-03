@@ -16,15 +16,16 @@ require_once('class/Sitemap.php');
 require_once('class/User.php');
 require_once('class/System.php');
 
+global $config_curl, $cookieArray;
+
 $component = new Component();
-$curl = new Curl($config_curl);
+$curl = new Curl($config_curl, $cookieArray['token']);
 $form = new Form();
 $user = new User();
 $system = new System();
 
 $menu = new Menu($user);
 $sitemap = new Sitemap($user);
-
 
 echo($sitemap->command0.'/');
 echo($sitemap->command1.'/');
@@ -33,7 +34,6 @@ echo($sitemap->command3.'/');
 echo($sitemap->command4.'/');
 echo($sitemap->command5.'/');
 echo(' = '.$sitemap->page);
-
 
 $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 

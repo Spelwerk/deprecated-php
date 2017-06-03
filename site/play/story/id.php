@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
 if($sitemap->index) {
-    $story = new Story($sitemap->index, $sitemap->secret);
+    $story = new Story($sitemap->index);
 
     $component->title($story->name);
 

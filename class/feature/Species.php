@@ -72,11 +72,14 @@ class Species {
         $component->p('Maximum Age: '.$this->maxAge);
         $component->p('Multiply Skill: '.$this->multiplySkill);
         $component->p('Multiply Expertise: '.$this->multiplyExpertise);
+        $component->h1('Attribute');
+        $this->listAttribute();
 
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            $component->linkButton($this->siteLink.'/attribute','Attribute');
+            $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
+            $component->linkButton($this->siteLink.'/attribute/delete','Delete Attribute',true);
             //$component->linkButton($this->siteLink.'/weapon','Weapon');
 
             $component->h2('Create');
@@ -252,8 +255,5 @@ class Species {
                 $component->listItem($item->name.' ('.$item->value.')', $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/attribute/add','Add');
-        $component->linkButton($this->siteLink.'/attribute/delete','Delete',true);
     }
 }

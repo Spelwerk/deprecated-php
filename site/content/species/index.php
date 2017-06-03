@@ -5,12 +5,12 @@ $index = is_numeric($sitemap->index) && is_int($sitemap->index + 0) ? intval($si
 if(is_int($index)) {
     require_once('./site/content/species/id.php');
 } else if($index == 'create') {
+    $component->title('Species');
     $system->createSpecies();
 } else {
     $component->title('Species');
     $component->returnButton('/content');
     $system->listSpecies();
-    $component->h4('Create');
-    $component->linkButton('/content/species/create','Create New');
+    $component->linkButton('/content/species/create','Create New',false,'sw-is-green');
 }
 ?>

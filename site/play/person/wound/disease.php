@@ -7,8 +7,7 @@ if($person->isOwner) {
     $form->formStart([
         'do' => 'person--wound',
         'id' => $person->id,
-        'secret' => $person->secret,
-        'return' => 'play/person/id',
+        'return' => 'play/person',
         'returnid' => 'disease',
         'context' => 'disease'
     ]);

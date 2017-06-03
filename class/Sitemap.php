@@ -11,7 +11,7 @@ class Sitemap {
 
     var $requestURI, $scriptName, $command;
 
-    var $page, $id, $hash, $secret, $thing, $do;
+    var $page, $id, $hash, $thing, $do;
 
     var $index;
 
@@ -91,9 +91,7 @@ class Sitemap {
     }
 
     function switch_top() {
-        $switch = $this->command0;
-
-        switch($switch) {
+        switch($this->command0) {
             default:
                 $this->page = 'page/home.php';
                 $this->menuID = 'Home';
@@ -204,9 +202,7 @@ class Sitemap {
     }
 
     function switch_play() {
-        $switch = $this->command1;
-
-        switch($switch) {
+        switch($this->command1) {
             default:
                 $this->menuLink = 'Play';
                 $this->page = 'site/play/index.php';
@@ -216,67 +212,54 @@ class Sitemap {
                 $this->menuLink = 'Person';
                 $this->page = 'site/play/person/index.php';
                 $this->index = $this->command2;
-                $this->secret = $this->command3;
-                $this->context = $this->command4;
-                $this->extra = $this->command5;
-                $this->extra2 = $this->command6;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                $this->extra2 = $this->command5;
                 break;
 
             case 'story':
                 $this->menuLink = 'Story';
                 $this->page = 'site/play/story/index.php';
                 $this->index = $this->command2;
-                $this->secret = $this->command3;
-                $this->context = $this->command4;
-                $this->extra = $this->command5;
-                $this->extra2 = $this->command6;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                $this->extra2 = $this->command5;
                 break;
         }
     }
 
     function switch_user() {
-        $switch = $this->command1;
-        $context = $this->command2;
-        $hash = $this->command3;
-
-        switch($switch) {
+        switch($this->command1) {
             default:
-                $this->page = 'page/user/user.php';
-                $this->menuLink = 'Login';
+                $this->menuLink = 'User';
+                $this->page = 'site/user/index.php';
+                $this->index = $this->command1;
                 break;
 
-            case 'new':
-                $this->page = 'page/user/new.php';
-                $this->context = $context;
+            case 'create':
                 $this->menuLink = 'New';
+                $this->page = 'site/user/create/index.php';
+                $this->index = $this->command2;
+                $this->hash = $this->command3;
                 break;
 
             case 'login':
-                $this->page = 'page/user/login.php';
-                $this->context = $context;
                 $this->menuLink = 'Login';
+                $this->page = 'site/user/login/index.php';
+                $this->index = $this->command2;
+                $this->hash = $this->command3;
+                break;
+
+            case 'password':
+                $this->menuLink = 'User';
+                $this->page = 'site/user/password/index.php';
+                $this->index = $this->command2;
+                $this->hash = $this->command3;
                 break;
 
             case 'logout':
-                $this->page = 'page/user/logout.php';
                 $this->menuLink = 'Logout';
-                break;
-
-            case 'verify':
-                $this->page = 'page/user/verify.php';
-                $this->context = $context;
-                $this->hash = $hash;
-                $this->menuLink = 'Login';
-                break;
-
-            case 'sent':
-                $this->page = 'page/user/sent.php';
-                $this->menuLink = 'Login';
-                break;
-
-            case 'me':
-                $this->page = 'page/user/me.php';
-                $this->menuLink = 'Me';
+                $this->page = 'page/user/logout.php';
                 break;
         }
     }

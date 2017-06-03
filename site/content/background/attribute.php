@@ -7,9 +7,7 @@ $component->h1('Attribute');
 
 switch($sitemap->extra)
 {
-    default:
-        $background->listAttribute();
-        break;
+    default: break;
 
     case 'add':
         $background->postAttribute();

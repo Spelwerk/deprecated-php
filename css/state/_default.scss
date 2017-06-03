@@ -14,6 +14,14 @@
   }
 }
 
+.sw-is-green {
+  background-color: $color-green-primary !important;;
+
+  &:hover {
+    background-color: $color-green-secondary !important;;
+  }
+}
+
 .sw-is-highlighted {
   background-color: $color-amber-highlight !important;;
 }

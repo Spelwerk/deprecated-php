@@ -69,12 +69,18 @@ class Manifestation {
         $component->h1('Data');
         $component->p('Power ID: '.$this->power); //todo api return name
         $component->p('Skill ID: '.$this->skill); //todo api return name
+        $component->h1('Focus');
+        $this->listFocus();
+        $component->h1('Doctrine');
+        $this->listDoctrine();
 
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            $component->linkButton($this->siteLink.'/doctrine','Doctrine');
-            $component->linkButton($this->siteLink.'/focus','Focus');
+            $component->linkButton($this->siteLink.'/doctrine/add','Add Doctrine');
+            $component->linkButton($this->siteLink.'/focus/add','Add Focus');
+            $component->linkButton($this->siteLink.'/doctrine/delete','Delete Doctrine',true);
+            $component->linkButton($this->siteLink.'/focus/delete','Delete Focus',true);
 
             $component->h2('Create');
             $component->linkButton($this->siteLink.'/background','Create Background');
@@ -109,12 +115,11 @@ class Manifestation {
     public function postDoctrine() {
         global $component, $form;
 
-        $component->h1('Create Doctrine');
+        $component->h1('Add Doctrine');
 
         $form->formStart([
             'do' => 'basic--post',
             'return' => 'content/manifestation',
-            'returnafter' => 'doctrine',
             'context' => 'doctrine'
         ]);
         $component->wrapStart();
@@ -130,14 +135,13 @@ class Manifestation {
     public function postFocus() {
         global $curl, $component, $form;
 
-        $component->h1('Create Focus');
+        $component->h1('Add Focus');
 
         $attributeList = $curl->get('attribute/special/0')['data'];
 
         $form->formStart([
             'do' => 'basic--post',
             'return' => 'content/manifestation',
-            'returnafter' => 'focus',
             'context' => 'focus'
         ]);
         $component->wrapStart();
@@ -196,9 +200,6 @@ class Manifestation {
                 $component->listItem($item->name, $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/doctrine/add','Add');
-        $component->linkButton($this->siteLink.'/doctrine/delete','Delete',true);
     }
 
     public function listFocus() {
@@ -211,8 +212,5 @@ class Manifestation {
                 $component->listItem($item->name, $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/focus/add','Add');
-        $component->linkButton($this->siteLink.'/focus/delete','Delete',true);
     }
 }

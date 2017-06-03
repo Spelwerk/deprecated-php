@@ -6,8 +6,7 @@ if($person->isOwner) {
     $form->formStart([
         'do' => 'person--edit--description',
         'id' => $person->id,
-        'secret' => $person->secret,
-        'return' => 'play/person/id'
+        'return' => 'play/person'
     ]);
     $form->varchar(true, 'nickname', 'Nickname', null, null, $person->nickname);
     $form->varchar(true, 'firstname', 'First Name', null, null, $person->firstname);

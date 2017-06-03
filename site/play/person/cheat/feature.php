@@ -10,8 +10,7 @@ if($person->isOwner) {
         $form->formStart([
             'do' => 'person--'.$sitemap->extra2,
             'id' => $person->id,
-            'secret' => $person->secret,
-            'return' => 'play/person/id'
+            'return' => 'play/person'
         ]);
     }
 

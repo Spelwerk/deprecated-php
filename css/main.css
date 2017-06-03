@@ -961,6 +961,11 @@ span {
   .sw-is-dangerous:hover {
     background-color: #d50000 !important; }
 
+.sw-is-green {
+  background-color: #7cb342 !important; }
+  .sw-is-green:hover {
+    background-color: #33691b !important; }
+
 .sw-is-highlighted {
   background-color: #ffe57f !important; }
 

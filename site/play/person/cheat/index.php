@@ -28,8 +28,7 @@ if($person->isOwner) {
                 $form->formStart([
                     'do' => 'person--cheat',
                     'id' => $person->id,
-                    'secret' => $person->secret,
-                    'return' => 'play/person/id',
+                    'return' => 'play/person',
                     'returnafter' => 'cheat'
                 ]);
                 $form->formEnd(false, 'Cheat');

@@ -66,17 +66,23 @@ class Background {
         $component->h1('Data');
         $component->p('Species ID: '.$this->species); //todo api return name
         $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+        $component->h1('Attribute');
+        $this->listAttribute();
+        $component->h1('Skill');
+        $this->listSkill();
 
         //todo foreach attribute/skill
 
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            $component->linkButton($this->siteLink.'/attribute','Attribute');
-            $component->linkButton($this->siteLink.'/skill','Skill');
+            $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
+            $component->linkButton($this->siteLink.'/skill/add','Add Skill');
+            $component->linkButton($this->siteLink.'/attribute/delete','Delete Attribute',true);
+            $component->linkButton($this->siteLink.'/skill/delete','Delete Skill',true);
 
             $component->h2('Create');
-            $component->linkButton($this->siteLink.'/milestone','Create Milestone');
+            $component->linkButton($this->siteLink.'/milestone','Create Milestone',false,'sw-is-green');
         }
     }
 
@@ -127,11 +133,9 @@ class Background {
     public function postAttribute() {
         global $component, $form, $curl;
 
-        $component->h1('Add Attribute');
         $form->formStart([
             'do' => 'basic--has--value',
             'return' => 'content/background',
-            'returnafter' => 'attribute',
             'context' => 'background',
             'context2' => 'attribute',
             'id' => $this->id
@@ -156,11 +160,9 @@ class Background {
     public function postSkill() {
         global $component, $form, $curl;
 
-        $component->h1('Add Skill');
         $form->formStart([
             'do' => 'basic--has--value',
             'return' => 'content/background',
-            'returnafter' => 'skill',
             'context' => 'background',
             'context2' => 'skill',
             'id' => $this->id
@@ -202,9 +204,6 @@ class Background {
                 $component->listItem($item->name.' ('.$item->value.')', $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/attribute/add','Add');
-        $component->linkButton($this->siteLink.'/attribute/delete','Delete',true);
     }
 
     public function listSkill() {
@@ -217,8 +216,5 @@ class Background {
                 $component->listItem($item->name.' ('.$item->value.')', $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/skill/add','Add');
-        $component->linkButton($this->siteLink.'/skill/delete','Delete',true);
     }
 }

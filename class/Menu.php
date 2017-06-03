@@ -44,10 +44,11 @@ class Menu {
 
         $menuUser = new MenuList('User');
         if(!$user->isActive) {
+            $menuUser->add('User', '/user');
             $menuUser->add('Login', '/user/login');
             $menuUser->add('New', '/user/new');
         } else {
-            $menuUser->add('Me', '/user/me',true);
+            $menuUser->add('User', '/user/'.$user->id,true);
             $menuUser->add('Logout', '/user/logout',true);
         }
 

@@ -21,7 +21,6 @@ class MenuLink {
     public function build($user) {
         if($this->user && !$user->isActive) {}
         else if($this->admin && !$user->isActive) {}
-        else if($this->user && $user->isActive && !$user->isVerified) {}
         else if($this->admin && $user->isActive && !$user->isAdmin) {}
         else {
             $class = $this->active

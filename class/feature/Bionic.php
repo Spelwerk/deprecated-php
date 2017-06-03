@@ -79,14 +79,20 @@ class Bionic {
         $component->h1('Data');
         $component->p('Energy: '.$this->energy); //todo api return not boolean
         $component->p('Legality: '.$this->legal); //todo api return not boolean
+        $component->h1('Attribute');
+        $this->listAttribute();
+        $component->h1('Augmentation');
+        $this->listAugmentation();
 
         //todo foreach attribute/skill
 
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            $component->linkButton($this->siteLink.'/attribute','Add Attribute');
-            $component->linkButton($this->siteLink.'/augmentation','Add Augmentation');
+            $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
+            $component->linkButton($this->siteLink.'/augmentation/add','Add Augmentation');
+            $component->linkButton($this->siteLink.'/attribute/delete','Delete Attribute',true);
+            $component->linkButton($this->siteLink.'/augmentation/delete','Delete Augmentation',true);
             //todo link to delete();
         }
     }
@@ -138,11 +144,9 @@ class Bionic {
     public function postAttribute() {
         global $component, $form, $curl;
 
-        $component->h1('Add Attribute');
         $form->formStart([
             'do' => 'basic--has--value',
             'return' => 'content/bionic',
-            'returnafter' => 'attribute',
             'context' => 'bionic',
             'context2' => 'attribute',
             'id' => $this->id
@@ -190,9 +194,6 @@ class Bionic {
                 $component->listItem($item->name.' ('.$item->value.')', $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/attribute/add','Add');
-        $component->linkButton($this->siteLink.'/attribute/delete','Delete',true);
     }
 
     public function listAugmentation() {
@@ -205,8 +206,5 @@ class Bionic {
                 $component->listItem($item->name, $item->description, $item->icon);
             }
         }
-
-        $component->linkButton($this->siteLink.'/augmentation/add','Add');
-        $component->linkButton($this->siteLink.'/augmentation/delete','Delete',true);
     }
 }

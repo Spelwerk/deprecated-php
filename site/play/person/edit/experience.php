@@ -10,8 +10,7 @@ if($person->isOwner) {
         'context' => 'person',
         'context2' => 'attribute',
         'return' => 'play/person',
-        'id' => $person->id,
-        'secret' => $person->secret
+        'id' => $person->id
     ]);
     $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
 

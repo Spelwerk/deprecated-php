@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-11-22
- * Time: 13:09
- */
 class User {
     var $isActive, $isVerified, $isAdmin;
 
@@ -18,26 +12,17 @@ class User {
             ? $_COOKIE[$cookieArray['token']]
             : null;
 
-        $result = isset($this->token)
-            ? $curl->get('user/validate', $this->token)
-            : null;
-
-        $data = isset($result['user'])
-            ? $result['user']
-            : null;
-
-        $this->id = $data['id'];
-        $this->email = $data['email'];
-        $this->displayname = $data['displayname'];
-        $this->firstname = $data['firstname'];
-        $this->surname = $data['surname'];
-
         $this->isActive = isset($this->token)
             ? true
             : false;
 
-        $this->isAdmin = intval($data['admin']);
-        $this->isVerified = intval($data['verify']);
+        $result = isset($this->token)
+            ? $curl->get('user/validate')
+            : null;
+
+        $this->id = $result['user']['id'];
+        $this->isAdmin = intval($result['user']['admin']);
+        $this->isVerified = intval($result['user']['verify']);
     }
 
     // GET
@@ -275,7 +260,7 @@ class User {
 
         if(isset($result['data'])) {
             foreach ($result['data'] as $item) {
-                $arrayList[] = new Person($item['id'], $item['secret']);
+                $arrayList[] = new Person($item['id']);
             }
         }
 
@@ -355,7 +340,7 @@ class User {
 
         if(isset($result['data'])) {
             foreach ($result['data'] as $item) {
-                $arrayList[] = new Story($item['id'], $item['secret']);
+                $arrayList[] = new Story($item['id']);
             }
         }
 

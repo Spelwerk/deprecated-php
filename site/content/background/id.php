@@ -22,6 +22,10 @@ if($sitemap->index) {
         case 'skill':
             require_once('./site/content/background/skill.php');
             break;
+
+        case 'milestone':
+            $background->postMilestone();
+            break;
     }
 }
 ?>

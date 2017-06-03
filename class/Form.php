@@ -306,10 +306,6 @@ class Form {
             ? '<input type="hidden" name="post--id" value="'.$options['id'].'"/>'
             : null;
 
-        $postHash = isset($options['secret'])
-            ? '<input type="hidden" name="post--secret" value="'.$options['secret'].'"/>'
-            : null;
-
         $postUser = isset($options['user'])
             ? '<input type="hidden" name="post--user" value="'.$options['user'].'"/>'
             : null;
@@ -350,7 +346,6 @@ class Form {
             '<form action="/post.php" method="post">'.
             $postDo.
             $postId.
-            $postHash.
             $postUser.
             $postReturn.
             $postReturnId.
@@ -576,10 +571,6 @@ class Form {
             ? '<input type="hidden" name="post--id" value="'.$options['id'].'"/>'
             : null;
 
-        $postSecret = isset($options['secret']) && $options['secret'] != null
-            ? '<input type="hidden" name="post--secret" value="'.$options['secret'].'"/>'
-            : null;
-
         $postReturn = isset($options['return']) && $options['return'] != null
             ? '<input type="hidden" name="post--return" value="'.$options['return'].'"/>'
             : null;
@@ -612,7 +603,6 @@ class Form {
             '<form action="/'.$formAction.'" method="post">'.
             $postDo.
             $postId.
-            $postSecret.
             $postReturn.
             $postReturnId.
             $postReturnAfter.

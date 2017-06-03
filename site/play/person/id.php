@@ -1,7 +1,7 @@
 <?php global $component, $sitemap, $system;
 
 if($sitemap->index) {
-    $person = new Person($sitemap->index, $sitemap->secret);
+    $person = new Person($sitemap->index);
 
     $component->title($person->nickname);
 
