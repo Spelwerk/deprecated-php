@@ -1,0 +1,14 @@
+.sw-c-iconlist {
+
+  &__item {
+    @include padding(0.8rem);
+
+    display: inline-block;
+
+    border-radius: 1rem;
+
+    img {
+      @include size(3.2rem);
+    }
+  }
+}

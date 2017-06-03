@@ -522,18 +522,15 @@ class Form {
 
         $list = $curl->get('icon')['data'];
 
-        echo(
-            '<h3>Select Icon</h3>'.
-            '<div class="sw-l-iconlist">'
-        );
+        echo('<h2>Select Icon</h2><div class="sw-c-iconlist">');
 
         foreach($list as $icon) {
             echo(
                 '<label for="item--icon__'.$icon['id'].'">'.
-                '<div class="sw-l-iconlist__item sw-js-icon-item">'.
+                '<div class="sw-c-iconlist__item sw-js-icon-item">'.
                 '<img src="'.$icon['path'].'"/>'.
                 '</div>'.
-                '<input class="sw-js-icon-radio sw-is-hidden" type="radio" name="item--icon" id="item--icon__'.$icon['id'].'" value="'.$icon['id'].'"/>'.
+                '<input class="sw-js-icon-radio sw-is-hidden" type="radio" name="item--icon" id="item--icon__'.$icon['id'].'" value="'.$icon['path'].'"/>'.
                 '</label>'
             );
         }

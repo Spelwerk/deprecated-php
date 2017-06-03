@@ -53,6 +53,7 @@ class Focus {
             $component->wrapStart();
             $form->varchar(true,'name','Name',null,null,$this->name);
             $form->text(false,'description','Description',null,null,$this->description);
+            $form->icon();
             $component->wrapEnd();
             $form->formEnd();
         }
@@ -63,6 +64,7 @@ class Focus {
 
         $component->returnButton('/content/focus');
 
+        if($this->icon) $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');

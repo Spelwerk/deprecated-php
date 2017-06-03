@@ -64,6 +64,7 @@ class Bionic {
             $form->text(false,'description','Description');
             $form->number(true,'energy','Energy','Amount of energy this bionic has in store to install extra augmentations.',null,0,16);
             $form->pick(true,'legal','Legality','Will a person be arrested for using this bionic?',null,'Legal','Illegal');
+            $form->icon();
             $component->wrapEnd();
             $form->formEnd();
         }
@@ -74,6 +75,7 @@ class Bionic {
 
         $component->returnButton('/content/bionic');
 
+        if($this->icon) $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');

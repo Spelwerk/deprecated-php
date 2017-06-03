@@ -46,6 +46,10 @@ class Component {
         echo('<div class="sw-t-subtitle">'.$content.'</div>');
     }
 
+    public function roundImage($path) {
+        echo('<div class="sw-c-roundimage"><img src="'.$path.'"/></div>');
+    }
+
     public function p($content) {
         echo('<p>'.$content.'</p>');
     }

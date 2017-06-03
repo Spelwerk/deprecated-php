@@ -453,6 +453,14 @@ input[type=submit] {
   background-color: #ffd740;
   cursor: default; }
 
+.sw-c-iconlist__item {
+  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+  display: inline-block;
+  border-radius: 1rem; }
+  .sw-c-iconlist__item img {
+    height: 3.2rem;
+    width: 3.2rem; }
+
 .sw-c-list__head {
   display: table;
   table-layout: fixed;
@@ -789,6 +797,19 @@ input[type=submit] {
     color: #283593;
     text-align: right;
     vertical-align: middle; }
+
+.sw-c-roundimage {
+  margin-left: auto;
+  margin-right: auto;
+  height: 7rem;
+  width: 7rem; }
+  .sw-c-roundimage img {
+    height: 7rem;
+    width: 7rem;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 3.5rem;
+    background-color: #ffffff; }
 
 .sw-c-viewmore {
   padding-top: 3rem; }

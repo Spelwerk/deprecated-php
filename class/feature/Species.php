@@ -49,6 +49,7 @@ class Species {
         $form->varchar(true,'name','Name',null,null,$this->name);
         $form->text(false,'description','Description',null,null,$this->description);
         $form->number(false,'max_age','Maximum Age','What is the maximum age your species can live?',null,1,12,$this->maxAge);
+        $form->icon();
         $component->wrapEnd();
 
         $component->h2('Multiplication');
@@ -66,6 +67,7 @@ class Species {
 
         $component->returnButton('/content/species');
 
+        if($this->icon) $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');
