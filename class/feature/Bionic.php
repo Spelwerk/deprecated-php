@@ -52,8 +52,8 @@ class Bionic {
 
             $bodypartList = $curl->get('bodypart')['data'];
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'return' => 'content/bionic',
                 'context' => 'bionic',
                 'id' => $this->id
@@ -66,7 +66,7 @@ class Bionic {
             $form->pick(true,'legal','Legality','Will a person be arrested for using this bionic?',null,'Legal','Illegal');
             $form->icon();
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 
@@ -146,8 +146,8 @@ class Bionic {
     public function postAttribute() {
         global $component, $form, $curl;
 
-        $form->formStart([
-            'do' => 'basic--has--value',
+        $form->form([
+            'do' => 'relation--value--post',
             'return' => 'content/bionic',
             'context' => 'bionic',
             'context2' => 'attribute',
@@ -161,7 +161,7 @@ class Bionic {
         $form->number(true,'value','Value',null,null,1,8,1);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postAugmentation() {

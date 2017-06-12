@@ -33,10 +33,12 @@ class Skill {
         $this->icon = $data['icon'];
 
         $this->maximum = $defaults['maximum'];
+        $this->required = $defaults['required'];
+        $this->increment = $defaults['increment'];
 
         $this->species = $data['species_id'];
 
-        $this->value = isset($data['value']) ? $data['value'] : 0;
+        $this->value = isset($data['value']) ? intval($data['value']) : 0;
 
         $this->siteLink = '/content/skill/'.$this->id;
     }
@@ -45,8 +47,8 @@ class Skill {
         if($this->isOwner) {
             global $component, $form;
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'return' => 'content/skill',
                 'context' => 'skill',
                 'id' => $this->id
@@ -56,7 +58,7 @@ class Skill {
             $form->text(false,'description','Description',null,null,$this->description);
             $form->icon();
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 

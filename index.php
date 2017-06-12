@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-11-30
- * Time: 12:05
- */
-
 require_once('php/config.php');
 
 require_once('class/Component.php');
@@ -45,7 +38,7 @@ $menu->findActive($sitemap->menuID, $sitemap->menuLink);
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/v3/main.css"/>
 
     <script src="/dependency/prefixfree.min.js"></script>
     <script src="/dependency/jquery-3.2.0.min.js"></script>

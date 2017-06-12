@@ -37,8 +37,8 @@ class Species {
     public function put() {
         global $form, $component;
 
-        $form->formStart([
-            'do' => 'basic--put',
+        $form->form([
+            'do' => 'put',
             'return' => 'content/species',
             'context' => 'species',
             'id' => $this->id
@@ -59,7 +59,7 @@ class Species {
         $form->number(false,'multiply_expertise','Multiplying Expertise','Increase this if your species should receive bonuses to expertises',null,1,16,$this->multiplyExpertise);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function view() {
@@ -170,8 +170,8 @@ class Species {
         global $component, $form, $curl;
 
         $component->h1('Add Attribute');
-        $form->formStart([
-            'do' => 'basic--has--value',
+        $form->form([
+            'do' => 'relation--value--post',
             'return' => 'content/species',
             'returnafter' => 'attribute',
             'context' => 'species',
@@ -186,7 +186,7 @@ class Species {
         $form->number(true,'value','Value',null,null,1,8,1);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postBackground() {

@@ -38,8 +38,8 @@ class Story {
         if($this->isOwner) {
             global $component, $form;
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'context' => 'story',
                 'return' => 'content/focus',
                 'id' => $this->id
@@ -49,7 +49,7 @@ class Story {
             $form->text(false,'description','Description',null,null,$this->description);
             $form->text(false,'plot','Plot',null,null,$this->plot);
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 
@@ -227,13 +227,14 @@ class Story {
         }
 
         if(!$userOwner) {
-            $form->formStart([
-                'do' => 'user--save',
+            $form->form([
+                'special' => 'user',
+                'do' => 'save',
                 'context' => 'story',
                 'return' => 'play/story',
                 'id' => $this->id
             ]);
-            $form->formEnd(false, 'Save this story');
+            $form->submit(false, 'Save this story');
         }
     }
 }

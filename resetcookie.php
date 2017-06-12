@@ -1,17 +1,9 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 07/04/2017
- * Time: 09:24
- */
-require_once('php/config.php');
+<?php require_once('php/config.php');
 
-global $cookieArray;
+global $config_policy, $config_token;
 
-foreach($cookieArray as $key => $value) {
-    setcookie($value, '', time() -2000);
-}
+setcookie($config_policy, '', time() -2000);
+setcookie($config_token, '', time() -2000);
 
 ob_start();
 header('Location: '.$baseUrl.$_GET['return'], true, 303);

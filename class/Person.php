@@ -109,8 +109,6 @@ class Person {
             $this->postManifestation();
         } else if($this->isSupernatural && !isset($this->focus)) {
             $this->postFocus();
-        } else if($this->isSupernatural && $this->pointDoctrineExpertise > 0) {
-            $this->postDoctrineRadio();
         } else if($this->isSupernatural && $this->pointPower > 0) {
             $this->postPower();
         } else if($this->pointMoney > 0) {
@@ -120,11 +118,11 @@ class Person {
         } else if(!isset($this->identity)) {
             $this->postIdentity();
         } else if($this->pointGift > 0) {
-            $this->postGift(false, true);
+            $this->postGift(false);
         } else if($this->pointImperfection > 0) {
-            $this->postImperfection(false, true);
+            $this->postImperfection(false);
         } else if($this->pointMilestone > 0) {
-            $this->postMilestone(null, true);
+            $this->postMilestone(false);
         } else if($this->pointSkill > 0) {
             $this->postSkill(false, true);
         } else if($this->pointExpertise > 0) {
@@ -140,8 +138,6 @@ class Person {
 
     public function view() {
         global $component;
-
-        echo('<div class="sw-js-person-name sw-is-hidden">'.$this->nickname.'</div>');
 
         if($this->isOwner && !$this->isCalculated && $this->isPlayable) {
             $this->create();
@@ -214,7 +210,6 @@ class Person {
             if($this->isPlayable && $this->isCalculated) {
                 $component->h2('Features');
                 $this->makeFeatures();
-                //$this->makeExpertiseList();
                 $this->makeAttributeList();
 
                 if($this->isOwner) {
@@ -331,6 +326,22 @@ class Person {
         return $arrayList;
     }
 
+    public function getDoctrine() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('person/id/'.$this->id.'/doctrine');
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Doctrine(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getExpertise($override = null) {
         global $curl;
 
@@ -435,6 +446,22 @@ class Person {
         return $arrayList;
     }
 
+    public function getSkill() {
+        global $curl;
+
+        $arrayList = null;
+
+        $result = $curl->get('person/id/'.$this->id.'/skill');
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Skill(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getSoftware() {} // todo
 
     public function getWeapon($equipped = null) {
@@ -481,76 +508,81 @@ class Person {
         global $system, $form, $component;
 
         $bionic = $this->getBionic($bionicId)[0];
-        $augmentationList = $this->world->getAugmentation($bionicId);
+        $list = $this->world->getAugmentation($bionicId);
         $idList = $system->idList($this->getAugmentation());
 
         $component->h2($bionic->name);
 
-        $form->formStart([
-            'do' => 'person--has--post',
-            'return' => 'play/person',
+        $form->form([
+            'do' => 'relation--post',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'augmentation',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
-
-        $form->checkboxList($augmentationList, [
+        $form->checkboxList($list,[
             'idList' => $idList
         ]);
-
         $form->hidden('bionic_id', $bionicId);
-
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postBackground() {
-        global $component;
+        global $component, $form;
 
-        $component->linkAction('#','Bookmark this Person','The framework for your character has been created in our database. Time to bookmark so you can return whenever you want!','/img/link-bookmark-w.png',true,'sw-js-bookmark');
+        $list = $this->world->getBackground('/species/'.$this->species->id);
 
         $component->h1('Background');
-        $component->subtitle('You will select <span>1</span> background from which you will gain a few attribute and skill changes.');
+        $component->subtitle('You will select <span>1</span> background from which you may gain a few attribute and skill changes.');
 
-        $this->radioList('background', $this->world->getBackground('/species/'.$this->species->id), [
-            'roll' => 'Background'
+        $form->form([
+            'do' => 'context--put',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'background',
+            'return' => 'play/person'
         ]);
+        $form->randomRadio('Background');
+        $form->viewStart();
+        $form->radioList($list);
+        $form->viewEnd();
+        $form->submit();
     }
 
     public function postBionic() {
         global $system, $form;
 
-        $bionicList = $this->world->getBionic();
+        $list = $this->world->getBionic();
         $idList = $system->idList($this->getBionic());
 
-        $form->formStart([
-            'do' => 'person--has--post',
-            'return' => 'play/person',
+        $form->form([
+            'do' => 'relation--post',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'bionic',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
-
-        $form->checkboxList($bionicList, [
+        $form->checkboxList($list, [
             'idList' => $idList
         ]);
-
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
-    public function postDescription($post = false) {
+    public function postDescription($creation = false) {
         global $form, $component;
 
-        $post = $post ? 'post--' : null;
+        $do = $creation ? 'post--description' : 'put';
 
         $component->h1('Name & Details');
 
         $component->wrapStart();
-        $form->formStart([
-            'do' => 'person--'.$post.'description',
-            'return' => 'play/person',
-            'id' => $this->id
+        $form->form([
+            'special' => 'person',
+            'do' => $do,
+            'id' => $this->id,
+            'return' => 'play/person'
         ]);
         $form->varchar(true, 'firstname', 'First Name');
         $form->varchar(true, 'surname', 'Surname');
@@ -561,205 +593,154 @@ class Person {
         $form->text(false, 'description', 'Description', 'Describe your character.');
         $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
         $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
-        $form->formEnd();
+        $form->submit();
         $component->wrapEnd();
     }
 
-    public function postDoctrine($cheat = false, $post = false) {
+    public function postDoctrine($cheat = false, $creation = false) {
         global $component, $curl, $form;
-
-        $do = $post ? 'person--post--doctrine' : 'person--experience--post';
 
         $component->h1($this->manifestation->name);
 
-        $exp = $this->getAttribute(null, $this->world->experienceAttribute)[0];
-        $pts = $this->pointDoctrine;
+        $do = $creation ? 'post--doctrine' : 'relation--value--post';
 
-        $points = intval($exp->value + $pts);
+        $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+        $doctrineList = $this->world->getDoctrine($this->manifestation->id);
 
-        $override = '/type/'.$this->manifestation->disciplineAttributeType.'/species/'.$this->species->id;
+        $powerValue = $curl->get('person/id/'.$this->id.'/attribute/id/'.$this->manifestation->power)[0]['value'];
 
-        $supernaturalList = $this->world->getAttribute($override);
-        $expertiseList = $this->getExpertise();
-        $currentList = $this->getAttribute($this->manifestation->disciplineAttributeType);
-        $idList = [];
-        $expList = [];
+        $creationPoints = $creation ? intval($this->pointDoctrine) : 0;
+        $experiencePoints = $creation ? 0 : intval($experience->value);
 
-        $personPower = $curl->get('person/id/'.$this->id.'/attribute/id/'.$this->manifestation->powerAttribute)['data'][0]['value'];
+        $totalPoints = $creationPoints + $experiencePoints;
 
-        $form->formStart([
+        $form->form([
+            'special' => 'person',
             'do' => $do,
-            'return' => 'play/person',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'doctrine',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
 
         if($cheat) {
             echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
         } else {
-            $form->points($points);
-            $form->hidden('experience', $this->world->experienceAttribute, 'post');
+            $form->points($totalPoints);
+            $form->hidden('experience', $experience->id, 'post');
         }
 
-        if(count($currentList) != null) {
-            foreach($currentList as $current) {
-                $idList[] = $current->id;
+        foreach($doctrineList as $doctrine) {
+            $maximum = $powerValue > $doctrine->maximum
+                ? $doctrine->maximum
+                : $powerValue;
 
-                $maximum = $personPower > $current->maximum
-                    ? $current->maximum
-                    : $personPower;
-
-                $form->purchase('insert_id', $current->name, $current->description, $current->icon, $current->id, 0, $maximum, $current->value);
-            }
+            $form->purchase('insert_id', $doctrine->name, $doctrine->description, $doctrine->id, 0, $maximum, $doctrine->value);
         }
 
-        foreach($expertiseList as $expertise) {
-            $expList[] = $expertise->attribute['id'];
-        }
-
-        foreach($supernaturalList as $supernatural) {
-            if(in_array($supernatural->id, $expList) && !in_array($supernatural->id, $idList)) {
-
-                $maximum = $personPower > $supernatural->maximum
-                    ? $current->maximum
-                    : $personPower;
-
-                $form->purchase('insert_id', $supernatural->name, $supernatural->description, $supernatural->id, 0, $maximum);
-            }
-        }
-
-        $form->formEnd();
+        $form->submit();
     }
 
-    public function postDoctrineRadio() {
-        global $component;
+    public function postExpertise($cheat = false, $creation = false) {
+        global $component, $form;
 
-        $component->h1('Doctrine');
-        $component->subtitle('You will get <span>1</span> doctrine for free.');
+        $do = $creation ? 'post--expertise' : 'relation--value--post';
 
-        $this->radioList('post--doctrine--expertise', $this->world->getExpertise('/manifestation/'.$this->manifestation->id.'/doctrine'));
-    }
+        $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+        $skillList = $this->getSkill();
 
-    public function postExpertise($cheat = false, $post = false) {
-        global $component, $form, $curl;
+        $creationPoints = $creation ? intval($this->pointSkill) : 0;
+        $experiencePoints = $creation ? 0 : intval($experience->value);
 
-        $do = $post ? 'person--post--expertise' : 'person--experience--post';
+        $totalPoints = $creationPoints + $experiencePoints;
 
         $component->h1('Expertise');
+        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to purchase Expertises.');
 
-        $exp = $this->getAttribute(null, $this->world->experienceAttribute)[0];
-        $pts = $this->pointExpertise;
-
-        $points = intval($exp->value + $pts);
-
-        $typeList = $curl->get('expertisetype')['data'];
-        $skillList = $this->getAttribute($this->world->skillAttributeType);
-        $currentList = $this->getExpertise();
-        $idList = [];
-
-        $form->formStart([
+        $form->form([
+            'special' => 'person',
             'do' => $do,
-            'return' => 'play/person',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'expertise',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
 
         if($cheat) {
             echo('<span class="sw-js-points-text sw-is-hidden">9999</span>');
         } else {
-            $form->points($points);
-            $form->hidden('experience', $this->world->experienceAttribute, 'post');
+            $form->points($totalPoints);
+            $form->hidden('experience', $experience->id, 'post');
         }
 
-        if(count($currentList) != null) {
-            foreach($currentList as $current) {
-                $idList[] = $current->id;
+        foreach($skillList as $skill) {
+            if($skill->value >= $skill->required) {
+                $math1 = $skill->value - $skill->required;
+                $math2 = floor($math1 / $skill->increment);
 
-                $skillVal = 0;
+                $override = $this->isSupernatural
+                    ? '/skill/' . $skill->id . '/species/' . $this->species->id . '/manifestation/' . $this->manifestation->id
+                    : '/skill/' . $skill->id . '/species/' . $this->species->id;
 
-                foreach($skillList as $skill) {
-                    if($skill->id == $current->skill['id']) {
-                        $skillVal = $skill->value;
-                    }
-                }
+                $expertiseList = $this->world->getExpertise($override);
 
-                $math1 = $skillVal - $current->skill['required'];
-                $math2 = floor($math1 / $current->skill['increment']);
+                foreach($expertiseList as $expertise) {
+                    $calculatedMax = $expertise->maximum <= $math2
+                        ? $expertise->maximum
+                        : $math2 + 1;
 
-                $calculatedMax = $current->maximum < $math2
-                    ? $current->maximum
-                    : $math2 + 1;
-
-                if($calculatedMax != 0) {
-                    $form->purchase('insert_id', $current->name, $current->description, $current->icon, $current->id, 0, $calculatedMax, $current->level);
-                }
-            }
-        }
-
-        foreach($typeList as $type) {
-            foreach($skillList as $skill) {
-                if($skill->value >= $type['skill_attribute_required']) {
-
-                    $override = '/type/'.$type['id'].'/skill/'.$skill->id.'/species/'.$this->species->id;
-
-                    $expertiseList = $this->world->getExpertise($override);
-
-                    $math1 = $skill->value - $type['skill_attribute_required'];
-                    $math2 = floor($math1 / $type['skill_attribute_increment']);
-
-                    if(isset($expertiseList)) {
-                        foreach($expertiseList as $expertise) {
-                            if(!in_array($expertise->id, $idList)) {
-                                $calculatedMax = $expertise->maximum < $math2
-                                    ? $expertise->maximum
-                                    : $math2 + 1;
-
-                                $form->purchase('insert_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax);
-                            }
-                        }
+                    if($calculatedMax != 0) {
+                        $form->purchase('insert_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax, $expertise->value);
                     }
                 }
             }
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postFocus() {
-        global $component;
+        global $component, $form;
+
+        $focusList = $this->manifestation->getFocus();
 
         $component->h1('Focus');
+        $component->subtitle('You will select <span>1</span> focus from which you draw your power.');
 
-        $this->radioList('focus', $this->world->getFocus($this->manifestation->id));
+        $form->form([
+            'do' => 'context--put',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'focus',
+            'return' => 'play/person'
+        ]);
+        $form->randomRadio('Focus');
+        $form->viewStart();
+        $form->radioList($focusList);
+        $form->viewEnd();
+        $form->submit();
     }
 
-    public function postGift($cheat = false, $post = false) {
+    public function postGift($cheat = false) {
         global $component, $system, $form;
-
-        $do = $post ? 'person--post--gift' : 'person--put--context';
 
         $component->h1('Gift');
         $component->subtitle('Get <span>'.$this->pointGift.'</span> gift that sets your character aside from others.');
 
         $list = null;
 
-        if($this->isSupernatural) {
-            $override = '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id;
-        } else {
-            $override = '/species/'.$this->species->id;
-        }
+        $override = $this->isSupernatural
+            ? '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id
+            : '/species/'.$this->species->id;
 
         $list = $this->world->getGift($override);
-
         $idList = $system->idList($this->getGift());
 
-        $form->formStart([
-            'do' => $do,
-            'context' => 'gift',
-            'return' => 'play/person',
-            'id' => $this->id
+        $form->form([
+            'special' => 'person',
+            'do' => 'post--gift',
+            'id' => $this->id,
+            'return' => 'play/person'
         ]);
 
         if($cheat) {
@@ -770,44 +751,54 @@ class Person {
 
         $form->randomRadio('Gift');
         $form->viewStart();
-        $system->radioList('insert_id',$list, $idList);
+        $form->radioList($list,[
+            'idList' => $idList
+        ]);
         $form->viewEnd();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postIdentity() {
-        global $component;
+        global $component, $form;
+
+        $list = $this->world->getIdentity();
 
         $component->h1('Identity');
 
-        $this->radioList('identity', $this->world->getIdentity());
+        $form->form([
+            'do' => 'context--put',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'identity',
+            'return' => 'play/person'
+        ]);
+        $form->randomRadio('Identity');
+        $form->viewStart();
+        $form->radioList($list);
+        $form->viewEnd();
+        $form->submit();
     }
 
-    public function postImperfection($cheat = false, $post = false) {
+    public function postImperfection($cheat = false) {
         global $component, $system, $form;
-
-        $do = $post ? 'person--post--imperfection' : 'person--put--context';
 
         $component->h1('Imperfection');
         $component->subtitle('Get <span>'.$this->pointImperfection.'</span> imperfection that sets your character aside from others.');
 
         $list = null;
 
-        if($this->isSupernatural) {
-            $override = '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id;
-        } else {
-            $override = '/species/'.$this->species->id;
-        }
+        $override = $this->isSupernatural
+            ? '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id
+            : '/species/'.$this->species->id;
 
         $list = $this->world->getImperfection($override);
-
         $idList = $system->idList($this->getImperfection());
 
-        $form->formStart([
-            'do' => $do,
-            'context' => 'imperfection',
-            'return' => 'play/person',
-            'id' => $this->id
+        $form->form([
+            'special' => 'person',
+            'do' => 'post--imperfection',
+            'id' => $this->id,
+            'return' => 'play/person'
         ]);
 
         if($cheat) {
@@ -818,105 +809,151 @@ class Person {
 
         $form->randomRadio('Imperfection');
         $form->viewStart();
-
-        $form->radioList($list,
-            ['idList' => $idList
+        $form->radioList($list,[
+            'idList' => $idList
         ]);
-
         $form->viewEnd();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postManifestation() {
-        global $component;
+        global $component, $form;
+
+        $list = $this->world->getManifestation();
 
         $component->h1('Manifestation');
 
-        $this->radioList('manifestation', $this->world->getManifestation());
+        $form->form([
+            'do' => 'context--put',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'manifestation',
+            'return' => 'play/person'
+        ]);
+        $form->randomRadio('Manifestation');
+        $form->viewStart();
+        $form->radioList($list);
+        $form->viewEnd();
+        $form->submit();
     }
 
-    public function postMilestone($points = null, $post = false) {
+    public function postMilestone($cheat = false) {
         global $component, $system, $form;
 
-        $do = $post ? 'person--post--milestone' : 'person--put--context';
-
-        $component->h1('Milestone');
-        $component->subtitle('Get <span>'.$this->pointMilestone.'</span> milestones that have happened to your character.');
-
-        $list = null;
-        $override = null;
-
-        $points = isset($points)
-            ? $points
+        $points = $cheat
+            ? 1
             : $this->pointMilestone;
 
-        if($this->isSupernatural) {
-            $override = '/background/'.$this->background->id.'/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id;
-        } else {
-            $override = '/background/'.$this->background->id.'/species/'.$this->species->id;
-        }
+        $component->h1('Milestone');
+        $component->subtitle('Get <span>'.$points.'</span> milestones that have happened to your character.');
+
+        $list = null;
+
+        $override = $this->isSupernatural
+            ? '/background/'.$this->background->id.'/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id
+            : '/background/'.$this->background->id.'/species/'.$this->species->id;
 
         $list = $this->world->getMilestone($override);
         $idList = $system->idList($this->getMilestone());
 
-        $form->formStart([
-            'do' => $do,
-            'context' => 'milestone',
-            'return' => 'play/person',
-            'id' => $this->id
+        $form->form([
+            'special' => 'person',
+            'do' => 'post--milestone',
+            'id' => $this->id,
+            'return' => 'play/person'
         ]);
 
         $form->points($points);
-        $form->randomRadio('milestone');
+        $form->randomRadio('Milestone');
         $form->viewStart();
-
         $form->radioList($list, [
             'idList' => $idList
         ]);
-
         $form->viewEnd();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postMoney() {
-        global $component;
+        global $component, $curl, $form;
 
         $component->h1('Money');
-        $component->subtitle('You will be rolling <span class="sw-js-points-text">'.$this->pointMoney.'</span> dice to either improve or impair your financial status.');
+        $component->subtitle('You will be rolling <span>'.$this->pointMoney.'</span> dice to either improve or impair your financial status.');
 
-        $this->rollAttribute('post--money', $this->world->moneyAttribute, $this->pointMoney);
+        $attribute = $curl->get('attribute/id/'.$this->world->moneyAttribute)['data'][0];
+
+        $component->wrapStart();
+        $form->form([
+            'special' => 'person',
+            'do' => 'post--money',
+            'id' => $this->id,
+            'return' => 'play/person'
+        ]);
+        $form->points($this->pointMoney);
+        $form->randomNumber($attribute['name'], $this->pointMoney);
+        $form->viewStart();
+        $form->number(true, 'insert_id', $attribute['name'], $attribute['description'], $attribute['id'], null, $attribute['maximum']);
+        $form->viewEnd();
+        $form->submit();
+        $component->wrapEnd();
     }
 
     public function postNature() {
-        global $component;
+        global $component, $form;
+
+        $list = $this->world->getNature();
 
         $component->h1('Nature');
 
-        $this->radioList('nature', $this->world->getNature());
+        $form->form([
+            'do' => 'context--put',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'nature',
+            'return' => 'play/person'
+        ]);
+        $form->randomRadio('Nature');
+        $form->viewStart();
+        $form->radioList($list);
+        $form->viewEnd();
+        $form->submit();
     }
 
     public function postPower() {
-        global $component, $curl;
+        global $component, $curl, $form;
 
-        $attribute = $curl->get('attribute/id/'.$this->manifestation->powerAttribute)['data'][0];
+        $component->h1('Money');
+        $component->subtitle('You will be rolling <span>'.$this->pointPower.'</span> dice to either improve or impair your financial status.');
 
-        $component->h1($attribute['name']);
+        $attribute = $curl->get('attribute/id/'.$this->manifestation->power)['data'][0];
 
-        $this->rollAttribute('post--power', $this->manifestation->powerAttribute, $this->pointPower);
+        $component->wrapStart();
+        $form->form([
+            'special' => 'person',
+            'do' => 'post--power',
+            'id' => $this->id,
+            'return' => 'play/person'
+        ]);
+        $form->points($this->pointPower);
+        $form->randomNumber($attribute['name'], $this->pointPower);
+        $form->viewStart();
+        $form->number(true, 'insert_id', $attribute['name'], $attribute['description'], $attribute['id'], null, $attribute['maximum']);
+        $form->viewEnd();
+        $form->submit();
+        $component->wrapEnd();
     }
 
     public function postProtection() {
         global $system, $form, $curl, $component;
 
         $typeList = $curl->get('protectiontype')['data'];
-        $idList = $this->idList($this->getProtection());
+        $idList = $system->idList($this->getProtection());
 
-        $form->formStart([
-            'do' => 'person--has--post',
-            'return' => 'play/person',
+        $form->form([
+            'do' => 'relation--post',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'protection',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
 
         foreach($typeList as $type) {
@@ -930,44 +967,46 @@ class Person {
         }
 
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
-    public function postSkill($cheat = false, $post = false) {
+    public function postSkill($cheat = false, $creation = false) {
         global $component, $form;
 
-        $do = $post ? 'person--post--skill' : 'person--experience--post';
+        $do = $creation ? 'post--skill' : 'relation--value--post';
 
-        $exp = $this->getAttribute(null, $this->world->experienceAttribute)[0];
-        $pts = $this->pointSkill;
+        $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+        $skillList = $this->getSkill();
 
-        $points = intval($exp->value + $pts);
+        $creationPoints = $creation ? intval($this->pointSkill) : 0;
+        $experiencePoints = $creation ? 0 : intval($experience->value);
+
+        $totalPoints = $creationPoints + $experiencePoints;
 
         $component->h1('Skill');
-        $component->subtitle('You will be using <span>'.$this->pointSkill.'</span> points to purchase Skills. Try to get at least 1 above 4, and a couple above 2.');
+        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to purchase Skills. Ensure that at least one skill is above 3.');
 
-        $currentList = $this->getAttribute($this->world->skillAttributeType);
-
-        $form->formStart([
+        $form->form([
+            'special' => 'person',
             'do' => $do,
-            'return' => 'play/person',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'skill',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
 
         if($cheat) {
             echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
         } else {
-            $form->points($points);
-            $form->hidden('experience', $this->world->experienceAttribute, 'post');
+            $form->points($totalPoints);
+            $form->hidden('experience', $experience->id, 'post');
         }
 
-        foreach($currentList as $current) {
-            $form->purchase('insert_id', $current->name, $current->description, $current->icon, $current->id, 0, $current->maximum, $current->value);
+        foreach($skillList as $skill) {
+            $form->purchase('insert_id', $skill->name, $skill->description, $skill->icon, $skill->id, 0, $skill->maximum, $skill->value);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postSoftware() {} //todo
@@ -975,23 +1014,23 @@ class Person {
     public function postWeapon() {
         global $system, $form;
 
+        $list = $this->world->getWeapon();
         $idList = $system->idList($this->getWeapon());
-        $weaponList = $this->world->getWeapon();
 
-        $form->formStart([
-            'do' => 'person--has--post',
-            'return' => 'play/person',
+        $form->form([
+            'do' => 'relation--post',
             'context' => 'person',
+            'id' => $this->id,
             'context2' => 'weapon',
-            'id' => $this->id
+            'return' => 'play/person'
         ]);
 
-        $form->checkboxList($weaponList, [
+        $form->checkboxList($list, [
             'idList' => $idList
         ]);
 
         $system->checkboxAll();
-        $form->formEnd(false);
+        $form->submit(false);
     }
 
     // BUILD
@@ -1012,12 +1051,13 @@ class Person {
 
         $quick = $this->isOwner
             ?   $form->quick([
-                    'do' => 'person--delete--context',
+                    'do' => 'context--delete',
+                    'context' => 'person',
                     'id' => $this->id,
+                    'context2' => $tableName,
+                    'extra' => $tableId,
                     'return' => 'play/person',
                     'returnid' => $returnId,
-                    'context' => $tableName,
-                    'context2' => $tableId,
                     'icon' => 'delete'
                 ])
             :   null;
@@ -1042,13 +1082,14 @@ class Person {
 
         $quick = $this->isOwner
             ?   $form->quick([
-                    'do' => 'person--equip',
-                    'id' => $this->id,
-                    'return' => 'play/person',
-                    'returnid' => $returnId,
+                    'special' => 'person',
+                    'do' => 'equip',
                     'context' => $tableName,
+                    'id' => $this->id,
                     'context2' => $tableId,
                     'extra' => $flip,
+                    'return' => 'play/person',
+                    'returnid' => $returnId,
                     'icon' => $img
                 ])
             :   null;
@@ -1080,13 +1121,14 @@ class Person {
             '<div class="sw-c-list__title">'.$title.$labelHealed.'</div>'.
             '<div class="sw-c-list__action">'.
             '<form action="/post.php" method="post">'.
-            '<input type="hidden" name="post--return" value="play/person"/>'.
-            '<input type="hidden" name="post--returnid" value="'.$context.'"/>'.
-            '<input type="hidden" name="post--do" value="person--wound--heal"/>'.
+            '<input type="hidden" name="post--special" value="person"/>'.
+            '<input type="hidden" name="post--do" value="heal"/>'.
             '<input type="hidden" name="post--context" value="'.$context.'"/>'.
+            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
             '<input type="hidden" name="post--context2" value="'.$id.'"/>'.
             '<input type="hidden" name="post--extra" value="'.$flipHeal.'"/>'.
-            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
+            '<input type="hidden" name="post--return" value="play/person"/>'.
+            '<input type="hidden" name="post--returnid" value="'.$context.'"/>'.
             '<input class="sw-u-action" type="image" src="/img/color/'.$context.'-heal.png"/>'.
             '</form>'.
             '</div>'.
@@ -1210,7 +1252,7 @@ class Person {
         $component->wrapEnd();
     }
 
-    private function makeDescription() {
+    public function makeDescription() {
         global $component;
 
         $component->sectionStart();
@@ -1378,7 +1420,7 @@ class Person {
         }
     }
 
-    private function makeQuickLinks() {
+    public function makeQuickLinks() {
         global $component;
 
         if($this->isPlayable && $this->isCalculated && $this->isOwner) {
@@ -1504,56 +1546,6 @@ class Person {
 
     // PRIVATE
 
-    private function radioList($context, $itemList, $options = null) {
-        global $form;
-
-        $roll = isset($options['roll'])
-            ? $options['roll']
-            : null;
-
-        $form->formStart([
-            'do' => 'person--put--context',
-            'context' => $context,
-            'return' => 'play/person',
-            'id' => $this->id
-        ]);
-
-        if($roll) {
-            $form->randomRadio($roll);
-            $form->viewStart();
-        }
-
-        $form->radioList($itemList, $options);
-
-        if($roll) {
-            $form->viewEnd();
-        }
-
-        $form->formEnd();
-    }
-
-    private function rollAttribute($do, $attributeId, $points) {
-        global $component, $curl, $form;
-
-        $attribute = $curl->get('attribute/id/'.$attributeId)['data'][0];
-
-        $component->wrapStart();
-        $form->formStart([
-            'do' => 'person--attribute--'.$do,
-            'context' => 'person',
-            'context2' => 'attribute',
-            'return' => 'play/person',
-            'id' => $this->id
-        ]);
-        $form->points($points);
-        $form->randomNumber($attribute['name'], $points);
-        $form->viewStart();
-        $form->number(true, 'insert_id', $attribute['name'], $attribute['description'], $attribute['id'], null, $attribute['maximum']);
-        $form->viewEnd();
-        $form->formEnd();
-        $component->wrapEnd();
-    }
-
     private function verifyUserOwnership() {
         global $form, $user;
 
@@ -1572,13 +1564,14 @@ class Person {
         }
 
         if(!$userOwner) {
-            $form->formStart([
-                'do' => 'user--save',
+            $form->form([
+                'special' => 'user',
+                'do' => 'save',
                 'context' => 'person',
                 'return' => 'play/person',
                 'id' => $this->id
             ]);
-            $form->formEnd(false, 'Save this person');
+            $form->submit(false, 'Save this person');
         }
     }
 }

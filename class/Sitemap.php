@@ -257,6 +257,13 @@ class Sitemap {
                 $this->hash = $this->command3;
                 break;
 
+            case 'email':
+                $this->menuLink = 'User';
+                $this->page = 'site/user/email/index.php';
+                $this->index = $this->command2;
+                $this->hash = $this->command3;
+                break;
+
             case 'logout':
                 $this->menuLink = 'Logout';
                 $this->page = 'page/user/logout.php';

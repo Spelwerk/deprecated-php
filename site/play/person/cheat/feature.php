@@ -7,7 +7,7 @@ if($person->isOwner) {
 
     if($sitemap->extra2) {
         $component->h2($sitemap->extra2);
-        $form->formStart([
+        $form->form([
             'do' => 'person--'.$sitemap->extra2,
             'id' => $person->id,
             'return' => 'play/person'
@@ -68,7 +68,7 @@ if($person->isOwner) {
         $form->radioList($list, [
             'currentId' => $currentId
         ]);
-        $form->formEnd();
+        $form->submit();
     }
 }
 ?>

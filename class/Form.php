@@ -343,7 +343,7 @@ class Form {
             : '<input class="sw-u-action" type="image" src="/img/missing_icon.png" alt="Submit" />';
 
         return
-            '<form action="/post.php" method="post">'.
+            '<form action="/post/post.php" method="post">'.
             $postDo.
             $postId.
             $postUser.
@@ -555,13 +555,17 @@ class Form {
 
     // FORM
 
-    public function formStart($options = null) {
+    public function form($options = null) {
         $formAction = isset($options['action'])
             ? $options['action']
-            : 'post.php';
+            : 'post/post.php';
 
         $postDo = isset($options['do']) && $options['do'] != null
             ? '<input type="hidden" name="post--do" value="'.$options['do'].'"/>'
+            : null;
+
+        $postSpecial = isset($options['special']) && $options['special'] != null
+            ? '<input type="hidden" name="post--special" value="'.$options['special'].'"/>'
             : null;
 
         $postId = isset($options['id']) && $options['id'] != null
@@ -596,9 +600,18 @@ class Form {
             ? '<input type="hidden" name="post--extra2" value="'.$options['extra2'].'"/>'
             : null;
 
+        $postPoints = isset($options['points']) && $options['points'] != null
+            ? '<input type="hidden" name="post--points" value="'.$options['points'].'"/>'
+            : null;
+
+        $postExperience = isset($options['experience']) && $options['experience'] != null
+            ? '<input type="hidden" name="post--experience" value="'.$options['experience'].'"/>'
+            : null;
+
         echo(
             '<form action="/'.$formAction.'" method="post">'.
             $postDo.
+            $postSpecial.
             $postId.
             $postReturn.
             $postReturnId.
@@ -606,11 +619,13 @@ class Form {
             $postContext.
             $postContext2.
             $postExtra.
-            $postExtra2
+            $postExtra2.
+            $postPoints.
+            $postExperience
         );
     }
 
-    public function formEnd($disabled = true, $submitText = null) {
+    public function submit($disabled = true, $submitText = null) {
         $class = $disabled
             ? ' sw-is-unclickable'
             : ' sw-is-clickable';

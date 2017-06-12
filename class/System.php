@@ -400,8 +400,8 @@ class System {
 
         $component->h1('Create Background');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/background',
             'context' => 'background'
         ]);
@@ -418,7 +418,7 @@ class System {
             $form->hidden('manifestation_id',$manifestation);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createBionic() {
@@ -428,8 +428,8 @@ class System {
 
         $bodypartList = $curl->get('bodypart')['data'];
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/bionic',
             'context' => 'bionic'
         ]);
@@ -441,7 +441,7 @@ class System {
         $form->pick(true,'legal','Legality','Will a person be arrested for using this bionic?',null,'Legal','Illegal');
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createExpertise($species = null) {
@@ -458,8 +458,8 @@ class System {
 
         $list = $curl->get($route)['data'];
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/expertise',
             'context' => 'expertise'
         ]);
@@ -473,7 +473,7 @@ class System {
             $form->hidden('species_id',$species);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createGift($species = null, $manifestation = null) {
@@ -493,8 +493,8 @@ class System {
 
         $skillList = array_merge($skillListPrimary, $skillListSpecies);
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/gift',
             'context' => 'gift'
         ]);
@@ -518,7 +518,7 @@ class System {
             $form->hidden('manifestation_id',$manifestation);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createImperfection($species = null, $manifestation = null) {
@@ -526,8 +526,8 @@ class System {
 
         $component->h1('Create Imperfection');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/imperfection',
             'context' => 'imperfection'
         ]);
@@ -544,7 +544,7 @@ class System {
             $form->hidden('manifestation_id',$manifestation);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createManifestation() {
@@ -552,8 +552,8 @@ class System {
 
         $component->h1('Create Manifestation');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/manifestation',
             'context' => 'manifestation'
         ]);
@@ -564,7 +564,7 @@ class System {
         $form->varchar(true,'skill','Skill','A manifestation needs to be controlled by something, a skill. What is the name of that skill?');
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createMilestone($background = null, $species = null, $manifestation = null) {
@@ -575,8 +575,8 @@ class System {
         $skillList = $curl->get('skill')['data'];
         $attributeList = $curl->get('attribute/special/0')['data'];
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/milestone',
             'context' => 'milestone'
         ]);
@@ -606,7 +606,7 @@ class System {
             $form->hidden('manifestation_id',$manifestation);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createPerson($world = null, $species = null, $playable = 1) {
@@ -627,7 +627,7 @@ class System {
             $component->h1('Nickname, Age, and Occupation');
 
             $component->wrapStart();
-            $form->formStart([
+            $form->form([
                 'do' => 'person--post',
                 'return' => 'play/person'
             ]);
@@ -645,7 +645,7 @@ class System {
 
             $form->hidden('playable', $playable);
 
-            $form->formEnd();
+            $form->submit();
             $component->wrapEnd();
         }
     }
@@ -657,8 +657,8 @@ class System {
 
         $component->h1('Create Skill');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/skill',
             'context' => 'skill'
         ]);
@@ -671,7 +671,7 @@ class System {
             $form->hidden('species_id',$species);
         }
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createSpecies() {
@@ -679,8 +679,8 @@ class System {
 
         $component->h1('Create Species');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/species',
             'context' => 'species'
         ]);
@@ -700,7 +700,7 @@ class System {
         $form->number(false,'multiply_expertise','Multiplying Expertise','Increase this if your species should receive bonuses to expertises',null,1,16,1);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function createStory($world = null) {
@@ -715,8 +715,8 @@ class System {
             $component->h1('Create Story');
             $component->h2('Details');
             $component->wrapStart();
-            $form->formStart([
-                'do' => 'basic--post',
+            $form->form([
+                'do' => 'post',
                 'return' => 'play/story',
                 'context' => 'story'
             ]);
@@ -724,7 +724,7 @@ class System {
             $form->varchar(true, 'name', 'Name', 'The name of your story will make it easier to remember which one it is.');
             $form->text(false, 'description', 'Description', 'Describe your Story. This field can be added to in the future.');
             $form->text(false, 'plot', 'Plot', 'Describe the plot of your Story. This field can be added to in the future.');
-            $form->formEnd();
+            $form->submit();
             $component->wrapEnd();
         }
     }
@@ -736,8 +736,8 @@ class System {
 
         $component->h1('Create World');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/world',
             'context' => 'world'
         ]);
@@ -778,7 +778,7 @@ class System {
         $form->number(false,'max_relationship','Maximum Relationship','',null,1,12,4);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     // LIST
@@ -1230,7 +1230,7 @@ class System {
     function checkList($tableName, $tableId, $relationName, $do, $list, $idList = null) {
         global $form, $system;
 
-        $form->formStart([
+        $form->form([
             'do' => $tableName.'--has--'.$do,
             'return' => 'content/'.$tableName,
             'returnafter' => $relationName,
@@ -1241,14 +1241,14 @@ class System {
         $system->checkboxList($list, $idList);
         $system->checkboxAll();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     function contentSelectList($tableName, $relationName, $do, $tableId, $tableList, $idList = null) {
         global $form, $system;
 
-        $form->formStart([
-            'do' => 'basic--has--'.$do,
+        $form->form([
+            'do' => 'relation--'.$do,
             'return' => 'content/'.$tableName,
             'returnafter' => $relationName,
             'id' => $tableId,
@@ -1259,7 +1259,7 @@ class System {
         $system->checkboxList($tableList, $idList);
         $system->checkboxAll();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     function selectWorld($action) {
@@ -1268,7 +1268,7 @@ class System {
         $worldList = $this->getWorld();
         $idList = null;
 
-        $form->formStart(['action' => $action]);
+        $form->form(['action' => $action]);
 
         if($user) {
             $userList = $user->getWorld();
@@ -1279,7 +1279,7 @@ class System {
         }
 
         $this->radioList('world_id', $worldList, $idList);
-        $form->formEnd();
+        $form->submit();
     }
 
     function selectSpecies($action, $world) {
@@ -1288,7 +1288,7 @@ class System {
         $speciesList = $world->getSpecies();
         $idList = null;
 
-        $form->formStart(['action' => $action]);
+        $form->form(['action' => $action]);
 
         if($user) {
             $userList = $user->getSpecies();
@@ -1300,7 +1300,7 @@ class System {
 
         $form->hidden('world_id', $world->id);
         $this->radioList('species_id', $speciesList, $idList);
-        $form->formEnd();
+        $form->submit();
     }
 
     function verifyOwner($data) {

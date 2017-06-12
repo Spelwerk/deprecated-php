@@ -1,15 +1,19 @@
 <?php
 
+require_once(dirname(__FILE__).'/../php/config.php');
+
 class Curl {
 
     var $url, $port, $apiKey, $tokenCookie;
 
-    public function __construct($array, $tokenCookie = null) {
-        $this->url = $array['url'];
-        $this->port = $array['port'];
-        $this->apiKey = $array['apiKey'];
+    public function __construct($array = null, $tokenCookie = null) {
+        global $config_curl, $cookieArray;
 
-        $this->tokenCookie = $tokenCookie;
+        $this->url = $config_curl['url'];
+        $this->port = $config_curl['port'];
+        $this->apiKey = $config_curl['apiKey'];
+
+        $this->tokenCookie = $cookieArray['token'];
     }
 
     public function get($route, $filter = null) {

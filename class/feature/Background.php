@@ -42,8 +42,8 @@ class Background {
         if($this->isOwner) {
             global $component, $form;
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'return' => 'content/background',
                 'context' => 'background',
                 'id' => $this->id
@@ -53,7 +53,7 @@ class Background {
             $form->text(false,'description','Description',null,null,$this->description);
             $form->icon();
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 
@@ -135,8 +135,8 @@ class Background {
     public function postAttribute() {
         global $component, $form, $curl;
 
-        $form->formStart([
-            'do' => 'basic--has--value',
+        $form->form([
+            'do' => 'relation--value--post',
             'return' => 'content/background',
             'context' => 'background',
             'context2' => 'attribute',
@@ -150,7 +150,7 @@ class Background {
         $form->number(true,'value','Value',null,null,1,8,1);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postMilestone() {
@@ -162,8 +162,8 @@ class Background {
     public function postSkill() {
         global $component, $form, $curl;
 
-        $form->formStart([
-            'do' => 'basic--has--value',
+        $form->form([
+            'do' => 'relation--value--post',
             'return' => 'content/background',
             'context' => 'background',
             'context2' => 'skill',
@@ -177,7 +177,7 @@ class Background {
         $form->number(true,'value','Value',null,null,1,8,1);
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     // DELETE

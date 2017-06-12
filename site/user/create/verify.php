@@ -3,8 +3,9 @@
 $component->h1('Verify your account');
 
 $component->wrapStart();
-$form->formStart([
-    'do' => 'user--post--verify',
+$form->form([
+    'special' => 'user',
+    'do' => 'post--verify',
     'return' => 'user'
 ]);
 $form->varchar(true,'secret','Verification Code','Copy and paste the code you have received via email if it has not been automatically added by clicking the email link.',null,$sitemap->hash);
@@ -12,7 +13,7 @@ $form->password(true,'password','Password','We recommend you to use a long and s
 $form->varchar(true,'displayname','Display Name','Your Display Name will not be used for login, but instead as public identification of you.');
 $form->varchar(false,'firstname','First Name','Your first name.');
 $form->varchar(false,'surname','Surname','Your surname.');
-$form->formEnd(false,'Verify');
+$form->submit(false,'Verify');
 $component->link('/user/new/timeout','Code has not appeared? Resend it here!');
 $component->wrapEnd();
 ?>

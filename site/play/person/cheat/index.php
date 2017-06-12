@@ -25,13 +25,13 @@ if($person->isOwner) {
                 $component->h1('Cheat');
                 $component->subtitle('There are options in this place that will let you change your person into something that is outside of the normal creation structure. Because of this we will remove your person from all public lists if you choose to move forward and cheat.');
                 $component->wrapStart();
-                $form->formStart([
+                $form->form([
                     'do' => 'person--cheat',
                     'id' => $person->id,
                     'return' => 'play/person',
                     'returnafter' => 'cheat'
                 ]);
-                $form->formEnd(false, 'Cheat');
+                $form->submit(false, 'Cheat');
                 $component->wrapEnd();
             }
             break;

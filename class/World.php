@@ -193,14 +193,14 @@ class World {
                 }
 
                 if($readyToCalculate) {
-                    $form->formStart([
-                        'do' => 'basic--put',
+                    $form->form([
+                        'do' => 'put',
                         'return' => 'content/world',
                         'context' => 'world',
                         'id' => $this->id
                     ]);
                     $form->hidden('calculated',1);
-                    $form->formEnd(false,'This world is ready to play. Press here!');
+                    $form->submit(false,'This world is ready to play. Press here!');
                 }
             } else {
                 $component->h1('Lists');
@@ -299,24 +299,14 @@ class World {
         return $arrayList;
     }
 
-    public function getDoctrine($override = null) {
-        global $curl;
+    public function getDoctrine($manifestation = null) {
+        global $system;
 
-        $arrayList = null;
+        $override = isset($manifestation)
+            ? '/manifestation/'.$manifestation
+            : null;
 
-        $get = isset($override)
-            ? 'world/id/'.$this->id.'/doctrine'.$override
-            : 'world/id/'.$this->id.'/doctrine';
-
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Doctrine(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getDoctrine($override);
     }
 
     public function getExpertise($override = null) {
@@ -515,8 +505,8 @@ class World {
         global $component, $form, $curl;
 
         $component->h1('Attribute Defaults');
-        $form->formStart([
-            'do' => 'basic--has--multiple--value--put',
+        $form->form([
+            'do' => 'relation--value--post',
             'context' => 'world',
             'context2' => 'attribute',
             'return' => 'content/world',
@@ -575,7 +565,7 @@ class World {
         $form->number(true,'insert_id','Rations','Default daily rations.',$this->rationsAttribute,0,96,$rations);
         $component->wrapEnd();
 
-        $form->formEnd(false);
+        $form->submit(false);
     }
 
     public function postBackground() {
@@ -586,8 +576,8 @@ class World {
         $speciesArray = $this->getSpecies();
         $manifestationArray = $this->getManifestation();
 
-        $form->formStart([
-            'do' => 'basic--has--post',
+        $form->form([
+            'do' => 'relation--post',
             'return' => 'content/world',
             'returnafter' => 'background',
             'id' => $this->id,
@@ -616,7 +606,7 @@ class World {
         }
 
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postBionic() {
@@ -633,8 +623,8 @@ class World {
         $skillArray = $this->getSkill();
         $manifestationArray = $this->getManifestation();
 
-        $form->formStart([
-            'do' => 'basic--has--post',
+        $form->form([
+            'do' => 'relation--post',
             'return' => 'content/world',
             'returnafter' => 'expertise',
             'id' => $this->id,
@@ -663,7 +653,7 @@ class World {
         }
 
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postGift() {
@@ -675,8 +665,8 @@ class World {
         $manifestationArray = $this->getManifestation();
         $skillArray = $this->getSkill();
 
-        $form->formStart([
-            'do' => 'basic--has--post',
+        $form->form([
+            'do' => 'relation--post',
             'return' => 'content/world',
             'returnafter' => 'gift',
             'id' => $this->id,
@@ -715,7 +705,7 @@ class World {
         }
 
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postImperfection() {
@@ -726,8 +716,8 @@ class World {
         $speciesArray = $this->getSpecies();
         $manifestationArray = $this->getManifestation();
 
-        $form->formStart([
-            'do' => 'basic--has--post',
+        $form->form([
+            'do' => 'relation--post',
             'return' => 'content/world',
             'returnafter' => 'imperfection',
             'id' => $this->id,
@@ -758,7 +748,7 @@ class World {
         }
 
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postManifestation() {
@@ -777,8 +767,8 @@ class World {
         $manifestationArray = $this->getManifestation();
         $skillArray = $this->getSkill();
 
-        $form->formStart([
-            'do' => 'basic--has--post',
+        $form->form([
+            'do' => 'relation--post',
             'return' => 'content/world',
             'returnafter' => 'milestone',
             'id' => $this->id,
@@ -825,7 +815,7 @@ class World {
         }
 
         $system->checkboxAll();
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postProtection() {

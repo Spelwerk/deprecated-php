@@ -7,12 +7,13 @@ if($user->id) {
     require_once('./site/user/logout/logout.php');
 } else {
     $component->wrapStart();
-    $form->formStart([
-        'do' => 'user--post',
+    $form->form([
+        'special' => 'user',
+        'do' => 'post',
         'return' => 'user'
     ]);
     $form->email(true,'email','Email','This will be kept secret and protected, and you will use it to login.');
-    $form->formEnd(true,'Create');
+    $form->submit(true,'Create');
     $component->wrapEnd();
 }
 ?>

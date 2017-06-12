@@ -6,7 +6,7 @@ if($person->isOwner) {
 
         $component->h2($attribute->name);
         $component->wrapStart();
-        $form->formStart([
+        $form->form([
             'do' => 'person--attribute',
             'context' => 'person',
             'context2' => 'attribute',
@@ -14,7 +14,7 @@ if($person->isOwner) {
             'id' => $person->id
         ]);
         $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
-        $form->formEnd();
+        $form->submit();
         $component->wrapEnd();
     } else {
         $component->h2('Attribute');

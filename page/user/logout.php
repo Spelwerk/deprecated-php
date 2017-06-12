@@ -11,9 +11,10 @@ $component->title('Logout');
 $component->h1('Logout');
 $component->subtitle('Press the button below if you wish to logout of this user.');
 $component->wrapStart();
-$form->formStart([
-    'do' => 'user--logout',
+$form->form([
+    'special' => 'user',
+    'do' => 'logout',
     'return' => 'user/login'
 ]);
-$form->formEnd(false,'Logout');
+$form->submit(false,'Logout');
 ?>

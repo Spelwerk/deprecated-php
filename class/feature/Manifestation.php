@@ -44,8 +44,8 @@ class Manifestation {
     public function put() {
         global $form, $component;
 
-        $form->formStart([
-            'do' => 'basic--put',
+        $form->form([
+            'do' => 'put',
             'return' => 'content/manifestation',
             'context' => 'manifestation',
             'id' => $this->id
@@ -57,7 +57,7 @@ class Manifestation {
         $form->icon();
         $component->wrapEnd();
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function view() {
@@ -119,8 +119,8 @@ class Manifestation {
 
         $component->h1('Add Doctrine');
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/manifestation',
             'context' => 'doctrine'
         ]);
@@ -131,7 +131,7 @@ class Manifestation {
 
         $form->hidden('manifestation_id',$this->id);
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postFocus() {
@@ -141,8 +141,8 @@ class Manifestation {
 
         $attributeList = $curl->get('attribute/special/0')['data'];
 
-        $form->formStart([
-            'do' => 'basic--post',
+        $form->form([
+            'do' => 'post',
             'return' => 'content/manifestation',
             'context' => 'focus'
         ]);
@@ -155,7 +155,7 @@ class Manifestation {
 
         $form->hidden('manifestation_id',$this->id);
 
-        $form->formEnd();
+        $form->submit();
     }
 
     public function postGift() {

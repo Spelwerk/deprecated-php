@@ -1,9 +1,10 @@
 <?php global $form, $component;
 
 $component->wrapStart();
-$form->formStart([
-    'do' => 'user--logout',
+$form->form([
+    'special' => 'user',
+    'do' => 'logout',
     'return' => 'user'
 ]);
-$form->formEnd(false,'Logout');
+$form->submit(false,'Logout');
 ?>

@@ -3,7 +3,7 @@
 if($person->isOwner) {
     $component->h2('Description');
     $component->wrapStart();
-    $form->formStart([
+    $form->form([
         'do' => 'person--edit--description',
         'id' => $person->id,
         'return' => 'play/person'
@@ -21,7 +21,7 @@ if($person->isOwner) {
     $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
     $form->text(false, 'species_custom', 'Species', 'Customize your species description if you wish.',null,$person->species->description);
     $form->text(false, 'background_custom', 'Background', 'Customize your background description if you wish.',null,$person->background->description);
-    $form->formEnd();
+    $form->submit();
     $component->wrapEnd();
 }
 ?>

@@ -10,7 +10,7 @@
 class Expertise {
     var $id, $canon, $name, $description, $icon;
 
-    var $level, $bonus;
+    var $value, $bonus;
 
     var $required, $increment, $maximum;
 
@@ -44,13 +44,10 @@ class Expertise {
 
         $this->icon = $data['icon'];
 
-        $this->level = isset($data['level']) ? $data['level'] : null;
+        $this->value = isset($data['value']) ? $data['value'] : null;
         $this->bonus = isset($data['bonus']) ? $data['bonus'] : null;
 
-        $this->start = isset($data['doctrine_id']) ? $defaults['doctrine']['start'] : $defaults['default']['start'];
-        $this->required = isset($data['doctrine_id']) ? $defaults['doctrine']['required'] : $defaults['default']['required'];
-        $this->increment = isset($data['doctrine_id']) ? $defaults['doctrine']['increment'] : $defaults['default']['increment'];
-        $this->maximum = isset($data['doctrine_id']) ? $defaults['doctrine']['maximum'] : $defaults['default']['maximum'];
+        $this->maximum = $defaults['maximum'];
 
         $this->skill = $data['skill_id'];
         $this->skillName = isset($data['skill_name']) ? $data['skill_name'] : null;
@@ -60,7 +57,7 @@ class Expertise {
         $this->manifestationName = isset($data['manifestation_name']) ? $data['manifestation_name'] : null;
         $this->doctrine = $data['doctrine_id'];
 
-        $this->dice = intval($this->start) + intval($this->level) - 1;
+        $this->dice = intval($this->start) + intval($this->value) - 1;
 
         $this->siteLink = '/content/expertise/'.$this->id;
     }
@@ -69,8 +66,8 @@ class Expertise {
         if($this->isOwner) {
             global $component, $form;
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'return' => 'content/expertise',
                 'context' => 'expertise',
                 'id' => $this->id
@@ -79,7 +76,7 @@ class Expertise {
             $form->varchar(true,'name','Name',null,null,$this->name);
             $form->text(false,'description','Description',null,null,$this->description);
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 

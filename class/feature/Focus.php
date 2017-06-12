@@ -44,8 +44,8 @@ class Focus {
         if($this->isOwner) {
             global $component, $form;
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'return' => 'content/focus',
                 'context' => 'focus',
                 'id' => $this->id
@@ -55,7 +55,7 @@ class Focus {
             $form->text(false,'description','Description',null,null,$this->description);
             $form->icon();
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 

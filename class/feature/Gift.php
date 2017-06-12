@@ -55,8 +55,8 @@ class Gift {
         if($this->isOwner) {
             global $component, $form;
 
-            $form->formStart([
-                'do' => 'basic--put',
+            $form->form([
+                'do' => 'put',
                 'return' => 'content/gift',
                 'context' => 'gift',
                 'id' => $this->id
@@ -65,7 +65,7 @@ class Gift {
             $form->varchar(true,'name','Name',null,null,$this->name);
             $form->text(false,'description','Description',null,null,$this->description);
             $component->wrapEnd();
-            $form->formEnd();
+            $form->submit();
         }
     }
 
