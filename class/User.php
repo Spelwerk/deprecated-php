@@ -3,6 +3,8 @@
 
     var $id, $email, $displayname, $firstname, $surname, $token;
 
+    var $popularity;
+
     public function __construct() {
         global $curl, $config_token;
 
@@ -12,11 +14,11 @@
             ? $curl->get('user/validate')
             : null;
 
+        $this->isActive = isset($this->token) ? true : false;
+
         $this->id = intval($result['user']['id']);
         $this->isAdmin = intval($result['user']['admin']);
         $this->isVerified = intval($result['user']['verify']);
-
-        $this->isActive = isset($this->id) ? true : false;
     }
 
     // GET

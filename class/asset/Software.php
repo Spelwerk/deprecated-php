@@ -1,5 +1,5 @@
 <?php class Software {
-    var $id, $name, $description, $icon, $price, $legal;
+    var $id, $name, $canon, $popularity, $description, $icon, $price, $legal;
 
     var $hacking, $hackingBonus;
 
@@ -16,6 +16,8 @@
 
         $this->id = $data['id'];
         $this->name = $data['name'];
+        $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->description = $data['description'];
         $this->price = $data['price'];
         $this->legal = $data['legal'];

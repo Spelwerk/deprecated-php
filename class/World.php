@@ -3,7 +3,7 @@
 
     var $isOwner, $isCalculated;
 
-    var $popularity, $thumbsup, $thumbsdown;
+    var $popularity;
 
     var $bodyAttributeType, $combatAttributeType, $consumableAttributeType, $damageAttributeType,
         $protectionAttributeType, $reputationAttributeType, $skillAttributeType, $woundAttributeType;

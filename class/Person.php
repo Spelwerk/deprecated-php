@@ -5,7 +5,7 @@
 
     var $isOwner, $isPlayable, $isCalculated, $isCheater, $isSupernatural;
 
-    var $popularity, $thumbsup, $thumbsdown;
+    var $popularity;
 
     var $background, $focus, $identity, $manifestation, $nature, $species, $world;
 

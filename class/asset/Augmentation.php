@@ -1,5 +1,5 @@
 <?php class Augmentation {
-    var $id, $canon, $name, $description, $price, $energy, $legal, $icon;
+    var $id, $canon, $popularity, $name, $description, $price, $energy, $legal, $icon;
 
     var $weapon;
 
@@ -20,6 +20,7 @@
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
             ? $data['custom']
