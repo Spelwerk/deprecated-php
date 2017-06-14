@@ -1,14 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-03
- * Time: 17:32
- */
-
-class Manifestation {
-    var $id, $canon, $name, $description, $icon;
+<?php class Manifestation {
+    var $id, $canon, $popularity, $name, $description, $icon;
 
     var $power;
 
@@ -27,6 +18,7 @@ class Manifestation {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
             ? $data['custom']
@@ -92,18 +84,20 @@ class Manifestation {
         }
     }
 
+    public function delete() {} //todo
+
     // GET
 
     public function getDoctrine() {
         global $system;
 
-        return $system->getDoctrine('/manifestation/'.$this->id);
+        return $system->getDoctrine('doctrine/manifestation/'.$this->id);
     }
 
     public function getFocus() {
         global $system;
 
-        return $system->getFocus('/manifestation/'.$this->id);
+        return $system->getFocus('focus/manifestation/'.$this->id);
     }
 
     // POST

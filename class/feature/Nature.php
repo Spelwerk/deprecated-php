@@ -1,13 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-03
- * Time: 17:31
- */
-
-class Nature {
+<?php class Nature {
     var $id, $name, $description, $icon;
 
     var $attribute, $attributeValue;

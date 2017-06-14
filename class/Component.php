@@ -1,12 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 02/04/2017
- * Time: 09:22
- */
-class Component {
+<?php class Component {
     public function __construct() {}
 
     public function title($title) {

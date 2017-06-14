@@ -1,9 +1,9 @@
-<?php class Background {
-    var $id, $canon, $popularity, $name, $description, $icon;
+<?php class Augmentation {
+    var $id, $canon, $name, $description, $price, $energy, $legal, $icon;
 
-    var $species;
+    var $weapon;
 
-    var $manifestation;
+    var $quality;
 
     var $isOwner;
 
@@ -11,55 +11,49 @@
         global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('background/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('augmentation/id/'.$id, $user->token)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
-        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
-        $this->description = $data['description'];
-        $this->icon = $data['icon'];
+        $this->description = isset($data['custom'])
+            ? $data['custom']
+            : $data['description'];
 
-        $this->species = $data['species_id'];
+        $this->price = isset($data['quality_price'])
+            ? intval($data['price']) * intval($data['quality_price'])
+            : intval($data['price']);
 
-        $this->manifestation = $data['manifestation_id'];
+        $this->energy = isset($data['quality_energy'])
+            ? intval($data['energy']) * intval($data['quality_energy'])
+            : intval($data['energy']);
 
-        $this->siteLink = '/content/background/'.$this->id;
+        $this->legal = $data['legal'];
+
+        $this->icon = 'http://cdn.spelwerk.com/file/2caee0a3adc7b135ffdd111fc150fb36442ffaa7.png';
+
+        $this->weapon = $data['weapon_id'];
+
+        $this->quality = isset($data['quality_id']) ? $data['quality_id'] : null;
+
+        $this->siteLink = '/content/augmentation/'.$this->id;
     }
 
-    public function put() {
-        if($this->isOwner) {
-            global $component, $form;
-
-            $form->form([
-                'do' => 'put',
-                'return' => 'content/background',
-                'context' => 'background',
-                'id' => $this->id
-            ]);
-            $component->wrapStart();
-            $form->varchar(true,'name','Name',null,null,$this->name);
-            $form->text(false,'description','Description',null,null,$this->description);
-            $form->icon();
-            $component->wrapEnd();
-            $form->submit();
-        }
-    }
+    public function put() {} //todo
 
     public function view() {
         global $component;
 
-        $component->returnButton('/content/background');
+        $component->returnButton('/content/augmentation');
 
-        if($this->icon) $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');
-        $component->p('Species ID: '.$this->species); //todo api return name
-        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+        $component->p('Energy: '.$this->energy);
+        $component->p('Legality: '.$this->legal);
         $component->h1('Attribute');
         $this->listAttribute();
         $component->h1('Skill');
@@ -72,9 +66,6 @@
             $component->linkButton($this->siteLink.'/skill/add','Add Skill');
             $component->linkButton($this->siteLink.'/attribute/delete','Delete Attribute',true);
             $component->linkButton($this->siteLink.'/skill/delete','Delete Skill',true);
-
-            $component->h2('Create');
-            $component->linkButton($this->siteLink.'/milestone','Create Milestone',false,'sw-is-green');
         }
     }
 
@@ -82,24 +73,16 @@
 
     // GET
 
-    public function getAttribute($override = null) {
+    public function getAttribute() {
         global $system;
 
-        $get = isset($override)
-            ? 'background/id/'.$this->id.'/attribute'.$override
-            : 'background/id/'.$this->id.'/attribute';
-
-        return $system->getAttribute($get);
+        return $system->getAttribute('augmentation/id/'.$this->id.'/attribute');
     }
 
-    public function getSkill($override = null) {
+    public function getSkill() {
         global $system;
 
-        $get = isset($override)
-            ? 'background/id/'.$this->id.'/skill'.$override
-            : 'background/id/'.$this->id.'/skill';
-
-        return $system->getSkill($get);
+        return $system->getSkill('augmentation/id/'.$this->id.'/skill');
     }
 
     // POST
@@ -109,26 +92,20 @@
 
         $form->form([
             'do' => 'relation--value--post',
-            'context' => 'background',
+            'context' => 'augmentation',
             'id' => $this->id,
             'context2' => 'attribute',
-            'return' => 'content/background'
+            'return' => 'content/augmentation'
         ]);
 
         $list = $curl->get('attribute/special/0')['data'];
 
         $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your background to have extra value in?');
+        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your augmentation to have extra value in?');
         $form->number(true,'value','Value',null,null,1,4,1);
         $component->wrapEnd();
 
         $form->submit();
-    }
-
-    public function postMilestone() {
-        global $system;
-
-        $system->createMilestone($this->id);
     }
 
     public function postSkill() {
@@ -136,16 +113,16 @@
 
         $form->form([
             'do' => 'relation--value--post',
-            'context' => 'background',
+            'context' => 'augmentation',
             'id' => $this->id,
             'context2' => 'skill',
-            'return' => 'content/background'
+            'return' => 'content/augmentation'
         ]);
 
         $list = $curl->get('skill')['data'];
 
         $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your background to have extra value in?');
+        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your augmentation to have extra value in?');
         $form->number(true,'value','Value',null,null,1,4,1);
         $component->wrapEnd();
 
@@ -157,13 +134,13 @@
     public function deleteAttribute() {
         global $system;
 
-        $system->contentSelectList('background','attribute','delete',$this->id,$this->getAttribute());
+        $system->contentSelectList('augmentation','attribute','delete',$this->id,$this->getAttribute());
     }
 
     public function deleteSkill() {
         global $system;
 
-        $system->contentSelectList('background','skill','delete',$this->id,$this->getSkill());
+        $system->contentSelectList('augmentation','skill','delete',$this->id,$this->getSkill());
     }
 
     // LIST

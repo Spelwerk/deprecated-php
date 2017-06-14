@@ -1,12 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 30/03/2017
- * Time: 10:08
- */
-class MenuLink {
+<?php class MenuLink {
     var $title, $href, $active, $user, $admin;
 
     var $linkList;

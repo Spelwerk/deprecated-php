@@ -1,22 +1,20 @@
-<?php class Doctrine {
+<?php class WeaponGroup {
     var $id, $canon, $popularity, $name, $description, $icon;
 
-    var $manifestation;
+    var $special;
 
-    var $value;
+    var $skill, $damage, $expertise;
 
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
-            ? $curl->get('doctrine/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('weapongroup/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
-
-        $defaults = $curl->get('system/doctrine');
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
@@ -25,13 +23,13 @@
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
-        $this->maximum = $defaults['maximum'];
+        $this->special = $data['special'];
 
-        $this->manifestation = $data['manifestation_id'];
+        $this->skill = $data['skill_id'];
+        $this->expertise = $data['expertise_id'];
+        $this->damage = $data['damage_id'];
 
-        $this->value = isset($data['value']) ? $data['value'] : 0;
-
-        $this->siteLink = '/content/doctrine/'.$this->id;
+        $this->siteLink = '/content/weapongroup/'.$this->id;
     }
 
     public function put() {} //todo

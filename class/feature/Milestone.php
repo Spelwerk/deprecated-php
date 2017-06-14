@@ -1,14 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-03
- * Time: 15:35
- */
-
-class Milestone {
-    var $id, $canon, $name, $description, $icon;
+<?php class Milestone {
+    var $id, $canon, $popularity, $name, $description, $icon;
 
     var $background;
 
@@ -35,6 +26,7 @@ class Milestone {
 
         $this->id = $data['id'];
         $this->name = $data['name'];
+        $this->popularity = $data['popularity'];
         $this->description = isset($data['custom'])
             ? $data['custom']
             : $data['description'];
@@ -59,7 +51,10 @@ class Milestone {
 
     public function put() {
         if($this->isOwner) {
-            global $component, $form;
+            global $component, $curl, $form;
+
+            $skillList = $curl->get('skill')['data'];
+            $attributeList = $curl->get('attribute/special/0')['data'];
 
             $form->form([
                 'do' => 'put',
@@ -70,6 +65,13 @@ class Milestone {
             $component->wrapStart();
             $form->varchar(true,'name','Name',null,null,$this->name);
             $form->text(false,'description','Description',null,null,$this->description);
+
+            $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
+            $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
+
+            $form->select(false,'skill_id',$skillList,'Skill','If this gift increases a skill, which one?');
+            $form->number(false,'skill_value','Skill Value','Amount of points this gift will increase by.',null,0,16);
+
             $component->wrapEnd();
             $form->submit();
         }
@@ -97,4 +99,6 @@ class Milestone {
             //todo link to delete();
         }
     }
+
+    public function delete() {} //todo
 }

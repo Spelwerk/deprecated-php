@@ -1,14 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-03
- * Time: 15:11
- */
-
-class Gift {
-    var $id, $canon, $name, $description, $icon;
+<?php class Gift {
+    var $id, $canon, $popularity, $name, $description, $icon;
 
     var $species;
 
@@ -21,16 +12,17 @@ class Gift {
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
-            ? $curl->get('gift/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('gift/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
             ? $data['custom']
@@ -90,4 +82,6 @@ class Gift {
             //todo link to delete();
         }
     }
+
+    public function delete() {} //todo
 }

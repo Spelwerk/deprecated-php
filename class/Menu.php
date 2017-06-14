@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 30/03/2017
- * Time: 09:44
- */
 require_once('menu/MenuTab.php');
 require_once('menu/MenuList.php');
 require_once('menu/MenuLink.php');

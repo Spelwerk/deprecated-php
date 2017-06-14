@@ -1,12 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-08
- * Time: 11:19
- */
-class Form {
+<?php class Form {
     public function __construct() {}
 
     // INPUT

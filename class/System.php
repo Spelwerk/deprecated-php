@@ -1,10 +1,15 @@
 <?php
 
+require_once('asset/Augmentation.php');
+require_once('asset/Bionic.php');
+require_once('asset/Protection.php');
+require_once('asset/Software.php');
+require_once('asset/Weapon.php');
+require_once('asset/WeaponGroup.php');
+require_once('asset/WeaponType.php');
+
 require_once('feature/Attribute.php');
-require_once('feature/Augmentation.php');
-require_once('feature/Bionic.php');
 require_once('feature/Background.php');
-require_once('feature/Disease.php');
 require_once('feature/Doctrine.php');
 require_once('feature/Expertise.php');
 require_once('feature/Focus.php');
@@ -14,19 +19,21 @@ require_once('feature/Identity.php');
 require_once('feature/Manifestation.php');
 require_once('feature/Milestone.php');
 require_once('feature/Nature.php');
-require_once('feature/Protection.php');
-require_once('feature/Sanity.php');
 require_once('feature/Skill.php');
 require_once('feature/Species.php');
-require_once('feature/Weapon.php');
-require_once('feature/Wound.php');
 
-require_once('World.php');
+require_once('wound/Disease.php');
+require_once('wound/Sanity.php');
+require_once('wound/Wound.php');
+
+require_once('Location.php');
+require_once('Meeting.php');
+
 require_once('Person.php');
 require_once('Story.php');
+require_once('World.php');
 
 class System {
-
     public function __construct() {}
 
     // GET
@@ -37,7 +44,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'attribute'.$override
+            ? $override
             : 'attribute';
 
         $result = $curl->get($get);
@@ -57,7 +64,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'augmentation'.$override
+            ? $override
             : 'augmentation';
 
         $result = $curl->get($get);
@@ -77,7 +84,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'background'.$override
+            ? $override
             : 'background';
 
         $result = $curl->get($get);
@@ -97,7 +104,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'bionic'.$override
+            ? $override
             : 'bionic';
 
         $result = $curl->get($get);
@@ -111,13 +118,33 @@ class System {
         return $arrayList;
     }
 
+    public function getDisease($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'disease';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Disease(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getDoctrine($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'doctrine'.$override
+            ? $override
             : 'doctrine';
 
         $result = $curl->get($get);
@@ -137,7 +164,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'expertise'.$override
+            ? $override
             : 'expertise';
 
         $result = $curl->get($get);
@@ -157,7 +184,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'focus'.$override
+            ? $override
             : 'focus';
 
         $result = $curl->get($get);
@@ -177,7 +204,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'gift'.$override
+            ? $override
             : 'gift';
 
         $result = $curl->get($get);
@@ -197,7 +224,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'identity'.$override
+            ? $override
             : 'identity';
 
         $result = $curl->get($get);
@@ -217,7 +244,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'imperfection'.$override
+            ? $override
             : 'imperfection';
 
         $result = $curl->get($get);
@@ -231,13 +258,33 @@ class System {
         return $arrayList;
     }
 
+    public function getLocation($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'location';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Location(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getManifestation($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'manifestation'.$override
+            ? $override
             : 'manifestation';
 
         $result = $curl->get($get);
@@ -251,13 +298,33 @@ class System {
         return $arrayList;
     }
 
+    public function getMeeting($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'meeting';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Meeting(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getMilestone($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'milestone'.$override
+            ? $override
             : 'milestone';
 
         $result = $curl->get($get);
@@ -277,7 +344,7 @@ class System {
         $arrayList = null;
 
         $get = isset($override)
-            ? 'nature'.$override
+            ? $override
             : 'nature';
 
         $result = $curl->get($get);
@@ -291,13 +358,33 @@ class System {
         return $arrayList;
     }
 
+    public function getPerson($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'person';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Person($array['id']);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getProtection($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'protection'.$override
+            ? $override
             : 'protection';
 
         $result = $curl->get($get);
@@ -311,13 +398,33 @@ class System {
         return $arrayList;
     }
 
+    public function getSanity($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'sanity';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Sanity(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getSkill($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'skill'.$override
+            ? $override
             : 'skill';
 
         $result = $curl->get($get);
@@ -331,13 +438,33 @@ class System {
         return $arrayList;
     }
 
+    public function getSoftware($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'software';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Software(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getSpecies($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'species'.$override
+            ? $override
             : 'species';
 
         $result = $curl->get($get);
@@ -351,13 +478,33 @@ class System {
         return $arrayList;
     }
 
+    public function getStory($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'story';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach($result['data'] as $array) {
+                $arrayList[] = new Story($array['id']);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getWeapon($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'weapon'.$override
+            ? $override
             : 'weapon';
 
         $result = $curl->get($get);
@@ -371,20 +518,80 @@ class System {
         return $arrayList;
     }
 
+    public function getWeaponGroup($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'weapongroup';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new WeaponGroup(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getWeaponType($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'weapontype';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new WeaponType(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
     public function getWorld($override = null) {
         global $curl;
 
         $arrayList = null;
 
         $get = isset($override)
-            ? 'world'.$override
+            ? $override
             : 'world';
 
         $result = $curl->get($get);
 
         if(isset($result['data'])) {
             foreach ($result['data'] as $array) {
-                $arrayList[] = new World(null, $array);
+                $arrayList[] = new World($array['id']);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getWound($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'wound';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Wound(null, $array);
             }
         }
 
@@ -393,7 +600,26 @@ class System {
 
     // CREATE
 
-    public function createAugmentation() {} //todo
+    public function createAugmentation() {
+        global $component, $form;
+
+        $component->h1('Create Augmentation');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'augmentation',
+            'return' => 'content/augmentation'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->number(true, 'energy', 'Energy Modification', 'Does this augmentation consume or produce energy? Use a negative value if the augmentation uses energy.',null,-12,12,-1);
+        $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this augmentation?', null, 'Legal', 'Illegal', true);
+        $component->wrapEnd();
+        $form->submit();
+
+        // todo v4 add weapon creation information in here as well hidden
+    }
 
     public function createBackground($species = null, $manifestation = null) {
         global $component, $form;
@@ -650,7 +876,26 @@ class System {
         }
     }
 
-    public function createProtection() {} //todo
+    public function createProtection() {
+        global $component, $curl, $form;
+
+        $component->h1('Create Protection');
+
+        $bodypartList = $curl->get('bodypart')['data'];
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'protection',
+            'return' => 'content/protection'
+        ]);
+        $component->wrapStart();
+        $form->select(true,'bodypart_id',$bodypartList,'Body Part','Reference to what area the protection is.');
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->icon();
+        $component->wrapEnd();
+        $form->submit();
+    }
 
     public function createSkill($species = null) {
         global $component, $form;
@@ -671,6 +916,26 @@ class System {
             $form->hidden('species_id',$species);
         }
 
+        $form->submit();
+    }
+
+    public function createSoftware() {
+        global $component, $form;
+
+        $component->h1('Create Software');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'software',
+            'return' => 'content/software'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->number(true, 'hacking', 'Hacking Difficulty', '', null, 0, 64, 12);
+        $form->number(true, 'hacking_bonus', 'Hacking Bonus', '', null, 0, 12);
+        $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this software?', null, 'Legal', 'Illegal', true);
+        $component->wrapEnd();
         $form->submit();
     }
 
@@ -729,7 +994,76 @@ class System {
         }
     }
 
-    public function createWeapon($species = null) {} //todo
+    public function createWeapon() {
+        global $curl, $component, $form;
+
+        $component->h1('Create Weapon');
+
+        $typeList = $curl->get('weapontype')['data'];
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'weapon',
+            'return' => 'content/weapon'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->select(true,'weapontype_id',$typeList,'Type','All weapons belong to a Weapon Type.');
+        $form->number(true, 'damage_bonus','Damage Bonus','Weapons have a static damage bonus value that gets added to the dice rolled from Weapon Type.',null,0,32);
+        $form->number(false, 'price','Hit chance modification','Does this weapon affect your ability to hit?',null,null,16);
+        $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this weapon?', null, 'Legal', 'Illegal', true);
+        $form->submit();
+    }
+
+    public function createWeaponGroup() {
+        global $curl, $component, $form;
+
+        $component->h1('Create Weapon Group');
+
+        $attributeType = $curl->get('system/attribute')['type']['protection'];
+
+        $skillList = $curl->get('skill')['data'];
+        $attributeList = $curl->get('attribute/type/'.$attributeType)['data'];
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'weapongroup',
+            'return' => 'content/weapongroup'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->select(true,'skill_id',$skillList,'Skill','Which skill does this weapon fit into? We\'d recommend: Melee | Projectiles | Guns');
+        $form->select(true,'damage_id',$attributeList,'Damage Type','What sort of damage does this weapon inflict?');
+        $form->icon();
+        $form->submit();
+    }
+
+    public function createWeaponType() {
+        global $curl, $component, $form;
+
+        $component->h1('Create Weapon Type');
+
+        $groupList = $curl->get('weapongroup')['data'];
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'weapontype',
+            'return' => 'content/weapontype'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->select(true,'weapongroup_id',$groupList,'Group','All weapon types belong to a Weapon Group.');
+        $form->number(true, 'damage_d12','Amount of Damage Dice','How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8',null,0,32,1);
+        $form->number(true, 'critical_d12','Amount of Critical Dice','How many extra dice will a player roll when scoring a critical hit?',null,0,32,1);
+        $form->number(false, 'hand','Hands required','Does this weapon require one hand or two hands to use?',null,1,2);
+        $form->number(false, 'initiative','Initiative Modification','Will this weapon affect your ability to react quicker in battle?',null,null,32);
+        $form->number(false, 'hit','Hit chance modification','Does this weapon affect your ability to hit?',null,null,16);
+        $form->number(false, 'distance','Distance','If this weapon is ranged - how far can a projectile travel?');
+        $form->submit();
+    }
 
     public function createWorld() {
         global $component, $form;
@@ -783,49 +1117,22 @@ class System {
 
     // LIST
 
-    public function listAugmentation() {} //todo
+    public function listAugmentation() {
+        global $user;
+
+        $this->listStandard('augmentation', $user->getAugmentation(), $this->getAugmentation());
+    }
 
     public function listBackground() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getBackground();
-        $list = $this->getBackground();
-
-        if($userArray) {
-            $component->h2('Your Content');
-
-            foreach($userArray as $item) {
-                $component->linkButton('/content/background/'.$item->id, $item->name);
-            }
-        }
-
-        if($list) {
-            $component->h2('Canon');
-
-            foreach($list as $item) {
-                $component->linkButton('/content/background/'.$item->id, $item->name);
-            }
-        }
+        $this->listStandard('background', $user->getBackground(), $this->getBackground());
     }
 
     public function listBionic() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getBionic();
-        $list = $this->getBionic();
-
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/bionic/'.$item->id, $item->name);
-            }
-        }
-
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/bionic/'.$item->id, $item->name);
-        }
+        $this->listStandard('bionic', $user->getBionic(), $this->getBionic());
     }
 
     public function listExpertise() {
@@ -950,43 +1257,15 @@ class System {
     }
 
     public function listImperfection() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getImperfection();
-        $list = $this->getImperfection();
-
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/imperfection/'.$item->id, $item->name);
-            }
-        }
-
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/imperfection/'.$item->id, $item->name);
-        }
+        $this->listStandard('imperfection', $user->getImperfection(), $this->getImperfection());
     }
 
     public function listManifestation() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getManifestation();
-        $list = $this->getManifestation();
-
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/manifestation/'.$item->id, $item->name);
-            }
-        }
-
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/manifestation/'.$item->id, $item->name);
-        }
+        $this->listStandard('manifestation', $user->getManifestation(), $this->getManifestation());
     }
 
     public function listMilestone() {
@@ -1064,7 +1343,7 @@ class System {
     }
 
     public function listPerson() {
-        global $user, $component, $curl;
+        global $user, $component;
 
         $userList = $user->isActive
             ? $user->getPerson()
@@ -1083,50 +1362,32 @@ class System {
         }
     }
 
-    public function listProtection() {} //todo
+    public function listProtection() {
+        global $user;
+
+        $this->listStandard('protection', $user->getProtection(), $this->getProtection());
+    }
 
     public function listSkill() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getSkill();
-        $list = $this->getSkill();
+        $this->listStandard('skill', $user->getSkill(), $this->getSkill());
+    }
 
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/skill/'.$item->id, $item->name);
-            }
-        }
+    public function listSoftware() {
+        global $user;
 
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/skill/'.$item->id, $item->name);
-        }
+        $this->listStandard('software', $user->getSoftware(), $this->getSoftware());
     }
 
     public function listSpecies() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getSpecies();
-        $list = $this->getSpecies();
-
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/species/'.$item->id, $item->name);
-            }
-        }
-
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/species/'.$item->id, $item->name);
-        }
+        $this->listStandard('species', $user->getSpecies(), $this->getSpecies());
     }
 
     public function listStory() {
-        global $user, $component, $curl;
+        global $user, $component;
 
         $userList = $user->isActive
             ? $user->getStory()
@@ -1145,26 +1406,28 @@ class System {
         }
     }
 
-    public function listWeapon() {} //todo
+    public function listWeapon() {
+        global $user;
+
+        $this->listStandard('weapon', $user->getWeapon(), $this->getWeapon());
+    }
+
+    public function listWeaponGroup() {
+        global $user;
+
+        $this->listStandard('weapongroup', $user->getWeaponGroup(), $this->getWeaponGroup());
+    }
+
+    public function listWeaponType() {
+        global $user;
+
+        $this->listStandard('weapontype', $user->getWeaponType(), $this->getWeaponType());
+    }
 
     public function listWorld() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getWorld();
-        $list = $this->getWorld();
-
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/world/'.$item->id, $item->name);
-            }
-        }
-
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/world/'.$item->id, $item->name);
-        }
+        $this->listStandard('world', $user->getWorld(), $this->getWorld());
     }
 
     // SYSTEM
@@ -1308,9 +1571,9 @@ class System {
 
         if($user->isAdmin) return true;
 
-        $result = isset($data['owner']) ? $data['owner'] : null;
+        $isOwner = isset($data['owner']) ? intval($data['owner']) : false;
 
-        return $result;
+        return $isOwner;
     }
 
     function listRelation($list, $relationName, $siteLink) {
@@ -1324,5 +1587,25 @@ class System {
 
         $component->linkButton($siteLink.'/'.$relationName.'/add','Add');
         $component->linkButton($siteLink.'/'.$relationName.'/delete','Delete',true);
+    }
+
+    function listStandard($contentHref, $userList, $canonList) {
+        global $component;
+
+        if($userList) {
+            $component->h2('Your Content');
+
+            foreach($userList as $item) {
+                $component->linkButton('/content/'.$contentHref.'/'.$item->id, $item->name);
+            }
+        }
+
+        if($canonList) {
+            $component->h2('Canon');
+
+            foreach($canonList as $item) {
+                $component->linkButton('/content/'.$contentHref.'/'.$item->id, $item->name);
+            }
+        }
     }
 }

@@ -1,16 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-11-16
- * Time: 16:49
- */
-
-require_once('World.php');
-
-class Person {
-
+<?php class Person {
     var $id, $nickname, $description,
         $firstname, $surname, $occupation, $gender, $age, $personality, $appearance,
         $drive, $pride, $problem;
@@ -251,253 +239,117 @@ class Person {
     // GET
 
     public function getAttribute($type = null, $id = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($type)
             ? 'person/id/'.$this->id.'/attribute/type/'.$type
             : 'person/id/'.$this->id.'/attribute/id/'.$id;
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Attribute(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     public function getAugmentation($bionic = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($bionic)
             ? 'person/id/'.$this->id.'/augmentation/bionic/'.$bionic
             : 'person/id/'.$this->id.'/augmentation';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Augmentation(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAugmentation($get);
     }
 
     public function getBionic($id = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($id)
             ? 'person/id/'.$this->id.'/bionic/id/'.$id
             : 'person/id/'.$this->id.'/bionic';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Bionic(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getBionic($get);
     }
 
     public function getDisease() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/disease');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Disease(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getDisease('person/id/'.$this->id.'/disease');
     }
 
     public function getDoctrine() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/doctrine');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Doctrine(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getDoctrine('person/id/'.$this->id.'/doctrine');
     }
 
     public function getExpertise($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'person/id/'.$this->id.'/expertise'.$override
             : 'person/id/'.$this->id.'/expertise';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Expertise(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getExpertise($get);
     }
 
     public function getGift() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/gift');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Gift(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getGift('person/id/'.$this->id.'/gift');
     }
 
     public function getImperfection() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/imperfection');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Imperfection(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getImperfection('person/id/'.$this->id.'/imperfection');
     }
 
     public function getMilestone() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/milestone');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Milestone(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getMilestone('person/id/'.$this->id.'/milestone');
     }
 
     public function getProtection($equipped = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($equipped)
             ? 'person/id/'.$this->id.'/protection/equipped/'.$equipped
             : 'person/id/'.$this->id.'/protection';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Protection(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     public function getSanity() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/sanity');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Sanity(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getSanity('person/id/'.$this->id.'/sanity');
     }
 
     public function getSkill() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/skill');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Skill(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getSkill('person/id/'.$this->id.'/skill');
     }
 
-    public function getSoftware() {} // todo
+    public function getSoftware() {
+        global $system;
+
+        return $system->getSoftware('person/id/'.$this->id.'/software');
+    }
 
     public function getWeapon($equipped = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($equipped)
             ? 'person/id/'.$this->id.'/weapon/equipped/'.$equipped
             : 'person/id/'.$this->id.'/weapon';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Weapon(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getWeapon($get);
     }
 
     public function getWound() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('person/id/'.$this->id.'/wound');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Wound(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getWound('person/id/'.$this->id.'/wound');
     }
 
     // POST
@@ -1231,7 +1083,7 @@ class Person {
                     break;
 
                 case 'weapon':
-                    $hitD12 = 2 + intval($item->expertiseLevel);
+                    $hitD12 = 2 + intval($item->expertiseValue);
                     $hitBonus = intval($item->damageBonus) + intval($item->hit);
                     $value = isset($item->damageBonus)
                         ? $item->damageD12.'d12+'.$item->damageBonus
@@ -1486,8 +1338,8 @@ class Person {
 
                 foreach($this->getExpertise($this->manifestation->expertiseType) as $expertise) {
                     if($expertise->attribute['id'] == $supernatural->id) {
-                        $rollD12 += intval($expertise->dice);
-                        $rollBonus += intval($expertise->skillValue);
+                        $rollD12 += intval($expertise->value);
+                        $rollBonus += intval($expertise->bonus);
                     }
                 }
 

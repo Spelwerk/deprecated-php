@@ -1,14 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-11-16
- * Time: 16:49
- */
-
-class World {
-
+<?php class World {
     var $id, $canon, $name, $description;
 
     var $isOwner, $isCalculated;
@@ -234,69 +224,39 @@ class World {
     // GET
 
     public function getAttribute($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/attribute'.$override
             : 'world/id/'.$this->id.'/attribute';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $array) {
-                $arrayList[] = new Attribute(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     public function getAugmentation($bionic) {
         global $system;
 
-        return $system->getBionic('/id/'.$bionic.'/augmentation');
+        return $system->getAugmentation('bionic/id/'.$bionic.'/augmentation');
     }
 
     public function getBionic($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/bionic'.$override
             : 'world/id/'.$this->id.'/bionic';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Bionic(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getBionic($get);
     }
 
     public function getBackground($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/background'.$override
             : 'world/id/'.$this->id.'/background';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Background(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getBackground($get);
     }
 
     public function getDoctrine($manifestation = null) {
@@ -306,73 +266,43 @@ class World {
             ? '/manifestation/'.$manifestation
             : null;
 
-        return $system->getDoctrine($override);
+        return $system->getDoctrine('doctrine'.$override);
     }
 
     public function getExpertise($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/expertise'.$override
             : 'world/id/'.$this->id.'/expertise';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Expertise(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getExpertise($get);
     }
 
     public function getFocus($manifestation) {
         global $system;
 
-        return $system->getFocus('/manifestation/'.$manifestation);
+        return $system->getFocus('focus/manifestation/'.$manifestation);
     }
 
     public function getGift($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/gift'.$override
             : 'world/id/'.$this->id.'/gift';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Gift(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getGift($get);
     }
 
     public function getImperfection($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/imperfection'.$override
             : 'world/id/'.$this->id.'/imperfection';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Imperfection(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getImperfection($get);
     }
 
     public function getIdentity() {
@@ -382,39 +312,19 @@ class World {
     }
 
     public function getManifestation() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('world/id/'.$this->id.'/manifestation');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Manifestation(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getManifestation('world/id/'.$this->id.'/manifestation');
     }
 
     public function getMilestone($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/milestone'.$override
             : 'world/id/'.$this->id.'/milestone';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Milestone(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getMilestone($get);
     }
 
     public function getNature() {
@@ -424,79 +334,49 @@ class World {
     }
 
     public function getProtection($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/protection'.$override
             : 'world/id/'.$this->id.'/protection';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $array) {
-                $arrayList[] = new Protection(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getProtection($get);
     }
 
     public function getSkill($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/skill'.$override
             : 'world/id/'.$this->id.'/skill';
 
-        $result = $curl->get($get);
+        return $system->getSkill($get);
+    }
 
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Skill(null, $array);
-            }
-        }
+    public function getSoftware($override = null) {
+        global $system;
 
-        return $arrayList;
+        $get = isset($override)
+            ? 'world/id/'.$this->id.'/software'.$override
+            : 'world/id/'.$this->id.'/software';
+
+        return $system->getSoftware($get);
     }
 
     public function getSpecies() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('world/id/'.$this->id.'/species');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Species(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getSpecies('world/id/'.$this->id.'/species');
     }
 
     public function getWeapon($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'world/id/'.$this->id.'/weapon'.$override
             : 'world/id/'.$this->id.'/weapon';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $array) {
-                $arrayList[] = new Weapon(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     // POST
@@ -588,7 +468,7 @@ class World {
         $system->checkboxList($system->getBackground(), $idList);
 
         foreach($speciesArray as $species) {
-            $list = $system->getBackground('/species/'.$species->id, $idList);
+            $list = $system->getBackground('background/species/'.$species->id, $idList);
 
             if(!$list) continue;
 
@@ -597,7 +477,7 @@ class World {
 
         if($this->supernaturalExists) {
             foreach($manifestationArray as $manifestation) {
-                $list = $system->getBackground('/manifestation/'.$manifestation->id, $idList);
+                $list = $system->getBackground('background/manifestation/'.$manifestation->id, $idList);
 
                 if(!$list) continue;
 
@@ -633,7 +513,7 @@ class World {
         ]);
 
         foreach($skillArray as $skill) {
-            $list = $system->getExpertise('/skill/'.$skill->id);
+            $list = $system->getExpertise('expertise/skill/'.$skill->id);
 
             if(!$list) continue;
 
@@ -643,7 +523,7 @@ class World {
 
         if($this->supernaturalExists) {
             foreach($manifestationArray as $manifestation) {
-                $list = $system->getExpertise('/manifestation/'.$manifestation->id);
+                $list = $system->getExpertise('expertise/manifestation/'.$manifestation->id);
 
                 if(!$list) continue;
 
@@ -677,7 +557,7 @@ class World {
         $system->checkboxList($system->getGift(), $idList);
 
         foreach($skillArray as $skill) {
-            $list = $system->getGift('/skill/'.$skill->id);
+            $list = $system->getGift('gift/skill/'.$skill->id);
 
             if(!$list) continue;
 
@@ -685,7 +565,7 @@ class World {
         }
 
         foreach($speciesArray as $species) {
-            $list = $system->getGift('/species/'.$species->id, $idList);
+            $list = $system->getGift('gift/species/'.$species->id, $idList);
 
             if(!$list) continue;
 
@@ -695,7 +575,7 @@ class World {
 
         if($this->supernaturalExists) {
             foreach($manifestationArray as $manifestation) {
-                $list = $system->getGift('/manifestation/'.$manifestation->id, $idList);
+                $list = $system->getGift('gift/manifestation/'.$manifestation->id, $idList);
 
                 if(!$list) continue;
 
@@ -728,7 +608,7 @@ class World {
         $system->checkboxList($system->getImperfection(), $idList);
 
         foreach($speciesArray as $species) {
-            $list = $system->getImperfection('/species/'.$species->id, $idList);
+            $list = $system->getImperfection('imperfection/species/'.$species->id, $idList);
 
             if(!$list) continue;
 
@@ -738,7 +618,7 @@ class World {
 
         if($this->supernaturalExists) {
             foreach($manifestationArray as $manifestation) {
-                $list = $system->getImperfection('/manifestation/'.$manifestation->id, $idList);
+                $list = $system->getImperfection('imperfection/manifestation/'.$manifestation->id, $idList);
 
                 if(!$list) continue;
 
@@ -779,7 +659,7 @@ class World {
         $system->checkboxList($system->getMilestone(), $idList);
 
         foreach($backgroundArray as $background) {
-            $list = $system->getMilestone('/background/'.$background->id);
+            $list = $system->getMilestone('milestone/background/'.$background->id);
 
             if(!$list) continue;
 
@@ -787,7 +667,7 @@ class World {
         }
 
         foreach($skillArray as $skill) {
-            $list = $system->getMilestone('/skill/'.$skill->id);
+            $list = $system->getMilestone('milestone/skill/'.$skill->id);
 
             if(!$list) continue;
 
@@ -795,7 +675,7 @@ class World {
         }
 
         foreach($speciesArray as $species) {
-            $list = $system->getMilestone('/species/'.$species->id, $idList);
+            $list = $system->getMilestone('milestone/species/'.$species->id, $idList);
 
             if(!$list) continue;
 
@@ -805,7 +685,7 @@ class World {
 
         if($this->supernaturalExists) {
             foreach($manifestationArray as $manifestation) {
-                $list = $system->getMilestone('/manifestation/'.$manifestation->id, $idList);
+                $list = $system->getMilestone('milestone/manifestation/'.$manifestation->id, $idList);
 
                 if(!$list) continue;
 
@@ -830,10 +710,16 @@ class World {
         $system->contentSelectList('world', 'skill', 'post', $this->id, $system->getSkill(), $system->idList($this->getSkill()));
     }
 
+    public function postSoftware() {
+        global $system;
+
+        $system->contentSelectList('world', 'software', 'post', $this->id, $system->getSoftware(), $system->idList($this->getSoftware()));
+    }
+
     public function postSpecies() {
         global $system;
 
-        $system->contentSelectList('world', 'species', 'post', $this->id, $system->getSpecies('/playable'), $system->idList($this->getSpecies()));
+        $system->contentSelectList('world', 'species', 'post', $this->id, $system->getSpecies('species/playable'), $system->idList($this->getSpecies()));
     }
 
     public function postWeapon() {
@@ -893,10 +779,15 @@ class World {
     }
 
     public function deleteSkill() {
-
         global $system;
 
         $system->contentSelectList('world', 'skill', 'delete', $this->id, $this->getSkill());
+    }
+
+    public function deleteSoftware() {
+        global $system;
+
+        $system->contentSelectList('world', 'software', 'delete', $this->id, $this->getSoftware());
     }
 
     public function deleteSpecies() {
@@ -997,6 +888,12 @@ class World {
         global $system;
 
         $system->listRelation($this->getSkill(), 'skill', $this->siteLink);
+    }
+
+    public function listSoftware() {
+        global $system;
+
+        $system->listRelation($this->getSoftware(), 'software', $this->siteLink);
     }
 
     public function listSpecies() {

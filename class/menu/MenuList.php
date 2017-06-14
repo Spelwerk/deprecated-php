@@ -1,12 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 30/03/2017
- * Time: 09:53
- */
-class MenuList {
+<?php class MenuList {
     var $listID, $active, $user, $admin;
 
     var $linkList;

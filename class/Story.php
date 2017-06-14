@@ -1,16 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-11-16
- * Time: 16:49
- */
-
-require_once('World.php');
-
-class Story {
-
+<?php class Story {
     var $id, $name, $description, $plot;
 
     var $isOwner;
@@ -79,54 +67,26 @@ class Story {
         $component->sectionEnd();
     }
 
+    public function delete() {} //todo
+
     // GET
 
     public function getPerson() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('story/id/'.$this->id.'/person');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = $array;
-            }
-        }
-
-        return $arrayList;
+        return $system->getPerson('story/id/'.$this->id.'/person');
     }
 
     public function getLocation() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('story/id/'.$this->id.'/location');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = $array;
-            }
-        }
-
-        return $arrayList;
+        return $system->getLocation('story/id/'.$this->id.'/location');
     }
 
     public function getMeeting() {
-        global $curl;
+        global $system;
 
-        $arrayList = null;
-
-        $result = $curl->get('story/id/'.$this->id.'/meeting');
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = $array;
-            }
-        }
-
-        return $arrayList;
+        return $system->getMeeting('story/id/'.$this->id.'/meeting');
     }
 
     // MAKE

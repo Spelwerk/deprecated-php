@@ -1,13 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 05/04/2017
- * Time: 19:41
- */
-class Wound {
-    var $id, $canon, $name, $icon;
+<?php class Disease {
+    var $id, $canon, $popularity, $name, $icon;
 
     var $heal, $lethal;
 
@@ -15,13 +7,14 @@ class Wound {
         global $curl;
 
         $data = isset($id)
-            ? $curl->get('wound/id/'.$id)['data'][0]
+            ? $curl->get('disease/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
-        $this->icon = '/img/color/wound.png';
+        $this->icon = '/img/color/disease.png';
 
         $this->heal = isset($data['heal'])
             ? $data['heal']
@@ -35,4 +28,10 @@ class Wound {
             ? 2
             : 1;
     }
+
+    public function put() {} //todo
+
+    public function view() {} //todo
+
+    public function delete() {} //todo
 }

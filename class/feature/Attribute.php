@@ -1,13 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-01
- * Time: 18:58
- */
-
-class Attribute {
+<?php class Attribute {
     var $id, $canon, $name, $description, $icon;
 
     var $type, $maximum;

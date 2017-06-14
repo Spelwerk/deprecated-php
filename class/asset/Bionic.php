@@ -1,14 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-02
- * Time: 07:28
- */
-
-class Bionic {
-    var $id, $canon, $name, $description, $price, $energy, $legal, $icon;
+<?php class Bionic {
+    var $id, $canon, $popularity, $name, $description, $price, $energy, $legal, $icon;
 
     var $bodypart;
 
@@ -25,6 +16,7 @@ class Bionic {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
             ? $data['custom']
@@ -102,43 +94,23 @@ class Bionic {
     // GET
 
     public function getAttribute($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'bionic/id/'.$this->id.'/attribute'.$override
             : 'bionic/id/'.$this->id.'/attribute';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $array) {
-                $arrayList[] = new Attribute(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     public function getAugmentation($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'bionic/id/'.$this->id.'/augmentation'.$override
             : 'bionic/id/'.$this->id.'/augmentation';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach($result['data'] as $array) {
-                $arrayList[] = new Augmentation(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAugmentation($get);
     }
 
     // POST

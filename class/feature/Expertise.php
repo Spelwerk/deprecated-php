@@ -1,14 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-03
- * Time: 15:15
- */
-
-class Expertise {
-    var $id, $canon, $name, $description, $icon;
+<?php class Expertise {
+    var $id, $canon, $popularity, $name, $description, $icon;
 
     var $value, $bonus;
 
@@ -37,6 +28,7 @@ class Expertise {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
             ? $data['custom']
@@ -56,8 +48,6 @@ class Expertise {
         $this->manifestation = $data['manifestation_id'];
         $this->manifestationName = isset($data['manifestation_name']) ? $data['manifestation_name'] : null;
         $this->doctrine = $data['doctrine_id'];
-
-        $this->dice = intval($this->start) + intval($this->value) - 1;
 
         $this->siteLink = '/content/expertise/'.$this->id;
     }
@@ -98,4 +88,6 @@ class Expertise {
             //todo link to delete();
         }
     }
+
+    public function delete() {} //todo
 }

@@ -1,15 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2016-12-03
- * Time: 15:37
- */
-
-class Focus {
-
-    var $id, $canon, $name, $description, $icon;
+<?php class Focus {
+    var $id, $canon, $popularity, $name, $description, $icon;
 
     var $manifestation;
 
@@ -28,6 +18,7 @@ class Focus {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = $data['description'];
         $this->icon = $data['icon'];
@@ -78,4 +69,6 @@ class Focus {
             //todo link to delete();
         }
     }
+
+    public function delete() {} //todo
 }

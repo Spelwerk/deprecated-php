@@ -55,6 +55,10 @@ if($sitemap->index) {
             require_once('./site/content/world/skill.php');
             break;
 
+        case 'software':
+            require_once('./site/content/world/software.php');
+            break;
+
         case 'species':
             require_once('./site/content/world/species.php');
             break;

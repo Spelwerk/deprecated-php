@@ -1,12 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 30/03/2017
- * Time: 09:45
- */
-class MenuTab {
+<?php class MenuTab {
     var $title, $listID, $icon, $active, $user, $admin;
 
     public function __construct($title, $listID, $icon, $user = false, $admin = false) {

@@ -3,50 +3,35 @@
 require_once(dirname(__FILE__).'/../php/config.php');
 
 class Curl {
-
     var $url, $port, $apiKey, $tokenCookie;
 
-    public function __construct($array = null, $tokenCookie = null) {
-        global $config_curl, $cookieArray;
+    public function __construct() {
+        global $config_curl, $config_token;
 
         $this->url = $config_curl['url'];
         $this->port = $config_curl['port'];
         $this->apiKey = $config_curl['apiKey'];
 
-        $this->tokenCookie = $cookieArray['token'];
+        $this->tokenCookie = $config_token;
     }
 
-    public function get($route, $filter = null) {
-        return $this->curl('GET',$route,null,$filter);
+    public function get($route, $order = null, $filter = null) {
+        return $this->curl('GET', $route, null, $order, $filter);
     }
 
     public function post($route, $data = null) {
-        return $this->curl('POST',$route,$data);
+        return $this->curl('POST', $route, $data);
     }
 
     public function put($route, $data = null) {
-        return $this->curl('PUT',$route,$data);
+        return $this->curl('PUT', $route, $data);
     }
 
-    public function delete($route, $data = null) {
-        return $this->curl('DELETE',$route,$data);
+    public function delete($route) {
+        return $this->curl('DELETE', $route);
     }
 
-    public function user($route) {
-        $return = [];
-
-        $curl = $this->curl('GET',$route);
-
-        if($curl['error']) {
-            $return = $curl;
-        } else {
-            $return['user'] = $curl['user'];
-        }
-
-        return $return;
-    }
-
-    function curl($method, $route, $data = null, $filter = null) {
+    function curl($method, $route, $data = null, $order = null, $filter = null) {
         $request = $this->url . '/' . $route;
         $auth = null;
         $return = null;
@@ -79,9 +64,6 @@ class Curl {
 
             case 'DELETE':
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-                if($data) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                }
                 break;
 
             default: break;
@@ -91,8 +73,8 @@ class Curl {
             ? 'token: '.$token
             : null;
 
-        $orderBy = $filter && isset($filter['order-by'])
-            ? 'x-order-by: '.$filter['order-by']
+        $orderBy = $order
+            ? 'x-order-by: '.$order
             : null;
 
         $paginationLimit = $filter && isset($filter['limit-from'])

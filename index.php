@@ -9,10 +9,10 @@ require_once('class/Sitemap.php');
 require_once('class/User.php');
 require_once('class/System.php');
 
-global $config_curl, $cookieArray;
+global $config_policy;
 
 $component = new Component();
-$curl = new Curl($config_curl, $cookieArray['token']);
+$curl = new Curl();
 $form = new Form();
 $user = new User();
 $system = new System();
@@ -50,7 +50,7 @@ $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 <body>
 
 <?php
-if(!isset($_COOKIE[$cookieArray['policy']])) {
+if(!isset($_COOKIE[$config_policy])) {
     require_once('php/cookiepolicy.php');
 }
 ?>

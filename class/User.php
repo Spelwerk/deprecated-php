@@ -1,390 +1,244 @@
-<?php
-
-class User {
+<?php class User {
     var $isActive, $isVerified, $isAdmin;
 
     var $id, $email, $displayname, $firstname, $surname, $token;
 
     public function __construct() {
-        global $curl, $cookieArray;
+        global $curl, $config_token;
 
-        $this->token = isset($_COOKIE[$cookieArray['token']])
-            ? $_COOKIE[$cookieArray['token']]
-            : null;
-
-        $this->isActive = isset($this->token)
-            ? true
-            : false;
+        $this->token = isset($_COOKIE[$config_token]) ? $_COOKIE[$config_token] : null;
 
         $result = isset($this->token)
             ? $curl->get('user/validate')
             : null;
 
-        $this->id = $result['user']['id'];
+        $this->id = intval($result['user']['id']);
         $this->isAdmin = intval($result['user']['admin']);
         $this->isVerified = intval($result['user']['verify']);
+
+        $this->isActive = isset($this->id) ? true : false;
     }
 
     // GET
 
     public function getAttribute($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/attribute'.$override
             : 'user/id/'.$this->id.'/attribute';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Attribute($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     public function getAugmentation($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/augmentation'.$override
             : 'user/id/'.$this->id.'/augmentation';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Augmentation($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAugmentation($get);
     }
 
     public function getBackground($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/background'.$override
             : 'user/id/'.$this->id.'/background';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Background($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getBackground($get);
     }
 
     public function getBionic($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/bionic'.$override
             : 'user/id/'.$this->id.'/bionic';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Bionic($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getBionic($get);
     }
 
     public function getDoctrine($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/doctrine'.$override
             : 'user/id/'.$this->id.'/doctrine';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Doctrine($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getDoctrine($get);
     }
 
     public function getExpertise($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/expertise'.$override
             : 'user/id/'.$this->id.'/expertise';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Expertise($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getExpertise($get);
     }
 
     public function getFocus($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/focus'.$override
             : 'user/id/'.$this->id.'/focus';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Focus($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getFocus($get);
     }
 
     public function getGift($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/gift'.$override
             : 'user/id/'.$this->id.'/gift';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Gift($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getGift($get);
     }
 
     public function getImperfection($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/imperfection'.$override
             : 'user/id/'.$this->id.'/imperfection';
 
-        $result = $curl->get($get);
+        return $system->getImperfection($get);
+    }
 
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Imperfection($id['id']);
-            }
-        }
+    public function getLocation($override = null) {
+        global $system;
 
-        return $arrayList;
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/location'.$override
+            : 'user/id/'.$this->id.'/location';
+
+        return $system->getLocation($get);
     }
 
     public function getManifestation($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/manifestation'.$override
             : 'user/id/'.$this->id.'/manifestation';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Manifestation($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getManifestation($get);
     }
 
     public function getMilestone($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/milestone'.$override
             : 'user/id/'.$this->id.'/milestone';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Milestone($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getMilestone($get);
     }
 
     public function getPerson($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/person'.$override
             : 'user/id/'.$this->id.'/person';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $item) {
-                $arrayList[] = new Person($item['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getPerson($get);
     }
 
     public function getProtection($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/protection'.$override
             : 'user/id/'.$this->id.'/protection';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Protection($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getProtection($get);
     }
 
     public function getSkill($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/skill'.$override
             : 'user/id/'.$this->id.'/skill';
 
-        $result = $curl->get($get);
+        return $system->getSkill($get);
+    }
 
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Skill($id['id']);
-            }
-        }
+    public function getSoftware($override = null) {
+        global $system;
 
-        return $arrayList;
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/software'.$override
+            : 'user/id/'.$this->id.'/software';
+
+        return $system->getSoftware($get);
     }
 
     public function getSpecies($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/species'.$override
             : 'user/id/'.$this->id.'/species';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Species($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getSpecies($get);
     }
 
     public function getStory($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/story'.$override
             : 'user/id/'.$this->id.'/story';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $item) {
-                $arrayList[] = new Story($item['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getStory($get);
     }
 
     public function getWeapon($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/weapon'.$override
             : 'user/id/'.$this->id.'/weapon';
 
-        $result = $curl->get($get);
+        return $system->getWeapon($get);
+    }
 
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new Weapon($id['id']);
-            }
-        }
+    public function getWeaponGroup($override = null) {
+        global $system;
 
-        return $arrayList;
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/weapongroup'.$override
+            : 'user/id/'.$this->id.'/weapongroup';
+
+        return $system->getWeaponGroup($get);
+    }
+
+    public function getWeaponType($override = null) {
+        global $system;
+
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/weapontype'.$override
+            : 'user/id/'.$this->id.'/weapontype';
+
+        return $system->getWeaponType($get);
     }
 
     public function getWorld($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'user/id/'.$this->id.'/world'.$override
             : 'user/id/'.$this->id.'/world';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $id) {
-                $arrayList[] = new World($id['id']);
-            }
-        }
-
-        return $arrayList;
+        return $system->getWorld($get);
     }
 }
 

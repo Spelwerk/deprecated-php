@@ -1,8 +1,5 @@
-<?php
-
-class Species {
-
-    var $id, $canon, $playable, $name, $description, $icon;
+<?php class Species {
+    var $id, $canon, $popularity, $playable, $name, $description, $icon;
 
     var $maxAge, $multiplySkill, $multiplyExpertise;
 
@@ -19,6 +16,7 @@ class Species {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->playable = $data['playable'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
@@ -94,74 +92,60 @@ class Species {
         }
     }
 
+    public function delete() {} //todo
+
     // GET
 
     public function getAttribute($override = null) {
-        global $curl;
-
-        $arrayList = null;
+        global $system;
 
         $get = isset($override)
             ? 'species/id/'.$this->id.'/attribute'.$override
             : 'species/id/'.$this->id.'/attribute';
 
-        $result = $curl->get($get);
-
-        if(isset($result['data'])) {
-            foreach ($result['data'] as $array) {
-                $arrayList[] = new Attribute(null, $array);
-            }
-        }
-
-        return $arrayList;
+        return $system->getAttribute($get);
     }
 
     public function getBackground() {
         global $system;
 
-        return $system->getBackground('/species/'.$this->id);
+        return $system->getBackground('background/species/'.$this->id);
     }
 
     public function getExpertise() {
         global $system;
 
-        return $system->getExpertise('/species/'.$this->id);
+        return $system->getExpertise('expertise/species/'.$this->id);
     }
 
     public function getGift() {
         global $system;
 
-        return $system->getGift('/species/'.$this->id);
+        return $system->getGift('gift/species/'.$this->id);
     }
 
     public function getImperfection() {
         global $system;
 
-        return $system->getImperfection('/species/'.$this->id);
+        return $system->getImperfection('imperfection/species/'.$this->id);
     }
 
     public function getMilestone() {
         global $system;
 
-        return $system->getMilestone('/species/'.$this->id);
+        return $system->getMilestone('milestone/species/'.$this->id);
     }
 
     public function getSkill() {
         global $system;
 
-        return $system->getSkill('/species/'.$this->id);
+        return $system->getSkill('skill/species/'.$this->id);
     }
 
     public function getWeapon() {
-        global $curl;
+        global $system;
 
-        $result = $curl->get('species/id/'.$this->id.'/weapon')['data'];
-
-        $data = isset($result)
-            ? $result
-            : null;
-
-        return $data;
+        return $system->getWeapon('species/id/'.$this->id.'/weapon');
     }
 
     // POST

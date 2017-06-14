@@ -1,14 +1,4 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 05/02/2017
- * Time: 11:12
- */
-
-class Sitemap {
-
+<?php class Sitemap {
     var $requestURI, $scriptName, $command;
 
     var $page, $id, $hash, $thing, $do;
@@ -129,6 +119,13 @@ class Sitemap {
                 $this->page = 'site/content/index.php';
                 break;
 
+            case 'augmentation':
+                $this->page = 'site/content/augmentation/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
             case 'background':
                 $this->page = 'site/content/background/index.php';
                 $this->index = $this->command2;
@@ -178,6 +175,13 @@ class Sitemap {
                 $this->extra = $this->command4;
                 break;
 
+            case 'protection':
+                $this->page = 'site/content/protection/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
             case 'skill':
                 $this->page = 'site/content/skill/index.php';
                 $this->index = $this->command2;
@@ -185,8 +189,36 @@ class Sitemap {
                 $this->extra = $this->command4;
                 break;
 
+            case 'software':
+                $this->page = 'site/content/software/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
             case 'species':
                 $this->page = 'site/content/species/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
+            case 'weapon':
+                $this->page = 'site/content/weapon/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
+            case 'weapongroup':
+                $this->page = 'site/content/weapongroup/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
+            case 'weapontype':
+                $this->page = 'site/content/weapontype/index.php';
                 $this->index = $this->command2;
                 $this->context = $this->command3;
                 $this->extra = $this->command4;

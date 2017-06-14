@@ -1,14 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 2017-04-25
- * Time: 21:20
- */
-
-class Imperfection {
-    var $id, $canon, $name, $description, $icon;
+<?php class Imperfection {
+    var $id, $canon, $popularity, $name, $description, $icon;
 
     var $species;
 
@@ -27,6 +18,7 @@ class Imperfection {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = isset($data['custom'])
             ? $data['custom']
@@ -76,4 +68,6 @@ class Imperfection {
             //todo link to delete();
         }
     }
+
+    public function delete() {} //todo
 }

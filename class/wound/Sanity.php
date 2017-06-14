@@ -1,13 +1,5 @@
-<?php
-
-/**
- * Created by PhpStorm.
- * User: jonn
- * Date: 05/04/2017
- * Time: 19:41
- */
-class Sanity {
-    var $id, $canon, $name, $icon;
+<?php class Sanity {
+    var $id, $canon, $popularity, $name, $icon;
 
     var $heal, $lethal;
 
@@ -20,6 +12,7 @@ class Sanity {
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->icon = '/img/color/sanity.png';
 
@@ -35,4 +28,10 @@ class Sanity {
             ? 2
             : 1;
     }
+
+    public function put() {} //todo
+
+    public function view() {} //todo
+
+    public function delete() {} //todo
 }
