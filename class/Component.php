@@ -4,7 +4,7 @@
     public function title($title) {
         echo(
             '<div class="sw-c-title">'.
-            '<div class="sw-l-wrap">'.$title.'</div>'.
+            '<div class="sw-l-wrap sw-js-custom-title">'.$title.'</div>'.
             '</div>'.
             '<div id="content"></div>'
         );

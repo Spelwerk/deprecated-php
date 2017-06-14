@@ -9,7 +9,7 @@
         global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('bionic/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('bionic/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
@@ -119,7 +119,7 @@
         global $component, $form, $curl;
 
         $form->form([
-            'do' => 'relation--value--post',
+            'do' => 'context--post',
             'return' => 'content/bionic',
             'context' => 'bionic',
             'context2' => 'attribute',

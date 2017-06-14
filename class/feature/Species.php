@@ -9,7 +9,7 @@
         global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('species/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('species/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
@@ -155,7 +155,7 @@
 
         $component->h1('Add Attribute');
         $form->form([
-            'do' => 'relation--value--post',
+            'do' => 'context--post',
             'return' => 'content/species',
             'returnafter' => 'attribute',
             'context' => 'species',

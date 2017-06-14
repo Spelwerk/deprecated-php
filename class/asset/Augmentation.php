@@ -10,8 +10,10 @@
     public function __construct($id = null, $array = null) {
         global $curl, $system, $user;
 
+        echo $id;
+
         $data = isset($id)
-            ? $curl->get('augmentation/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('augmentation/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
@@ -91,7 +93,7 @@
         global $component, $form, $curl;
 
         $form->form([
-            'do' => 'relation--value--post',
+            'do' => 'context--post',
             'context' => 'augmentation',
             'id' => $this->id,
             'context2' => 'attribute',
@@ -112,7 +114,7 @@
         global $component, $form, $curl;
 
         $form->form([
-            'do' => 'relation--value--post',
+            'do' => 'context--post',
             'context' => 'augmentation',
             'id' => $this->id,
             'context2' => 'skill',

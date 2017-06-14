@@ -73,7 +73,7 @@ class Curl {
             ? 'token: '.$token
             : null;
 
-        $orderBy = $order
+        $orderBy = isset($order)
             ? 'x-order-by: '.$order
             : null;
 

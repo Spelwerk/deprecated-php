@@ -29,7 +29,6 @@ echo($sitemap->command5.'/');
 echo(' = '.$sitemap->page);
 
 $menu->findActive($sitemap->menuID, $sitemap->menuLink);
-
 ?>
 
 <!DOCTYPE html>

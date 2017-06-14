@@ -19,7 +19,7 @@
         global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('expertise/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('expertise/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);

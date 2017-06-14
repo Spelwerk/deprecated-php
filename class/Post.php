@@ -43,12 +43,6 @@ class Post {
         $this->do = isset($this->post['do']) ? $this->post['do'] : null;
         $this->special = isset($this->post['special']) ? $this->post['special'] : null;
 
-        $this->returnBase = $baseUrl;
-        $this->returnStart = isset($this->post['return']) ? $this->post['return'] : null;
-        $this->returnLast = isset($this->post['returnafter']) ? $this->post['returnafter'] : null;
-        $this->returnID = isset($this->post['returnid']) ? $this->post['returnid'] : null;
-        $this->returnFull = $this->getReturn();
-
         $this->id = isset($this->post['id']) ? $this->post['id'] : null;
 
         $this->context = isset($this->post['context']) ? $this->post['context'] : null;
@@ -59,6 +53,12 @@ class Post {
 
         $this->points = isset($this->post['points']) ? $this->post['points'] : null;
         $this->experience = isset($this->post['experience']) ? $this->post['experience'] : null;
+
+        $this->returnBase = $baseUrl;
+        $this->returnStart = isset($this->post['return']) ? $this->post['return'] : null;
+        $this->returnLast = isset($this->post['returnafter']) ? $this->post['returnafter'] : null;
+        $this->returnID = isset($this->post['returnid']) ? $this->post['returnid'] : null;
+        $this->returnFull = $this->getReturn();
     }
 
     public function switchTop() {
@@ -108,28 +108,25 @@ class Post {
                 $this->curl->delete($this->context.'/id/'.$this->id.'/'.$this->context2.'/'.$this->extra);
                 break;
 
-            // RELATION
+            // MANY RELATION
 
             case 'relation--post':
                 $this->tableManyRelationPost($this->context, $this->id, $this->context2);
                 break;
 
             case 'relation--put':
-                $result = $this->curl->post($this->context.'/id/'.$this->id.'/'.$this->context2, $this->data);
                 break;
 
             case 'relation--delete':
-                $this->tableManyRelationDelete($this->context, $this->id, $this->context2);
                 break;
 
-            // RELATION WITH VALUE
+            // MANY RELATION WITH VALUE
 
             case 'relation--value--post':
                 $this->tableManyRelationPostWithValue($this->context, $this->id, $this->context2);
                 break;
 
             case 'relation--value--put':
-                $this->tableManyRelationPutWithValue($this->context, $this->id, $this->context2);
                 break;
         }
     }

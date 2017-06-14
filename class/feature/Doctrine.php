@@ -11,7 +11,7 @@
         global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('doctrine/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('doctrine/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);

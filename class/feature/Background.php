@@ -11,7 +11,7 @@
         global $curl, $system, $user;
 
         $data = isset($id)
-            ? $curl->get('background/id/'.$id, $user->token)['data'][0]
+            ? $curl->get('background/id/'.$id)['data'][0]
             : $array;
 
         $this->isOwner = $system->verifyOwner($data);
@@ -108,7 +108,7 @@
         global $component, $form, $curl;
 
         $form->form([
-            'do' => 'relation--value--post',
+            'do' => 'context--post',
             'context' => 'background',
             'id' => $this->id,
             'context2' => 'attribute',
@@ -135,7 +135,7 @@
         global $component, $form, $curl;
 
         $form->form([
-            'do' => 'relation--value--post',
+            'do' => 'context--post',
             'context' => 'background',
             'id' => $this->id,
             'context2' => 'skill',
