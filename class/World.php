@@ -12,9 +12,9 @@
 
     var $augmentationExists, $bionicExists, $softwareExists, $supernaturalExists;
 
-    var $splitSupernatural, $splitSkill, $splitExpertise, $splitMilestone, $splitRelationship;
+    var $splitDoctrine, $splitSkill, $splitExpertise, $splitMilestone, $splitRelationship;
 
-    var $maxGift, $maxImperfection, $maxSupernatural, $maxSkill, $maxExpertise, $maxMilestone, $maxRelationship;
+    var $maxGift, $maxImperfection, $maxDoctrine, $maxSkill, $maxExpertise, $maxMilestone, $maxRelationship;
 
     var $supernaturalName;
 
@@ -73,7 +73,7 @@
         $this->softwareExists = $data['software'];
         $this->supernaturalExists = $data['supernatural'];
 
-        $this->splitSupernatural = intval($data['split_supernatural']);
+        $this->splitDoctrine = intval($data['split_doctrine']);
         $this->splitSkill = intval($data['split_skill']);
         $this->splitExpertise = intval($data['split_expertise']);
         $this->splitMilestone = intval($data['split_milestone']);
@@ -81,7 +81,7 @@
 
         $this->maxGift = intval($data['max_gift']);
         $this->maxImperfection = intval($data['max_imperfection']);
-        $this->maxSupernatural = intval($data['max_supernatural']);
+        $this->maxDoctrine = intval($data['max_doctrine']);
         $this->maxSkill = intval($data['max_skill']);
         $this->maxExpertise = intval($data['max_expertise']);
         $this->maxMilestone = intval($data['max_milestone']);
@@ -96,127 +96,137 @@
 
     public function put() {} //todo
 
-    public function view() {
+    public function create() {
         global $form, $component, $curl;
+
+        $component->h1('Creating '.$this->name);
+
+        $readyToCalculate = true;
+
+        $defaultRoutes = [
+            'expertise' => 'expertise',
+            'gift' => 'gift',
+            'imperfection' => 'imperfection',
+            'milestone' => 'milestone',
+            //'protection' => 'protection',
+            'weapon' => 'weapon',
+        ];
+
+        $sResult = $this->getSpecies();
+        $mResult = $this->getManifestation();
+        $kResult = $this->getSkill();
+        $bResult = $this->getBackground();
+
+        if(!$sResult) {
+            $component->linkButton($this->siteLink.'/species/add', 'Add species', true);
+            $readyToCalculate = false;
+        } else if($this->supernaturalExists && !$mResult) {
+            $component->linkButton($this->siteLink.'/manifestation/add', 'Add manifestations', true);
+            $readyToCalculate = false;
+        } else if(!$kResult) {
+            $component->linkButton($this->siteLink.'/skill/add', 'Add skills', true);
+            $readyToCalculate = false;
+        } else if(!$bResult) {
+            $component->linkButton($this->siteLink.'/background/add', 'Add backgrounds', true);
+            $readyToCalculate = false;
+        } else {
+            foreach($defaultRoutes as $key => $route) {
+                $result = $curl->get('world/id/'.$this->id.'/'.$route);
+
+                $empty = false;
+
+                if(!$result['data']) {
+                    $readyToCalculate = false;
+                    $empty = true;
+                } else {
+                    if(count($result) == 0) {
+                        $readyToCalculate = false;
+                        $empty = true;
+                    }
+                }
+
+                if($empty) {
+                    $component->linkButton($this->siteLink.'/'.$key.'/add','Add '.$key.'s');
+                }
+            }
+
+            if($this->bionicExists) {
+                $bResult = $this->getBionic();
+
+                if(!$bResult) {
+                    $component->linkButton($this->siteLink.'/bionic/add','Add bionics');
+                    $readyToCalculate = false;
+                }
+            }
+        }
+
+        if($readyToCalculate) {
+            $form->form([
+                'do' => 'put',
+                'context' => 'world',
+                'id' => $this->id,
+                'return' => 'content/world'
+            ]);
+            $form->hidden('calculated',1);
+            $form->submit(false,'This world is ready to play. Press here!');
+        }
+    }
+
+    public function view() {
+        global $component;
 
         $component->returnButton('/content/world');
 
         $component->h1('Description');
         $component->p($this->description);
-        $component->h1('Data');
-        $component->p('Has Bionic: '.$this->bionicExists);
-        $component->p('Has Supernatural: '.$this->supernaturalExists);
 
-        $component->p('Split Supernatural: '.$this->splitSupernatural);
-        $component->p('Split Skill: '.$this->splitSkill);
-        $component->p('Split Expertise: '.$this->splitExpertise);
-        $component->p('Split Milestone: '.$this->splitMilestone);
-        $component->p('Split Relationship: '.$this->splitRelationship);
+        if(!$this->isCalculated) {
+            if($this->isOwner) {
+                $this->create();
+            }
+        } else {
+            $component->h1('Data');
+            $component->p('Has Bionic: '.$this->bionicExists);
+            $component->p('Has Supernatural: '.$this->supernaturalExists);
 
-        $component->p('Maximum Gift: '.$this->maxGift);
-        $component->p('Maximum Imperfection: '.$this->maxImperfection);
-        $component->p('Maximum Supernatural: '.$this->maxSupernatural);
-        $component->p('Maximum Skill: '.$this->maxSkill);
-        $component->p('Maximum Expertise: '.$this->maxExpertise);
-        $component->p('Maximum Milestone: '.$this->maxMilestone);
-        $component->p('Maximum Relationship: '.$this->maxRelationship);
+            $component->p('Split Supernatural: '.$this->splitDoctrine);
+            $component->p('Split Skill: '.$this->splitSkill);
+            $component->p('Split Expertise: '.$this->splitExpertise);
+            $component->p('Split Milestone: '.$this->splitMilestone);
+            $component->p('Split Relationship: '.$this->splitRelationship);
 
-        if($this->isOwner) {
+            $component->p('Maximum Gift: '.$this->maxGift);
+            $component->p('Maximum Imperfection: '.$this->maxImperfection);
+            $component->p('Maximum Supernatural: '.$this->maxDoctrine);
+            $component->p('Maximum Skill: '.$this->maxSkill);
+            $component->p('Maximum Expertise: '.$this->maxExpertise);
+            $component->p('Maximum Milestone: '.$this->maxMilestone);
+            $component->p('Maximum Relationship: '.$this->maxRelationship);
 
-            if(!$this->isCalculated) {
-                $component->h1('Creating '.$this->name);
+            $component->h1('Lists');
+            $component->linkButton($this->siteLink.'/attribute','Attribute');
+            $component->linkButton($this->siteLink.'/background','Background');
 
-                $readyToCalculate = true;
-
-                $defaultRoutes = [
-                    'background' => 'background',
-                    'expertise' => 'expertise',
-                    'gift' => 'gift',
-                    'imperfection' => 'imperfection',
-                    'milestone' => 'milestone',
-                    //'protection' => 'protection',
-                    'weapon' => 'weapon',
-                ];
-
-                $sResult = $this->getSpecies();
-                $mResult = $this->getManifestation();
-                $kResult = $this->getSkill();
-
-                if(!$sResult) {
-                    $component->linkButton($this->siteLink.'/species/add','Add species',true);
-                    $readyToCalculate = false;
-                } else if($this->supernaturalExists && !$mResult) {
-                    $component->linkButton($this->siteLink.'/manifestation/add','Add manifestations',true);
-                    $readyToCalculate = false;
-                } else if(!$kResult) {
-                    $component->linkButton($this->siteLink.'/skill/add','Add skills',true);
-                    $readyToCalculate = false;
-                } else {
-                    foreach($defaultRoutes as $key => $route) {
-                        $result = $curl->get('world/id/'.$this->id.'/'.$route);
-
-                        $empty = false;
-
-                        if(!$result['data']) {
-                            $readyToCalculate = false;
-                            $empty = true;
-                        } else {
-                            if(count($result) == 0) {
-                                $readyToCalculate = false;
-                                $empty = true;
-                            }
-                        }
-
-                        if($empty) {
-                            $component->linkButton($this->siteLink.'/'.$key.'/add','Add '.$key.'s');
-                        }
-                    }
-
-                    if($this->bionicExists) {
-                        $bResult = $this->getBionic();
-
-                        if(!$bResult) {
-                            $component->linkButton($this->siteLink.'/bionic/add','Add bionics');
-                            $readyToCalculate = false;
-                        }
-                    }
-                }
-
-                if($readyToCalculate) {
-                    $form->form([
-                        'do' => 'put',
-                        'return' => 'content/world',
-                        'context' => 'world',
-                        'id' => $this->id
-                    ]);
-                    $form->hidden('calculated',1);
-                    $form->submit(false,'This world is ready to play. Press here!');
-                }
-            } else {
-                $component->h1('Lists');
-                $component->linkButton($this->siteLink.'/attribute','Attribute');
-                $component->linkButton($this->siteLink.'/background','Background');
-
-                if($this->bionicExists) {
-                    $component->linkButton($this->siteLink.'/bionic','Bionic');
-                }
-
-                $component->linkButton($this->siteLink.'/expertise','Expertise');
-                $component->linkButton($this->siteLink.'/gift','Gift');
-                $component->linkButton($this->siteLink.'/imperfection','Imperfection');
-
-                if($this->supernaturalExists) {
-                    $component->linkButton($this->siteLink.'/manifestation','Manifestation');
-                }
-
-                $component->linkButton($this->siteLink.'/milestone','Milestone');
-                $component->linkButton($this->siteLink.'/protection','Protection');
-                $component->linkButton($this->siteLink.'/skill','Skill');
-                $component->linkButton($this->siteLink.'/species','Species');
-                $component->linkButton($this->siteLink.'/weapon','Weapon');
+            if($this->bionicExists) {
+                $component->linkButton($this->siteLink.'/bionic','Bionic');
             }
 
+            $component->linkButton($this->siteLink.'/expertise','Expertise');
+            $component->linkButton($this->siteLink.'/gift','Gift');
+            $component->linkButton($this->siteLink.'/imperfection','Imperfection');
+
+            if($this->supernaturalExists) {
+                $component->linkButton($this->siteLink.'/manifestation','Manifestation');
+            }
+
+            $component->linkButton($this->siteLink.'/milestone','Milestone');
+            $component->linkButton($this->siteLink.'/protection','Protection');
+            $component->linkButton($this->siteLink.'/skill','Skill');
+            $component->linkButton($this->siteLink.'/species','Species');
+            $component->linkButton($this->siteLink.'/weapon','Weapon');
         }
+
+
     }
 
     public function delete() {} //todo
@@ -499,9 +509,7 @@
         global $system, $form, $component;
 
         $idList = $system->idList($this->getExpertise());
-
         $skillArray = $this->getSkill();
-        $manifestationArray = $this->getManifestation();
 
         $form->form([
             'do' => 'relation--post',
@@ -521,17 +529,6 @@
             $system->checkboxList($list, $idList);
         }
 
-        if($this->supernaturalExists) {
-            foreach($manifestationArray as $manifestation) {
-                $list = $system->getExpertise('expertise/manifestation/'.$manifestation->id);
-
-                if(!$list) continue;
-
-                $component->h2($manifestation->name);
-                $system->checkboxList($list, $idList);
-            }
-        }
-
         $system->checkboxAll();
         $form->submit();
     }
@@ -543,7 +540,6 @@
 
         $speciesArray = $this->getSpecies();
         $manifestationArray = $this->getManifestation();
-        $skillArray = $this->getSkill();
 
         $form->form([
             'do' => 'relation--post',
@@ -555,14 +551,6 @@
         ]);
 
         $system->checkboxList($system->getGift(), $idList);
-
-        foreach($skillArray as $skill) {
-            $list = $system->getGift('gift/skill/'.$skill->id);
-
-            if(!$list) continue;
-
-            $system->checkboxList($list, $idList);
-        }
 
         foreach($speciesArray as $species) {
             $list = $system->getGift('gift/species/'.$species->id, $idList);
@@ -645,7 +633,6 @@
         $backgroundArray = $this->getBackground();
         $speciesArray = $this->getSpecies();
         $manifestationArray = $this->getManifestation();
-        $skillArray = $this->getSkill();
 
         $form->form([
             'do' => 'relation--post',
@@ -660,14 +647,6 @@
 
         foreach($backgroundArray as $background) {
             $list = $system->getMilestone('milestone/background/'.$background->id);
-
-            if(!$list) continue;
-
-            $system->checkboxList($list, $idList);
-        }
-
-        foreach($skillArray as $skill) {
-            $list = $system->getMilestone('milestone/skill/'.$skill->id);
 
             if(!$list) continue;
 

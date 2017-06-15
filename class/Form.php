@@ -290,6 +290,10 @@
     // SPECIAL
 
     public function quick($options = null) {
+        $postSpecial = isset($options['special'])
+            ? '<input type="hidden" name="post--special" value="'.$options['special'].'"/>'
+            : null;
+
         $postDo = isset($options['do'])
             ? '<input type="hidden" name="post--do" value="'.$options['do'].'"/>'
             : null;
@@ -335,7 +339,8 @@
             : '<input class="sw-u-action" type="image" src="/img/missing_icon.png" alt="Submit" />';
 
         return
-            '<form action="/post/post.php" method="post">'.
+            '<form action="/post/post" method="post">'.
+            $postSpecial.
             $postDo.
             $postId.
             $postUser.

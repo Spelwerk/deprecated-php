@@ -1,20 +1,20 @@
 <?php global $form, $component, $curl, $sitemap, $system, $user;
 
-global $background;
+global $gift;
 
-$component->returnButton($background->siteLink);
-$component->h1('Skill');
+$component->returnButton($gift->siteLink);
+$component->h1('Attribute');
 
 switch($sitemap->extra)
 {
     default: break;
 
     case 'add':
-        $background->postSkill();
+        $gift->postAttribute();
         break;
 
     case 'delete':
-        $background->deleteSkill();
+        $gift->deleteAttribute();
         break;
 }
 ?>

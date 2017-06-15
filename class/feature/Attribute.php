@@ -18,7 +18,7 @@
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
-        $this->type = $data['attributetype_id'];
+        $this->type = isset($data['attributetype_id']) ? $data['attributetype_id'] : null;
         $this->maximum = isset($data['maximum']) ? $data['maximum'] : 0;
 
         $this->value = isset($data['value']) ? $data['value'] : 0;

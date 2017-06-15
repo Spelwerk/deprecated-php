@@ -12,23 +12,23 @@ if($sitemap->index) {
             break;
 
         case 'cheat':
-            require_once('./site/content/person/cheat/index.php');
+            require_once('cheat/index.php');
             break;
 
         case 'edit':
-            require_once('./site/content/person/edit/index.php');
+            require_once('edit/index.php');
             break;
 
         case 'disease':
-            require_once('./site/content/person/wound/disease.php');
+            require_once('wound/disease.php');
             break;
 
         case 'sanity':
-            require_once('./site/content/person/wound/sanity.php');
+            require_once('wound/sanity.php');
             break;
 
         case 'wound':
-            require_once('./site/content/person/wound/wound.php');
+            require_once('wound/wound.php');
             break;
     }
 }

@@ -7,9 +7,7 @@ $component->h1('Attribute');
 
 switch($sitemap->extra)
 {
-    default:
-        $bionic->listAttribute();
-        break;
+    default: break;
 
     case 'add':
         $bionic->postAttribute();

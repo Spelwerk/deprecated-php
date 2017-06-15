@@ -8,7 +8,7 @@
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('manifestation/id/'.$id)['data'][0]
@@ -92,6 +92,16 @@
         global $system;
 
         return $system->getDoctrine('doctrine/manifestation/'.$this->id);
+    }
+
+    public function getExpertise($override = null) {
+        global $system;
+
+        $get = isset($override)
+            ? $override
+            : 'expertise/manifestation/'.$this->id;
+
+        return $system->getExpertise($get);
     }
 
     public function getFocus() {

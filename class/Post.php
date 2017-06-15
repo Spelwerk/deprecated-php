@@ -9,7 +9,7 @@ class Post {
 
     var $do, $special;
 
-    var $returnBase, $returnStart, $returnLast, $returnID, $returnFull;
+    var $returnBase, $returnStart, $returnLast, $returnID;
 
     var $id;
 
@@ -58,7 +58,6 @@ class Post {
         $this->returnStart = isset($this->post['return']) ? $this->post['return'] : null;
         $this->returnLast = isset($this->post['returnafter']) ? $this->post['returnafter'] : null;
         $this->returnID = isset($this->post['returnid']) ? $this->post['returnid'] : null;
-        $this->returnFull = $this->getReturn();
     }
 
     public function switchTop() {
@@ -87,11 +86,11 @@ class Post {
                 break;
 
             case 'put':
-                $result = $this->curl->put($this->context.'/id/'.$this->id, $this->data);
+                $this->curl->put($this->context.'/id/'.$this->id, $this->data);
                 break;
 
             case 'delete':
-                $result = $this->curl->delete($this->context.'/id/'.$this->id);
+                $this->curl->delete($this->context.'/id/'.$this->id);
                 break;
 
             // CONTEXT
@@ -134,21 +133,6 @@ class Post {
     public function switchPerson() {
         switch($this->do) {
             default: break;
-
-            // DEFAULTS
-
-            case 'post':
-                $result = $this->curl->post('person', $this->data);
-                $this->id = $result['id'];
-                break;
-
-            case 'put':
-                $this->curl->put('person/id/'.$this->id, $this->data);
-                break;
-
-            case 'delete':
-                $this->curl->delete('person/id/'.$this->id);
-                break;
 
             // CREATING THE PERSON
 
@@ -331,6 +315,12 @@ class Post {
     public function userSet($route) {
         global $config_token;
 
+        $this->data += [
+            'os' => $this->getUserOS(),
+            'browser' => $this->getUserBrowser(),
+            'ip' => $this->getUserIP()
+        ];
+
         $result = $this->curl->post($route, $this->data);
 
         $token = isset($result['token'])
@@ -396,5 +386,72 @@ class Post {
                 $this->curl->put($ownerTableName.'/id/'.$ownerTableId.'/'.$relationTableName, ['insert_id' => $explode[1], 'value' => $value]);
             }
         }
+    }
+
+    // USER AGENT
+
+    private function getUserOS() {
+        $os_platform = "Unknown OS Platform";
+
+        $os_array = [
+            '/windows nt 6.3/i'     =>  'Windows 8.1',
+            '/windows nt 6.2/i'     =>  'Windows 8',
+            '/windows nt 6.1/i'     =>  'Windows 7',
+            '/windows nt 6.0/i'     =>  'Windows Vista',
+            '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
+            '/windows nt 5.1/i'     =>  'Windows XP',
+            '/windows xp/i'         =>  'Windows XP',
+            '/windows nt 5.0/i'     =>  'Windows 2000',
+            '/windows me/i'         =>  'Windows ME',
+            '/win98/i'              =>  'Windows 98',
+            '/win95/i'              =>  'Windows 95',
+            '/win16/i'              =>  'Windows 3.11',
+            '/macintosh|mac os x/i' =>  'Mac OS X',
+            '/mac_powerpc/i'        =>  'Mac OS 9',
+            '/linux/i'              =>  'Linux',
+            '/ubuntu/i'             =>  'Ubuntu',
+            '/iphone/i'             =>  'iPhone',
+            '/ipod/i'               =>  'iPod',
+            '/ipad/i'               =>  'iPad',
+            '/android/i'            =>  'Android',
+            '/blackberry/i'         =>  'BlackBerry',
+            '/webos/i'              =>  'Mobile'
+        ];
+
+        foreach($os_array as $regex => $value) {
+            if(preg_match($regex, $_SERVER['HTTP_USER_AGENT'])) {
+                $os_platform = $value;
+            }
+        }
+
+        return $os_platform;
+    }
+
+    private function getUserBrowser() {
+        $browser = "Unknown Browser";
+
+        $browser_array = [
+            '/msie/i'       =>  'Internet Explorer',
+            '/firefox/i'    =>  'Firefox',
+            '/safari/i'     =>  'Safari',
+            '/chrome/i'     =>  'Chrome',
+            '/opera/i'      =>  'Opera',
+            '/netscape/i'   =>  'Netscape',
+            '/maxthon/i'    =>  'Maxthon',
+            '/konqueror/i'  =>  'Konqueror',
+            '/mobile/i'     =>  'Handheld Browser'
+        ];
+
+        foreach($browser_array as $regex => $value) {
+            if(preg_match($regex, $_SERVER['HTTP_USER_AGENT'])) {
+                $browser = $value;
+            }
+        }
+
+        return $browser;
+    }
+
+    private function getUserIP() {
+        return $_SERVER['REMOTE_ADDR'];
     }
 }

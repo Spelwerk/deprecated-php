@@ -8,7 +8,7 @@
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('focus/id/'.$id)['data'][0]

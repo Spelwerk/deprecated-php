@@ -35,7 +35,7 @@ if($person->isOwner) {
             break;
 
         case 'augmentation':
-            require_once('./site/content/person/edit/augmentation.php');
+            require_once('augmentation.php');
             break;
 
         case 'bionic':
@@ -45,11 +45,11 @@ if($person->isOwner) {
             break;
 
         case 'consumable':
-            require_once('./site/content/person/edit/consumable.php');
+            require_once('consumable.php');
             break;
 
         case 'description':
-            require_once('./site/content/person/edit/description.php');
+            require_once('description.php');
             break;
 
         case 'doctrine':
@@ -58,7 +58,7 @@ if($person->isOwner) {
             break;
 
         case 'experience':
-            require_once('./site/content/person/edit/experience.php');
+            require_once('experience.php');
             break;
 
         case 'expertise':
@@ -68,7 +68,7 @@ if($person->isOwner) {
             break;
 
         case 'protection':
-            require_once('./site/content/person/edit/protection.php');
+            require_once('protection.php');
             break;
 
         case 'skill':
@@ -77,7 +77,7 @@ if($person->isOwner) {
             break;
 
         case 'weapon':
-            require_once('./site/content/person/edit/weapon.php');
+            require_once('weapon.php');
             break;
     }
 }

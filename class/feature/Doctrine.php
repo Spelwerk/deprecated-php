@@ -8,7 +8,7 @@
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('doctrine/id/'.$id)['data'][0]
@@ -28,6 +28,7 @@
         $this->maximum = $defaults['maximum'];
 
         $this->manifestation = $data['manifestation_id'];
+        $this->expertise = $data['expertise_id'];
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
 

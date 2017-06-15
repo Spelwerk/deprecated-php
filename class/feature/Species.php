@@ -6,7 +6,7 @@
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('species/id/'.$id)['data'][0]
@@ -112,10 +112,14 @@
         return $system->getBackground('background/species/'.$this->id);
     }
 
-    public function getExpertise() {
+    public function getExpertise($override = null) {
         global $system;
 
-        return $system->getExpertise('expertise/species/'.$this->id);
+        $get = isset($override)
+            ? $override
+            : 'expertise/species/'.$this->id;
+
+        return $system->getExpertise($get);
     }
 
     public function getGift() {

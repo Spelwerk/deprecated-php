@@ -14,6 +14,14 @@ if($sitemap->index) {
         case 'edit':
             $gift->put();
             break;
+
+        case 'attribute':
+            require_once('./site/content/gift/attribute.php');
+            break;
+
+        case 'skill':
+            require_once('./site/content/gift/skill.php');
+            break;
     }
 }
 ?>

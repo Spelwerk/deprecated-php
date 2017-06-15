@@ -16,7 +16,7 @@
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('expertise/id/'.$id)['data'][0]
@@ -47,7 +47,6 @@
         $this->speciesName = isset($data['species_name']) ? $data['species_name'] : null;
         $this->manifestation = $data['manifestation_id'];
         $this->manifestationName = isset($data['manifestation_name']) ? $data['manifestation_name'] : null;
-        $this->doctrine = $data['doctrine_id'];
 
         $this->siteLink = '/content/expertise/'.$this->id;
     }

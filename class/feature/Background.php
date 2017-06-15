@@ -8,7 +8,7 @@
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('background/id/'.$id)['data'][0]
@@ -24,7 +24,6 @@
         $this->icon = $data['icon'];
 
         $this->species = $data['species_id'];
-
         $this->manifestation = $data['manifestation_id'];
 
         $this->siteLink = '/content/background/'.$this->id;

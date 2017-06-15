@@ -5,7 +5,7 @@ $post = new Post();
 
 $post->switchTop();
 
-$post->redirect($post->returnFull);
+//$post->redirect($post->getReturn());
 ?>
 
-<a href="<?php echo $post->returnFull; ?>"><?php echo $post->returnFull; ?></a>
+<a href="<?php echo $post->getReturn(); ?>"><?php echo $post->getReturn(); ?></a>

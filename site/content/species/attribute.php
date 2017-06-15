@@ -5,9 +5,7 @@ global $species;
 $component->returnButton($species->siteLink);
 switch($sitemap->extra)
 {
-    default:
-        $species->listAttribute();
-        break;
+    default: break;
 
     case 'add':
         $species->postAttribute();

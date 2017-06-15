@@ -703,21 +703,9 @@ class System {
     }
 
     public function createGift($species = null, $manifestation = null) {
-        global $curl, $component, $form;
+        global $component, $form;
 
         $component->h1('Create Gift');
-
-        $skillListPrimary = $curl->get('skill')['data'];
-        $skillListSpecies = [];
-        $attributeList = $curl->get('attribute/special/0')['data'];
-
-        $skillList = null;
-
-        if($species) {
-            $skillListSpecies = $curl->get('skill/species/'.$species)['data'];
-        }
-
-        $skillList = array_merge($skillListPrimary, $skillListSpecies);
 
         $form->form([
             'do' => 'post',
@@ -727,13 +715,6 @@ class System {
         $component->wrapStart();
         $form->varchar(true,'name','Name');
         $form->text(false,'description','Description');
-
-        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
-        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
-
-        $form->select(false,'skill_id',$skillList,'Skill','If this gift increases a skill, which one?');
-        $form->number(false,'skill_value','Skill Value','Amount of points this gift will increase by.',null,0,16);
-
         $component->wrapEnd();
 
         if($species) {
@@ -798,9 +779,6 @@ class System {
 
         $component->h1('Create Milestone');
 
-        $skillList = $curl->get('skill')['data'];
-        $attributeList = $curl->get('attribute/special/0')['data'];
-
         $form->form([
             'do' => 'post',
             'return' => 'content/milestone',
@@ -809,15 +787,6 @@ class System {
         $component->wrapStart();
         $form->varchar(true,'name','Name');
         $form->text(false,'description','Description');
-
-        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
-        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
-
-        $form->select(false,'skill_id',$skillList,'Skill','If this gift increases a skill, which one?');
-        $form->number(false,'skill_value','Skill Value','Amount of points this gift will increase by.',null,0,16);
-
-        //todo add loyalty and relationship here
-
         $component->wrapEnd();
 
         if($species) {
@@ -854,7 +823,8 @@ class System {
 
             $component->wrapStart();
             $form->form([
-                'do' => 'person--post',
+                'do' => 'post',
+                'context' => 'person',
                 'return' => 'play/person'
             ]);
             $form->hidden('world_id', $world->id);
@@ -1093,7 +1063,7 @@ class System {
         $component->h2('Split Values');
         $component->subtitle('During person/character creation, a person will split age with a value to receive points. With what value?');
         $component->wrapStart();
-        $form->number(false,'split_supernatural','Split Supernatural','',null,1,128,4);
+        $form->number(false,'split_doctrine','Split Doctrine','',null,1,128,4);
         $form->number(false,'split_skill','Split Skill','',null,1,128,1);
         $form->number(false,'split_expertise','Split Expertise','',null,1,128,4);
         $form->number(false,'split_milestone','Split Milestone','',null,1,12,8);
@@ -1105,7 +1075,7 @@ class System {
         $component->wrapStart();
         $form->number(false,'max_gift','Maximum Gift','',null,1,12,1);
         $form->number(false,'max_imperfection','Maximum Imperfection','',null,1,12,1);
-        $form->number(false,'max_supernatural','Maximum Supernatural','',null,1,128,12);
+        $form->number(false,'max_doctrine','Maximum Supernatural','',null,1,128,12);
         $form->number(false,'max_skill','Maximum Skill','',null,1,128,32);
         $form->number(false,'max_expertise','Maximum Expertise','',null,1,128,12);
         $form->number(false,'max_milestone','Maximum Milestone','',null,1,12,6);
@@ -1136,45 +1106,9 @@ class System {
     }
 
     public function listExpertise() {
-        global $component, $user;
+        global $user;
 
-        $userArray = $user->getExpertise();
-        $list = $this->getExpertise();
-        $speciesArray = $this->getSpecies();
-        $manifestationArray = $this->getManifestation();
-
-        if($userArray) {
-            $component->h2('Your Content');
-            foreach($userArray as $item) {
-                $component->linkButton('/content/expertise/'.$item->id, $item->name);
-            }
-        }
-
-        $component->h2('Canon');
-
-        foreach($list as $item) {
-            $component->linkButton('/content/expertise/'.$item->id, $item->name);
-        }
-
-        foreach($speciesArray as $species) {
-            $list = $this->getExpertise('/species/'.$species->id);
-
-            if(!$list) continue;
-
-            foreach($list as $item) {
-                $component->linkButton('/content/expertise/'.$item->id, $item->name);
-            }
-        }
-
-        foreach($manifestationArray as $manifestation) {
-            $list = $this->getExpertise('/manifestation/'.$manifestation->id);
-
-            if(!$list) continue;
-
-            foreach($list as $item) {
-                $component->linkButton('/content/expertise/'.$item->id, $item->name);
-            }
-        }
+        $this->listStandard('expertise', $user->getExpertise(), $this->getExpertise());
     }
 
     public function listFocus() {
@@ -1210,7 +1144,6 @@ class System {
         $list = $this->getGift();
         $speciesArray = $this->getSpecies();
         $manifestationArray = $this->getManifestation();
-        $skillArray = $this->getSkill();
 
         if($userArray) {
             $component->h2('Your Content');
@@ -1223,16 +1156,6 @@ class System {
 
         foreach($list as $item) {
             $component->linkButton('/content/gift/'.$item->id, $item->name);
-        }
-
-        foreach($skillArray as $skill) {
-            $list = $this->getGift('/skill/'.$skill->id);
-
-            if(!$list) continue;
-
-            foreach($list as $item) {
-                $component->linkButton('/content/gift/'.$item->id, $item->name);
-            }
         }
 
         foreach($speciesArray as $species) {
@@ -1276,7 +1199,6 @@ class System {
         $backgroundArray = $this->getBackground();
         $speciesArray = $this->getSpecies();
         $manifestationArray = $this->getManifestation();
-        $skillArray = $this->getSkill();
 
         if($userArray) {
             $component->h2('Your Content');
@@ -1328,18 +1250,6 @@ class System {
                 }
             }
         }
-
-        if($skillArray) {
-            foreach($skillArray as $skill) {
-                $list = $this->getMilestone('/skill/'.$skill->id);
-
-                if(!$list) continue;
-
-                foreach($list as $item) {
-                    $component->linkButton('/content/milestone/'.$item->id, $item->name);
-                }
-            }
-        }
     }
 
     public function listPerson() {
@@ -1355,9 +1265,9 @@ class System {
             $component->h1('Your saved persons');
 
             foreach($userList as $item) {
-                $filterList[] = $item['id'];
+                $filterList[] = $item->id;
 
-                $component->linkButton('play/person/'.$item['id'],$item['nickname'].' ('.$item['occupation'].')');
+                $component->linkButton('play/person/'.$item->id,$item->nickname.' ('.$item->occupation.')');
             }
         }
     }

@@ -1,8 +1,8 @@
 <?php global $form, $component, $curl, $sitemap, $system, $user;
 
-global $background;
+global $gift;
 
-$component->returnButton($background->siteLink);
+$component->returnButton($gift->siteLink);
 $component->h1('Skill');
 
 switch($sitemap->extra)
@@ -10,11 +10,11 @@ switch($sitemap->extra)
     default: break;
 
     case 'add':
-        $background->postSkill();
+        $gift->postSkill();
         break;
 
     case 'delete':
-        $background->deleteSkill();
+        $gift->deleteSkill();
         break;
 }
 ?>

@@ -7,9 +7,7 @@ $component->h1('Skill');
 
 switch($sitemap->extra)
 {
-    default:
-        $augmentation->listSkill();
-        break;
+    default: break;
 
     case 'add':
         $augmentation->postSkill();

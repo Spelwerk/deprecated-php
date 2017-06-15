@@ -7,9 +7,7 @@ $component->h1('Augmentation');
 
 switch($sitemap->extra)
 {
-    default:
-        $bionic->listAugmentation();
-        break;
+    default: break;
 
     case 'add':
         $bionic->postAugmentation();

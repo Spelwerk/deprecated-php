@@ -14,6 +14,14 @@ if($sitemap->index) {
         case 'edit':
             $milestone->put();
             break;
+
+        case 'attribute':
+            require_once('./site/content/milestone/attribute.php');
+            break;
+
+        case 'skill':
+            require_once('./site/content/milestone/skill.php');
+            break;
     }
 }
 ?>
