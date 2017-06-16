@@ -952,8 +952,8 @@ class System {
             $component->wrapStart();
             $form->form([
                 'do' => 'post',
-                'return' => 'play/story',
-                'context' => 'story'
+                'context' => 'story',
+                'return' => 'play/story'
             ]);
             $form->hidden('world_id', $world->id);
             $form->varchar(true, 'name', 'Name', 'The name of your story will make it easier to remember which one it is.');
@@ -1309,9 +1309,9 @@ class System {
             $component->h1('Your saved stories');
 
             foreach($userList as $item) {
-                $filterList[] = $item['id'];
+                $filterList[] = $item->id;
 
-                $component->linkButton('play/story/'.$item['id'], $item['name']);
+                $component->linkButton('play/story/'.$item->id, $item->name);
             }
         }
     }

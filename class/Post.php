@@ -221,13 +221,26 @@ class Post {
                 $this->curl->put('person/id/'.$this->id.'/cheat', $this->data);
                 break;
 
-            case 'equip':
-                $this->curl->put('person/id/'.$this->id.'/'.$this->context.'/'.$this->context2.'/equip/'.$this->extra);
-                break;
-
             case 'heal':
                 $this->curl->put('person/id/'.$this->id.'/'.$this->context.'/'.$this->context2.'/heal/'.$this->extra, $this->data);
                 break;
+
+            case 'equip':
+                $this->curl->put('person/id/'.$this->id.'/'.$this->context.'/'.$this->extra.'/equip');
+                break;
+
+            case 'unequip':
+                $this->curl->put('person/id/'.$this->id.'/'.$this->context.'/'.$this->extra.'/unequip');
+                break;
+
+            case 'activate':
+                $this->curl->put('person/id/'.$this->id.'/augmentation/'.$this->extra.'/bionic/'.$this->extra2.'/activate');
+                break;
+
+            case 'deactivate':
+                $this->curl->put('person/id/'.$this->id.'/augmentation/'.$this->extra.'/bionic/'.$this->extra2.'/deactivate');
+                break;
+
         }
     }
 

@@ -160,11 +160,11 @@
         $component->h1('Add Attribute');
         $form->form([
             'do' => 'context--post',
-            'return' => 'content/species',
-            'returnafter' => 'attribute',
             'context' => 'species',
+            'id' => $this->id,
             'context2' => 'attribute',
-            'id' => $this->id
+            'return' => 'content/species',
+            'returnafter' => 'attribute'
         ]);
 
         $list = $curl->get('attribute/special/0')['data'];

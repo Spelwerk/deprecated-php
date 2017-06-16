@@ -16,15 +16,15 @@ if($sitemap->index) {
             break;
 
         case 'location':
-            require_once('./site/content/story/location.php');
+            require_once('location.php');
             break;
 
         case 'meeting':
-            require_once('./site/content/story/meeting.php');
+            require_once('meeting.php');
             break;
 
         case 'person':
-            require_once('./site/content/story/person.php');
+            require_once('person.php');
             break;
     }
 }

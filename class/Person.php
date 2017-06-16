@@ -913,18 +913,17 @@
             ? 'color/switch-true'
             : 'color/switch-false';
 
-        $flip = $equipped == 1
-            ? 0
-            : 1;
+        $do = $equipped == 1
+            ? 'unequip'
+            : 'equip';
 
         $quick = $this->isOwner
             ?   $form->quick([
                     'special' => 'person',
-                    'do' => 'equip',
+                    'do' => $do,
                     'context' => $tableName,
                     'id' => $this->id,
-                    'context2' => $tableId,
-                    'extra' => $flip,
+                    'extra' => $tableId,
                     'return' => 'play/person',
                     'returnid' => $returnId,
                     'icon' => $img
@@ -1235,20 +1234,11 @@
     }
 
     public function makeProtection() {
-        $equippedList = $this->getProtection(1);
         $attributeList = $this->getAttribute($this->world->protectionAttributeType);
         $tolerance = $this->getAttribute(null,$this->world->toleranceAttribute)[0];
 
         foreach($attributeList as $attribute) {
             $attribute->value = intval($attribute->value) + intval($tolerance->value);
-
-            if($equippedList) {
-                foreach($equippedList as $protection) {
-                    if($protection->attributeId == $attribute->id) {
-                        $attribute->value = intval($attribute->value) + intval($protection->attributeValue);
-                    }
-                }
-            }
         }
 
         $this->makeCard($attributeList);

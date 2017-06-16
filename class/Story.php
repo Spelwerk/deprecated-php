@@ -19,7 +19,7 @@
 
         $this->world = isset($data['world_id']) ? new World($data['world_id']) : null;
 
-        $this->siteLink = '/play/story/id/'.$this->id;
+        $this->siteLink = '/play/story/'.$this->id;
     }
 
     public function put() {
@@ -89,6 +89,30 @@
         return $system->getMeeting('story/id/'.$this->id.'/meeting');
     }
 
+    // POST
+
+    public function postPerson() {
+        global $component, $form;
+
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'story',
+            'id' => $this->id,
+            'context2' => 'person',
+            'return' => 'play/story'
+        ]);
+        $component->wrapStart();
+        $form->number(true,'insert_id','Person ID','Which person would you like to add?');
+        $component->wrapEnd();
+        $form->submit();
+    }
+
+    // DELETE
+
+    public function deletePerson() {
+
+    }
+
     // MAKE
 
     public function makeButton() {
@@ -141,11 +165,7 @@
 
         if($list) {
             foreach($list as $person) {
-                $link = isset($person['person_hash'])
-                    ? '/play/person/id/'.$person['person_id'].'/'.$person['person_hash']
-                    : '/play/person/id/'.$person['person_id'];
-
-                $component->linkAction($link, $person['person_nickname'], $person['person_occupation'], '/img/link-person-w.png');
+                $component->linkAction($person->siteLink, $person->nickname, $person->occupation, '/img/link-person-w.png');
             }
         }
 
