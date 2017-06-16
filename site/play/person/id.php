@@ -11,9 +11,11 @@ if($sitemap->index) {
             $person->view();
             break;
 
+        /* Not necessary to have at start
         case 'cheat':
             require_once('cheat/index.php');
             break;
+        */
 
         case 'edit':
             require_once('edit/index.php');

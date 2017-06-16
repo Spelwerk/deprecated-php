@@ -1267,7 +1267,7 @@ class System {
             foreach($userList as $item) {
                 $filterList[] = $item->id;
 
-                $component->linkButton('play/person/'.$item->id,$item->nickname.' ('.$item->occupation.')');
+                $component->linkButton('/play/person/'.$item->id,$item->nickname.' ('.$item->occupation.')');
             }
         }
     }

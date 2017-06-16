@@ -364,10 +364,9 @@
         $component->h2($bionic->name);
 
         $form->form([
-            'do' => 'relation--post',
-            'context' => 'person',
+            'special' => 'person',
+            'do' => 'augmentation',
             'id' => $this->id,
-            'context2' => 'augmentation',
             'return' => 'play/person'
         ]);
         $form->checkboxList($list,[

@@ -14,13 +14,13 @@ if($person->isOwner) {
         $component->h2($attribute->name);
         $component->wrapStart();
         $form->form([
-            'do' => 'person--attribute',
+            'do' => 'relation--value--post',
             'context' => 'person',
+            'id' => $person->id,
             'context2' => 'attribute',
-            'return' => 'play/person',
-            'id' => $person->id
+            'return' => 'play/person'
         ]);
-        $form->number(true, 'attribute_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
+        $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
         $form->submit();
         $component->wrapEnd();
     } else {

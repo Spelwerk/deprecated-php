@@ -5,14 +5,16 @@ if($person->isOwner) {
     $component->subtitle('Once attached. Augmentations cannot be removed.');
 
     if($sitemap->extra2 == 'add') {
-        $person->postAugmentation($sitemap->context);
+        $person->postAugmentation($sitemap->extra3);
     } else {
         $bionicList = $person->getBionic();
 
         $component->wrapStart();
 
-        foreach($bionicList as $bionic) {
-            $component->linkButton($person->siteLink.'/edit/augmentation/'.$bionic->id,$bionic->name);
+        if($bionicList) {
+            foreach($bionicList as $bionic) {
+                $component->linkButton($person->siteLink.'/edit/augmentation/add/'.$bionic->id,$bionic->name);
+            }
         }
 
         $component->wrapEnd();

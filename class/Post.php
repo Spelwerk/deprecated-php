@@ -127,6 +127,9 @@ class Post {
 
             case 'relation--value--put':
                 break;
+
+            case 'relation--value--delete':
+                $this->tableManyRelationDelete($this->context, $this->id, $this->context2);
         }
     }
 
@@ -209,6 +212,10 @@ class Post {
                 break;
 
             // SPECIFIC
+
+            case 'augmentation':
+                $this->personAugmentation($this->id);
+                break;
 
             case 'cheat':
                 $this->curl->put('person/id/'.$this->id.'/cheat', $this->data);
@@ -298,8 +305,6 @@ class Post {
         exit;
     }
 
-    // RETURN
-
     public function getReturn() {
         $rBase = $this->returnBase;
         $rStart = isset($this->returnStart) ? '/'.$this->returnStart : null;
@@ -356,19 +361,19 @@ class Post {
 
     // TABLE
 
-    public function tableManyRelationPost($ownerTableName, $ownerTableId, $relationTableName) {
+    private function tableManyRelationPost($ownerTableName, $ownerTableId, $relationTableName) {
         foreach($this->data as $key => $value) {
             $this->curl->post($ownerTableName.'/id/'.$ownerTableId.'/'.$relationTableName, ['insert_id' => $value]);
         }
     }
 
-    public function tableManyRelationDelete($ownerTableName, $ownerTableId, $relationTableName) {
+    private function tableManyRelationDelete($ownerTableName, $ownerTableId, $relationTableName) {
         foreach($this->data as $key => $value) {
             $this->curl->delete($ownerTableName.'/id/'.$ownerTableId.'/'.$relationTableName.'/'.$value);
         }
     }
 
-    public function tableManyRelationPostWithValue($ownerTableName, $ownerTableId, $relationTableName) {
+    private function tableManyRelationPostWithValue($ownerTableName, $ownerTableId, $relationTableName) {
         foreach($this->data as $key => $value) {
             $explode = explode('__', $key);
 
@@ -378,12 +383,24 @@ class Post {
         }
     }
 
-    public function tableManyRelationPutWithValue($ownerTableName, $ownerTableId, $relationTableName) {
+    private function tableManyRelationPutWithValue($ownerTableName, $ownerTableId, $relationTableName) {
         foreach($this->data as $key => $value) {
             $explode = explode('__', $key);
 
             if(isset($explode[1])) {
                 $this->curl->put($ownerTableName.'/id/'.$ownerTableId.'/'.$relationTableName, ['insert_id' => $explode[1], 'value' => $value]);
+            }
+        }
+    }
+
+    // PERSON
+
+    private function personAugmentation($personId) {
+        $bionicId = $this->data['bionic_id'];
+
+        foreach($this->data as $key => $value) {
+            if($key == $value) {
+                $this->curl->post('person/id/'.$personId.'/augmentation', ['insert_id' => $value, 'bionic_id' => $bionicId]);
             }
         }
     }

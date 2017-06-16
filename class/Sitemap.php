@@ -247,6 +247,7 @@
                 $this->context = $this->command3;
                 $this->extra = $this->command4;
                 $this->extra2 = $this->command5;
+                $this->extra3 = $this->command6;
                 break;
 
             case 'story':
