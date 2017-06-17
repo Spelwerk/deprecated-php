@@ -163,8 +163,7 @@
             'context' => 'species',
             'id' => $this->id,
             'context2' => 'attribute',
-            'return' => 'content/species',
-            'returnafter' => 'attribute'
+            'return' => 'content/species'
         ]);
 
         $list = $curl->get('attribute/special/0')['data'];

@@ -1555,7 +1555,7 @@ class System {
         $form->submit();
     }
 
-    function contentSelectList($tableName, $relationName, $do, $tableId, $tableList, $idList = null) {
+    function contentSelectList($tableName, $relationName, $do, $tableId, $tableList, $idList = null, $userList = null) {
         global $form, $system;
 
         $form->form([
@@ -1567,6 +1567,9 @@ class System {
         ]);
 
         $system->checkboxList($tableList, $idList);
+
+        if($userList) $system->checkboxList($userList, $idList);
+
         $system->checkboxAll();
 
         $form->submit();

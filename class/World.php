@@ -459,7 +459,7 @@
     }
 
     public function postBackground() {
-        global $system, $form;
+        global $system, $form, $user;
 
         $idList = $system->idList($this->getBackground());
 
@@ -468,11 +468,10 @@
 
         $form->form([
             'do' => 'relation--post',
-            'return' => 'content/world',
-            'returnafter' => 'background',
-            'id' => $this->id,
             'context' => 'world',
-            'context2' => 'background'
+            'id' => $this->id,
+            'context2' => 'background',
+            'return' => 'content/world'
         ]);
 
         $system->checkboxList($system->getBackground(), $idList);
@@ -495,29 +494,38 @@
             }
         }
 
+        $system->checkboxList($user->getBackground(), $idList);
+
         $system->checkboxAll();
         $form->submit();
     }
 
     public function postBionic() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'bionic', 'post', $this->id, $system->getBionic(), $system->idList($this->getBionic()));
+        $system->contentSelectList(
+            'world',
+            'bionic',
+            'post',
+            $this->id,
+            $system->getBionic(),
+            $system->idList($this->getBionic()),
+            $user->getBionic()
+        );
     }
 
     public function postExpertise() {
-        global $system, $form, $component;
+        global $system, $form, $component, $user;
 
         $idList = $system->idList($this->getExpertise());
         $skillArray = $this->getSkill();
 
         $form->form([
             'do' => 'relation--post',
-            'return' => 'content/world',
-            'returnafter' => 'expertise',
-            'id' => $this->id,
             'context' => 'world',
-            'context2' => 'expertise'
+            'id' => $this->id,
+            'context2' => 'expertise',
+            'return' => 'content/world',
         ]);
 
         foreach($skillArray as $skill) {
@@ -529,104 +537,56 @@
             $system->checkboxList($list, $idList);
         }
 
+        $system->checkboxList($user->getExpertise(), $idList);
+
         $system->checkboxAll();
         $form->submit();
     }
 
     public function postGift() {
-        global $system, $form, $component;
+        global $system, $user;
 
-        $idList = $system->idList($this->getGift());
-
-        $speciesArray = $this->getSpecies();
-        $manifestationArray = $this->getManifestation();
-
-        $form->form([
-            'do' => 'relation--post',
-            'return' => 'content/world',
-            'returnafter' => 'gift',
-            'id' => $this->id,
-            'context' => 'world',
-            'context2' => 'gift'
-        ]);
-
-        $system->checkboxList($system->getGift(), $idList);
-
-        foreach($speciesArray as $species) {
-            $list = $system->getGift('gift/species/'.$species->id, $idList);
-
-            if(!$list) continue;
-
-            $component->h2($species->name);
-            $system->checkboxList($list, $idList);
-        }
-
-        if($this->supernaturalExists) {
-            foreach($manifestationArray as $manifestation) {
-                $list = $system->getGift('gift/manifestation/'.$manifestation->id, $idList);
-
-                if(!$list) continue;
-
-                $component->h2($manifestation->name);
-                $system->checkboxList($list, $idList);
-            }
-        }
-
-        $system->checkboxAll();
-        $form->submit();
+        $system->contentSelectList(
+            'world',
+            'gift',
+            'post',
+            $this->id,
+            $system->getGift(),
+            $system->idList($this->getGift()),
+            $user->getGift()
+        );
     }
 
     public function postImperfection() {
-        global $system, $form, $component;
+        global $system, $user;
 
-        $idList = $system->idList($this->getImperfection());
-
-        $speciesArray = $this->getSpecies();
-        $manifestationArray = $this->getManifestation();
-
-        $form->form([
-            'do' => 'relation--post',
-            'return' => 'content/world',
-            'returnafter' => 'imperfection',
-            'id' => $this->id,
-            'context' => 'world',
-            'context2' => 'imperfection'
-        ]);
-
-        $system->checkboxList($system->getImperfection(), $idList);
-
-        foreach($speciesArray as $species) {
-            $list = $system->getImperfection('imperfection/species/'.$species->id, $idList);
-
-            if(!$list) continue;
-
-            $component->h2($species->name);
-            $system->checkboxList($list, $idList);
-        }
-
-        if($this->supernaturalExists) {
-            foreach($manifestationArray as $manifestation) {
-                $list = $system->getImperfection('imperfection/manifestation/'.$manifestation->id, $idList);
-
-                if(!$list) continue;
-
-                $component->h2($manifestation->name);
-                $system->checkboxList($list, $idList);
-            }
-        }
-
-        $system->checkboxAll();
-        $form->submit();
+        $system->contentSelectList(
+            'world',
+            'imperfection',
+            'post',
+            $this->id,
+            $system->getImperfection(),
+            $system->idList($this->getImperfection()),
+            $user->getImperfection()
+        );
     }
 
     public function postManifestation() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'manifestation', 'post', $this->id, $system->getManifestation(), $system->idList($this->getManifestation()));
+        $system->contentSelectList(
+            'world',
+            'manifestation',
+            'post',
+            $this->id,
+            $system->getManifestation(),
+            $system->idList($this->getManifestation()),
+            $user->getManifestation()
+        );
     }
 
     public function postMilestone() {
-        global $system, $form, $component;
+        global $system, $form, $component, $user;
 
         $idList = $system->idList($this->getGift());
 
@@ -636,11 +596,10 @@
 
         $form->form([
             'do' => 'relation--post',
-            'return' => 'content/world',
-            'returnafter' => 'milestone',
-            'id' => $this->id,
             'context' => 'world',
-            'context2' => 'milestone'
+            'id' => $this->id,
+            'context2' => 'milestone',
+            'return' => 'content/world'
         ]);
 
         $system->checkboxList($system->getMilestone(), $idList);
@@ -673,38 +632,80 @@
             }
         }
 
+        $system->checkboxList($user->getMilestone(), $idList);
+
         $system->checkboxAll();
         $form->submit();
     }
 
     public function postProtection() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'protection', 'post', $this->id, $system->getProtection(), $system->idList($this->getProtection()));
+        $system->contentSelectList(
+            'world',
+            'protection',
+            'post',
+            $this->id,
+            $system->getProtection(),
+            $system->idList($this->getProtection()),
+            $user->getProtection()
+        );
     }
 
     public function postSkill() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'skill', 'post', $this->id, $system->getSkill(), $system->idList($this->getSkill()));
+        $system->contentSelectList(
+            'world',
+            'skill',
+            'post',
+            $this->id,
+            $system->getSkill(),
+            $system->idList($this->getSkill()),
+            $user->getSkill()
+        );
     }
 
     public function postSoftware() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'software', 'post', $this->id, $system->getSoftware(), $system->idList($this->getSoftware()));
+        $system->contentSelectList(
+            'world',
+            'software',
+            'post',
+            $this->id,
+            $system->getSoftware(),
+            $system->idList($this->getSoftware()),
+            $user->getSoftware()
+        );
     }
 
     public function postSpecies() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'species', 'post', $this->id, $system->getSpecies('species/playable'), $system->idList($this->getSpecies()));
+        $system->contentSelectList(
+            'world',
+            'species',
+            'post',
+            $this->id,
+            $system->getSpecies('species/playable'),
+            $system->idList($this->getSpecies()),
+            $user->getSpecies()
+        );
     }
 
     public function postWeapon() {
-        global $system;
+        global $system, $user;
 
-        $system->contentSelectList('world', 'weapon', 'post', $this->id, $system->getWeapon(), $system->idList($this->getWeapon()));
+        $system->contentSelectList(
+            'world',
+            'weapon',
+            'post',
+            $this->id,
+            $system->getWeapon(),
+            $system->idList($this->getWeapon()),
+            $user->getWeapon()
+        );
     }
 
     // DELETE

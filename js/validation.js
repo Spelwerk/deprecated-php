@@ -187,6 +187,7 @@ $(document).ready(function() {
             $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-false').addClass('sw-is-hidden');
 
             $(this).parents('form').find('.sw-js-checkbox-input').attr('checked', true).prop('checked', true);
+            $(this).parents('form').find('.sw-js-checkbox-body').removeClass('sw-is-hidden');
             $(this).parents('form').find('.sw-js-checkbox-item').addClass('sw-is-selected');
             $(this).parents('form').find('.sw-js-checkbox-true').removeClass('sw-is-hidden');
             $(this).parents('form').find('.sw-js-checkbox-false').addClass('sw-is-hidden');
@@ -196,6 +197,7 @@ $(document).ready(function() {
             $(this).parents('.sw-js-checkbox-item').find('.sw-js-checkbox-false').removeClass('sw-is-hidden');
 
             $(this).parents('form').find('.sw-js-checkbox-input').attr('checked', false).prop('checked', false);
+            $(this).parents('form').find('.sw-js-checkbox-body').addClass('sw-is-hidden');
             $(this).parents('form').find('.sw-js-checkbox-item').removeClass('sw-is-selected');
             $(this).parents('form').find('.sw-js-checkbox-true').addClass('sw-is-hidden');
             $(this).parents('form').find('.sw-js-checkbox-false').removeClass('sw-is-hidden');

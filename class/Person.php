@@ -575,11 +575,6 @@
 
         $list = null;
 
-        $override = $this->isSupernatural
-            ? '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id
-            : '/species/'.$this->species->id;
-
-        $list = $this->world->getGift($override);
         $idList = $system->idList($this->getGift());
 
         $form->form([
@@ -597,9 +592,18 @@
 
         $form->randomRadio('Gift');
         $form->viewStart();
-        $form->radioList($list,[
-            'idList' => $idList
-        ]);
+
+        $list = $this->world->getGift();
+        $form->radioList($list,['idList' => $idList]);
+
+        $speciesList = $system->getGift('gift/species/'.$this->species->id);
+        $form->radioList($speciesList,['idList' => $idList]);
+
+        if($this->isSupernatural) {
+            $manifestationList = $system->getGift('gift/manifestation/'.$this->manifestation->id);
+            $form->radioList($manifestationList,['idList' => $idList]);
+        }
+
         $form->viewEnd();
         $form->submit();
     }
@@ -630,11 +634,6 @@
 
         $list = null;
 
-        $override = $this->isSupernatural
-            ? '/species/'.$this->species->id.'/manifestation/'.$this->manifestation->id
-            : '/species/'.$this->species->id;
-
-        $list = $this->world->getImperfection($override);
         $idList = $system->idList($this->getImperfection());
 
         $form->form([
@@ -652,9 +651,18 @@
 
         $form->randomRadio('Imperfection');
         $form->viewStart();
-        $form->radioList($list,[
-            'idList' => $idList
-        ]);
+
+        $list = $this->world->getImperfection();
+        $form->radioList($list,['idList' => $idList]);
+
+        $speciesList = $system->getImperfection('imperfection/species/'.$this->species->id);
+        $form->radioList($speciesList,['idList' => $idList]);
+
+        if($this->isSupernatural) {
+            $manifestationList = $system->getImperfection('imperfection/manifestation/'.$this->manifestation->id);
+            $form->radioList($manifestationList,['idList' => $idList]);
+        }
+
         $form->viewEnd();
         $form->submit();
     }
