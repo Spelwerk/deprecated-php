@@ -1,22 +1,30 @@
 <?php global $component, $sitemap, $system;
 
 if($sitemap->index) {
-    $augmentation = new Augmentation($sitemap->index);
+    $asset = new Asset($sitemap->index);
 
-    $component->title($augmentation->name);
+    $component->title($asset->name);
 
     switch($sitemap->context)
     {
         default:
-            $augmentation->view();
+            $asset->view();
             break;
 
         case 'edit':
-            $augmentation->put();
+            $asset->put();
             break;
 
         case 'attribute':
             require_once('attribute.php');
+            break;
+
+        case 'doctrine':
+            require_once('doctrine.php');
+            break;
+
+        case 'expertise':
+            require_once('expertise.php');
             break;
 
         case 'skill':

@@ -5,7 +5,7 @@ $post = new Post();
 
 $post->switchTop();
 
-//$post->redirect($post->getReturn());
+$post->redirect($post->getReturn());
 ?>
 
 <h2>Data</h2>

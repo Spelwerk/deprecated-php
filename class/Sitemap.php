@@ -119,6 +119,27 @@
                 $this->page = 'site/content/index.php';
                 break;
 
+            case 'asset':
+                $this->page = 'site/content/asset/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
+            case 'assetgroup':
+                $this->page = 'site/content/assetgroup/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
+            case 'assettype':
+                $this->page = 'site/content/assettype/index.php';
+                $this->index = $this->command2;
+                $this->context = $this->command3;
+                $this->extra = $this->command4;
+                break;
+
             case 'augmentation':
                 $this->page = 'site/content/augmentation/index.php';
                 $this->index = $this->command2;

@@ -126,7 +126,7 @@
 
         $component->wrapStart();
         $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your milestone to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
+        $form->number(true,'value','Value',null,null,-16,16,1);
         $component->wrapEnd();
 
         $form->submit();

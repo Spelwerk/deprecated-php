@@ -139,7 +139,7 @@
     public function postAugmentation() {
         global $system;
 
-        $system->contentSelectList('bionic','augmentation','post',$this->id,$system->getAugmentation());
+        $system->contentSelectList('bionic','augmentation','post',$this->id,$system->getAugmentation(),$system->idList($this->getAugmentation()));
     }
 
     // DELETE

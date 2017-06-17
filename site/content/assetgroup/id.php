@@ -1,18 +1,18 @@
 <?php global $component, $sitemap, $system;
 
 if($sitemap->index) {
-    $weapontype = new WeaponType($sitemap->index);
+    $assetgroup = new AssetGroup($sitemap->index);
 
-    $component->title($weapontype->name);
+    $component->title($assetgroup->name);
 
     switch($sitemap->context)
     {
         default:
-            $weapontype->view();
+            $assetgroup->view();
             break;
 
         case 'edit':
-            $weapontype->put();
+            $assetgroup->put();
             break;
     }
 }

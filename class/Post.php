@@ -117,6 +117,7 @@ class Post {
                 break;
 
             case 'relation--delete':
+                $this->tableManyRelationDelete($this->context, $this->id, $this->context2);
                 break;
 
             // MANY RELATION WITH VALUE

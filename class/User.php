@@ -23,6 +23,36 @@
 
     // GET
 
+    public function getAsset($override = null) {
+        global $system;
+
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/asset'.$override
+            : 'user/id/'.$this->id.'/asset';
+
+        return $system->getAsset($get);
+    }
+
+    public function getAssetGroup($override = null) {
+        global $system;
+
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/assetgroup'.$override
+            : 'user/id/'.$this->id.'/assetgroup';
+
+        return $system->getAssetGroup($get);
+    }
+
+    public function getAssetType($override = null) {
+        global $system;
+
+        $get = isset($override)
+            ? 'user/id/'.$this->id.'/assettype'.$override
+            : 'user/id/'.$this->id.'/assettype';
+
+        return $system->getAssetType($get);
+    }
+
     public function getAttribute($override = null) {
         global $system;
 

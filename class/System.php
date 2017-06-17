@@ -1,5 +1,8 @@
 <?php
 
+require_once('asset/Asset.php');
+require_once('asset/AssetGroup.php');
+require_once('asset/AssetType.php');
 require_once('asset/Augmentation.php');
 require_once('asset/Bionic.php');
 require_once('asset/Protection.php');
@@ -37,6 +40,66 @@ class System {
     public function __construct() {}
 
     // GET
+
+    public function getAsset($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'asset';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new Asset(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getAssetGroup($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'assetgroup';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new AssetGroup(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getAssetType($override = null) {
+        global $curl;
+
+        $arrayList = null;
+
+        $get = isset($override)
+            ? $override
+            : 'assettype';
+
+        $result = $curl->get($get);
+
+        if(isset($result['data'])) {
+            foreach ($result['data'] as $array) {
+                $arrayList[] = new AssetType(null, $array);
+            }
+        }
+
+        return $arrayList;
+    }
 
     public function getAttribute($override = null) {
         global $curl;
@@ -600,6 +663,63 @@ class System {
 
     // CREATE
 
+    public function createAsset() {
+        global $curl, $component, $form;
+
+        $list = $curl->get('assettype')['data'];
+
+        $component->h1('Create Asset');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'asset',
+            'return' => 'content/asset'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->select(true,'assettype_id',$list,'Type','All assets are in a type');
+        $form->text(false,'description','Description');
+        $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this augmentation?', null, 'Legal', 'Illegal', true);
+        $component->wrapEnd();
+        $form->submit();
+    }
+
+    public function createAssetGroup() {
+        global $component, $form;
+
+        $component->h1('Create Asset Group');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'assetgroup',
+            'return' => 'content/assetgroup'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $component->wrapEnd();
+        $form->submit();
+    }
+
+    public function createAssetType() {
+        global $curl, $component, $form;
+
+        $list = $curl->get('assetgroup')['data'];
+
+        $component->h1('Create Asset Type');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'assettype',
+            'return' => 'content/assettype'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->select(true,'assetgroup_id',$list,'Group','All asset types are in a group');
+        $form->icon();
+        $component->wrapEnd();
+        $form->submit();
+    }
+
     public function createAugmentation() {
         global $component, $form;
 
@@ -1087,6 +1207,24 @@ class System {
 
     // LIST
 
+    public function listAsset() {
+        global $user;
+
+        $this->listStandard('asset', $user->getAsset(), $this->getAsset());
+    }
+
+    public function listAssetGroup() {
+        global $user;
+
+        $this->listStandard('assetgroup', $user->getAssetGroup(), $this->getAssetGroup());
+    }
+
+    public function listAssetType() {
+        global $user;
+
+        $this->listStandard('assettype', $user->getAssetType(), $this->getAssetType());
+    }
+
     public function listAugmentation() {
         global $user;
 
@@ -1423,7 +1561,6 @@ class System {
         $form->form([
             'do' => 'relation--'.$do,
             'return' => 'content/'.$tableName,
-            'returnafter' => $relationName,
             'id' => $tableId,
             'context' => $tableName,
             'context2' => $relationName
