@@ -12,7 +12,7 @@ if($person->isOwner) {
         'context2' => 'attribute',
         'return' => 'play/person'
     ]);
-    $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, null, $attribute->value);
+    $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
 
     $form->submit();
     $component->wrapEnd();

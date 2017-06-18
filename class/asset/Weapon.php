@@ -69,7 +69,7 @@
         $this->augmentation = $data['augmentation'];
 
         $this->skill = $data['skill_id'];
-        $this->skillValue = isset($data['skill_value']) ? $data['skill_value'] : null;
+        $this->skillValue = isset($data['skill_value']) ? intval($data['skill_value']) : null;
 
         $this->expertise = $data['expertise_id'];
         $this->expertiseValue = isset($data['expertise_value']) ? $data['expertise_value'] : null;
@@ -79,6 +79,24 @@
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
             : false;
+
+        $this->hitDice = intval($system->defaultDice['amount']) + $this->expertiseValue;
+        $this->hitBonus = $this->skillValue + $this->hit;
+
+        $this->strikeDice = $this->damageD12;
+        $this->strikeBonus = $this->damageBonus;
+        $this->strikeCritical = $this->criticalD12;
+
+        $this->diceText = $this->strikeBonus > 0
+            ? $this->strikeDice.'d'.$system->defaultDice['value'].'+'.$this->strikeBonus
+            : $this->strikeDice.'d'.$system->defaultDice['value'];
+
+        $this->diceData = 'data-roll-type="weapon" 
+                           data-roll-d12="'.$this->hitDice.'" 
+                           data-roll-bonus="'.$this->hitBonus.'" 
+                           data-strike-d12="'.$this->damageD12.'" 
+                           data-strike-bonus="'.$this->damageBonus.'" 
+                           data-strike-critical="'.$this->criticalD12.'"';
 
         $this->siteLink = '/content/weapon/'.$this->id;
     }

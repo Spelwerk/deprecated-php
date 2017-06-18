@@ -1,10 +1,8 @@
-/**
- * Created by jonn on 10/02/2017.
- */
-
-var roll_d12, roll_bonus, strike_d12, strike_bonus, strike_critical;
+var diceValue, roll_d12, roll_bonus, strike_d12, strike_bonus, strike_critical;
 
 $(document).ready(function(){
+
+    diceValue = parseInt($(".sw-js-dice-value").text());
 
     document.title = "Spelwerk: " + $(".sw-js-custom-title").text();
 
@@ -46,7 +44,12 @@ $(document).ready(function(){
         $('.sw-js-modal-description').html($(this).find('.sw-js-roll-text').html());
 
         switch(type) {
-            case 'default':
+            case 'attribute':
+                modalDisplayRoll();
+                modalDefaultButtons();
+                break;
+
+            case 'skill':
                 modalDisplayRoll();
                 modalDefaultButtons();
                 break;
@@ -58,7 +61,7 @@ $(document).ready(function(){
 
             case 'supernatural':
                 modalDisplayRoll();
-                modalSupernaturalButtons();
+                modalDoctrineButtons();
                 break;
 
             case 'weapon':
@@ -90,7 +93,7 @@ $(document).ready(function(){
 
     $(".sw-js-modal-supernatural").click(function() {
         modalDisplayRoll();
-        modalRollSupernatural(strike_d12);
+        modalRollDoctrine(strike_d12);
     });
 
     $(".sw-js-modal-weapon").click(function() {
@@ -135,7 +138,7 @@ $(document).ready(function(){
 });
 
 $(document).keyup(function(e) {
-    if (e.keyCode == 27) {
+    if (e.keyCode === 27) {
         modalClose();
     }
 });
@@ -148,10 +151,10 @@ function modalRollDice(times, tellMe) {
     var critical = false;
 
     for (var i = 0; i < dice; i++) {
-        roll = Math.floor((Math.random() * 12) + 1);
+        roll = Math.floor((Math.random() * diceValue) + 1);
         result = result + roll;
 
-        if (roll == 12 || roll == 1) {
+        if (roll === diceValue) {
             critical = true;
         }
 
@@ -167,12 +170,12 @@ function modalRollDice(times, tellMe) {
     return [result,critical];
 }
 
-function modalRollDefault(rollD12, rollBonus) {
-    $('.sw-js-modal-with').html("Rolling with " + rollD12 + "d12+" + rollBonus);
+function modalRollDefault(diceAmount, rollBonus) {
+    $('.sw-js-modal-with').html("Rolling with " + diceAmount + "d" + diceValue + "+" + rollBonus);
 
     var bonus = parseInt(rollBonus);
     var modifier = parseInt($('.sw-js-roll-modifier').text());
-    var resultArray = modalRollDice(parseInt(rollD12), true);
+    var resultArray = modalRollDice(parseInt(diceAmount), true);
     var result = resultArray[0];
     var critical = resultArray[1];
 
@@ -197,44 +200,44 @@ function modalRollDefault(rollD12, rollBonus) {
     $('.sw-js-modal-result').html(result);
 }
 
-function modalRollConsumable(rollD12) {
-    $('.sw-js-modal-with').html("Rolling with " + rollD12 + "D12");
+function modalRollConsumable(diceAmount) {
+    $('.sw-js-modal-with').html("Rolling with " + diceAmount + "d" + diceValue);
 
-    var d12 = parseInt(rollD12);
+    diceAmount = parseInt(diceAmount);
     var result = 0;
     var roll = 0;
 
-    for (var i = 0; i < d12; i++) {
-        roll = Math.floor((Math.random() * 12) + 1);
+    for (var i = 0; i < diceAmount; i++) {
+        roll = Math.floor((Math.random() * diceValue) + 1);
 
-        if (roll == 1) {
+        if (roll === 1) {
             result = 'failed';
         }
 
         $('.sw-js-modal-count').html($('.sw-js-modal-count').html() + roll);
 
-        if(i < d12-1) {
+        if(i < diceAmount-1) {
             $('.sw-js-modal-count').html($('.sw-js-modal-count').html() + ' + ');
         }
     }
 
-    if (result == 0) { result = 'safe'; }
+    if (result === 0) { result = 'safe'; }
 
     $('.sw-js-modal-result').html(result);
 }
 
-function modalRollSupernatural(strikeD12) {
-    $('.sw-js-modal-with').html("Rolling with " + strikeD12 + "D12");
+function modalRollDoctrine(strikeDice) {
+    $('.sw-js-modal-with').html("Rolling with " + strikeDice + "D12");
 
     var amount = 0;
     var critical = parseInt($('.sw-js-saved-critical').text());
 
-    if (critical == 1) {
+    if (critical === 1) {
         $('.sw-js-modal-critical').html("- DC Critical -");
-        amount = parseInt(strikeD12) * 2;
+        amount = parseInt(strikeDice) * 2;
     } else {
         $('.sw-js-modal-critical').html("&nbsp;");
-        amount = parseInt(strikeD12);
+        amount = parseInt(strikeDice);
     }
 
     var resultArray = modalRollDice(amount, true);
@@ -243,15 +246,15 @@ function modalRollSupernatural(strikeD12) {
     $('.sw-js-modal-result').html(result);
 }
 
-function modalRollWeapon(strikeD12, strikeBonus, strikeCritical) {
-    $('.sw-js-modal-with').html("Rolling with " + strikeD12 + "D12+" + strikeBonus);
+function modalRollWeapon(strikeDice, strikeBonus, strikeCriticalDice) {
+    $('.sw-js-modal-with').html("Rolling with " + strikeDice + "D12+" + strikeBonus);
 
-    var resultArray = modalRollDice(parseInt(strikeD12), true);
+    var resultArray = modalRollDice(parseInt(strikeDice), true);
     var result = resultArray[0];
 
     var bonus = parseInt(strikeBonus);
 
-    if (!bonus == 0) {
+    if (!bonus === 0) {
         result = result + bonus;
         $('.sw-js-modal-count').html($('.sw-js-modal-count').html() + ' (+' + bonus + ')');
     }
@@ -261,7 +264,7 @@ function modalRollWeapon(strikeD12, strikeBonus, strikeCritical) {
     if(critical) {
         $('.sw-js-modal-critical').html("- DC Critical -");
 
-        var critArray = modalRollDice(parseInt(strikeCritical), false);
+        var critArray = modalRollDice(parseInt(strikeCriticalDice), false);
         result = result + critArray[0];
 
         $('.sw-js-modal-count').html($('.sw-js-modal-count').html() + ' (+' + critArray[0] + ')');
@@ -313,11 +316,11 @@ function modalClose() {
 }
 
 function modalOpen() {
-    $('.sw-js-modal-mask').removeClass('sw-is-hidden');
-    $('.sw-js-modal').removeClass('sw-is-hidden');
+    $(".sw-js-modal-mask").removeClass("sw-is-hidden");
 
-    $('.sw-js-modal').css('top', ($(window).height()/2) - ($('.sw-js-modal').height()/2));
-    $('.sw-js-modal').css('left', ($(window).width()/2) - ($('.sw-js-modal').width()/2));
+    $(".sw-js-modal").removeClass("sw-is-hidden");
+    $(".sw-js-modal").css("top", (window.innerHeight/2) - ($(".sw-js-modal").height()/2));
+    $(".sw-js-modal").css("left", (window.innerWidth/2) - ($(".sw-js-modal").width()/2));
 }
 
 function modalDefaultButtons() {
@@ -336,7 +339,7 @@ function modalConsumableButtons() {
     $('.sw-js-modal-weapon').addClass('sw-is-hidden');
 }
 
-function modalSupernaturalButtons() {
+function modalDoctrineButtons() {
     $('.sw-js-modal-roll').removeClass('sw-is-hidden');
     $('.sw-js-modal-supernatural').removeClass('sw-is-hidden');
 

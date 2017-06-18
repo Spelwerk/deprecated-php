@@ -37,7 +37,25 @@ require_once('Story.php');
 require_once('World.php');
 
 class System {
-    public function __construct() {}
+
+    var $defaults;
+
+    var $defaultAttributeId, $defaultAttributeType, $defaultSkill, $defaultExpertise, $defaultDoctrine, $defaultWeapon, $defaultDice, $defaultIcon;
+
+    public function __construct() {
+        global $curl;
+
+        $this->defaults = $curl->get('system');
+
+        $this->defaultAttributeId = $this->defaults['attribute']['id'];
+        $this->defaultAttributeType = $this->defaults['attribute']['type'];
+        $this->defaultSkill = $this->defaults['skill'];
+        $this->defaultExpertise = $this->defaults['expertise'];
+        $this->defaultDoctrine = $this->defaults['doctrine'];
+        $this->defaultWeapon = $this->defaults['weapon'];
+        $this->defaultDice = $this->defaults['dice'];
+        $this->defaultIcon = $this->defaults['icon'];
+    }
 
     // GET
 

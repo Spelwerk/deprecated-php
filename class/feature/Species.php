@@ -46,7 +46,7 @@
         $component->wrapStart();
         $form->varchar(true,'name','Name',null,null,$this->name);
         $form->text(false,'description','Description',null,null,$this->description);
-        $form->number(false,'max_age','Maximum Age','What is the maximum age your species can live?',null,1,12,$this->maxAge);
+        $form->number(false,'max_age','Maximum Age','What is the maximum age your species can live?',null,1,9001,$this->maxAge);
         $form->icon();
         $component->wrapEnd();
 

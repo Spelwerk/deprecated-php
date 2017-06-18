@@ -335,7 +335,7 @@
             : null;
 
         $postIcon = isset($options['icon'])
-            ? '<input class="sw-u-action" type="image" src="/img/'.$options['icon'].'.png" alt="Submit" />'
+            ? '<input class="sw-u-action" type="image" src="'.$options['icon'].'" alt="Submit" />'
             : '<input class="sw-u-action" type="image" src="/img/missing_icon.png" alt="Submit" />';
 
         return

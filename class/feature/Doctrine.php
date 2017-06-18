@@ -16,8 +16,6 @@
 
         $this->isOwner = $system->verifyOwner($data);
 
-        $defaults = $curl->get('system/doctrine');
-
         $this->id = $data['id'];
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
@@ -25,12 +23,15 @@
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
-        $this->maximum = $defaults['maximum'];
+        $this->maximum = $system->defaultDoctrine['maximum'];
 
         $this->manifestation = $data['manifestation_id'];
         $this->expertise = $data['expertise_id'];
 
         $this->value = isset($data['value']) ? $data['value'] : 0;
+
+        $this->dice = intval($this->value);
+        $this->diceText = $this->value.'d'.$system->defaultDice['value'];
 
         $this->siteLink = '/content/doctrine/'.$this->id;
     }

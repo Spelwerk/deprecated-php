@@ -531,7 +531,7 @@ input[type=submit] {
   height: 60rem;
   width: 34rem;
   position: fixed;
-  z-index: 500; }
+  z-index: 900; }
   @media (max-width: 76rem) {
     .sw-c-modal {
       height: 90%;

@@ -50,7 +50,7 @@ $menu->findActive($sitemap->menuID, $sitemap->menuLink);
 
 <?php
 if(!isset($_COOKIE[$config_policy])) {
-    require_once('php/cookiepolicy.php');
+    //require_once('php/cookiepolicy.php');
 }
 ?>
 
@@ -88,7 +88,7 @@ if(!isset($_COOKIE[$config_policy])) {
     </div>
 </footer>
 
-<div class="sw-js-modal sw-c-modal sw-is-hidden">
+<div class="sw-js-modal sw-c-modal"> <!-- class: sw-is-hidden-->
     <div class="sw-js-modal-title sw-c-modal__title">Title</div>
     <div class="sw-c-modal__content">
         <div class="sw-c-modal__body">
@@ -112,6 +112,7 @@ if(!isset($_COOKIE[$config_policy])) {
 <div class="sw-js-modal-mask sw-u-mask sw-is-hidden"></div>
 <div class="sw-js-saved-critical sw-is-hidden">0</div>
 <div class="sw-js-roll-modifier sw-is-hidden">0</div>
+<div class="sw-js-dice-value sw-is-hidden"><?php echo $system->defaultDice['value']; ?></div>
 
 <script src="/js/validation.js"></script>
 <script src="/js/play.js"></script>

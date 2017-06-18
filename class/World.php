@@ -24,7 +24,7 @@
     var $siteLink;
 
     public function __construct($id = null, $array = null) {
-        global $curl, $system, $user;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('world/id/'.$id)['data'][0]
@@ -32,42 +32,41 @@
 
         $this->isOwner = $system->verifyOwner($data);
 
-        $defaults = $curl->get('system/attribute');
-
         $this->isCalculated = $data['calculated'];
 
         $this->id = $data['id'];
         $this->canon = $data['canon'];
+        $this->popularity = $data['popularity'];
         $this->name = $data['name'];
         $this->description = $data['description'];
 
-        $this->bodyAttributeType = $defaults['type']['body'];
-        $this->combatAttributeType = $defaults['type']['combat'];
-        $this->consumableAttributeType = $defaults['type']['consumable'];
-        $this->damageAttributeType = $defaults['type']['damage'];
-        $this->energyAttributeType = $defaults['type']['energy'];
-        $this->experienceAttributeType = $defaults['type']['experience'];
-        $this->protectionAttributeType = $defaults['type']['protection'];
-        $this->powerAttributeType = $defaults['type']['power'];
-        $this->reputationAttributeType = $defaults['type']['reputation'];
-        $this->woundAttributeType = $defaults['type']['wound'];
+        $this->bodyAttributeType = $system->defaultAttributeType['body'];
+        $this->combatAttributeType = $system->defaultAttributeType['combat'];
+        $this->consumableAttributeType = $system->defaultAttributeType['consumable'];
+        $this->damageAttributeType = $system->defaultAttributeType['damage'];
+        $this->energyAttributeType = $system->defaultAttributeType['energy'];
+        $this->experienceAttributeType = $system->defaultAttributeType['experience'];
+        $this->protectionAttributeType = $system->defaultAttributeType['protection'];
+        $this->powerAttributeType = $system->defaultAttributeType['power'];
+        $this->reputationAttributeType = $system->defaultAttributeType['reputation'];
+        $this->woundAttributeType = $system->defaultAttributeType['wound'];
 
-        $this->ammunitionAttribute = $defaults['id']['ammunition'];
-        $this->damageAttribute = $defaults['id']['damage'];
-        $this->diseaseAttribute = $defaults['id']['disease'];
-        $this->energyAttribute = $defaults['id']['energy'];
-        $this->experienceAttribute = $defaults['id']['experience'];
-        $this->honorAttribute = $defaults['id']['honor'];
-        $this->infamyAttribute = $defaults['id']['infamy'];
-        $this->moneyAttribute = $defaults['id']['money'];
-        $this->rationsAttribute = $defaults['id']['rations'];
-        $this->resilienceAttribute = $defaults['id']['resilience'];
-        $this->sanityAttribute = $defaults['id']['sanity'];
-        $this->speedAttribute = $defaults['id']['speed'];
-        $this->staminaAttribute = $defaults['id']['stamina'];
-        $this->toleranceAttribute = $defaults['id']['tolerance'];
-        $this->traumaAttribute = $defaults['id']['trauma'];
-        $this->initiativeAttribute = $defaults['id']['initiative'];
+        $this->ammunitionAttribute = $system->defaultAttributeId['ammunition'];
+        $this->damageAttribute = $system->defaultAttributeId['damage'];
+        $this->diseaseAttribute = $system->defaultAttributeId['disease'];
+        $this->energyAttribute = $system->defaultAttributeId['energy'];
+        $this->experienceAttribute = $system->defaultAttributeId['experience'];
+        $this->honorAttribute = $system->defaultAttributeId['honor'];
+        $this->infamyAttribute = $system->defaultAttributeId['infamy'];
+        $this->moneyAttribute = $system->defaultAttributeId['money'];
+        $this->rationsAttribute = $system->defaultAttributeId['rations'];
+        $this->resilienceAttribute = $system->defaultAttributeId['resilience'];
+        $this->sanityAttribute = $system->defaultAttributeId['sanity'];
+        $this->speedAttribute = $system->defaultAttributeId['speed'];
+        $this->staminaAttribute = $system->defaultAttributeId['stamina'];
+        $this->toleranceAttribute = $system->defaultAttributeId['tolerance'];
+        $this->traumaAttribute = $system->defaultAttributeId['trauma'];
+        $this->initiativeAttribute = $system->defaultAttributeId['initiative'];
 
         $this->augmentationExists = $data['augmentation'];
         $this->bionicExists = $data['bionic'];

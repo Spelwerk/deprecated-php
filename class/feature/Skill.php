@@ -16,8 +16,6 @@
 
         $this->isOwner = $system->verifyOwner($data);
 
-        $defaults = $curl->get('system/skill');
-
         $this->id = $data['id'];
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
@@ -25,13 +23,21 @@
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
-        $this->maximum = $defaults['maximum'];
-        $this->required = $defaults['required'];
-        $this->increment = $defaults['increment'];
+        $this->maximum = $system->defaultSkill['maximum'];
+        $this->required = $system->defaultSkill['required'];
+        $this->increment = $system->defaultSkill['increment'];
 
         $this->species = $data['species_id'];
 
         $this->value = isset($data['value']) ? intval($data['value']) : 0;
+
+        $this->dice = $system->defaultDice['amount'];
+        $this->diceText = $this->value > 0
+            ? $this->dice.'d'.$system->defaultDice['value'].'+'.$this->value
+            : $this->dice.'d'.$system->defaultDice['value'];
+        $this->diceData = 'data-roll-type="skill" 
+                           data-roll-d12="'.$this->dice.'" 
+                           data-roll-bonus="'.$this->value.'"';
 
         $this->siteLink = '/content/skill/'.$this->id;
     }

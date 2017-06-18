@@ -178,7 +178,7 @@
         global $component, $form;
 
         $quick = $this->isOwner
-            ? $form->quick('story--delete--has',$this->id,'play/story/id','delete',[
+            ? $form->quick('story--delete--has',$this->id,'play/story/id','/img/delete.png',[
                 'context' => $context,
                 'thing' => $thing
             ])

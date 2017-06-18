@@ -24,8 +24,6 @@
 
         $this->isOwner = $system->verifyOwner($data);
 
-        $defaults = $curl->get('system/expertise');
-
         $this->id = $data['id'];
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
@@ -39,7 +37,7 @@
         $this->value = isset($data['value']) ? $data['value'] : null;
         $this->bonus = isset($data['bonus']) ? $data['bonus'] : null;
 
-        $this->maximum = $defaults['maximum'];
+        $this->maximum = $system->defaultExpertise['maximum'];
 
         $this->skill = $data['skill_id'];
         $this->skillName = isset($data['skill_name']) ? $data['skill_name'] : null;
@@ -47,6 +45,12 @@
         $this->speciesName = isset($data['species_name']) ? $data['species_name'] : null;
         $this->manifestation = $data['manifestation_id'];
         $this->manifestationName = isset($data['manifestation_name']) ? $data['manifestation_name'] : null;
+
+        $this->dice = $system->defaultDice['amount'] + intval($this->value);
+        $this->diceText = $this->dice.'d'.$system->defaultDice['value'].'+'.intval($this->bonus);
+        $this->diceData = 'data-roll-type="default" 
+                           data-roll-d12="'.$this->dice.'" 
+                           data-roll-bonus="'.$this->bonus.'"';
 
         $this->siteLink = '/content/expertise/'.$this->id;
     }

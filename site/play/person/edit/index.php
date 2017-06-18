@@ -8,6 +8,8 @@ if($person->isOwner) {
         default:
             $component->wrapStart();
 
+            $component->linkButton($person->siteLink.'/edit/attribute','Attribute');
+
             if($person->world->augmentationExists) {
                 $component->linkButton($person->siteLink.'/edit/augmentation','Augmentation');
             }
@@ -34,13 +36,15 @@ if($person->isOwner) {
             $component->wrapEnd();
             break;
 
+        case 'attribute':
+            $person->postAttribute();
+            break;
+
         case 'augmentation':
             require_once('augmentation.php');
             break;
 
         case 'bionic':
-            $component->h2('Bionic');
-            $component->subtitle('Once attached. Bionics cannot be removed.');
             $person->postBionic();
             break;
 
@@ -53,7 +57,6 @@ if($person->isOwner) {
             break;
 
         case 'doctrine':
-            $component->h2('Doctrine');
             $person->postDoctrine();
             break;
 
@@ -62,8 +65,6 @@ if($person->isOwner) {
             break;
 
         case 'expertise':
-            $component->h2('Purchase Expertise');
-            $exp = $person->getAttribute(null, $person->world->experienceAttribute)[0];
             $person->postExpertise();
             break;
 
@@ -72,7 +73,6 @@ if($person->isOwner) {
             break;
 
         case 'skill':
-            $component->h2('Skill');
             $person->postSkill();
             break;
 

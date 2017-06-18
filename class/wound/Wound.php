@@ -20,6 +20,8 @@
             ? $data['heal']
             : null;
 
+        $this->healIcon = 'http://cdn.spelwerk.com/file/bf981642d36525ead935fb42755b01e1dc538b77.png';
+
         $this->double = isset($data['timestwo'])
             ? $data['timestwo']
             : null;

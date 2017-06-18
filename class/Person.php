@@ -150,8 +150,8 @@
                 $this->makeButton($this->getAttribute($this->world->consumableAttributeType), 'consumable');
 
                 $component->h2('Attribute');
-                $this->makeButton($this->getAttribute($this->world->reputationAttributeType), 'skill');
-                $this->makeButton($this->getAttribute($this->world->combatAttributeType), 'skill');
+                $this->makeButton($this->getAttribute($this->world->reputationAttributeType), 'attribute');
+                $this->makeButton($this->getAttribute($this->world->combatAttributeType), 'attribute');
 
                 $component->sectionEnd();
 
@@ -312,7 +312,7 @@
             ? 'person/id/'.$this->id.'/protection/equipped/'.$equipped
             : 'person/id/'.$this->id.'/protection';
 
-        return $system->getAttribute($get);
+        return $system->getProtection($get);
     }
 
     public function getSanity() {
@@ -351,7 +351,54 @@
 
     // POST
 
-    public function postAttribute($attributeId) {} //todo
+    public function postAttribute($cheat = false) {
+        global $component, $curl, $form;
+
+        $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+        $totalPoints = intval($experience->value);
+
+        $component->h1('Purchase Attributes');
+        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to increase your Attributes.');
+
+        $form->form([
+            'special' => 'person',
+            'do' => 'relation--value--post',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'play/person'
+        ]);
+
+        if($cheat) {
+            echo('<span class="sw-js-points-text sw-is-hidden">999</span>');
+        } else {
+            $form->points($totalPoints);
+            $form->hidden('experience', $experience->id, 'post');
+        }
+
+        $bodyList = $this->getAttribute($this->world->bodyAttributeType);
+        $combatList = $this->getAttribute($this->world->combatAttributeType);
+        $damageList = $this->getAttribute($this->world->damageAttributeType);
+        $reputationList = $this->getAttribute($this->world->reputationAttributeType);
+
+        foreach($bodyList as $attribute) {
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+        }
+
+        foreach($combatList as $attribute) {
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+        }
+
+        foreach($damageList as $attribute) {
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+        }
+
+        foreach($reputationList as $attribute) {
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+        }
+
+        $form->submit();
+    }
 
     public function postAugmentation($bionicId) {
         global $system, $form, $component;
@@ -448,8 +495,6 @@
     public function postDoctrine($cheat = false, $creation = false) {
         global $component, $curl, $form;
 
-        $component->h1($this->manifestation->name);
-
         $do = $creation ? 'post--doctrine' : 'relation--value--post';
 
         $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
@@ -462,6 +507,9 @@
         $experiencePoints = $creation ? 0 : intval($experience->value);
 
         $totalPoints = $creationPoints + $experiencePoints;
+
+        $component->h1('Purchase Doctrines');
+        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to add or upgrade Doctrines.');
 
         $form->form([
             'special' => 'person',
@@ -513,8 +561,8 @@
 
         $totalPoints = $creationPoints + $experiencePoints;
 
-        $component->h1('Expertise');
-        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to purchase Expertises.');
+        $component->h1('Purchase Expertise');
+        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to add or upgrade Expertises.');
 
         $form->form([
             'special' => 'person',
@@ -798,9 +846,12 @@
     }
 
     public function postProtection() {
-        global $system, $form, $curl, $component;
+        global $component, $form, $system;
 
-        $typeList = $curl->get('protectiontype')['data'];
+        $component->h1('Protection');
+        $component->subtitle('Select the protective gear you want to add to your character.');
+
+        $list = $this->world->getProtection();
         $idList = $system->idList($this->getProtection());
 
         $form->form([
@@ -811,15 +862,9 @@
             'return' => 'play/person'
         ]);
 
-        foreach($typeList as $type) {
-            $protectionList = $this->world->getProtection('/type/'.$type['id']);
-
-            $component->h4($type['name']);
-
-            $form->checkboxList($protectionList, [
-                'idList' => $idList
-            ]);
-        }
+        $form->checkboxList($list, [
+            'idList' => $idList
+        ]);
 
         $system->checkboxAll();
         $form->submit();
@@ -838,8 +883,8 @@
 
         $totalPoints = $creationPoints + $experiencePoints;
 
-        $component->h1('Skill');
-        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to purchase Skills. Ensure that at least one skill is above 3.');
+        $component->h1('Purchase Skills');
+        $component->subtitle('You will be using <span>'.$totalPoints.'</span> points to upgrade your Skills. Ensure that at least one skill is above 3.');
 
         $form->form([
             'special' => 'person',
@@ -867,7 +912,10 @@
     public function postSoftware() {} //todo
 
     public function postWeapon() {
-        global $system, $form;
+        global $component, $form, $system;
+
+        $component->h1('Weapon');
+        $component->subtitle('Select the weapons you want to add to your character.');
 
         $list = $this->world->getWeapon();
         $idList = $system->idList($this->getWeapon());
@@ -913,7 +961,7 @@
                     'extra' => $tableId,
                     'return' => 'play/person',
                     'returnid' => $returnId,
-                    'icon' => 'delete'
+                    'icon' => '/img/delete.png'
                 ])
             :   null;
 
@@ -928,8 +976,8 @@
             : ' sw-is-opacity';
 
         $img = $equipped == 1
-            ? 'color/switch-true'
-            : 'color/switch-false';
+            ? '/img/color/switch-true.png'
+            : '/img/color/switch-false.png';
 
         $do = $equipped == 1
             ? 'unequip'
@@ -954,12 +1002,14 @@
         ]);
     }
 
-    function buildWound($context, $id, $title, $icon, $heal) {
-        $labelHealed = $heal == 1
-            ? ' (Healed)'
-            : null;
+    function buildWound($context, $id, $title, $heal, $rowIcon, $actionIcon) {
+        global $component, $form;
 
-        $healed = $heal == 1
+        $title = $heal == 1
+            ? $title . ' (Healed)'
+            : $title;
+
+        $opacity = $heal == 1
             ? ' sw-is-opacity'
             : null;
 
@@ -967,29 +1017,21 @@
             ? 0
             : 1;
 
-        echo(
-            '<div class="sw-c-list sw-u-even'.$healed.'">'.
-            '<div class="sw-l-wrap">'.
-            '<div class="sw-c-list__head">'.
-            '<div class="sw-c-list__icon"><img src="'.$icon.'"/></div>'.
-            '<div class="sw-c-list__title">'.$title.$labelHealed.'</div>'.
-            '<div class="sw-c-list__action">'.
-            '<form action="/post/post" method="post">'.
-            '<input type="hidden" name="post--special" value="person"/>'.
-            '<input type="hidden" name="post--do" value="heal"/>'.
-            '<input type="hidden" name="post--context" value="'.$context.'"/>'.
-            '<input type="hidden" name="post--id" value="'.$this->id.'"/>'.
-            '<input type="hidden" name="post--context2" value="'.$id.'"/>'.
-            '<input type="hidden" name="post--extra" value="'.$flipHeal.'"/>'.
-            '<input type="hidden" name="post--return" value="play/person"/>'.
-            '<input type="hidden" name="post--returnid" value="'.$context.'"/>'.
-            '<input class="sw-u-action" type="image" src="/img/color/'.$context.'-heal.png"/>'.
-            '</form>'.
-            '</div>'.
-            '</div>'.
-            '</div>'.
-            '</div>'
-        );
+        $quick = $this->isOwner
+            ?   $form->quick([
+                'special' => 'person',
+                'do' => 'heal',
+                'context' => $context,
+                'id' => $this->id,
+                'context2' => $id,
+                'extra' => $flipHeal,
+                'return' => 'play/person',
+                'returnid' => $context,
+                'icon' => $actionIcon
+            ])
+            :   null;
+
+        $component->listAction($title, $quick, ['icon' => $rowIcon, 'class' => $opacity]);
     }
 
     // MAKE
@@ -1062,7 +1104,7 @@
     }
 
     public function makeButton($list, $type) {
-        global $component;
+        global $component, $system;
 
         $component->wrapStart(true);
 
@@ -1074,32 +1116,29 @@
             switch($type)
             {
                 case 'consumable':
-                    $value = $item->value.'d12';
+                    $value = $item->value.'d'.$system->defaultDice['value'];
                     $data = 'data-roll-type="consumable" 
                              data-roll-d12="'.$item->value.'"';
                     break;
 
-                case 'skill':
+                case 'attribute':
                     $value = $item->value > 0
-                        ? '2d12+'.$item->value
-                        : '2d12';
-                    $data = 'data-roll-type="default" 
-                             data-roll-d12="2" 
+                        ? $system->defaultDice['amount'].'d'.$system->defaultDice['value'].'+'.$item->value
+                        : $system->defaultDice['amount'].'d'.$system->defaultDice['value'];
+
+                    $data = 'data-roll-type="attribute" 
+                             data-roll-d12="'.$system->defaultDice['amount'].'" 
                              data-roll-bonus="'.$item->value.'"';
                     break;
 
+                case 'skill':
+                    $value = $item->diceText;
+                    $data = $item->diceData;
+                    break;
+
                 case 'weapon':
-                    $hitD12 = 2 + intval($item->expertiseValue);
-                    $hitBonus = intval($item->damageBonus) + intval($item->hit);
-                    $value = isset($item->damageBonus)
-                        ? $item->damageD12.'d12+'.$item->damageBonus
-                        : $item->damageD12.'d12';
-                    $data = 'data-roll-type="weapon" 
-                             data-roll-d12="'.$hitD12.'" 
-                             data-roll-bonus="'.$hitBonus.'" 
-                             data-strike-d12="'.$item->damageD12.'" 
-                             data-strike-bonus="'.$item->damageBonus.'" 
-                             data-strike-critical="'.$item->criticalD12.'"';
+                    $value = $item->diceText;
+                    $data = $item->diceData;
                     break;
 
             }
@@ -1139,7 +1178,7 @@
                     $itemCount = $itemCount + $item->value;
                 }
 
-                $this->buildWound('disease', $item->id, $item->name, $item->icon, $item->heal);
+                $this->buildWound('disease', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
             }
         }
 
@@ -1156,6 +1195,44 @@
         }
     }
 
+    public function makeDoctrine() {
+        global $system;
+
+        if($this->isSupernatural) {
+            global $component;
+
+            $expertiseList = $this->getExpertise('/manifestation/'.$this->manifestation->id);
+
+            $component->h2($this->manifestation->name);
+            $component->wrapStart(true);
+
+            $list = $this->getDoctrine();
+
+            foreach($list as $item) {
+                $rollD12 = $system->defaultDice['amount'];
+                $rollBonus = 0;
+
+                if($expertiseList) {
+                    foreach($expertiseList as $expertise) {
+                        if($item->expertise == $expertise->id) {
+                            $rollD12 += intval($expertise->value);
+                            $rollBonus += intval($expertise->bonus);
+                        }
+                    }
+                }
+
+                $data = 'data-roll-type="supernatural" 
+                         data-roll-d12="'.$rollD12.'" 
+                         data-roll-bonus="'.$rollBonus.'" 
+                         data-strike-d12="'.$item->value.'"';
+
+                $component->roll($item->name, $item->description, $item->icon, $item->diceText, $data);
+            }
+
+            $component->wrapEnd();
+        }
+    }
+
     public function makeExpertise() {
         global $component;
 
@@ -1166,14 +1243,7 @@
             $component->wrapStart(true);
 
             foreach($list as $item) {
-                $rollD12 = 2 + intval($item->value);
-                $rollBonus = $item->bonus;
-
-                $value = $rollD12.'d12+'.$rollBonus;
-
-                $data = 'data-roll-type="default" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'"';
-
-                $component->roll($item->name, $item->description, $item->icon, $value, $data);
+                $component->roll($item->name, $item->description, $item->icon, $item->diceText, $item->diceData);
             }
 
             $component->wrapEnd();
@@ -1312,7 +1382,7 @@
                     $itemCount = $itemCount + $item->value;
                 }
 
-                $this->buildWound('sanity', $item->id, $item->name, $item->icon, $item->heal);
+                $this->buildWound('sanity', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
             }
         }
 
@@ -1326,37 +1396,6 @@
             $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
 
             echo('</div>');
-        }
-    }
-
-    public function makeDoctrine() {
-        if($this->isSupernatural) {
-            global $component;
-
-            $component->h2($this->manifestation->name);
-            $component->wrapStart(true);
-
-            $list = $this->getDoctrine();
-
-            foreach($list as $doctrine) {
-                $rollD12 = 2;
-                $rollBonus = 0;
-
-                foreach($this->getExpertise('/manifestation/'.$this->manifestation->id) as $expertise) {
-                    if($doctrine->expertise == $expertise->id) {
-                        $rollD12 += intval($expertise->value);
-                        $rollBonus += intval($expertise->bonus);
-                    }
-                }
-
-                $value = $doctrine->value.'d12';
-
-                $data = 'data-roll-type="supernatural" data-roll-d12="'.$rollD12.'" data-roll-bonus="'.$rollBonus.'" data-strike-d12="'.$doctrine->value.'"';
-
-                $component->roll($doctrine->name, $doctrine->description, $doctrine->icon, $value, $data);
-            }
-
-            $component->wrapEnd();
         }
     }
 
@@ -1385,7 +1424,7 @@
                     $itemCount = $itemCount + $item->value;
                 }
 
-                $this->buildWound('wound', $item->id, $item->name, $item->icon, $item->heal);
+                $this->buildWound('wound', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
             }
         }
 

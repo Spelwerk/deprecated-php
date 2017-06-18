@@ -32,7 +32,7 @@
 
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
-            : null;
+            : false;
 
         if(isset($data['quality_id'])) {
             $this->quality = $data['quality_id'];

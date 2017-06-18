@@ -1,8 +1,6 @@
 <?php global $component, $person, $sitemap;
 
 if($person->isOwner) {
-    $component->h2('Weapon');
-
     if($sitemap->extra2 == 'add') {
         $person->postWeapon();
     } else {
