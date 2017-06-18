@@ -14,6 +14,10 @@ if($sitemap->index) {
         case 'edit':
             $protection->put();
             break;
+
+        case 'attribute':
+            require_once('attribute.php');
+            break;
     }
 }
 ?>

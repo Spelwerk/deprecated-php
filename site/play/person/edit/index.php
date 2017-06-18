@@ -25,11 +25,11 @@ if($person->isOwner) {
 
             $component->linkButton($person->siteLink.'/edit/experience','Experience');
             $component->linkButton($person->siteLink.'/edit/expertise','Expertise');
-            $component->linkButton($person->siteLink.'/edit/milestone','Milestone');
+            //$component->linkButton($person->siteLink.'/edit/milestone','Milestone');
             $component->linkButton($person->siteLink.'/edit/protection','Protection');
             $component->linkButton($person->siteLink.'/edit/skill','Skill');
             $component->linkButton($person->siteLink.'/edit/weapon','Weapon');
-            $component->linkButton($person->siteLink.'/cheat','Cheat',true);
+            //$component->linkButton($person->siteLink.'/cheat','Cheat',true);
 
             $component->wrapEnd();
             break;

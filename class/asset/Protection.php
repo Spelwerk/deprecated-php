@@ -27,17 +27,17 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->price = isset($data['quality_price'])
-            ? intval($data['price']) * intval($data['quality_price'])
-            : intval($data['price']);
-
+        $this->price = intval($data['price']);
         $this->bodypart = $data['bodypart_id'];
 
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
             : null;
 
-        $this->quality = $data['quality_id'];
+        if(isset($data['quality_id'])) {
+            $this->quality = $data['quality_id'];
+            $this->price += intval($data['quality_price']);
+        }
 
         $this->siteLink = '/content/protection/'.$this->id;
     }
@@ -49,6 +49,7 @@
 
         $component->returnButton('/content/protection');
 
+        $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Attribute');
