@@ -22,7 +22,7 @@
         $this->price = $data['price'];
         $this->legal = $data['legal'];
 
-        $this->icon = '/img/color/software.png';
+        $this->icon = 'http://cdn.spelwerk.com/file/e7a54531e7a664d7ac0b683017b30e46d4d856b0.png';
 
         $this->hacking = $data['hacking'];
         $this->hackingBonus = $data['hacking_bonus'];

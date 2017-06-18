@@ -40,22 +40,19 @@
 
     public function put() {
         if($this->isOwner) {
-            global $curl, $component, $form;
-
-            $bodypartList = $curl->get('bodypart')['data'];
+            global $component, $form;
 
             $form->form([
                 'do' => 'put',
-                'return' => 'content/bionic',
                 'context' => 'bionic',
-                'id' => $this->id
+                'id' => $this->id,
+                'return' => 'content/bionic'
             ]);
             $component->wrapStart();
-            $form->select(true,'bodypart_id',$bodypartList,'Body Part','Reference to what area the bionic is.');
-            $form->varchar(true,'name','Name');
-            $form->text(false,'description','Description');
-            $form->number(true,'energy','Energy','Amount of energy this bionic has in store to install extra augmentations.',null,0,16);
-            $form->pick(true,'legal','Legality','Will a person be arrested for using this bionic?',null,'Legal','Illegal');
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $form->number(true,'energy','Energy','Amount of energy this bionic has in store to install extra augmentations.',null,0,16,$this->energy);
+            $form->pick(true,'legal','Legality','Will a person be arrested for using this bionic?',null,'Legal','Illegal',$this->legal);
             $form->icon();
             $component->wrapEnd();
             $form->submit();

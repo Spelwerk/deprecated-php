@@ -83,9 +83,52 @@
         $this->siteLink = '/content/weapon/'.$this->id;
     }
 
-    public function put() {} //todo
+    public function put() {
+        global $component, $form;
 
-    public function view() {} //todo
+        $form->form([
+            'do' => 'put',
+            'id' => $this->id,
+            'context' => 'weapon',
+            'return' => 'content/weapon'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name',null,null,$this->name);
+        $form->text(false,'description','Description',null,null,$this->description);
+        $form->number(true, 'damage_bonus','Damage Bonus','Weapons have a static damage bonus value that gets added to the dice rolled from Weapon Type.',null,0,32,$this->damageBonus);
+        $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this weapon?', null, 'Legal', 'Illegal', $this->legal);
+        $form->submit();
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/weapon');
+
+        $component->roundImage($this->icon);
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Group ID: '.$this->group);
+
+        $component->p('Skill ID: '.$this->skill);
+        $component->p('Damage ID: '.$this->damage);
+        $component->p('Expertise ID: '.$this->expertise);
+
+        $component->p('Hand: '.$this->hand);
+        $component->p('Initiative: '.$this->initiative);
+        $component->p('Hit: '.$this->hit);
+        $component->p('Distance: '.$this->distance);
+
+        $component->p('Damage D12: '.$this->damageD12);
+        $component->p('Damage Bonus: '.$this->damageBonus);
+        $component->p('Critical D12: '.$this->criticalD12);
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton($this->siteLink.'/edit','Edit');
+        }
+    }
 
     public function delete() {} //todo
 }

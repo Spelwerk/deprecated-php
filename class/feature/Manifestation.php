@@ -57,7 +57,7 @@
 
         $component->returnButton('/content/manifestation');
 
-        if($this->icon) $component->roundImage($this->icon);
+        $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');

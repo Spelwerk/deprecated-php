@@ -31,7 +31,7 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->icon = '/img/color/milestone.png';
+        $this->icon = 'http://cdn.spelwerk.com/file/f0ba5d18c543b0a767832c0be49a96503fc8f75d.png';
 
         $this->background = $data['background_id'];
         $this->species = $data['species_id'];

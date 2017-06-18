@@ -180,24 +180,18 @@ class Post {
                 $this->tableManyRelationPostWithValue($this->context, $this->id, $this->context2);
 
                 $this->curl->put('person/id/'.$this->id, ['point_skill' => 0]);
-
-                if($this->experience) $this->curl->put('person/id/'.$this->id.'/attribute', ['insert_id' => $this->experience, 'value' => $this->points]);
                 break;
 
             case 'post--expertise':
                 $this->tableManyRelationPostWithValue($this->context, $this->id, $this->context2);
 
                 $this->curl->put('person/id/'.$this->id, ['point_expertise' => 0]);
-
-                if($this->experience) $this->curl->put('person/id/'.$this->id.'/attribute', ['insert_id' => $this->experience, 'value' => $this->points]);
                 break;
 
             case 'post--doctrine':
                 $this->tableManyRelationPostWithValue($this->context, $this->id, $this->context2);
 
                 $this->curl->put('person/id/'.$this->id, ['point_doctrine' => 0]);
-
-                if($this->experience) $this->curl->put('person/id/'.$this->id.'/attribute', ['insert_id' => $this->experience, 'value' => $this->points]);
                 break;
 
             case 'post--description':
@@ -209,7 +203,7 @@ class Post {
 
             case 'relation--value--post':
                 $this->tableManyRelationPostWithValue($this->context, $this->id, $this->context2);
-                if($this->experience) $this->curl->put('person/id/'.$this->id.'/attribute', ['insert_id' => $this->experience, 'value' => $this->points]);
+                if($this->experience) $this->curl->post('person/id/'.$this->id.'/attribute', ['insert_id' => $this->experience, 'value' => $this->points]);
                 break;
 
             // SPECIFIC

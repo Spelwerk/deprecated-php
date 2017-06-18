@@ -36,7 +36,7 @@
 
         $this->legal = $data['legal'];
 
-        $this->icon = 'http://cdn.spelwerk.com/file/2caee0a3adc7b135ffdd111fc150fb36442ffaa7.png';
+        $this->icon = 'http://cdn.spelwerk.com/file/773d3d0695e7f5ef448ce7ea0fdcaab14f4e7f1d.png';
 
         $this->weapon = $data['weapon_id'];
 

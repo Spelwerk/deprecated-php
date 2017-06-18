@@ -55,6 +55,7 @@
         $this->ammunitionAttribute = $defaults['id']['ammunition'];
         $this->damageAttribute = $defaults['id']['damage'];
         $this->diseaseAttribute = $defaults['id']['disease'];
+        $this->energyAttribute = $defaults['id']['energy'];
         $this->experienceAttribute = $defaults['id']['experience'];
         $this->honorAttribute = $defaults['id']['honor'];
         $this->infamyAttribute = $defaults['id']['infamy'];

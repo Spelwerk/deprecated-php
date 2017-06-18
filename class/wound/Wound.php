@@ -14,7 +14,7 @@
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
-        $this->icon = '/img/color/wound.png';
+        $this->icon = 'http://cdn.spelwerk.com/file/40a4cce284ae3b6fd26e9ad69997edb82bcdfd86.png';
 
         $this->heal = isset($data['heal'])
             ? $data['heal']

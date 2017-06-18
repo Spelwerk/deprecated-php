@@ -24,7 +24,7 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->icon = '/img/color/gift.png';
+        $this->icon = 'http://cdn.spelwerk.com/file/9224721c30565571fa737c6309630f11285d50d4.png';
 
         $this->species = $data['species_id'];
         $this->manifestation = $data['manifestation_id'];

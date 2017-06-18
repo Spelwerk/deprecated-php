@@ -10,7 +10,7 @@
     var $background, $focus, $identity, $manifestation, $nature, $species, $world;
 
     var $pointExpertise, $pointGift, $pointImperfection, $pointMilestone, $pointMoney, $pointPowe, $pointRelationship,
-        $pointSkill, $pointDoctrine, $pointDoctrineExpertise;
+        $pointSkill, $pointDoctrine;
 
     var $siteLink;
 
@@ -71,6 +71,7 @@
                 ? new Species($data['species_id'])
                 : null;
 
+            $this->pointDoctrine = intval($data['point_doctrine']);
             $this->pointExpertise = intval($data['point_expertise']);
             $this->pointGift = intval($data['point_gift']);
             $this->pointImperfection = intval($data['point_imperfection']);
@@ -79,8 +80,6 @@
             $this->pointPower= intval($data['point_power']);
             $this->pointRelationship = intval($data['point_relationship']);
             $this->pointSkill = intval($data['point_skill']);
-            $this->pointDoctrine = intval($data['point_doctrine']);
-            $this->pointDoctrineExpertise = intval($data['point_doctrine_expertise']);
         }
 
         $this->siteLink = '/play/person/'.$this->id;
@@ -455,6 +454,7 @@
 
         $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
         $doctrineList = $this->manifestation->getDoctrine();
+        $currentList = $this->getDoctrine();
 
         $powerValue = $curl->get('person/id/'.$this->id.'/attribute/id/'.$this->manifestation->power)['data'][0]['value'];
 
@@ -480,11 +480,20 @@
         }
 
         foreach($doctrineList as $doctrine) {
+            $value = null;
+
             $maximum = $powerValue > $doctrine->maximum
                 ? $doctrine->maximum
                 : $powerValue;
 
-            $form->purchase('insert_id', $doctrine->name, $doctrine->description, $doctrine->icon, $doctrine->id, 0, $maximum, $doctrine->value);
+            foreach($currentList as $doc) {
+                if($doc->id == $doctrine->id) {
+                    $value = $doc->value;
+                    break;
+                }
+            }
+
+            $form->purchase('insert_id', $doctrine->name, $doctrine->description, $doctrine->icon, $doctrine->id, 0, $maximum, $value);
         }
 
         $form->submit();
@@ -497,6 +506,7 @@
 
         $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
         $skillList = $this->getSkill();
+        $currentList = $this->getExpertise();
 
         $creationPoints = $creation ? intval($this->pointExpertise) : 0;
         $experiencePoints = $creation ? 0 : intval($experience->value);
@@ -531,16 +541,16 @@
 
                 // Looping through world list, getting the expertises that we selected when creating world
                 $worldList = $this->world->getExpertise('/skill/'.$skill->id);
-                $this->expertisePurchase($worldList, $maximumExpertiseValue);
+                $this->expertisePurchase($worldList, $currentList, $maximumExpertiseValue);
 
                 // Looping through species list, getting the expertises associated to this species, regardless of world
                 $speciesList = $system->getExpertise('expertise/skill/'.$skill->id.'/species/'.$this->species->id);
-                $this->expertisePurchase($speciesList, $maximumExpertiseValue);
+                $this->expertisePurchase($speciesList, $currentList, $maximumExpertiseValue);
 
                 if($this->isSupernatural) {
                     // Looping through manifestation list, getting the expertises associated to this manifestation, regardless of world
                     $manifestationList = $system->getExpertise('expertise/skill/'.$skill->id.'/manifestation/'.$this->manifestation->id);
-                    $this->expertisePurchase($manifestationList, $maximumExpertiseValue);
+                    $this->expertisePurchase($manifestationList, $currentList, $maximumExpertiseValue);
                 }
             }
         }
@@ -557,7 +567,7 @@
         $component->subtitle('You will select <span>1</span> focus from which you draw your power.');
 
         $form->form([
-            'do' => 'put',
+            'do' => 'context--put',
             'context' => 'person',
             'id' => $this->id,
             'context2' => 'focus',
@@ -994,6 +1004,10 @@
             $list[] = $this->getAttribute(null,$this->manifestation->power)[0];
         }
 
+        if($this->world->bionicExists) {
+            $list[] = $this->getAttribute(null,$this->world->energyAttribute)[0];
+        }
+
         $this->makeCard($list);
     }
 
@@ -1222,7 +1236,7 @@
         }
 
         if($imperfectionList) {
-            foreach($giftList as $item) {
+            foreach($imperfectionList as $item) {
                 $component->listItem($item->name, $item->description, $item->icon);
             }
         }
@@ -1419,17 +1433,26 @@
         }
     }
 
-    private function expertisePurchase($list, $maximumExpertiseValue) {
+    private function expertisePurchase($list, $personList, $maximumExpertiseValue) {
         global $form;
 
         if($list) {
             foreach($list as $expertise) {
+                $value = null;
+
                 $calculatedMax = $expertise->maximum <= $maximumExpertiseValue
                     ? $expertise->maximum
                     : $maximumExpertiseValue + 1;
 
+                foreach($personList as $exp) {
+                    if($exp->id == $expertise->id) {
+                        $value = $exp->value;
+                        break;
+                    }
+                }
+
                 if($calculatedMax != 0) {
-                    $form->purchase('insert_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax, $expertise->value);
+                    $form->purchase('insert_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax, $value);
                 }
             }
         }

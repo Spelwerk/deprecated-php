@@ -32,9 +32,41 @@
         $this->siteLink = '/content/weapongroup/'.$this->id;
     }
 
-    public function put() {} //todo
+    public function put() {
+        global $component, $form;
 
-    public function view() {} //todo
+        $form->form([
+            'do' => 'put',
+            'id' => $this->id,
+            'context' => 'weapongroup',
+            'return' => 'content/weapongroup'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name',null,null,$this->name);
+        $form->text(false,'description','Description',null,null,$this->description);
+        $form->icon();
+        $form->submit();
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/weapongroup');
+
+        $component->roundImage($this->icon);
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+
+        $component->p('Skill ID: '.$this->skill);
+        $component->p('Damage ID: '.$this->damage);
+        $component->p('Expertise ID: '.$this->expertise);
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton($this->siteLink.'/edit','Edit');
+        }
+    }
 
     public function delete() {} //todo
 }

@@ -1139,7 +1139,6 @@ class System {
         $form->text(false,'description','Description');
         $form->select(true,'weapontype_id',$typeList,'Type','All weapons belong to a Weapon Type.');
         $form->number(true, 'damage_bonus','Damage Bonus','Weapons have a static damage bonus value that gets added to the dice rolled from Weapon Type.',null,0,32);
-        $form->number(false, 'price','Hit chance modification','Does this weapon affect your ability to hit?',null,null,16);
         $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this weapon?', null, 'Legal', 'Illegal', true);
         $form->submit();
     }
