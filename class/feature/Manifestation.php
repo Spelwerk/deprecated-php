@@ -119,47 +119,15 @@
     }
 
     public function postDoctrine() {
-        global $component, $form;
+        global $system;
 
-        $component->h1('Add Doctrine');
-
-        $form->form([
-            'do' => 'post',
-            'return' => 'content/manifestation',
-            'context' => 'doctrine'
-        ]);
-        $component->wrapStart();
-        $form->varchar(true,'name','Name');
-        $form->text(false,'description','Description');
-        $component->wrapEnd();
-
-        $form->hidden('manifestation_id',$this->id);
-
-        $form->submit();
+        $system->postDoctrine($this->id);
     }
 
     public function postFocus() {
-        global $curl, $component, $form;
+        global $system;
 
-        $component->h1('Add Focus');
-
-        $attributeList = $curl->get('attribute/special/0')['data'];
-
-        $form->form([
-            'do' => 'post',
-            'return' => 'content/manifestation',
-            'context' => 'focus'
-        ]);
-        $component->wrapStart();
-        $form->varchar(true,'name','Name');
-        $form->text(false,'description','Description');
-        $form->select(false,'attribute_id',$attributeList,'Attribute','If this gift increases an attribute, which one?');
-        $form->number(false,'attribute_value','Attribute Value','Amount of points this gift will increase by.',null,0,16);
-        $component->wrapEnd();
-
-        $form->hidden('manifestation_id',$this->id);
-
-        $form->submit();
+        $system->postFocus($this->id);
     }
 
     public function postGift() {

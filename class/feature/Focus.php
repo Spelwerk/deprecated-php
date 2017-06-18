@@ -3,8 +3,6 @@
 
     var $manifestation;
 
-    var $attribute, $attributeValue;
-
     var $isOwner;
 
     public function __construct($id = null, $array = null) {
@@ -25,9 +23,6 @@
 
         $this->manifestation = $data['manifestation_id'];
 
-        $this->attribute = $data['attribute_id'];
-        $this->attributeValue = $data['attribute_value'];
-
         $this->siteLink = '/content/focus/'.$this->id;
     }
 
@@ -37,13 +32,13 @@
 
             $form->form([
                 'do' => 'put',
-                'return' => 'content/focus',
                 'context' => 'focus',
-                'id' => $this->id
+                'id' => $this->id,
+                'return' => 'content/focus'
             ]);
             $component->wrapStart();
-            $form->varchar(true,'name','Name',null,null,$this->name);
-            $form->text(false,'description','Description',null,null,$this->description);
+            $form->varchar(true, 'name', 'Name', null, null, $this->name);
+            $form->text(false, 'description', 'Description', null, null, $this->description);
             $form->icon();
             $component->wrapEnd();
             $form->submit();
@@ -55,20 +50,13 @@
 
         $component->returnButton('/content/focus');
 
-        if($this->icon) $component->roundImage($this->icon);
+        $component->roundImage($this->icon);
         $component->h1('Description');
         $component->p($this->description);
-        $component->h1('Data');
-        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
-        $component->p('Attribute ID: '.$this->attribute); //todo api return name
-        $component->p('Attribute Value: '.$this->attributeValue); //todo api return name
 
         if($this->isOwner) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
-            //todo link to delete();
         }
     }
-
-    public function delete() {} //todo
 }

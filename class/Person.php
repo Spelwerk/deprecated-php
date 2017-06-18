@@ -557,7 +557,7 @@
         $component->subtitle('You will select <span>1</span> focus from which you draw your power.');
 
         $form->form([
-            'do' => 'context--put',
+            'do' => 'put',
             'context' => 'person',
             'id' => $this->id,
             'context2' => 'focus',

@@ -35,9 +35,43 @@
         $this->siteLink = '/content/doctrine/'.$this->id;
     }
 
-    public function put() {} //todo
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
 
-    public function view() {} //todo
+            $component->h1('Edit Doctrine');
+
+            $form->form([
+                'do' => 'put',
+                'context' => 'doctrine',
+                'id' => $this->id,
+                'return' => 'content/doctrine'
+            ]);
+            $component->wrapStart();
+            $form->varchar(true,'name','Name',null,null,$this->name);
+            $form->text(false,'description','Description',null,null,$this->description);
+            $form->icon();
+            $component->wrapEnd();
+            $form->submit();
+        }
+    }
+
+    public function view() {
+        global $component;
+
+        $component->returnButton('/content/doctrine');
+
+        $component->roundImage($this->icon);
+        $component->h1('Description');
+        $component->p($this->description);
+        $component->h1('Data');
+        $component->p('Manifestation ID: '.$this->manifestation); //todo api return name
+
+        if($this->isOwner) {
+            $component->h1('Manage');
+            $component->linkButton($this->siteLink.'/edit','Edit');
+        }
+    }
 
     public function delete() {} //todo
 }

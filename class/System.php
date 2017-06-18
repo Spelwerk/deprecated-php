@@ -790,6 +790,25 @@ class System {
         $form->submit();
     }
 
+    public function createDoctrine($manifestation = null) {
+        global $component, $form;
+
+        $component->h1('Add Doctrine');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'doctrine',
+            'return' => 'content/manifestation'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->icon();
+        $component->wrapEnd();
+        $form->hidden('manifestation_id',$manifestation);
+        $form->submit();
+    }
+
     public function createExpertise($species = null) {
         global $curl, $component, $form;
 
@@ -819,6 +838,25 @@ class System {
             $form->hidden('species_id',$species);
         }
 
+        $form->submit();
+    }
+
+    public function createFocus($manifestation) {
+        global $component, $form;
+
+        $component->h1('Add Focus');
+
+        $form->form([
+            'do' => 'post',
+            'context' => 'focus',
+            'return' => 'content/manifestation'
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name');
+        $form->text(false,'description','Description');
+        $form->icon();
+        $component->wrapEnd();
+        $form->hidden('manifestation_id',$manifestation);
         $form->submit();
     }
 
@@ -1231,6 +1269,10 @@ class System {
         $this->listStandard('augmentation', $user->getAugmentation(), $this->getAugmentation());
     }
 
+    public function listAttribute() {
+        $this->listStandard('attribute', null, $this->getAttribute());
+    }
+
     public function listBackground() {
         global $user;
 
@@ -1241,6 +1283,34 @@ class System {
         global $user;
 
         $this->listStandard('bionic', $user->getBionic(), $this->getBionic());
+    }
+
+    public function listDoctrine() {
+        global $component, $user;
+
+        $userArray = $user->getDoctrine();
+        $manifestationArray = $this->getManifestation();
+
+        if($userArray) {
+            $component->h2('Your Content');
+            foreach($userArray as $item) {
+                $component->linkButton('/content/doctrine/'.$item->id, $item->name);
+            }
+        }
+
+        $component->h2('Canon');
+
+        foreach($manifestationArray as $manifestation) {
+            $list = $this->getDoctrine('doctrine/manifestation/'.$manifestation->id);
+
+            if(!$list) continue;
+
+            $component->h3($manifestation->name);
+
+            foreach($list as $item) {
+                $component->linkButton('/content/doctrine/'.$item->id, $item->name);
+            }
+        }
     }
 
     public function listExpertise() {
@@ -1265,7 +1335,9 @@ class System {
         $component->h2('Canon');
 
         foreach($manifestationArray as $manifestation) {
-            $list = $this->getFocus('/manifestation/'.$manifestation->id);
+            $list = $this->getFocus('focus/manifestation/'.$manifestation->id);
+
+            $component->h3($manifestation->name);
 
             if(!$list) continue;
 
@@ -1315,6 +1387,10 @@ class System {
                 $component->linkButton('/content/gift/'.$item->id, $item->name);
             }
         }
+    }
+
+    public function listIdentity() {
+        $this->listStandard('identity', null, $this->getIdentity());
     }
 
     public function listImperfection() {
@@ -1388,6 +1464,10 @@ class System {
                 }
             }
         }
+    }
+
+    public function listNature() {
+        $this->listStandard('nature', null, $this->getNature());
     }
 
     public function listPerson() {

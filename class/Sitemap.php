@@ -113,6 +113,10 @@
     function switch_content() {
         $this->menuLink = 'Content';
 
+        $this->index = $this->command2;
+        $this->context = $this->command3;
+        $this->extra = $this->command4;
+
         switch($this->command1)
         {
             default:
@@ -121,135 +125,98 @@
 
             case 'asset':
                 $this->page = 'site/content/asset/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'assetgroup':
                 $this->page = 'site/content/assetgroup/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'assettype':
                 $this->page = 'site/content/assettype/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'attribute':
+                $this->page = 'site/content/attribute/index.php';
                 break;
 
             case 'augmentation':
                 $this->page = 'site/content/augmentation/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'background':
                 $this->page = 'site/content/background/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'bionic':
                 $this->page = 'site/content/bionic/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'doctrine':
+                $this->page = 'site/content/doctrine/index.php';
                 break;
 
             case 'expertise':
                 $this->page = 'site/content/expertise/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'focus':
+                $this->page = 'site/content/focus/index.php';
                 break;
 
             case 'gift':
                 $this->page = 'site/content/gift/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'identity':
+                $this->page = 'site/content/identity/index.php';
                 break;
 
             case 'imperfection':
                 $this->page = 'site/content/imperfection/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'manifestation':
                 $this->page = 'site/content/manifestation/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'milestone':
                 $this->page = 'site/content/milestone/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
+                break;
+
+            case 'nature':
+                $this->page = 'site/content/nature/index.php';
                 break;
 
             case 'protection':
                 $this->page = 'site/content/protection/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'skill':
                 $this->page = 'site/content/skill/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'software':
                 $this->page = 'site/content/software/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'species':
                 $this->page = 'site/content/species/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'weapon':
                 $this->page = 'site/content/weapon/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'weapongroup':
                 $this->page = 'site/content/weapongroup/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'weapontype':
                 $this->page = 'site/content/weapontype/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
 
             case 'world':
                 $this->page = 'site/content/world/index.php';
-                $this->index = $this->command2;
-                $this->context = $this->command3;
-                $this->extra = $this->command4;
                 break;
         }
     }
