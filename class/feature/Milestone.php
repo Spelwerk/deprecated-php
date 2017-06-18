@@ -22,9 +22,9 @@
             ? $curl->get('milestone/id/'.$id)['data'][0]
             : $array;
 
-        $this->isOwner = $system->verifyOwner($data);
-
         $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('milestone',$this->id);
+
         $this->name = $data['name'];
         $this->popularity = $data['popularity'];
         $this->description = isset($data['custom'])

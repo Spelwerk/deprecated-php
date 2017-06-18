@@ -15,18 +15,17 @@
     var $siteLink;
 
     public function __construct($id) {
-        global $curl;
+        global $curl, $system;
 
         $data = $curl->get('person/id/'.$id)['data'][0];
 
-        $this->isOwner = isset($data['owner']) ? $data['owner'] : false;
-
+        $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('person',$this->id);
         $this->isPlayable = intval($data['playable']);
         $this->isCalculated = intval($data['calculated']);
 
         $this->popularity = $data['popularity'];
 
-        $this->id = $data['id'];
         $this->nickname = $data['nickname'];
         $this->description = $data['description'];
         $this->firstname = $data['firstname'];
@@ -129,7 +128,7 @@
         } else {
             $this->makeQuickLinks();
 
-            $this->verifyUserOwnership();
+            $this->makeSavePersonButton();
 
             $this->makeDescription();
 
@@ -1443,24 +1442,10 @@
 
     // PRIVATE
 
-    private function verifyUserOwnership() {
+    private function makeSavePersonButton() {
         global $form, $user;
 
-        $userOwner = false;
-
-        if($this->isOwner) {
-            $list = $user->getPerson();
-
-            if($list) {
-                foreach($list as $item) {
-                    if($this->id == $item->id) {
-                        $userOwner = true;
-                    }
-                }
-            }
-        }
-
-        if(!$userOwner) {
+        if($user->isActive && !$this->isOwner) {
             $form->form([
                 'special' => 'user',
                 'do' => 'save',

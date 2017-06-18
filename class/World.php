@@ -30,11 +30,10 @@
             ? $curl->get('world/id/'.$id)['data'][0]
             : $array;
 
-        $this->isOwner = $system->verifyOwner($data);
-
+        $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('world',$this->id);
         $this->isCalculated = $data['calculated'];
 
-        $this->id = $data['id'];
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];

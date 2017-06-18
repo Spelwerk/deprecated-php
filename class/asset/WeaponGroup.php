@@ -14,9 +14,9 @@
             ? $curl->get('weapongroup/id/'.$id)['data'][0]
             : $array;
 
-        $this->isOwner = $system->verifyOwner($data);
-
         $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('weapongroup',$this->id);
+
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];

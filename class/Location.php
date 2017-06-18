@@ -14,9 +14,9 @@
             ? $curl->get('location/id/'.$id)['data'][0]
             : $array;
 
-        $this->isOwner = $system->verifyOwner($data);
-
         $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('location',$this->id);
+
         $this->name = $data['name'];
         $this->description = $data['description'];
 

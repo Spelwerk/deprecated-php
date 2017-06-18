@@ -14,9 +14,9 @@
             ? $curl->get('doctrine/id/'.$id)['data'][0]
             : $array;
 
-        $this->isOwner = $system->verifyOwner($data);
-
         $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('doctrine',$this->id);
+
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];

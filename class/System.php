@@ -1713,12 +1713,12 @@ class System {
         $form->submit();
     }
 
-    function verifyOwner($data) {
-        global $user;
+    function verifyOwner($route, $id) {
+        global $curl, $user;
 
         if($user->isAdmin) return true;
 
-        $isOwner = isset($data['owner']) ? intval($data['owner']) : false;
+        $isOwner = $curl->get($route.'/id/'.$id.'/owner')['owner'];
 
         return $isOwner;
     }
