@@ -1,14 +1,12 @@
 <?php class Augmentation {
-    var $id, $canon, $popularity, $name, $description, $price, $energy, $legal, $icon;
+    var $id, $canon, $popularity, $name, $description, $price, $legal, $icon;
 
     var $weapon;
 
-    var $quality;
+    var $active;
 
     public function __construct($id = null, $array = null) {
         global $curl;
-
-        echo $id;
 
         $data = isset($id)
             ? $curl->get('augmentation/id/'.$id)['data'][0]
@@ -22,21 +20,12 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->price = isset($data['quality_price'])
-            ? intval($data['price']) * intval($data['quality_price'])
-            : intval($data['price']);
-
-        $this->energy = isset($data['quality_energy'])
-            ? intval($data['energy']) * intval($data['quality_energy'])
-            : intval($data['energy']);
-
+        $this->price = $data['price'];
         $this->legal = $data['legal'];
+        $this->weapon = $data['weapon_id'];
+        $this->active = isset($data['active']) ? $data['active'] : false;
 
         $this->icon = 'http://cdn.spelwerk.com/file/773d3d0695e7f5ef448ce7ea0fdcaab14f4e7f1d.png';
-
-        $this->weapon = $data['weapon_id'];
-
-        $this->quality = isset($data['quality_id']) ? $data['quality_id'] : null;
 
         $this->siteLink = '/content/augmentation/'.$this->id;
     }
@@ -57,7 +46,6 @@
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');
-        $component->p('Energy: '.$this->energy);
         $component->p('Legality: '.$this->legal);
         $component->h1('Attribute');
         $this->listAttribute();
@@ -94,7 +82,7 @@
 
     public function postAttribute() {
         if($this->verifyOwner()) {
-            global $component, $form, $curl;
+            global $component, $form, $curl, $system;
 
             $form->form([
                 'do' => 'context--post',
@@ -105,10 +93,14 @@
             ]);
 
             $list = $curl->get('attribute/special/0')['data'];
+            $energy = $curl->get('attribute/id/'.$system->defaultAttributeId['energy'])['data'][0];
+
+            $count = count($list) + 1;
+            $list[$count] = $energy;
 
             $component->wrapStart();
             $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your augmentation to have extra value in?');
-            $form->number(true,'value','Value',null,null,1,4,1);
+            $form->number(true,'value','Value',null,null,null,12,1);
             $component->wrapEnd();
 
             $form->submit();

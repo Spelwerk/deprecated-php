@@ -1,5 +1,5 @@
 <?php class Bionic {
-    var $id, $canon, $popularity, $name, $description, $price, $energy, $legal, $icon;
+    var $id, $canon, $popularity, $name, $description, $price, $legal, $icon;
 
     var $bodypart;
 
@@ -18,18 +18,11 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->price = isset($data['quality_price'])
-            ? intval($data['price']) * intval($data['quality_price'])
-            : intval($data['price']);
-
-        $this->energy = isset($data['quality_energy'])
-            ? intval($data['energy']) * intval($data['quality_energy'])
-            : intval($data['energy']);
-
+        $this->price = $data['price'];
         $this->legal = $data['legal'];
-        $this->icon = $data['icon'];
-
         $this->bodypart = $data['bodypart_id'];
+
+        $this->icon = $data['icon'];
 
         $this->siteLink = '/content/bionic/'.$this->id;
     }
@@ -70,7 +63,6 @@
         $component->h1('Description');
         $component->p($this->description);
         $component->h1('Data');
-        $component->p('Energy: '.$this->energy); //todo api return not boolean
         $component->p('Legality: '.$this->legal); //todo api return not boolean
         $component->h1('Attribute');
         $this->listAttribute();
@@ -116,7 +108,7 @@
 
     public function postAttribute() {
         if($this->verifyOwner()) {
-            global $component, $form, $curl;
+            global $component, $form, $curl, $system;
 
             $form->form([
                 'do' => 'context--post',
@@ -127,6 +119,10 @@
             ]);
 
             $list = $curl->get('attribute/special/0')['data'];
+            $energy = $curl->get('attribute/id/'.$system->defaultAttributeId['energy'])['data'][0];
+
+            $count = count($list) + 1;
+            $list[$count] = $energy;
 
             $component->wrapStart();
             $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your bionic to have extra value in?');

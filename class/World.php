@@ -423,8 +423,6 @@
         $ammunition = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->ammunitionAttribute)['data'][0]['value'];
         $rations = $curl->get('world/id/'.$this->id.'/attribute/value/'.$this->rationsAttribute)['data'][0]['value'];
 
-        echo $money;
-
         $component->h2('Wounds');
         $component->subtitle('This section contains the different kinds of wounds a person can take.');
         $component->wrapStart();

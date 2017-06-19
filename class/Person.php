@@ -85,8 +85,6 @@
     }
 
     public function create() {
-        echo($this->isSupernatural);
-
         if(!isset($this->background)) {
             $this->postBackground();
         } else if($this->isSupernatural && !isset($this->manifestation)) {
@@ -153,31 +151,49 @@
         if($this->isOwner && !$this->isCalculated && $this->isPlayable) {
             $this->create();
         } else {
-            $this->makeQuickLinks();
+            $this->quickLinks();
 
             $this->makeSavePersonButton();
 
-            $this->makeDescription();
+            $component->sectionStart();
+            $component->p('This is '.$this->firstname.' "'.$this->nickname.'" '.$this->surname.'. '.$this->firstname.' is a '.$this->occupation);
+
+            if($this->isPlayable && $this->isCalculated) {
+                $component->p($this->firstname.' is '.$this->age.' years old. '.$this->firstname.'\'s gender is '.$this->gender);
+                $component->p('Drive: '.$this->drive);
+                $component->p('Pride: '.$this->pride);
+                $component->p('Problem: '.$this->problem);
+
+                if($this->description != null) $component->p($this->description);
+                if($this->personality != null) $component->p($this->personality);
+                if($this->appearance != null) $component->p($this->appearance);
+            }
+
+            if($this->isOwner) {
+                $component->link($this->siteLink.'/edit/description','Edit Description');
+            }
+
+            $component->sectionEnd();
 
             if($this->isPlayable && $this->isCalculated) {
                 $component->sectionStart();
 
                 $component->h2('Skill');
-                $this->makeButton($this->getSkill(), 'skill');
+                $this->buildButton($this->getSkill(), 'skill');
 
                 $this->makeExpertise();
 
                 $this->makeDoctrine();
 
                 $component->h2('Weapon', 'weapon');
-                $this->makeButton($this->getWeapon(1), 'weapon');
+                $this->buildButton($this->getWeapon(1), 'weapon');
 
                 $component->h2('Consumable');
-                $this->makeButton($this->getAttribute($this->world->consumableAttributeType), 'consumable');
+                $this->buildButton($this->getAttribute($this->world->consumableAttributeType), 'consumable');
 
                 $component->h2('Attribute');
-                $this->makeButton($this->getAttribute($this->world->reputationAttributeType), 'attribute');
-                $this->makeButton($this->getAttribute($this->world->combatAttributeType), 'attribute');
+                $this->buildButton($this->getAttribute($this->world->reputationAttributeType), 'attribute');
+                $this->buildButton($this->getAttribute($this->world->combatAttributeType), 'attribute');
 
                 $component->sectionEnd();
 
@@ -187,44 +203,20 @@
                 $this->makeWound();
 
                 if($this->isOwner) {
-                    $component->linkButton($this->siteLink.'/wound','Add Wound');
+                    $component->link($this->siteLink.'/wound','Add Wound');
                 }
-
-                $component->h2('Disease','disease');
-                $this->makeDisease();
-
                 if($this->isOwner) {
-                    $component->linkButton($this->siteLink.'/disease','Add Disease');
+                    $component->link($this->siteLink.'/disease','Add Disease');
                 }
-
-                $component->h2('Sanity','sanity');
-                $this->makeSanity();
-
                 if($this->isOwner) {
-                    $component->linkButton($this->siteLink.'/sanity','Add Sanity');
+                    $component->link($this->siteLink.'/sanity','Add Sanity');
                 }
 
                 $component->sectionEnd();
-            }
 
-            $component->h2('Description');
-
-            if($this->description != null) {
-                $component->p($this->description);
-            }
-
-            if($this->personality != null) {
-                $component->p($this->personality);
-            }
-
-            if($this->isOwner) {
-                $component->link($this->siteLink.'/edit/description','Edit Description');
-            }
-
-            if($this->isPlayable && $this->isCalculated) {
                 $component->h2('Features');
-                $this->makeFeatures();
                 $this->makeAttributeList();
+                $this->makeFeatures();
 
                 if($this->isOwner) {
                     $component->linkButton($this->siteLink.'/edit', 'Level Up', '/img/arrow-up.png');
@@ -232,14 +224,14 @@
 
                 $component->h2('Equipment');
                 $component->h3('Weapon','eq_weapon');
-                $this->makeWeaponEquip();
+                $this->equipWeapon();
 
                 if($this->isOwner) {
                     $component->link($this->siteLink.'/edit/weapon','Edit Weapon');
                 }
 
                 $component->h3('Protection','eq_protection');
-                $this->makeProtectionEquip();
+                $this->equipProtection();
 
                 if($this->isOwner) {
                     $component->link($this->siteLink.'/edit/protection','Edit Protection');
@@ -247,14 +239,14 @@
 
                 if($this->world->bionicExists) {
                     $component->h3('Bionic','eq_bionic');
-                    $this->makeList($this->getBionic());
+                    $this->buildList($this->getBionic());
 
                     if($this->isOwner) {
                         $component->link($this->siteLink.'/edit/bionic','Edit Bionic');
                     }
                 }
 
-                $this->makeAugmentation();
+                $this->equipAugmentation();
             }
         }
     }
@@ -439,7 +431,8 @@
             'special' => 'person',
             'do' => 'augmentation',
             'id' => $this->id,
-            'return' => 'play/person'
+            'return' => 'play/person',
+            'returnid' => 'eq_augmentation'
         ]);
         $form->checkboxList($list,[
             'idList' => $idList
@@ -1113,17 +1106,6 @@
 
     // BUILD
 
-    function buildEditDescription($id, $title, $description, $icon) {
-        /* todo build this
-         * bionic
-         * characteristic
-         * expertise
-         * milestone
-         * protection
-         * weapon
-         */
-    }
-
     function buildRemoval($tableName, $tableId, $title, $icon, $returnId = null) {
         global $component, $form;
 
@@ -1143,132 +1125,7 @@
         $component->listAction($title, $quick, ['icon' => $icon]);
     }
 
-    function buildEquip($tableName, $tableId, $title, $icon, $equipped, $returnId = null) {
-        global $component, $form;
-
-        $opacity = $equipped == 1
-            ? null
-            : ' sw-is-opacity';
-
-        $img = $equipped == 1
-            ? '/img/color/switch-true.png'
-            : '/img/color/switch-false.png';
-
-        $do = $equipped == 1
-            ? 'unequip'
-            : 'equip';
-
-        $quick = $this->isOwner
-            ?   $form->quick([
-                    'special' => 'person',
-                    'do' => $do,
-                    'context' => $tableName,
-                    'id' => $this->id,
-                    'extra' => $tableId,
-                    'return' => 'play/person',
-                    'returnid' => $returnId,
-                    'icon' => $img
-                ])
-            :   null;
-
-        $component->listAction($title, $quick, [
-            'icon' => $icon,
-            'class' => $opacity
-        ]);
-    }
-
-    function buildWound($context, $id, $title, $heal, $rowIcon, $actionIcon) {
-        global $component, $form;
-
-        $title = $heal == 1
-            ? $title . ' (Healed)'
-            : $title;
-
-        $opacity = $heal == 1
-            ? ' sw-is-opacity'
-            : null;
-
-        $flipHeal = $heal == 1
-            ? 0
-            : 1;
-
-        $quick = $this->isOwner
-            ?   $form->quick([
-                'special' => 'person',
-                'do' => 'heal',
-                'context' => $context,
-                'id' => $this->id,
-                'context2' => $id,
-                'extra' => $flipHeal,
-                'return' => 'play/person',
-                'returnid' => $context,
-                'icon' => $actionIcon
-            ])
-            :   null;
-
-        $component->listAction($title, $quick, ['icon' => $rowIcon, 'class' => $opacity]);
-    }
-
-    // MAKE
-
-    public function makeAttributeList() {
-        $list = [];
-
-        $list[] = $this->getAttribute(null,$this->world->experienceAttribute)[0];
-        $list[] = $this->getAttribute(null,$this->world->damageAttribute)[0];
-
-        if($this->isSupernatural) {
-            $list[] = $this->getAttribute(null,$this->manifestation->power)[0];
-        }
-
-        if($this->world->bionicExists) {
-            $list[] = $this->getAttribute(null,$this->world->energyAttribute)[0];
-        }
-
-        $this->makeCard($list);
-    }
-
-    public function makeAugmentation() {
-        global $component;
-
-        if($this->world->augmentationExists) {
-            $component->h3('Augmentation','eq_augmentation');
-
-            $bionicList = $this->getBionic();
-
-            if($bionicList) {
-                foreach($bionicList as $bionic) {
-                    $augmentationList = $this->getAugmentation($bionic->id);
-
-                    if($augmentationList) {
-                        $component->h4($bionic->name);
-
-                        foreach($augmentationList as $item) {
-                            $component->listItem($item->name, $item->description, $item->icon);
-                        }
-                    }
-                }
-            }
-
-            if($this->isOwner) {
-                $component->link($this->siteLink.'/edit/augmentation','Edit Augmentation');
-            }
-        }
-    }
-
-    public function makeCard($list) {
-        global $component;
-
-        echo('<div class="sw-u-center">');
-
-        foreach($list as $object) {
-            $component->attribute($object->name, $object->value);
-        }
-
-        echo('</div>');
-    }
-
-    public function makeList($list) {
+    function buildList($list) {
         global $component;
 
         if($list) {
@@ -1278,7 +1135,7 @@
         }
     }
 
-    public function makeButton($list, $type) {
+    function buildButton($list, $type) {
         global $component, $system;
 
         $component->wrapStart(true);
@@ -1326,50 +1183,67 @@
         $component->wrapEnd();
     }
 
-    public function makeDescription() {
-        global $component;
+    function buildWound($context, $id, $title, $heal, $rowIcon, $actionIcon) {
+        global $component, $form;
 
-        $component->sectionStart();
-        $component->p('This is '.$this->firstname.' "'.$this->nickname.'" '.$this->surname.'. '.$this->firstname.' is a '.$this->occupation);
+        $title = $heal == 1
+            ? $title . ' (Healed)'
+            : $title;
 
-        if($this->isPlayable && $this->isCalculated) {
-            $component->p($this->firstname.' is '.$this->age.' years old. '.$this->firstname.'\'s gender is '.$this->gender);
-        }
+        $opacity = $heal == 1
+            ? ' sw-is-opacity'
+            : null;
 
-        $component->sectionEnd();
+        $flipHeal = $heal == 1
+            ? 0
+            : 1;
+
+        $quick = $this->isOwner
+            ?   $form->quick([
+                'special' => 'person',
+                'do' => 'heal',
+                'context' => $context,
+                'id' => $this->id,
+                'context2' => $id,
+                'extra' => $flipHeal,
+                'return' => 'play/person',
+                'returnid' => 'wound',
+                'icon' => $actionIcon
+            ])
+            :   null;
+
+        $component->listAction($title, $quick, ['icon' => $rowIcon, 'class' => $opacity]);
     }
 
-    public function makeDisease() {
+    // MAKE
+
+    public function makeAttributeList() {
         global $component;
 
-        $itemCount = 0;
-        $itemList = $this->getDisease();
-        $itemAttribute = $this->getAttribute(null,$this->world->diseaseAttribute)[0];
+        $list = [];
 
-        $stamina = $this->getAttribute(null,$this->world->staminaAttribute);
-        $this->makeCard($stamina);
+        $list[] = $this->getAttribute(null,$this->world->experienceAttribute)[0];
+        $list[] = $this->getAttribute(null,$this->world->damageAttribute)[0];
 
-        if(isset($itemList)) {
-            foreach($itemList as $item) {
-                if($item->heal == 0) {
-                    $itemCount = $itemCount + $item->value;
-                }
-
-                $this->buildWound('disease', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
-            }
+        if($this->isSupernatural) {
+            $list[] = $this->getAttribute(null,$this->manifestation->power)[0];
         }
 
-        if($itemCount != 0) {
-            echo('<div class="sw-u-center">');
+        if($this->world->bionicExists) {
+            $list[] = $this->getAttribute(null,$this->world->energyAttribute)[0];
+        }
 
-            $color = $itemCount >= $itemAttribute->value
+        echo('<div class="sw-u-center">');
+
+        foreach($list as $object) {
+            $color = $object->value < 0
                 ? ' sw-is-invalid'
                 : null;
 
-            $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
-
-            echo('</div>');
+            $component->attribute($object->name, $object->value, $color);
         }
+
+        echo('</div>');
     }
 
     public function makeDoctrine() {
@@ -1427,41 +1301,6 @@
         }
     }
 
-    public function makeExpertiseList() {
-        global $component;
-
-        $list = $this->getExpertise($this->world->attributeExpertiseType);
-
-        if($list) {
-            echo(
-                '<h3>Expertise</h3>'.
-                '<div class="sw-l-padding">'
-            );
-
-            foreach($list as $expertise) {
-                $info = $expertise->description;
-
-                $lvl = null;
-
-                if($expertise->level == 1) {
-                    $lvl = ' I';
-                } else if ($expertise->level == 2) {
-                    $lvl = ' II';
-                } else if ($expertise->level == 3) {
-                    $lvl = ' III';
-                } else if ($expertise->level == 4) {
-                    $lvl = ' IV';
-                }
-
-                $title = $expertise->name . $lvl;
-
-                $component->listItem($title, $info, $expertise->icon);
-            }
-
-            echo('</div>');
-        }
-    }
-
     public function makeFeatures() {
         global $component;
 
@@ -1502,119 +1341,190 @@
         echo('</div>');
     }
 
-    public function makeProtection() {
-        $attributeList = $this->getAttribute($this->world->protectionAttributeType);
-        $tolerance = $this->getAttribute(null,$this->world->toleranceAttribute)[0];
-
-        foreach($attributeList as $attribute) {
-            $attribute->value = intval($attribute->value) + intval($tolerance->value);
-        }
-
-        $this->makeCard($attributeList);
-    }
-
-    public function makeProtectionEquip() {
-        $list = $this->getProtection();
-
-        if(isset($list)) {
-            foreach($list as $item) {
-                $this->buildEquip('protection', $item->id, $item->name, $item->icon, $item->equipped, 'eq_protection');
-            }
-        }
-    }
-
-    public function makeQuickLinks() {
-        global $component;
-
-        if($this->isPlayable && $this->isCalculated && $this->isOwner) {
-            echo('<div class="sw-l-quicklink">');
-
-            $component->linkQuick($this->siteLink.'/wound','Wound','/img/wound-wound.png');
-            $component->linkQuick($this->siteLink.'/edit/weapon','Weapon','/img/weapon.png');
-            $component->linkQuick($this->siteLink.'/edit/protection','Protection','/img/armor.png');
-
-            if($this->world->bionicExists) {
-                $component->linkQuick($this->siteLink.'/edit/bionic','Bionic','/img/bionic.png');
-            }
-
-            $component->linkQuick($this->siteLink.'/edit','Edit','/img/edit.png');
-
-            echo('</div>');
-        }
-    }
-
-    public function makeSanity() {
-        global $component;
-
-        $itemCount = 0;
-        $itemList = $this->getSanity();
-        $itemAttribute = $this->getAttribute(null,$this->world->sanityAttribute)[0];
-
-        $resilience = $this->getAttribute(null,$this->world->resilienceAttribute);
-        $this->makeCard($resilience);
-
-        if(isset($itemList)) {
-            foreach($itemList as $item) {
-                if($item->heal == 0) {
-                    $itemCount = $itemCount + $item->value;
-                }
-
-                $this->buildWound('sanity', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
-            }
-        }
-
-        if($itemCount != 0) {
-            echo('<div class="sw-u-center">');
-
-            $color = $itemCount >= $itemAttribute->value
-                ? ' sw-is-invalid'
-                : null;
-
-            $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
-
-            echo('</div>');
-        }
-    }
-
-    public function makeWeaponEquip() {
-        $list = $this->getWeapon();
-
-        if(isset($list)) {
-            foreach($list as $item) {
-                $this->buildEquip('weapon', $item->id, $item->name, $item->icon, $item->equipped, 'eq_weapon');
-            }
-        }
-    }
-
     public function makeWound() {
         global $component;
 
-        $itemCount = 0;
-        $itemList = $this->getWound();
-        $itemAttribute = $this->getAttribute(null,$this->world->traumaAttribute)[0];
+        $woundCount = 0;
+        $sanityCount = 0;
+        $diseaseCount = 0;
 
-        $this->makeProtection();
+        $woundList = $this->getWound();
+        $sanityList = $this->getSanity();
+        $diseaseList = $this->getDisease();
 
-        if(isset($itemList)) {
-            foreach($itemList as $item) {
+        $traumaAttribute = $this->getAttribute(null,$this->world->traumaAttribute)[0];
+        $sanityAttribute = $this->getAttribute(null,$this->world->sanityAttribute)[0];
+        $diseaseAttribute = $this->getAttribute(null,$this->world->diseaseAttribute)[0];
+
+        $tolerance = $this->getAttribute(null,$this->world->toleranceAttribute)[0];
+        $stamina = $this->getAttribute(null,$this->world->staminaAttribute)[0];
+        $resilience = $this->getAttribute(null,$this->world->resilienceAttribute)[0];
+
+        $protectionList = $this->getAttribute($this->world->protectionAttributeType);
+
+        // MAKE CARDS WITH RESISTANCE ATTRIBUTES
+
+        echo('<div class="sw-u-center">');
+
+        $component->attribute($tolerance->name, $tolerance->value);
+        $component->attribute($stamina->name, $stamina->value);
+        $component->attribute($resilience->name, $resilience->value);
+
+        echo('</div>');
+
+        echo('<div class="sw-u-center">');
+
+        foreach($protectionList as $item) {
+            $item->value = intval($item->value) + intval($tolerance->value);
+
+            if($item->value > $tolerance->value) {
+                $component->attribute($item->name, $item->value);
+            }
+        }
+
+        echo('</div>');
+
+        // MAKE LISTS
+
+        if(isset($woundList)) {
+            foreach($woundList as $item) {
                 if($item->heal == 0) {
-                    $itemCount = $itemCount + $item->value;
+                    $woundCount = $woundCount + $item->value;
                 }
 
                 $this->buildWound('wound', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
             }
         }
 
-        if($itemCount != 0) {
-            echo('<div class="sw-u-center">');
+        if(isset($sanityList)) {
+            foreach($sanityList as $item) {
+                if($item->heal == 0) {
+                    $sanityCount = $sanityCount + $item->value;
+                }
 
-            $color = $itemCount >= $itemAttribute->value
+                $this->buildWound('sanity', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
+            }
+        }
+
+        if(isset($diseaseList)) {
+            foreach($diseaseList as $item) {
+                if($item->heal == 0) {
+                    $diseaseCount = $diseaseCount + $item->value;
+                }
+
+                $this->buildWound('disease', $item->id, $item->name, $item->heal, $item->icon, $item->healIcon);
+            }
+        }
+
+        // MAKE CARDS WITH WOUNDS LEFT
+
+        echo('<div class="sw-u-center">');
+
+        if($woundCount != 0) {
+            $color = $woundCount >= $traumaAttribute->value
                 ? ' sw-is-invalid'
                 : null;
 
-            $component->attribute($itemAttribute->name, $itemCount.'/'.$itemAttribute->value,$color);
+            $component->attribute($traumaAttribute->name, $woundCount.'/'.$traumaAttribute->value,$color);
+        }
 
-            echo('</div>');
+        if($sanityCount != 0) {
+            $color = $sanityCount >= $sanityAttribute->value
+                ? ' sw-is-invalid'
+                : null;
+
+            $component->attribute($sanityAttribute->name, $sanityCount.'/'.$sanityAttribute->value,$color);
+        }
+
+        if($diseaseCount != 0) {
+            $color = $diseaseCount >= $diseaseAttribute->value
+                ? ' sw-is-invalid'
+                : null;
+
+            $component->attribute($diseaseAttribute->name, $diseaseCount.'/'.$diseaseAttribute->value,$color);
+        }
+
+        echo('</div>');
+    }
+
+    // EQUIP
+
+    public function equipAugmentation() {
+        global $component, $form;
+
+        if($this->world->augmentationExists) {
+            $component->h3('Augmentation','eq_augmentation');
+
+            $bionicList = $this->getBionic();
+
+            if($bionicList) {
+                foreach($bionicList as $bionic) {
+                    $augmentationList = $this->getAugmentation($bionic->id);
+
+                    if($augmentationList) {
+                        $component->h4($bionic->name);
+
+                        foreach($augmentationList as $item) {
+                            echo $item->active;
+
+                            $opacity = $item->active == 1
+                                ? null
+                                : ' sw-is-opacity';
+
+                            $img = $item->active == 1
+                                ? '/img/color/switch-true.png'
+                                : '/img/color/switch-false.png';
+
+                            $do = $item->active == 1
+                                ? 'deactivate'
+                                : 'activate';
+
+                            $quick = $this->isOwner
+                                ?   $form->quick([
+                                    'special' => 'person',
+                                    'do' => $do,
+                                    'context' => 'augmentation',
+                                    'id' => $this->id,
+                                    'extra' => $item->id,
+                                    'extra2' => $bionic->id,
+                                    'return' => 'play/person',
+                                    'returnid' => 'eq_augmentation',
+                                    'icon' => $img
+                                ])
+                                :   null;
+
+                            $component->listAction($item->name, $quick, [
+                                'icon' => $item->icon,
+                                'class' => $opacity
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if($this->isOwner) {
+                $component->link($this->siteLink.'/edit/augmentation','Edit Augmentation');
+            }
+        }
+    }
+
+    public function equipProtection() {
+        $list = $this->getProtection();
+
+        if(isset($list)) {
+            foreach($list as $item) {
+                $this->equip('protection', $item->id, $item->name, $item->icon, $item->equipped, 'eq_protection');
+            }
+        }
+    }
+
+    public function equipWeapon() {
+        $list = $this->getWeapon();
+
+        if(isset($list)) {
+            foreach($list as $item) {
+                $this->equip('weapon', $item->id, $item->name, $item->icon, $item->equipped, 'eq_weapon');
+            }
         }
     }
 
@@ -1646,10 +1556,12 @@
                     ? $expertise->maximum
                     : $maximumExpertiseValue + 1;
 
-                foreach($personList as $exp) {
-                    if($exp->id == $expertise->id) {
-                        $value = $exp->value;
-                        break;
+                if($personList) {
+                    foreach($personList as $exp) {
+                        if($exp->id == $expertise->id) {
+                            $value = $exp->value;
+                            break;
+                        }
                     }
                 }
 
@@ -1659,4 +1571,50 @@
             }
         }
     }
+
+    private function equip($tableName, $tableId, $title, $icon, $equipped, $returnId = null) {
+        global $component, $form;
+
+        $opacity = $equipped == 1
+            ? null
+            : ' sw-is-opacity';
+
+        $img = $equipped == 1
+            ? '/img/color/switch-true.png'
+            : '/img/color/switch-false.png';
+
+        $do = $equipped == 1
+            ? 'unequip'
+            : 'equip';
+
+        $quick = $this->isOwner
+            ?   $form->quick([
+                'special' => 'person',
+                'do' => $do,
+                'context' => $tableName,
+                'id' => $this->id,
+                'extra' => $tableId,
+                'return' => 'play/person',
+                'returnid' => $returnId,
+                'icon' => $img
+            ])
+            :   null;
+
+        $component->listAction($title, $quick, [
+            'icon' => $icon,
+            'class' => $opacity
+        ]);
+    }
+
+    private function quickLinks() {
+        global $component;
+        if($this->isPlayable && $this->isCalculated && $this->isOwner) {
+            echo('<div class="sw-l-quicklink">');
+            $component->linkQuick($this->siteLink.'/edit/weapon','Weapon','/img/weapon.png');
+            $component->linkQuick($this->siteLink.'/edit/protection','Protection','/img/armor.png');
+            $component->linkQuick($this->siteLink.'/edit','Edit','/img/edit.png');
+            echo('</div>');
+        }
+    }
+
 }

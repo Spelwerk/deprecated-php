@@ -4,8 +4,6 @@
     public function __construct($id = null, $array = null) {
         global $curl;
 
-        echo $id;
-
         $data = isset($id)
             ? $curl->get('assetgroup/id/'.$id)['data'][0]
             : $array;
