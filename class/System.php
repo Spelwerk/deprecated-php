@@ -1718,7 +1718,7 @@ class System {
 
         if($user->isAdmin) return true;
 
-        $isOwner = $curl->get($route.'/id/'.$id.'/owner')['owner'];
+        $isOwner = $curl->get($route.'/id/'.$id.'/isOwner')['owner'];
 
         return $isOwner;
     }

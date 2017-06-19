@@ -5,10 +5,8 @@
 
     var $quality;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         echo $id;
 
@@ -17,8 +15,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('augmentation',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -45,6 +41,12 @@
         $this->siteLink = '/content/augmentation/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('augmentation', $this->id);
+    }
+
     public function put() {} //todo
 
     public function view() {
@@ -62,7 +64,7 @@
         $component->h1('Skill');
         $this->listSkill();
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
@@ -91,59 +93,67 @@
     // POST
 
     public function postAttribute() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'augmentation',
-            'id' => $this->id,
-            'context2' => 'attribute',
-            'return' => 'content/augmentation'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'augmentation',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'content/augmentation'
+            ]);
 
-        $list = $curl->get('attribute/special/0')['data'];
+            $list = $curl->get('attribute/special/0')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your augmentation to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your augmentation to have extra value in?');
+            $form->number(true,'value','Value',null,null,1,4,1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function postSkill() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'augmentation',
-            'id' => $this->id,
-            'context2' => 'skill',
-            'return' => 'content/augmentation'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'augmentation',
+                'id' => $this->id,
+                'context2' => 'skill',
+                'return' => 'content/augmentation'
+            ]);
 
-        $list = $curl->get('skill')['data'];
+            $list = $curl->get('skill')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your augmentation to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your augmentation to have extra value in?');
+            $form->number(true,'value','Value',null,null,1,4,1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('augmentation','attribute','delete',$this->id,$this->getAttribute());
+            $system->contentSelectList('augmentation','attribute','delete',$this->id,$this->getAttribute());
+        }
     }
 
     public function deleteSkill() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('augmentation','skill','delete',$this->id,$this->getSkill());
+            $system->contentSelectList('augmentation','skill','delete',$this->id,$this->getSkill());
+        }
     }
 
     // LIST

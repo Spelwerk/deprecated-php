@@ -6,13 +6,13 @@
     var $world;
 
     public function __construct($id = null) {
-        global $curl;
+        global $curl, $system;
 
         $data = $curl->get('story/id/'.$id)['data'][0];
 
-        $this->isOwner = isset($data['owner']) ? $data['owner'] : false;
-
         $this->id = $data['id'];
+        $this->isOwner = $system->verifyOwner('story', $this->id);
+
         $this->name = $data['name'];
         $this->description = $data['description'];
         $this->plot = $data['plot'];

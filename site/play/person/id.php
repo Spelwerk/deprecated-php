@@ -18,19 +18,23 @@ if($sitemap->index) {
         */
 
         case 'edit':
+            $component->returnButton($person->siteLink);
             require_once('edit/index.php');
             break;
 
         case 'disease':
-            require_once('wound/disease.php');
+            $component->returnButton($person->siteLink);
+            $person->postDisease();
             break;
 
         case 'sanity':
-            require_once('wound/sanity.php');
+            $component->returnButton($person->siteLink);
+            $person->postSanity();
             break;
 
         case 'wound':
-            require_once('wound/wound.php');
+            $component->returnButton($person->siteLink);
+            $person->postWound();
             break;
     }
 }

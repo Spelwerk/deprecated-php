@@ -3,19 +3,14 @@
 
     var $maxAge, $multiplySkill, $multiplyExpertise;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         $data = isset($id)
             ? $curl->get('species/id/'.$id)['data'][0]
             : $array;
 
-
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('species',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->playable = $data['playable'];
@@ -33,32 +28,40 @@
         $this->siteLink = '/content/species/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('species', $this->id);
+    }
+
     public function put() {
-        global $form, $component;
+        if($this->verifyOwner()) {
+            global $form, $component;
 
-        $form->form([
-            'do' => 'put',
-            'return' => 'content/species',
-            'context' => 'species',
-            'id' => $this->id
-        ]);
+            $form->form([
+                'do' => 'put',
+                'return' => 'content/species',
+                'context' => 'species',
+                'id' => $this->id
+            ]);
 
-        $component->h2('Basic Information');
-        $component->wrapStart();
-        $form->varchar(true,'name','Name',null,null,$this->name);
-        $form->text(false,'description','Description',null,null,$this->description);
-        $form->number(false,'max_age','Maximum Age','What is the maximum age your species can live?',null,1,9001,$this->maxAge);
-        $form->icon();
-        $component->wrapEnd();
+            $component->h2('Basic Information');
+            $component->wrapStart();
+            $form->varchar(true, 'name', 'Name', null, null, $this->name);
+            $form->text(false, 'description', 'Description', null, null, $this->description);
+            $form->number(false, 'max_age', 'Maximum Age', 'What is the maximum age your species can live?', null, 1, 9001, $this->maxAge);
+            $form->icon();
+            $component->wrapEnd();
 
-        $component->h2('Multiplication');
-        $component->subtitle('During person/character creation, a person will multiply age with a value to receive points. With what value? This is useful for species that won\'t live long, but mature quickly.');
-        $component->wrapStart();
-        $form->number(false,'multiply_skill','Multiplying Skill','Increase this if your species should receive bonuses to skill',null,1,16,$this->multiplySkill);
-        $form->number(false,'multiply_expertise','Multiplying Expertise','Increase this if your species should receive bonuses to expertises',null,1,16,$this->multiplyExpertise);
-        $component->wrapEnd();
+            $component->h2('Multiplication');
+            $component->subtitle('During person/character creation, a person will multiply age with a value to receive points. With what value? This is useful for species that won\'t live long, but mature quickly.');
+            $component->wrapStart();
+            $form->number(false, 'multiply_skill', 'Multiplying Skill', 'Increase this if your species should receive bonuses to skill', null, 1, 16, $this->multiplySkill);
+            $form->number(false, 'multiply_expertise', 'Multiplying Expertise', 'Increase this if your species should receive bonuses to expertises', null, 1, 16, $this->multiplyExpertise);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function view() {
@@ -76,7 +79,7 @@
         $component->h1('Attribute');
         $this->listAttribute();
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
@@ -156,61 +159,75 @@
     // POST
 
     public function postAttribute() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $component->h1('Add Attribute');
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'species',
-            'id' => $this->id,
-            'context2' => 'attribute',
-            'return' => 'content/species'
-        ]);
+            $component->h1('Add Attribute');
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'species',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'content/species'
+            ]);
 
-        $list = $curl->get('attribute/special/0')['data'];
+            $list = $curl->get('attribute/special/0')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your species to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,8,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true, 'insert_id', $list, 'Attribute', 'Which Attribute do you wish your species to have extra value in?');
+            $form->number(true, 'value', 'Value', null, null, 1, 8, 1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function postBackground() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createBackground($this->id);
+            $system->createBackground($this->id);
+        }
     }
 
     public function postExpertise() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createExpertise($this->id);
+            $system->createExpertise($this->id);
+        }
     }
 
     public function postGift() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createGift($this->id);
+            $system->createGift($this->id);
+        }
     }
 
     public function postImperfection() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createImperfection($this->id);
+            $system->createImperfection($this->id);
+        }
     }
 
     public function postMilestone() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createMilestone(null,$this->id);
+            $system->createMilestone(null, $this->id);
+        }
     }
 
     public function postSkill() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createSkill($this->id);
+            $system->createSkill($this->id);
+        }
     }
 
     public function postWeapon() {} // todo create weaponry specific for species
@@ -218,9 +235,11 @@
     // DELETE
 
     public function deleteAttribute() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('species','attribute','delete',$this->id,$this->getAttribute());
+            $system->contentSelectList('species', 'attribute', 'delete', $this->id, $this->getAttribute());
+        }
     }
 
     public function deleteExpertise() {} // todo
@@ -228,9 +247,11 @@
     public function deleteSkill() {} // todo
 
     public function deleteWeapon() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('species','weapon','delete',$this->id,$this->getWeapon());
+            $system->contentSelectList('species', 'weapon', 'delete', $this->id, $this->getWeapon());
+        }
     }
 
     // LIST

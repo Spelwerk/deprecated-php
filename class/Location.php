@@ -5,8 +5,6 @@
 
     var $location;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
         global $curl, $system;
 
@@ -15,8 +13,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('location',$this->id);
-
         $this->name = $data['name'];
         $this->description = $data['description'];
 
@@ -27,6 +23,12 @@
         $this->location = isset($data['location_id'])
             ? $data['location_id']
             : null;
+    }
+
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('location', $this->id);
     }
 
     public function put() {} //todo

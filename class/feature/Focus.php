@@ -3,18 +3,14 @@
 
     var $manifestation;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         $data = isset($id)
             ? $curl->get('focus/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('focus',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -26,8 +22,14 @@
         $this->siteLink = '/content/focus/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('focus', $this->id);
+    }
+
     public function put() {
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             global $component, $form;
 
             $form->form([
@@ -54,7 +56,7 @@
         $component->h1('Description');
         $component->p($this->description);
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
         }

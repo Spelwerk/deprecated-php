@@ -3,10 +3,8 @@
 
     var $group;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         echo $id;
 
@@ -15,8 +13,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('assettype',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -25,6 +21,12 @@
         $this->group = $data['assetgroup_id'];
 
         $this->siteLink = '/content/assettype/'.$this->id;
+    }
+
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('assettype', $this->id);
     }
 
     public function put() {} //todo
@@ -38,7 +40,7 @@
         $component->h1('Data');
         $component->p('Group ID: '.$this->group);
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
         }

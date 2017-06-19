@@ -5,10 +5,8 @@
 
     var $group;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         echo $id;
 
@@ -17,8 +15,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('asset',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -35,6 +31,12 @@
         $this->group = $data['assetgroup_id'];
 
         $this->siteLink = '/content/asset/'.$this->id;
+    }
+
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('asset', $this->id);
     }
 
     public function put() {} //todo
@@ -60,7 +62,7 @@
         $component->h1('Skill');
         $this->listSkill();
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
@@ -105,113 +107,129 @@
     // POST
 
     public function postAttribute() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'asset',
-            'id' => $this->id,
-            'context2' => 'attribute',
-            'return' => 'content/asset'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'asset',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'content/asset'
+            ]);
 
-        $list = $curl->get('attribute')['data'];
+            $list = $curl->get('attribute')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your asset to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your asset to have extra value in?');
+            $form->number(true,'value','Value',null,null,1,4,1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function postDoctrine() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'asset',
-            'id' => $this->id,
-            'context2' => 'doctrine',
-            'return' => 'content/asset'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'asset',
+                'id' => $this->id,
+                'context2' => 'doctrine',
+                'return' => 'content/asset'
+            ]);
 
-        $list = $curl->get('doctrine')['data'];
+            $list = $curl->get('doctrine')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Doctrine','Which Doctrine do you wish your asset to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true,'insert_id',$list,'Doctrine','Which Doctrine do you wish your asset to have extra value in?');
+            $form->number(true,'value','Value',null,null,1,4,1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function postExpertise() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'asset',
-            'id' => $this->id,
-            'context2' => 'expertise',
-            'return' => 'content/asset'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'asset',
+                'id' => $this->id,
+                'context2' => 'expertise',
+                'return' => 'content/asset'
+            ]);
 
-        $list = $curl->get('expertise')['data'];
+            $list = $curl->get('expertise')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Expertise do you wish your asset to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true,'insert_id',$list,'Attribute','Which Expertise do you wish your asset to have extra value in?');
+            $form->number(true,'value','Value',null,null,1,4,1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function postSkill() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'asset',
-            'id' => $this->id,
-            'context2' => 'skill',
-            'return' => 'content/asset'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'asset',
+                'id' => $this->id,
+                'context2' => 'skill',
+                'return' => 'content/asset'
+            ]);
 
-        $list = $curl->get('skill')['data'];
+            $list = $curl->get('skill')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your asset to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your asset to have extra value in?');
+            $form->number(true,'value','Value',null,null,1,4,1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('asset','attribute','delete',$this->id,$this->getAttribute());
+            $system->contentSelectList('asset','attribute','delete',$this->id,$this->getAttribute());
+        }
     }
 
     public function deleteDoctrine() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('asset','doctrine','delete',$this->id,$this->getDoctrine());
+            $system->contentSelectList('asset','doctrine','delete',$this->id,$this->getDoctrine());
+        }
     }
 
     public function deleteExpertise() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('asset','expertise','delete',$this->id,$this->getExpertise());
+            $system->contentSelectList('asset','expertise','delete',$this->id,$this->getExpertise());
+        }
     }
 
     public function deleteSkill() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('asset','skill','delete',$this->id,$this->getSkill());
+            $system->contentSelectList('asset','skill','delete',$this->id,$this->getSkill());
+        }
     }
 
     // LIST

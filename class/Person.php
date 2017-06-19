@@ -118,7 +118,34 @@
         }
     }
 
-    public function put() {} //todo
+    public function put() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $component->h2('Description');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'person--edit--description',
+                'id' => $this->id,
+                'return' => 'play/person'
+            ]);
+            $form->varchar(true, 'nickname', 'Nickname', null, null, $this->nickname);
+            $form->varchar(true, 'firstname', 'First Name', null, null, $this->firstname);
+            $form->varchar(true, 'surname', 'Surname', null, null, $this->surname);
+            $form->varchar(true, 'drive', 'Drive', 'What drives your character forward?', null, $this->drive);
+            $form->varchar(true, 'pride', 'Pride', 'What is the thing your character is most proud of?', null, $this->pride);
+            $form->varchar(true, 'problem', 'Problem', 'What kind of problem does your character fight with?', null, $this->problem);
+            $form->varchar(true, 'gender', 'Gender', null, null, $this->gender);
+            $form->number(true, 'age', 'Age', 'When changing age after creation, the system will no longer change any other variables.', null, 1, $this->species->maxAge, $this->age);
+            $form->text(false, 'description', 'Description', 'Describe your character. Features, etc.', null, $this->description);
+            $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
+            $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
+            $form->text(false, 'species_custom', 'Species', 'Customize your species description if you wish.',null,$this->species->description);
+            $form->text(false, 'background_custom', 'Background', 'Customize your background description if you wish.',null,$this->background->description);
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
 
     public function view() {
         global $component;
@@ -351,7 +378,7 @@
     // POST
 
     public function postAttribute($cheat = false) {
-        global $component, $curl, $form;
+        global $component, $form;
 
         $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
         $totalPoints = intval($experience->value);
@@ -381,19 +408,19 @@
         $reputationList = $this->getAttribute($this->world->reputationAttributeType);
 
         foreach($bodyList as $attribute) {
-            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, $attribute->value, $attribute->maximum, $attribute->value);
         }
 
         foreach($combatList as $attribute) {
-            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, $attribute->value, $attribute->maximum, $attribute->value);
         }
 
         foreach($damageList as $attribute) {
-            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, $attribute->value, $attribute->maximum, $attribute->value);
         }
 
         foreach($reputationList as $attribute) {
-            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->purchase('insert_id', $attribute->name, $attribute->description, $attribute->icon, $attribute->id, $attribute->value, $attribute->maximum, $attribute->value);
         }
 
         $form->submit();
@@ -491,6 +518,27 @@
         $component->wrapEnd();
     }
 
+    public function postDisease() {
+        global $component, $form;
+
+        if($this->isOwner) {
+            $component->h1('Add Disease');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'disease',
+                'return' => 'play/person',
+                'returnid' => 'disease'
+            ]);
+            $form->varchar(true, 'name', 'Short Description', 'A disease is a persistant harmful effect that you have suffered. It can either be poison or natural sickness. You are either way probably debilitated.');
+            $form->pick(true, 'timestwo', 'Double Damage','Check this if you have suffered double damage.');
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
+
     public function postDoctrine($cheat = false, $creation = false) {
         global $component, $curl, $form;
 
@@ -540,7 +588,7 @@
                 }
             }
 
-            $form->purchase('insert_id', $doctrine->name, $doctrine->description, $doctrine->icon, $doctrine->id, 0, $maximum, $value);
+            $form->purchase('insert_id', $doctrine->name, $doctrine->description, $doctrine->icon, $doctrine->id, $value, $maximum, $value);
         }
 
         $form->submit();
@@ -869,6 +917,27 @@
         $form->submit();
     }
 
+    public function postSanity() {
+        global $component, $form;
+
+        if($this->isOwner) {
+            $component->h1('Add Sanity');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'sanity',
+                'return' => 'play/person',
+                'returnid' => 'sanity'
+            ]);
+            $form->varchar(true, 'name', 'Short Description', 'Taking sanity damage is no easy thing. Every mind can only take so much pressure before breaking.');
+            $form->pick(true, 'timestwo', 'Double Damage','Check this if you have suffered double damage.');
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
+
     public function postSkill($cheat = false, $creation = false) {
         global $component, $form;
 
@@ -902,7 +971,7 @@
         }
 
         foreach($skillList as $skill) {
-            $form->purchase('insert_id', $skill->name, $skill->description, $skill->icon, $skill->id, 0, $skill->maximum, $skill->value);
+            $form->purchase('insert_id', $skill->name, $skill->description, $skill->icon, $skill->id, $skill->value, $skill->maximum, $skill->value);
         }
 
         $form->submit();
@@ -933,6 +1002,113 @@
 
         $system->checkboxAll();
         $form->submit(false);
+    }
+
+    public function postWound() {
+        global $component, $form;
+
+        if($this->isOwner) {
+            $component->h1('Add Wound');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'wound',
+                'return' => 'play/person',
+                'returnid' => 'wound'
+            ]);
+            $form->varchar(true, 'name', 'Short Description', 'A wound is significant damage that you have taken. It can either be serious or lethal.');
+            $form->pick(true, 'timestwo', 'Double Damage','Check this if you have suffered double damage.');
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
+
+    // PUT
+
+    public function putAmmunition() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $attribute = $this->getAttribute(null, $this->world->ammunitionAttribute)[0];
+
+            $component->h2('Ammunition');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'relation--value--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'play/person'
+            ]);
+            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
+
+    public function putExperience() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $attribute = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+
+            $component->h1('Experience');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'relation--value--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'play/person'
+            ]);
+            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
+
+    public function putMoney() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $attribute = $this->getAttribute(null, $this->world->moneyAttribute)[0];
+
+            $component->h2('Money');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'relation--value--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'play/person'
+            ]);
+            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->submit();
+            $component->wrapEnd();
+        }
+    }
+
+    public function putRations() {
+        if($this->isOwner) {
+            global $component, $form;
+
+            $attribute = $this->getAttribute(null, $this->world->rationsAttribute)[0];
+
+            $component->h2('Rations');
+            $component->wrapStart();
+            $form->form([
+                'do' => 'relation--value--post',
+                'context' => 'person',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'play/person'
+            ]);
+            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+            $form->submit();
+            $component->wrapEnd();
+        }
     }
 
     // BUILD
@@ -1107,42 +1283,44 @@
 
         $component->wrapStart(true);
 
-        foreach($list as $item) {
+        if($list) {
+            foreach($list as $item) {
 
-            $value = null;
-            $data = null;
+                $value = null;
+                $data = null;
 
-            switch($type)
-            {
-                case 'consumable':
-                    $value = $item->value.'d'.$system->defaultDice['value'];
-                    $data = 'data-roll-type="consumable" 
+                switch($type)
+                {
+                    case 'consumable':
+                        $value = $item->value.'d'.$system->defaultDice['value'];
+                        $data = 'data-roll-type="consumable" 
                              data-roll-d12="'.$item->value.'"';
-                    break;
+                        break;
 
-                case 'attribute':
-                    $value = $item->value > 0
-                        ? $system->defaultDice['amount'].'d'.$system->defaultDice['value'].'+'.$item->value
-                        : $system->defaultDice['amount'].'d'.$system->defaultDice['value'];
+                    case 'attribute':
+                        $value = $item->value > 0
+                            ? $system->defaultDice['amount'].'d'.$system->defaultDice['value'].'+'.$item->value
+                            : $system->defaultDice['amount'].'d'.$system->defaultDice['value'];
 
-                    $data = 'data-roll-type="attribute" 
+                        $data = 'data-roll-type="attribute" 
                              data-roll-d12="'.$system->defaultDice['amount'].'" 
                              data-roll-bonus="'.$item->value.'"';
-                    break;
+                        break;
 
-                case 'skill':
-                    $value = $item->diceText;
-                    $data = $item->diceData;
-                    break;
+                    case 'skill':
+                        $value = $item->diceText;
+                        $data = $item->diceData;
+                        break;
 
-                case 'weapon':
-                    $value = $item->diceText;
-                    $data = $item->diceData;
-                    break;
+                    case 'weapon':
+                        $value = $item->diceText;
+                        $data = $item->diceData;
+                        break;
 
+                }
+
+                $component->roll($item->name, $item->description, $item->icon, $value, $data);
             }
-
-            $component->roll($item->name, $item->description, $item->icon, $value, $data);
         }
 
         $component->wrapEnd();
@@ -1476,7 +1654,7 @@
                 }
 
                 if($calculatedMax != 0) {
-                    $form->purchase('insert_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, 0, $calculatedMax, $value);
+                    $form->purchase('insert_id', $expertise->name, $expertise->description, $expertise->icon, $expertise->id, $value, $calculatedMax, $value);
                 }
             }
         }

@@ -5,8 +5,6 @@
 
     var $value;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
         global $curl, $system;
 
@@ -15,8 +13,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('skill',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -42,8 +38,14 @@
         $this->siteLink = '/content/skill/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('skill', $this->id);
+    }
+
     public function put() {
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             global $component, $form;
 
             $form->form([
@@ -72,7 +74,7 @@
         $component->h1('Data');
         $component->p('Species ID: '.$this->species); //todo api return name
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();

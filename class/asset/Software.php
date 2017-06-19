@@ -3,18 +3,14 @@
 
     var $hacking, $hackingBonus;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         $data = isset($id)
             ? $curl->get('software/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('software',$this->id);
-
         $this->name = $data['name'];
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
@@ -26,6 +22,12 @@
 
         $this->hacking = $data['hacking'];
         $this->hackingBonus = $data['hacking_bonus'];
+    }
+
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('software', $this->id);
     }
 
     public function put() {} //todo

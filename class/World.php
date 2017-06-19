@@ -31,7 +31,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('world',$this->id);
         $this->isCalculated = $data['calculated'];
 
         $this->canon = $data['canon'];
@@ -91,6 +90,12 @@
             : null;
 
         $this->siteLink = '/content/world/'.$this->id;
+    }
+
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('world', $this->id);
     }
 
     public function put() {} //todo

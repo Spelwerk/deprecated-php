@@ -9,8 +9,6 @@
 
     var $equipped;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
         global $curl, $system;
 
@@ -20,8 +18,6 @@
 
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('weapon',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -102,21 +98,29 @@
         $this->siteLink = '/content/weapon/'.$this->id;
     }
 
-    public function put() {
-        global $component, $form;
+    public function verifyOwner() {
+        global $system;
 
-        $form->form([
-            'do' => 'put',
-            'id' => $this->id,
-            'context' => 'weapon',
-            'return' => 'content/weapon'
-        ]);
-        $component->wrapStart();
-        $form->varchar(true,'name','Name',null,null,$this->name);
-        $form->text(false,'description','Description',null,null,$this->description);
-        $form->number(true, 'damage_bonus','Damage Bonus','Weapons have a static damage bonus value that gets added to the dice rolled from Weapon Type.',null,0,32,$this->damageBonus);
-        $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this weapon?', null, 'Legal', 'Illegal', $this->legal);
-        $form->submit();
+        return $system->verifyOwner('weapon', $this->id);
+    }
+
+    public function put() {
+        if($this->verifyOwner()) {
+            global $component, $form;
+
+            $form->form([
+                'do' => 'put',
+                'id' => $this->id,
+                'context' => 'weapon',
+                'return' => 'content/weapon'
+            ]);
+            $component->wrapStart();
+            $form->varchar(true, 'name', 'Name', null, null, $this->name);
+            $form->text(false, 'description', 'Description', null, null, $this->description);
+            $form->number(true, 'damage_bonus', 'Damage Bonus', 'Weapons have a static damage bonus value that gets added to the dice rolled from Weapon Type.', null, 0, 32, $this->damageBonus);
+            $form->pick(true, 'legal', 'Legality', 'Will a person be arrested for using this weapon?', null, 'Legal', 'Illegal', $this->legal);
+            $form->submit();
+        }
     }
 
     public function view() {
@@ -143,7 +147,7 @@
         $component->p('Damage Bonus: '.$this->damageBonus);
         $component->p('Critical D12: '.$this->criticalD12);
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
         }

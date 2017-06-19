@@ -13,8 +13,6 @@
 
     var $doctrine;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
         global $curl, $system;
 
@@ -23,8 +21,6 @@
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('expertise',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -55,8 +51,14 @@
         $this->siteLink = '/content/expertise/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('expertise', $this->id);
+    }
+
     public function put() {
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             global $component, $form;
 
             $form->form([
@@ -85,7 +87,7 @@
         $component->p('Species: '.$this->speciesName);
         $component->p('Manifestation: '.$this->manifestationName);
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             //todo link to delete();

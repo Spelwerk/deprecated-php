@@ -13,18 +13,14 @@
 
     var $loyalty, $loyaltyOccupation;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         $data = isset($id)
             ? $curl->get('milestone/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('milestone',$this->id);
-
         $this->name = $data['name'];
         $this->popularity = $data['popularity'];
         $this->description = isset($data['custom'])
@@ -40,8 +36,14 @@
         $this->siteLink = '/content/milestone/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('milestone', $this->id);
+    }
+
     public function put() {
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             global $component, $form;
 
             $form->form([
@@ -74,7 +76,7 @@
         $component->h1('Skill');
         $this->listSkill();
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/attribute/add','Add Attribute');
@@ -112,65 +114,75 @@
     // POST
 
     public function postAttribute() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'milestone',
-            'id' => $this->id,
-            'context2' => 'attribute',
-            'return' => 'content/milestone'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'milestone',
+                'id' => $this->id,
+                'context2' => 'attribute',
+                'return' => 'content/milestone'
+            ]);
 
-        $list = $curl->get('attribute/special/0')['data'];
+            $list = $curl->get('attribute/special/0')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your milestone to have extra value in?');
-        $form->number(true,'value','Value',null,null,-16,16,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true, 'insert_id', $list, 'Attribute', 'Which Attribute do you wish your milestone to have extra value in?');
+            $form->number(true, 'value', 'Value', null, null, -16, 16, 1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function postMilestone() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createMilestone($this->id);
+            $system->createMilestone($this->id);
+        }
     }
 
     public function postSkill() {
-        global $component, $form, $curl;
+        if($this->verifyOwner()) {
+            global $component, $form, $curl;
 
-        $form->form([
-            'do' => 'context--post',
-            'context' => 'milestone',
-            'id' => $this->id,
-            'context2' => 'skill',
-            'return' => 'content/milestone'
-        ]);
+            $form->form([
+                'do' => 'context--post',
+                'context' => 'milestone',
+                'id' => $this->id,
+                'context2' => 'skill',
+                'return' => 'content/milestone'
+            ]);
 
-        $list = $curl->get('skill')['data'];
+            $list = $curl->get('skill')['data'];
 
-        $component->wrapStart();
-        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your milestone to have extra value in?');
-        $form->number(true,'value','Value',null,null,1,4,1);
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->select(true, 'insert_id', $list, 'Skill', 'Which Skill do you wish your milestone to have extra value in?');
+            $form->number(true, 'value', 'Value', null, null, 1, 4, 1);
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('milestone','attribute','delete',$this->id,$this->getAttribute());
+            $system->contentSelectList('milestone', 'attribute', 'delete', $this->id, $this->getAttribute());
+        }
     }
 
     public function deleteSkill() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('milestone','skill','delete',$this->id,$this->getSkill());
+            $system->contentSelectList('milestone', 'skill', 'delete', $this->id, $this->getSkill());
+        }
     }
 
     // LIST

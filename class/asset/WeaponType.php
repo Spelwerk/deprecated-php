@@ -9,18 +9,14 @@
 
     var $group, $skill, $damage, $expertise;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         $data = isset($id)
             ? $curl->get('weapontype/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('weapontype',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -45,25 +41,33 @@
         $this->siteLink = '/content/weapontype/'.$this->id;
     }
 
-    public function put() {
-        global $component, $form;
+    public function verifyOwner() {
+        global $system;
 
-        $form->form([
-            'do' => 'post',
-            'id' => $this->id,
-            'context' => 'weapontype',
-            'return' => 'content/weapontype'
-        ]);
-        $component->wrapStart();
-        $form->varchar(true,'name','Name',null,null,$this->name);
-        $form->text(false,'description','Description',null,null,$this->description);
-        $form->number(true, 'damage_d12','Amount of Damage Dice','How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8',null,0,32,$this->damageD12);
-        $form->number(true, 'critical_d12','Amount of Critical Dice','How many extra dice will a player roll when scoring a critical hit?',null,0,32,$this->criticalD12);
-        $form->number(false, 'hand','Hands required','Does this weapon require one hand or two hands to use?',null,1,2,$this->hand);
-        $form->number(false, 'initiative','Initiative Modification','Will this weapon affect your ability to react quicker in battle?',null,null,32,$this->initiative);
-        $form->number(false, 'hit','Hit chance modification','Does this weapon affect your ability to hit?',null,null,16,$this->hit);
-        $form->number(false, 'distance','Distance','If this weapon is ranged - how far can a projectile travel?',null,0,null,$this->distance);
-        $form->submit();
+        return $system->verifyOwner('weapontype', $this->id);
+    }
+
+    public function put() {
+        if($this->verifyOwner()) {
+            global $component, $form;
+
+            $form->form([
+                'do' => 'post',
+                'id' => $this->id,
+                'context' => 'weapontype',
+                'return' => 'content/weapontype'
+            ]);
+            $component->wrapStart();
+            $form->varchar(true, 'name', 'Name', null, null, $this->name);
+            $form->text(false, 'description', 'Description', null, null, $this->description);
+            $form->number(true, 'damage_d12', 'Amount of Damage Dice', 'How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8', null, 0, 32, $this->damageD12);
+            $form->number(true, 'critical_d12', 'Amount of Critical Dice', 'How many extra dice will a player roll when scoring a critical hit?', null, 0, 32, $this->criticalD12);
+            $form->number(false, 'hand', 'Hands required', 'Does this weapon require one hand or two hands to use?', null, 1, 2, $this->hand);
+            $form->number(false, 'initiative', 'Initiative Modification', 'Will this weapon affect your ability to react quicker in battle?', null, null, 32, $this->initiative);
+            $form->number(false, 'hit', 'Hit chance modification', 'Does this weapon affect your ability to hit?', null, null, 16, $this->hit);
+            $form->number(false, 'distance', 'Distance', 'If this weapon is ranged - how far can a projectile travel?', null, 0, null, $this->distance);
+            $form->submit();
+        }
     }
 
     public function view() {
@@ -89,7 +93,7 @@
         $component->p('Damage D12: '.$this->damageD12);
         $component->p('Critical D12: '.$this->criticalD12);
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
         }

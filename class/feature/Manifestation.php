@@ -5,18 +5,14 @@
 
     var $skill;
 
-    var $isOwner;
-
     public function __construct($id = null, $array = null) {
-        global $curl, $system;
+        global $curl;
 
         $data = isset($id)
             ? $curl->get('manifestation/id/'.$id)['data'][0]
             : $array;
 
         $this->id = $data['id'];
-        $this->isOwner = $system->verifyOwner('manifestation',$this->id);
-
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
@@ -33,23 +29,31 @@
         $this->siteLink = '/content/manifestation/'.$this->id;
     }
 
+    public function verifyOwner() {
+        global $system;
+
+        return $system->verifyOwner('manifestation', $this->id);
+    }
+
     public function put() {
-        global $form, $component;
+        if($this->verifyOwner()) {
+            global $form, $component;
 
-        $form->form([
-            'do' => 'put',
-            'return' => 'content/manifestation',
-            'context' => 'manifestation',
-            'id' => $this->id
-        ]);
+            $form->form([
+                'do' => 'put',
+                'return' => 'content/manifestation',
+                'context' => 'manifestation',
+                'id' => $this->id
+            ]);
 
-        $component->wrapStart();
-        $form->varchar(true,'name','Name',null,null,$this->name);
-        $form->text(false,'description','Description',null,null,$this->description);
-        $form->icon();
-        $component->wrapEnd();
+            $component->wrapStart();
+            $form->varchar(true, 'name', 'Name', null, null, $this->name);
+            $form->text(false, 'description', 'Description', null, null, $this->description);
+            $form->icon();
+            $component->wrapEnd();
 
-        $form->submit();
+            $form->submit();
+        }
     }
 
     public function view() {
@@ -68,7 +72,7 @@
         $component->h1('Doctrine');
         $this->listDoctrine();
 
-        if($this->isOwner) {
+        if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
             $component->linkButton($this->siteLink.'/doctrine/add','Add Doctrine');
@@ -113,53 +117,69 @@
     // POST
 
     public function postBackground() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createBackground(null,$this->id);
+            $system->createBackground(null, $this->id);
+        }
     }
 
     public function postDoctrine() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->postDoctrine($this->id);
+            $system->postDoctrine($this->id);
+        }
     }
 
     public function postFocus() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->postFocus($this->id);
+            $system->postFocus($this->id);
+        }
     }
 
     public function postGift() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createGift(null,$this->id);
+            $system->createGift(null, $this->id);
+        }
     }
 
     public function postImperfection() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createImperfection(null,$this->id);
+            $system->createImperfection(null, $this->id);
+        }
     }
 
     public function postMilestone() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->createMilestone(null,null,$this->id);
+            $system->createMilestone(null, null, $this->id);
+        }
     }
 
     // DELETE
 
     public function deleteDoctrine() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('manifestation','doctrine','delete',$this->id,$this->getDoctrine());
+            $system->contentSelectList('manifestation', 'doctrine', 'delete', $this->id, $this->getDoctrine());
+        }
     }
 
     public function deleteFocus() {
-        global $system;
+        if($this->verifyOwner()) {
+            global $system;
 
-        $system->contentSelectList('manifestation','focus','delete',$this->id,$this->getFocus());
+            $system->contentSelectList('manifestation', 'focus', 'delete', $this->id, $this->getFocus());
+        }
     }
 
     // LIST
