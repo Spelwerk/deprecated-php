@@ -1201,8 +1201,8 @@ class System {
         $form->varchar(true,'name','Name');
         $form->text(false,'description','Description');
         $form->select(true,'weapongroup_id',$groupList,'Group','All weapon types belong to a Weapon Group.');
-        $form->number(true, 'damage_d12','Amount of Damage Dice','How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8',null,0,32,1);
-        $form->number(true, 'critical_d12','Amount of Critical Dice','How many extra dice will a player roll when scoring a critical hit?',null,0,32,1);
+        $form->number(true, 'damage_dice','Amount of Damage Dice','How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8',null,0,32,1);
+        $form->number(true, 'critical_dice','Amount of Critical Dice','How many extra dice will a player roll when scoring a critical hit?',null,0,32,1);
         $form->number(false, 'hand','Hands required','Does this weapon require one hand or two hands to use?',null,1,2);
         $form->number(false, 'initiative','Initiative Modification','Will this weapon affect your ability to react quicker in battle?',null,null,32);
         $form->number(false, 'hit','Hit chance modification','Does this weapon affect your ability to hit?',null,null,16);

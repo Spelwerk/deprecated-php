@@ -45,7 +45,7 @@
         $this->dice = $system->defaultDice['amount'] + intval($this->value);
         $this->diceText = $this->dice.'d'.$system->defaultDice['value'].'+'.intval($this->bonus);
         $this->diceData = 'data-roll-type="default" 
-                           data-roll-d12="'.$this->dice.'" 
+                           data-roll-dice="'.$this->dice.'" 
                            data-roll-bonus="'.$this->bonus.'"';
 
         $this->siteLink = '/content/expertise/'.$this->id;

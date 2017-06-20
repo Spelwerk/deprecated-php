@@ -32,7 +32,7 @@
             ? $this->dice.'d'.$system->defaultDice['value'].'+'.$this->value
             : $this->dice.'d'.$system->defaultDice['value'];
         $this->diceData = 'data-roll-type="skill" 
-                           data-roll-d12="'.$this->dice.'" 
+                           data-roll-dice="'.$this->dice.'" 
                            data-roll-bonus="'.$this->value.'"';
 
         $this->siteLink = '/content/skill/'.$this->id;

@@ -126,7 +126,7 @@
             $value = $i.'d12';
 
             $data = 'data-roll-type="default" 
-                     data-roll-d12="'.$i.'" 
+                     data-roll-dice="'.$i.'" 
                      data-roll-bonus="0"';
 
             $component->roll($title, null, '/img/modal/dice.png', $value, $data);
@@ -146,9 +146,9 @@
             $value = $i.'d12';
 
             $data = 'data-roll-type="weapon" 
-                     data-roll-d12="2" 
+                     data-roll-dice="2" 
                      data-roll-bonus="0" 
-                     data-strike-d12="'.$i.'" 
+                     data-strike-dice="'.$i.'" 
                      data-strike-bonus="0" 
                      data-strike-critical="1"';
 

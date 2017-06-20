@@ -1,4 +1,4 @@
-var diceValue, roll_d12, roll_bonus, strike_d12, strike_bonus, strike_critical;
+var diceValue, rollDice, rollBonus, strikeDice, strikeBonus, strikeCritical;
 
 $(document).ready(function(){
 
@@ -34,11 +34,11 @@ $(document).ready(function(){
     $(".sw-js-roll").click(function() {
         var type = $(this).attr('data-roll-type');
 
-        roll_d12 = $(this).attr('data-roll-d12');
-        roll_bonus = $(this).attr('data-roll-bonus');
-        strike_d12 = $(this).attr('data-strike-d12');
-        strike_bonus = $(this).attr('data-strike-bonus');
-        strike_critical = $(this).attr('data-strike-critical');
+        rollDice = $(this).attr('data-roll-dice');
+        rollBonus = $(this).attr('data-roll-bonus');
+        strikeDice = $(this).attr('data-strike-dice');
+        strikeBonus = $(this).attr('data-strike-bonus');
+        strikeCritical = $(this).attr('data-strike-critical');
 
         $('.sw-js-modal-title').text($(this).find('.sw-js-roll-title').text());
         $('.sw-js-modal-description').html($(this).find('.sw-js-roll-text').html());
@@ -59,7 +59,7 @@ $(document).ready(function(){
                 modalConsumableButtons();
                 break;
 
-            case 'supernatural':
+            case 'doctrine':
                 modalDisplayRoll();
                 modalDoctrineButtons();
                 break;
@@ -83,22 +83,22 @@ $(document).ready(function(){
 
     $(".sw-js-modal-roll").click(function() {
         modalDisplayRoll();
-        modalRollDefault(roll_d12, roll_bonus);
+        modalRollDefault(rollDice, rollBonus);
     });
 
     $(".sw-js-modal-consumable").click(function() {
         modalDisplayRoll();
-        modalRollConsumable(roll_d12);
+        modalRollConsumable(rollDice);
     });
 
-    $(".sw-js-modal-supernatural").click(function() {
+    $(".sw-js-modal-doctrine").click(function() {
         modalDisplayRoll();
-        modalRollDoctrine(strike_d12);
+        modalRollDoctrine(strikeDice);
     });
 
     $(".sw-js-modal-weapon").click(function() {
         modalDisplayRoll();
-        modalRollWeapon(strike_d12, strike_bonus, strike_critical);
+        modalRollWeapon(strikeDice, strikeBonus, strikeCritical);
     });
 
     $(".sw-js-modal-mask").click(function() {

@@ -1,7 +1,7 @@
 <?php class Weapon {
     var $id, $canon, $popularity, $name, $description, $icon, $price, $legal;
 
-    var $damageD12, $damageBonus, $criticalD12, $hand, $initiative, $hit, $distance;
+    var $damageDice, $damageBonus, $criticalDice, $hand, $initiative, $hit, $distance;
 
     var $special, $species, $augmentation;
 
@@ -24,54 +24,34 @@
         $this->description = isset($data['custom'])
             ? $data['custom']
             : $data['description'];
+
         $this->icon = $data['icon'];
-
-        $this->price = isset($data['quality_price'])
-            ? intval($data['price']) * intval($data['quality_price'])
-            : intval($data['price']);
-
+        $this->price = $data['price'];
         $this->legal = $data['legal'];
 
-        $this->damageD12 = isset($data['quality_damage_d12'])
-            ? intval($data['damage_d12']) + intval($data['quality_damage_d12'])
-            : intval($data['damage_d12']);
+        $this->damageDice = intval($data['damage_dice']);
+        $this->damageBonus = intval($data['damage_bonus']);
+        $this->criticalDice = intval($data['critical_dice']);
 
-        $this->damageBonus = isset($data['quality_damage_bonus'])
-            ? intval($data['damage_bonus']) + intval($data['quality_damage_bonus'])
-            : intval($data['damage_bonus']);
+        $this->hand = intval($data['hand']);
+        $this->initiative = $data['initiative'];
+        $this->hit = $data['hit'];
+        $this->distance = $data['distance'];
 
-        $this->criticalD12 = isset($data['quality_critical_d12'])
-            ? intval($data['critical_d12']) + intval($data['quality_critical_d12'])
-            : intval($data['critical_d12']);
-
-        $this->hand = $data['hand'];
-
-        $this->initiative = isset($data['quality_initiative'])
-            ? intval($data['initiative']) + intval($data['quality_initiative'])
-            : intval($data['initiative']);
-
-        $this->hit = isset($data['quality_hit'])
-            ? intval($data['hit']) + intval($data['quality_hit'])
-            : intval($data['hit']);
-
-        $this->distance = isset($data['quality_distance'])
-            ? intval($data['distance']) + intval($data['quality_distance'])
-            : intval($data['distance']);
-
-        $this->type = $data['weapontype_id'];
-        $this->group = $data['weapongroup_id'];
+        $this->type = intval($data['weapontype_id']);
+        $this->group = intval($data['weapongroup_id']);
 
         $this->special = $data['special'];
         $this->species = $data['species'];
         $this->augmentation = $data['augmentation'];
 
-        $this->skill = $data['skill_id'];
+        $this->skill = intval($data['skill_id']);
         $this->skillValue = isset($data['skill_value']) ? intval($data['skill_value']) : null;
 
-        $this->expertise = $data['expertise_id'];
+        $this->expertise = intval($data['expertise_id']);
         $this->expertiseValue = isset($data['expertise_value']) ? $data['expertise_value'] : null;
 
-        $this->damage = $data['damage_id'];
+        $this->damage = intval($data['damage_id']);
 
         $this->equipped = isset($data['equipped'])
             ? $data['equipped']
@@ -80,20 +60,20 @@
         $this->hitDice = intval($system->defaultDice['amount']) + $this->expertiseValue;
         $this->hitBonus = $this->skillValue + $this->hit;
 
-        $this->strikeDice = $this->damageD12;
+        $this->strikeDice = $this->damageDice;
         $this->strikeBonus = $this->damageBonus;
-        $this->strikeCritical = $this->criticalD12;
+        $this->strikeCritical = $this->criticalDice;
 
         $this->diceText = $this->strikeBonus > 0
             ? $this->strikeDice.'d'.$system->defaultDice['value'].'+'.$this->strikeBonus
             : $this->strikeDice.'d'.$system->defaultDice['value'];
 
         $this->diceData = 'data-roll-type="weapon" 
-                           data-roll-d12="'.$this->hitDice.'" 
+                           data-roll-dice="'.$this->hitDice.'" 
                            data-roll-bonus="'.$this->hitBonus.'" 
-                           data-strike-d12="'.$this->damageD12.'" 
+                           data-strike-dice="'.$this->damageDice.'" 
                            data-strike-bonus="'.$this->damageBonus.'" 
-                           data-strike-critical="'.$this->criticalD12.'"';
+                           data-strike-critical="'.$this->criticalDice.'"';
 
         $this->siteLink = '/content/weapon/'.$this->id;
     }
@@ -143,9 +123,9 @@
         $component->p('Hit: '.$this->hit);
         $component->p('Distance: '.$this->distance);
 
-        $component->p('Damage D12: '.$this->damageD12);
+        $component->p('Damage D12: '.$this->damageDice);
         $component->p('Damage Bonus: '.$this->damageBonus);
-        $component->p('Critical D12: '.$this->criticalD12);
+        $component->p('Critical D12: '.$this->criticalDice);
 
         if($this->verifyOwner()) {
             $component->h1('Manage');

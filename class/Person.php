@@ -1151,7 +1151,7 @@
                     case 'consumable':
                         $value = $item->value.'d'.$system->defaultDice['value'];
                         $data = 'data-roll-type="consumable" 
-                             data-roll-d12="'.$item->value.'"';
+                             data-roll-dice="'.$item->value.'"';
                         break;
 
                     case 'attribute':
@@ -1160,7 +1160,7 @@
                             : $system->defaultDice['amount'].'d'.$system->defaultDice['value'];
 
                         $data = 'data-roll-type="attribute" 
-                             data-roll-d12="'.$system->defaultDice['amount'].'" 
+                             data-roll-dice="'.$system->defaultDice['amount'].'" 
                              data-roll-bonus="'.$item->value.'"';
                         break;
 
@@ -1272,10 +1272,10 @@
                     }
                 }
 
-                $data = 'data-roll-type="supernatural" 
-                         data-roll-d12="'.$rollD12.'" 
+                $data = 'data-roll-type="doctrine" 
+                         data-roll-dice="'.$rollD12.'" 
                          data-roll-bonus="'.$rollBonus.'" 
-                         data-strike-d12="'.$item->value.'"';
+                         data-strike-dice="'.$item->value.'"';
 
                 $component->roll($item->name, $item->description, $item->icon, $item->diceText, $data);
             }

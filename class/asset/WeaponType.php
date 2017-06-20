@@ -3,7 +3,7 @@
 
     var $special;
 
-    var $damageD12, $criticalD12;
+    var $damageDice, $criticalDice;
 
     var $hand, $initiative, $hit, $distance;
 
@@ -23,8 +23,8 @@
         $this->description = $data['description'];
         $this->icon = $data['icon'];
 
-        $this->damageD12 = intval($data['damage_d12']);
-        $this->criticalD12 = intval($data['critical_d12']);
+        $this->damageDice = intval($data['damage_dice']);
+        $this->criticalDice = intval($data['critical_dice']);
         $this->hand = intval($data['hand']);
         $this->initiative = intval($data['initiative']);
         $this->hit = intval($data['hit']);
@@ -60,8 +60,8 @@
             $component->wrapStart();
             $form->varchar(true, 'name', 'Name', null, null, $this->name);
             $form->text(false, 'description', 'Description', null, null, $this->description);
-            $form->number(true, 'damage_d12', 'Amount of Damage Dice', 'How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8', null, 0, 32, $this->damageD12);
-            $form->number(true, 'critical_d12', 'Amount of Critical Dice', 'How many extra dice will a player roll when scoring a critical hit?', null, 0, 32, $this->criticalD12);
+            $form->number(true, 'damage_dice', 'Amount of Damage Dice', 'How many dice will a player roll upon hitting someone. Remember that standard tolerance without protection is: 8', null, 0, 32, $this->damageDice);
+            $form->number(true, 'critical_dice', 'Amount of Critical Dice', 'How many extra dice will a player roll when scoring a critical hit?', null, 0, 32, $this->criticalDice);
             $form->number(false, 'hand', 'Hands required', 'Does this weapon require one hand or two hands to use?', null, 1, 2, $this->hand);
             $form->number(false, 'initiative', 'Initiative Modification', 'Will this weapon affect your ability to react quicker in battle?', null, null, 32, $this->initiative);
             $form->number(false, 'hit', 'Hit chance modification', 'Does this weapon affect your ability to hit?', null, null, 16, $this->hit);
@@ -90,8 +90,8 @@
         $component->p('Hit: '.$this->hit);
         $component->p('Distance: '.$this->distance);
 
-        $component->p('Damage D12: '.$this->damageD12);
-        $component->p('Critical D12: '.$this->criticalD12);
+        $component->p('Damage D12: '.$this->damageDice);
+        $component->p('Critical D12: '.$this->criticalDice);
 
         if($this->verifyOwner()) {
             $component->h1('Manage');

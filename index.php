@@ -103,7 +103,7 @@ if(!isset($_COOKIE[$config_policy])) {
             <div class="sw-js-modal-close sw-c-modal__button__item"><img src="/img/modal/close.png"/></div>
             <div class="sw-js-modal-roll sw-c-modal__button__item sw-is-hidden"><img src="/img/modal/dice.png"/></div>
             <div class="sw-js-modal-consumable sw-c-modal__button__item sw-is-hidden"><img src="/img/modal/dice.png"/></div>
-            <div class="sw-js-modal-supernatural sw-c-modal__button__item sw-is-hidden"><img src="/img/modal/magic.png"/></div>
+            <div class="sw-js-modal-doctrine sw-c-modal__button__item sw-is-hidden"><img src="/img/modal/magic.png"/></div>
             <div class="sw-js-modal-weapon sw-c-modal__button__item sw-is-hidden"><img src="/img/modal/damage.png"/></div>
         </div>
     </div>
