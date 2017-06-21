@@ -82,37 +82,37 @@
     // POST
 
     public function postAttribute() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl;
+        if(!$this->verifyOwner()) exit;
 
-            $form->form([
-                'do' => 'context--post',
-                'context' => 'protection',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'content/protection'
-            ]);
+        global $component, $form, $curl;
 
-            $attributeType = $curl->get('system/attribute')['type']['protection'];
-            $attributeList = $curl->get('attribute/type/'.$attributeType)['data'];
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'protection',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'content/protection'
+        ]);
 
-            $component->wrapStart();
-            $form->select(true,'insert_id',$attributeList,'Attribute','Which Damage Type do you wish your gear to protect against?');
-            $form->number(true,'value','Value',null,null,1,4,1);
-            $component->wrapEnd();
+        $attributeType = $curl->get('system/attribute')['type']['protection'];
+        $attributeList = $curl->get('attribute/type/'.$attributeType)['data'];
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true,'insert_id',$attributeList,'Attribute','Which Damage Type do you wish your gear to protect against?');
+        $form->number(true,'value','Value',null,null,1,4,1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('protection','attribute','delete',$this->id,$this->getAttribute());
-        }
+        global $system;
+
+        $system->contentSelectList('protection','attribute','delete',$this->id,$this->getAttribute());
     }
 
     // LIST

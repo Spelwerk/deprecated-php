@@ -7,8 +7,10 @@ if(is_int($index)) {
 } else {
     $component->title('Doctrine');
     $component->returnButton('/content');
+    $component->subtitle('You cannot create new doctrine from here. If you wish to do so: go to manifestation');
+
     $system->listDoctrine();
-    $component->p('You cannot create new doctrine from here. If you wish to do so: go to manifestation');
+
     $component->link('/content/manifestation','Go to manifestation');
 }
 ?>

@@ -159,75 +159,75 @@
     // POST
 
     public function postAttribute() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl;
+        if(!$this->verifyOwner()) exit;
 
-            $component->h1('Add Attribute');
-            $form->form([
-                'do' => 'context--post',
-                'context' => 'species',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'content/species'
-            ]);
+        global $component, $form, $curl;
 
-            $list = $curl->get('attribute/special/0')['data'];
+        $component->h1('Add Attribute');
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'species',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'content/species'
+        ]);
 
-            $component->wrapStart();
-            $form->select(true, 'insert_id', $list, 'Attribute', 'Which Attribute do you wish your species to have extra value in?');
-            $form->number(true, 'value', 'Value', null, null, 1, 8, 1);
-            $component->wrapEnd();
+        $list = $curl->get('attribute/special/0')['data'];
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true, 'insert_id', $list, 'Attribute', 'Which Attribute do you wish your species to have extra value in?');
+        $form->number(true, 'value', 'Value', null, null, 1, 8, 1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     public function postBackground() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createBackground($this->id);
-        }
+        global $system;
+
+        $system->createBackground($this->id);
     }
 
     public function postExpertise() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createExpertise($this->id);
-        }
+        global $system;
+
+        $system->createExpertise($this->id);
     }
 
     public function postGift() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createGift($this->id);
-        }
+        global $system;
+
+        $system->createGift($this->id);
     }
 
     public function postImperfection() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createImperfection($this->id);
-        }
+        global $system;
+
+        $system->createImperfection($this->id);
     }
 
     public function postMilestone() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createMilestone(null, $this->id);
-        }
+        global $system;
+
+        $system->createMilestone(null, $this->id);
     }
 
     public function postSkill() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createSkill($this->id);
-        }
+        global $system;
+
+        $system->createSkill($this->id);
     }
 
     public function postWeapon() {} // todo create weaponry specific for species
@@ -235,11 +235,11 @@
     // DELETE
 
     public function deleteAttribute() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('species', 'attribute', 'delete', $this->id, $this->getAttribute());
-        }
+        global $system;
+
+        $system->contentSelectList('species', 'attribute', 'delete', $this->id, $this->getAttribute());
     }
 
     public function deleteExpertise() {} // todo
@@ -247,11 +247,11 @@
     public function deleteSkill() {} // todo
 
     public function deleteWeapon() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('species', 'weapon', 'delete', $this->id, $this->getWeapon());
-        }
+        global $system;
+
+        $system->contentSelectList('species', 'weapon', 'delete', $this->id, $this->getWeapon());
     }
 
     // LIST

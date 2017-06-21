@@ -17,7 +17,9 @@
 
     var $command0, $command1, $command2, $command3, $command4, $command5, $command6, $command7, $command8, $command9;
 
-    public function __construct($user = null) {
+    public function __construct() {
+        global $user;
+
         $this->requestURI = explode('/', $_SERVER['REQUEST_URI']);
         $this->scriptName = explode('/', $_SERVER['SCRIPT_NAME']);
 

@@ -7,7 +7,8 @@ if(is_int($index)) {
 } else {
     $component->title('Identity');
     $component->returnButton('/content');
+    $component->subtitle('You cannot create new identities.');
+
     $system->listIdentity();
-    $component->p('You cannot create new identities');
 }
 ?>

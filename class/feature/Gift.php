@@ -105,75 +105,75 @@
     // POST
 
     public function postAttribute() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl;
+        if(!$this->verifyOwner()) exit;
 
-            $form->form([
-                'do' => 'context--post',
-                'context' => 'gift',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'content/gift'
-            ]);
+        global $component, $form, $curl;
 
-            $list = $curl->get('attribute/special/0')['data'];
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'gift',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'content/gift'
+        ]);
 
-            $component->wrapStart();
-            $form->select(true, 'insert_id', $list, 'Attribute', 'Which Attribute do you wish your gift to have extra value in?');
-            $form->number(true, 'value', 'Value', null, null, 1, 4, 1);
-            $component->wrapEnd();
+        $list = $curl->get('attribute/special/0')['data'];
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true, 'insert_id', $list, 'Attribute', 'Which Attribute do you wish your gift to have extra value in?');
+        $form->number(true, 'value', 'Value', null, null, 1, 4, 1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     public function postMilestone() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createMilestone($this->id);
-        }
+        global $system;
+
+        $system->createMilestone($this->id);
     }
 
     public function postSkill() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl;
+        if(!$this->verifyOwner()) exit;
 
-            $form->form([
-                'do' => 'context--post',
-                'context' => 'gift',
-                'id' => $this->id,
-                'context2' => 'skill',
-                'return' => 'content/gift'
-            ]);
+        global $component, $form, $curl;
 
-            $list = $curl->get('skill')['data'];
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'gift',
+            'id' => $this->id,
+            'context2' => 'skill',
+            'return' => 'content/gift'
+        ]);
 
-            $component->wrapStart();
-            $form->select(true, 'insert_id', $list, 'Skill', 'Which Skill do you wish your gift to have extra value in?');
-            $form->number(true, 'value', 'Value', null, null, 1, 4, 1);
-            $component->wrapEnd();
+        $list = $curl->get('skill')['data'];
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true, 'insert_id', $list, 'Skill', 'Which Skill do you wish your gift to have extra value in?');
+        $form->number(true, 'value', 'Value', null, null, 1, 4, 1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('gift', 'attribute', 'delete', $this->id, $this->getAttribute());
-        }
+        global $system;
+
+        $system->contentSelectList('gift', 'attribute', 'delete', $this->id, $this->getAttribute());
     }
 
     public function deleteSkill() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('gift', 'skill', 'delete', $this->id, $this->getSkill());
-        }
+        global $system;
+
+        $system->contentSelectList('gift', 'skill', 'delete', $this->id, $this->getSkill());
     }
 
     // LIST

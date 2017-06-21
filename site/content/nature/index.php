@@ -7,7 +7,8 @@ if(is_int($index)) {
 } else {
     $component->title('Nature');
     $component->returnButton('/content');
+    $component->subtitle('You cannot create new natures');
+
     $system->listNature();
-    $component->p('You cannot create new natures');
 }
 ?>

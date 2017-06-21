@@ -92,6 +92,8 @@
     // POST
 
     public function postPerson() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $form->form([
@@ -109,9 +111,7 @@
 
     // DELETE
 
-    public function deletePerson() {
-
-    }
+    public function deletePerson() {} // todo
 
     // MAKE
 
@@ -185,36 +185,5 @@
             : null;
 
         $component->listAction($title, $quick, ['icon' => $icon]);
-    }
-
-    // PRIVATE
-
-    private function verifyUserOwnership() {
-        global $form, $user;
-
-        $userOwner = false;
-
-        if($this->isOwner) {
-            $list = $user->getStory();
-
-            if($list) {
-                foreach($list as $item) {
-                    if($this->id == $item->id) {
-                        $userOwner = true;
-                    }
-                }
-            }
-        }
-
-        if(!$userOwner) {
-            $form->form([
-                'special' => 'user',
-                'do' => 'save',
-                'context' => 'story',
-                'return' => 'play/story',
-                'id' => $this->id
-            ]);
-            $form->submit(false, 'Save this story');
-        }
     }
 }

@@ -396,6 +396,8 @@
     // POST
 
     public function postAttribute() {
+        if($this->isOwner) exit;
+
         global $component, $form, $curl;
 
         $component->h1('Attribute Defaults');
@@ -461,6 +463,8 @@
     }
 
     public function postBackground() {
+        if($this->isOwner) exit;
+
         global $system, $form, $user;
 
         $idList = $system->idList($this->getBackground());
@@ -503,6 +507,8 @@
     }
 
     public function postBionic() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -517,6 +523,8 @@
     }
 
     public function postExpertise() {
+        if($this->isOwner) exit;
+
         global $system, $form, $component, $user;
 
         $idList = $system->idList($this->getExpertise());
@@ -546,6 +554,8 @@
     }
 
     public function postGift() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -560,6 +570,8 @@
     }
 
     public function postImperfection() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -574,6 +586,8 @@
     }
 
     public function postManifestation() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -588,6 +602,8 @@
     }
 
     public function postMilestone() {
+        if($this->isOwner) exit;
+
         global $system, $form, $component, $user;
 
         $idList = $system->idList($this->getGift());
@@ -641,6 +657,8 @@
     }
 
     public function postProtection() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -655,6 +673,8 @@
     }
 
     public function postSkill() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -669,6 +689,8 @@
     }
 
     public function postSoftware() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -683,6 +705,8 @@
     }
 
     public function postSpecies() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -697,6 +721,8 @@
     }
 
     public function postWeapon() {
+        if($this->isOwner) exit;
+
         global $system, $user;
 
         $system->contentSelectList(
@@ -713,72 +739,96 @@
     // DELETE
 
     public function deleteBionic() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'bionic', 'delete', $this->id, $this->getBionic());
     }
 
     public function deleteBackground() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'background', 'delete', $this->id, $this->getBackground());
     }
 
     public function deleteExpertise() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'expertise', 'delete', $this->id, $this->getExpertise());
     }
 
     public function deleteGift() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'gift', 'delete', $this->id, $this->getGift());
     }
 
     public function deleteImperfection() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'imperfection', 'delete', $this->id, $this->getImperfection());
     }
 
     public function deleteManifestation() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'manifestation', 'delete', $this->id, $this->getManifestation());
     }
 
     public function deleteMilestone() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'milestone', 'delete', $this->id, $this->getMilestone());
     }
 
     public function deleteProtection() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'protection', 'delete', $this->id, $this->getProtection());
     }
 
     public function deleteSkill() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'skill', 'delete', $this->id, $this->getSkill());
     }
 
     public function deleteSoftware() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'software', 'delete', $this->id, $this->getSoftware());
     }
 
     public function deleteSpecies() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'species', 'delete', $this->id, $this->getSpecies());
     }
 
     public function deleteWeapon() {
+        if($this->isOwner) exit;
+
         global $system;
 
         $system->contentSelectList('world', 'weapon', 'delete', $this->id, $this->getWeapon());

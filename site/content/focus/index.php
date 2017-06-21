@@ -7,8 +7,10 @@ if(is_int($index)) {
 } else {
     $component->title('Focus');
     $component->returnButton('/content');
+    $component->subtitle('You cannot create new focus from here. If you wish to do so: go to manifestation');
+
     $system->listFocus();
-    $component->p('You cannot create new focus from here. If you wish to do so: go to manifestation');
+
     $component->link('/content/manifestation','Go to manifestation');
 }
 ?>

@@ -81,71 +81,71 @@
     // POST
 
     public function postAttribute() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl, $system;
+        if(!$this->verifyOwner()) exit;
 
-            $form->form([
-                'do' => 'context--post',
-                'context' => 'augmentation',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'content/augmentation'
-            ]);
+        global $component, $form, $curl, $system;
 
-            $list = $curl->get('attribute/special/0')['data'];
-            $energy = $curl->get('attribute/id/'.$system->defaultAttributeId['energy'])['data'][0];
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'augmentation',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'content/augmentation'
+        ]);
 
-            $count = count($list) + 1;
-            $list[$count] = $energy;
+        $list = $curl->get('attribute/special/0')['data'];
+        $energy = $curl->get('attribute/id/'.$system->defaultAttributeId['energy'])['data'][0];
 
-            $component->wrapStart();
-            $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your augmentation to have extra value in?');
-            $form->number(true,'value','Value',null,null,null,12,1);
-            $component->wrapEnd();
+        $count = count($list) + 1;
+        $list[$count] = $energy;
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your augmentation to have extra value in?');
+        $form->number(true,'value','Value',null,null,null,12,1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     public function postSkill() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl;
+        if(!$this->verifyOwner()) exit;
 
-            $form->form([
-                'do' => 'context--post',
-                'context' => 'augmentation',
-                'id' => $this->id,
-                'context2' => 'skill',
-                'return' => 'content/augmentation'
-            ]);
+        global $component, $form, $curl;
 
-            $list = $curl->get('skill')['data'];
+        $form->form([
+            'do' => 'context--post',
+            'context' => 'augmentation',
+            'id' => $this->id,
+            'context2' => 'skill',
+            'return' => 'content/augmentation'
+        ]);
 
-            $component->wrapStart();
-            $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your augmentation to have extra value in?');
-            $form->number(true,'value','Value',null,null,1,4,1);
-            $component->wrapEnd();
+        $list = $curl->get('skill')['data'];
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true,'insert_id',$list,'Skill','Which Skill do you wish your augmentation to have extra value in?');
+        $form->number(true,'value','Value',null,null,1,4,1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('augmentation','attribute','delete',$this->id,$this->getAttribute());
-        }
+        global $system;
+
+        $system->contentSelectList('augmentation','attribute','delete',$this->id,$this->getAttribute());
     }
 
     public function deleteSkill() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('augmentation','skill','delete',$this->id,$this->getSkill());
-        }
+        global $system;
+
+        $system->contentSelectList('augmentation','skill','delete',$this->id,$this->getSkill());
     }
 
     // LIST

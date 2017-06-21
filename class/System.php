@@ -37,13 +37,17 @@ require_once('Story.php');
 require_once('World.php');
 
 class System {
-
     var $defaults;
 
     var $defaultAttributeId, $defaultAttributeType, $defaultSkill, $defaultExpertise, $defaultDoctrine, $defaultWeapon, $defaultDice, $defaultIcon;
 
+    var $user;
+
     public function __construct() {
-        global $curl;
+        global $curl, $user;
+
+        $this->user = $user->isActive;
+        $this->admin = $user->isAdmin;
 
         $this->defaults = $curl->get('system');
 
@@ -682,6 +686,8 @@ class System {
     // CREATE
 
     public function createAsset() {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $list = $curl->get('assettype')['data'];
@@ -703,6 +709,8 @@ class System {
     }
 
     public function createAssetGroup() {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Asset Group');
@@ -719,6 +727,8 @@ class System {
     }
 
     public function createAssetType() {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $list = $curl->get('assetgroup')['data'];
@@ -739,6 +749,8 @@ class System {
     }
 
     public function createAugmentation() {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Augmentation');
@@ -760,6 +772,8 @@ class System {
     }
 
     public function createBackground($species = null, $manifestation = null) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Background');
@@ -786,6 +800,8 @@ class System {
     }
 
     public function createBionic() {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $component->h1('Create Bionic');
@@ -809,6 +825,8 @@ class System {
     }
 
     public function createDoctrine($manifestation = null) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Add Doctrine');
@@ -828,6 +846,8 @@ class System {
     }
 
     public function createExpertise($species = null) {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $component->h1('Create Expertise');
@@ -860,6 +880,8 @@ class System {
     }
 
     public function createFocus($manifestation) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Add Focus');
@@ -879,6 +901,8 @@ class System {
     }
 
     public function createGift($species = null, $manifestation = null) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Gift');
@@ -905,6 +929,8 @@ class System {
     }
 
     public function createImperfection($species = null, $manifestation = null) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Imperfection');
@@ -931,6 +957,8 @@ class System {
     }
 
     public function createManifestation() {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Manifestation');
@@ -951,7 +979,9 @@ class System {
     }
 
     public function createMilestone($background = null, $species = null, $manifestation = null) {
-        global $curl, $component, $form;
+        if(!$this->user) exit;
+
+        global $component, $form;
 
         $component->h1('Create Milestone');
 
@@ -981,6 +1011,8 @@ class System {
     }
 
     public function createPerson($world = null, $species = null, $playable = 1) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         if(!isset($world) && !isset($species)) {
@@ -1023,6 +1055,8 @@ class System {
     }
 
     public function createProtection() {
+        if(!$this->user) exit;
+
         global $component, $curl, $form;
 
         $component->h1('Create Protection');
@@ -1044,6 +1078,8 @@ class System {
     }
 
     public function createSkill($species = null) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Skill');
@@ -1066,6 +1102,8 @@ class System {
     }
 
     public function createSoftware() {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Software');
@@ -1086,6 +1124,8 @@ class System {
     }
 
     public function createSpecies() {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create Species');
@@ -1115,6 +1155,8 @@ class System {
     }
 
     public function createStory($world = null) {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         if(!isset($world)) {
@@ -1141,6 +1183,8 @@ class System {
     }
 
     public function createWeapon() {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $component->h1('Create Weapon');
@@ -1162,6 +1206,8 @@ class System {
     }
 
     public function createWeaponGroup() {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $component->h1('Create Weapon Group');
@@ -1186,6 +1232,8 @@ class System {
     }
 
     public function createWeaponType() {
+        if(!$this->user) exit;
+
         global $curl, $component, $form;
 
         $component->h1('Create Weapon Type');
@@ -1211,6 +1259,8 @@ class System {
     }
 
     public function createWorld() {
+        if(!$this->user) exit;
+
         global $component, $form;
 
         $component->h1('Create World');

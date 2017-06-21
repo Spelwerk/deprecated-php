@@ -117,69 +117,69 @@
     // POST
 
     public function postBackground() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createBackground(null, $this->id);
-        }
+        global $system;
+
+        $system->createBackground(null, $this->id);
     }
 
     public function postDoctrine() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->postDoctrine($this->id);
-        }
+        global $system;
+
+        $system->postDoctrine($this->id);
     }
 
     public function postFocus() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->postFocus($this->id);
-        }
+        global $system;
+
+        $system->postFocus($this->id);
     }
 
     public function postGift() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createGift(null, $this->id);
-        }
+        global $system;
+
+        $system->createGift(null, $this->id);
     }
 
     public function postImperfection() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createImperfection(null, $this->id);
-        }
+        global $system;
+
+        $system->createImperfection(null, $this->id);
     }
 
     public function postMilestone() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->createMilestone(null, null, $this->id);
-        }
+        global $system;
+
+        $system->createMilestone(null, null, $this->id);
     }
 
     // DELETE
 
     public function deleteDoctrine() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('manifestation', 'doctrine', 'delete', $this->id, $this->getDoctrine());
-        }
+        global $system;
+
+        $system->contentSelectList('manifestation', 'doctrine', 'delete', $this->id, $this->getDoctrine());
     }
 
     public function deleteFocus() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('manifestation', 'focus', 'delete', $this->id, $this->getFocus());
-        }
+        global $system;
+
+        $system->contentSelectList('manifestation', 'focus', 'delete', $this->id, $this->getFocus());
     }
 
     // LIST

@@ -9,14 +9,16 @@ class Menu {
 
     var $user;
 
-    public function __construct($user = null) {
+    public function __construct() {
+        global $user;
+
         $this->user = $user;
         $this->tabArray = [];
         $this->listArray = [];
 
         $this->addTab('Home', 'Home', '/img/tab-home.png');
         $this->addTab('Play', 'Play', '/img/tab-play.png');
-        $this->addTab('Content', 'Content', '/img/tab-content.png',true);
+        $this->addTab('Content', 'Content', '/img/tab-content.png');
         $this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
         $this->addTab('User', 'User', '/img/tab-user.png');
 
@@ -29,9 +31,9 @@ class Menu {
         $menuPlay->add('Person', '/play/person');
         $menuPlay->add('Story', '/play/story');
 
-        $menuContent = new MenuList('Content',true);
-        $menuContent->add('Content', '/content',true);
-        $menuContent->add('About', '/content/about',true);
+        $menuContent = new MenuList('Content');
+        $menuContent->add('Content', '/content');
+        $menuContent->add('About', '/content/about');
 
         $menuAdmin = new MenuList('Admin', true, true);
         $menuAdmin->add('Admin', '/admin',true,true);

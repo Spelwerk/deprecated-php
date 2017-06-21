@@ -37,9 +37,7 @@ class Curl {
         $return = null;
         $token = isset($_COOKIE[$this->tokenCookie]) ? $_COOKIE[$this->tokenCookie] : null;
 
-        if($data) {
-            $data = json_encode($data, true);
-        }
+        if($data) $data = json_encode($data, true);
 
         $curl = curl_init();
 

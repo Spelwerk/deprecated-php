@@ -69,8 +69,6 @@
         $component->h1('Augmentation');
         $this->listAugmentation();
 
-        //todo foreach attribute/skill
-
         if($this->verifyOwner()) {
             $component->h1('Manage');
             $component->linkButton($this->siteLink.'/edit','Edit');
@@ -107,56 +105,56 @@
     // POST
 
     public function postAttribute() {
-        if($this->verifyOwner()) {
-            global $component, $form, $curl, $system;
+        if(!$this->verifyOwner()) exit;
 
-            $form->form([
-                'do' => 'context--post',
-                'return' => 'content/bionic',
-                'context' => 'bionic',
-                'context2' => 'attribute',
-                'id' => $this->id
-            ]);
+        global $component, $form, $curl, $system;
 
-            $list = $curl->get('attribute/special/0')['data'];
-            $energy = $curl->get('attribute/id/'.$system->defaultAttributeId['energy'])['data'][0];
+        $form->form([
+            'do' => 'context--post',
+            'return' => 'content/bionic',
+            'context' => 'bionic',
+            'context2' => 'attribute',
+            'id' => $this->id
+        ]);
 
-            $count = count($list) + 1;
-            $list[$count] = $energy;
+        $list = $curl->get('attribute/special/0')['data'];
+        $energy = $curl->get('attribute/id/'.$system->defaultAttributeId['energy'])['data'][0];
 
-            $component->wrapStart();
-            $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your bionic to have extra value in?');
-            $form->number(true,'value','Value',null,null,1,8,1);
-            $component->wrapEnd();
+        $count = count($list) + 1;
+        $list[$count] = $energy;
 
-            $form->submit();
-        }
+        $component->wrapStart();
+        $form->select(true,'insert_id',$list,'Attribute','Which Attribute do you wish your bionic to have extra value in?');
+        $form->number(true,'value','Value',null,null,1,8,1);
+        $component->wrapEnd();
+
+        $form->submit();
     }
 
     public function postAugmentation() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('bionic','augmentation','post',$this->id,$system->getAugmentation(),$system->idList($this->getAugmentation()));
-        }
+        global $system;
+
+        $system->contentSelectList('bionic','augmentation','post',$this->id,$system->getAugmentation(),$system->idList($this->getAugmentation()));
     }
 
     // DELETE
 
     public function deleteAttribute() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('bionic','attribute','delete',$this->id,$this->getAttribute());
-        }
+        global $system;
+
+        $system->contentSelectList('bionic','attribute','delete',$this->id,$this->getAttribute());
     }
 
     public function deleteAugmentation() {
-        if($this->verifyOwner()) {
-            global $system;
+        if(!$this->verifyOwner()) exit;
 
-            $system->contentSelectList('bionic','augmentation','delete',$this->id,$this->getAugmentation());
-        }
+        global $system;
+
+        $system->contentSelectList('bionic','augmentation','delete',$this->id,$this->getAugmentation());
     }
 
     // LIST

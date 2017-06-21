@@ -117,32 +117,32 @@
     }
 
     public function put() {
-        if($this->isOwner) {
-            global $component, $form;
+        if($this->isOwner) exit;
 
-            $component->h2('Description');
-            $component->wrapStart();
-            $form->form([
-                'do' => 'person--edit--description',
-                'id' => $this->id,
-                'return' => 'play/person'
-            ]);
-            $form->varchar(true, 'nickname', 'Nickname', null, null, $this->nickname);
-            $form->varchar(true, 'firstname', 'First Name', null, null, $this->firstname);
-            $form->varchar(true, 'surname', 'Surname', null, null, $this->surname);
-            $form->varchar(true, 'drive', 'Drive', 'What drives your character forward?', null, $this->drive);
-            $form->varchar(true, 'pride', 'Pride', 'What is the thing your character is most proud of?', null, $this->pride);
-            $form->varchar(true, 'problem', 'Problem', 'What kind of problem does your character fight with?', null, $this->problem);
-            $form->varchar(true, 'gender', 'Gender', null, null, $this->gender);
-            $form->number(true, 'age', 'Age', 'When changing age after creation, the system will no longer change any other variables.', null, 1, $this->species->maxAge, $this->age);
-            $form->text(false, 'description', 'Description', 'Describe your character. Features, etc.', null, $this->description);
-            $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
-            $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
-            $form->text(false, 'species_custom', 'Species', 'Customize your species description if you wish.',null,$this->species->description);
-            $form->text(false, 'background_custom', 'Background', 'Customize your background description if you wish.',null,$this->background->description);
-            $form->submit();
-            $component->wrapEnd();
-        }
+        global $component, $form;
+
+        $component->h2('Description');
+        $component->wrapStart();
+        $form->form([
+            'do' => 'person--edit--description',
+            'id' => $this->id,
+            'return' => 'play/person'
+        ]);
+        $form->varchar(true, 'nickname', 'Nickname', null, null, $this->nickname);
+        $form->varchar(true, 'firstname', 'First Name', null, null, $this->firstname);
+        $form->varchar(true, 'surname', 'Surname', null, null, $this->surname);
+        $form->varchar(true, 'drive', 'Drive', 'What drives your character forward?', null, $this->drive);
+        $form->varchar(true, 'pride', 'Pride', 'What is the thing your character is most proud of?', null, $this->pride);
+        $form->varchar(true, 'problem', 'Problem', 'What kind of problem does your character fight with?', null, $this->problem);
+        $form->varchar(true, 'gender', 'Gender', null, null, $this->gender);
+        $form->number(true, 'age', 'Age', 'When changing age after creation, the system will no longer change any other variables.', null, 1, $this->species->maxAge, $this->age);
+        $form->text(false, 'description', 'Description', 'Describe your character. Features, etc.', null, $this->description);
+        $form->text(false, 'personality', 'Personality', 'Describe your character\'s personality. Behaviour, Mannerisms, etc.');
+        $form->text(false, 'appearance', 'Appearance', 'Describe your character\'s appearance.');
+        $form->text(false, 'species_custom', 'Species', 'Customize your species description if you wish.',null,$this->species->description);
+        $form->text(false, 'background_custom', 'Background', 'Customize your background description if you wish.',null,$this->background->description);
+        $form->submit();
+        $component->wrapEnd();
     }
 
     public function view() {
@@ -370,6 +370,8 @@
     // POST
 
     public function postAttribute($cheat = false) {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $experience = $this->getAttribute(null, $this->world->experienceAttribute)[0];
@@ -419,6 +421,8 @@
     }
 
     public function postAugmentation($bionicId) {
+        if($this->isOwner) exit;
+
         global $system, $form, $component;
 
         $bionic = $this->getBionic($bionicId)[0];
@@ -443,6 +447,8 @@
     }
 
     public function postBackground() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $list = $this->world->getBackground('/species/'.$this->species->id);
@@ -465,6 +471,8 @@
     }
 
     public function postBionic() {
+        if($this->isOwner) exit;
+
         global $system, $form;
 
         $list = $this->world->getBionic();
@@ -485,6 +493,8 @@
     }
 
     public function postDescription($creation = false) {
+        if($this->isOwner) exit;
+
         global $form, $component;
 
         $do = $creation ? 'post--description' : 'put';
@@ -512,6 +522,8 @@
     }
 
     public function postDisease() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         if($this->isOwner) {
@@ -533,6 +545,8 @@
     }
 
     public function postDoctrine($cheat = false, $creation = false) {
+        if($this->isOwner) exit;
+
         global $component, $curl, $form;
 
         $do = $creation ? 'post--doctrine' : 'relation--value--post';
@@ -588,6 +602,8 @@
     }
 
     public function postExpertise($cheat = false, $creation = false) {
+        if($this->isOwner) exit;
+
         global $component, $form, $system;
 
         $do = $creation ? 'post--expertise' : 'relation--value--post';
@@ -647,6 +663,8 @@
     }
 
     public function postFocus() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $focusList = $this->manifestation->getFocus();
@@ -666,6 +684,8 @@
     }
 
     public function postGift($cheat = false) {
+        if($this->isOwner) exit;
+
         global $component, $system, $form;
 
         $component->h1('Gift');
@@ -707,6 +727,8 @@
     }
 
     public function postIdentity() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $list = $this->world->getIdentity();
@@ -725,6 +747,8 @@
     }
 
     public function postImperfection($cheat = false) {
+        if($this->isOwner) exit;
+
         global $component, $system, $form;
 
         $component->h1('Imperfection');
@@ -766,6 +790,8 @@
     }
 
     public function postManifestation() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $list = $this->world->getManifestation();
@@ -784,6 +810,8 @@
     }
 
     public function postMilestone($cheat = false) {
+        if($this->isOwner) exit;
+
         global $component, $system, $form;
 
         $points = $cheat
@@ -820,6 +848,8 @@
     }
 
     public function postMoney() {
+        if($this->isOwner) exit;
+
         global $component, $curl, $form;
 
         $component->h1('Money');
@@ -844,6 +874,8 @@
     }
 
     public function postNature() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $list = $this->world->getNature();
@@ -862,6 +894,8 @@
     }
 
     public function postPower() {
+        if($this->isOwner) exit;
+
         global $component, $curl, $form;
 
         $component->h1('Potential');
@@ -886,6 +920,8 @@
     }
 
     public function postProtection() {
+        if($this->isOwner) exit;
+
         global $component, $form, $system;
 
         $component->h1('Protection');
@@ -911,6 +947,8 @@
     }
 
     public function postSanity() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         if($this->isOwner) {
@@ -932,6 +970,8 @@
     }
 
     public function postSkill($cheat = false, $creation = false) {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         $do = $creation ? 'post--skill' : 'relation--value--post';
@@ -973,6 +1013,8 @@
     public function postSoftware() {} //todo
 
     public function postWeapon() {
+        if($this->isOwner) exit;
+
         global $component, $form, $system;
 
         $component->h1('Weapon');
@@ -998,6 +1040,8 @@
     }
 
     public function postWound() {
+        if($this->isOwner) exit;
+
         global $component, $form;
 
         if($this->isOwner) {
@@ -1021,87 +1065,87 @@
     // PUT
 
     public function putAmmunition() {
-        if($this->isOwner) {
-            global $component, $form;
+        if($this->isOwner) exit;
 
-            $attribute = $this->getAttribute(null, $this->world->ammunitionAttribute)[0];
+        global $component, $form;
 
-            $component->h2('Ammunition');
-            $component->wrapStart();
-            $form->form([
-                'do' => 'relation--value--post',
-                'context' => 'person',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'play/person'
-            ]);
-            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
-            $form->submit();
-            $component->wrapEnd();
-        }
+        $attribute = $this->getAttribute(null, $this->world->ammunitionAttribute)[0];
+
+        $component->h2('Ammunition');
+        $component->wrapStart();
+        $form->form([
+            'do' => 'relation--value--post',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'play/person'
+        ]);
+        $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+        $form->submit();
+        $component->wrapEnd();
     }
 
     public function putExperience() {
-        if($this->isOwner) {
-            global $component, $form;
+        if($this->isOwner) exit;
 
-            $attribute = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+        global $component, $form;
 
-            $component->h1('Experience');
-            $component->wrapStart();
-            $form->form([
-                'do' => 'relation--value--post',
-                'context' => 'person',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'play/person'
-            ]);
-            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
-            $form->submit();
-            $component->wrapEnd();
-        }
+        $attribute = $this->getAttribute(null, $this->world->experienceAttribute)[0];
+
+        $component->h1('Experience');
+        $component->wrapStart();
+        $form->form([
+            'do' => 'relation--value--post',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'play/person'
+        ]);
+        $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+        $form->submit();
+        $component->wrapEnd();
     }
 
     public function putMoney() {
-        if($this->isOwner) {
-            global $component, $form;
+        if($this->isOwner) exit;
 
-            $attribute = $this->getAttribute(null, $this->world->moneyAttribute)[0];
+        global $component, $form;
 
-            $component->h2('Money');
-            $component->wrapStart();
-            $form->form([
-                'do' => 'relation--value--post',
-                'context' => 'person',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'play/person'
-            ]);
-            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
-            $form->submit();
-            $component->wrapEnd();
-        }
+        $attribute = $this->getAttribute(null, $this->world->moneyAttribute)[0];
+
+        $component->h2('Money');
+        $component->wrapStart();
+        $form->form([
+            'do' => 'relation--value--post',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'play/person'
+        ]);
+        $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+        $form->submit();
+        $component->wrapEnd();
     }
 
     public function putRations() {
-        if($this->isOwner) {
-            global $component, $form;
+        if($this->isOwner) exit;
 
-            $attribute = $this->getAttribute(null, $this->world->rationsAttribute)[0];
+        global $component, $form;
 
-            $component->h2('Rations');
-            $component->wrapStart();
-            $form->form([
-                'do' => 'relation--value--post',
-                'context' => 'person',
-                'id' => $this->id,
-                'context2' => 'attribute',
-                'return' => 'play/person'
-            ]);
-            $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
-            $form->submit();
-            $component->wrapEnd();
-        }
+        $attribute = $this->getAttribute(null, $this->world->rationsAttribute)[0];
+
+        $component->h2('Rations');
+        $component->wrapStart();
+        $form->form([
+            'do' => 'relation--value--post',
+            'context' => 'person',
+            'id' => $this->id,
+            'context2' => 'attribute',
+            'return' => 'play/person'
+        ]);
+        $form->number(true, 'insert_id', $attribute->name, $attribute->description, $attribute->id, null, $attribute->maximum, $attribute->value);
+        $form->submit();
+        $component->wrapEnd();
     }
 
     // BUILD
@@ -1533,16 +1577,16 @@
     private function makeSavePersonButton() {
         global $form, $user;
 
-        if($user->isActive && !$this->isOwner) {
-            $form->form([
-                'special' => 'user',
-                'do' => 'save',
-                'context' => 'person',
-                'return' => 'play/person',
-                'id' => $this->id
-            ]);
-            $form->submit(false, 'Save this person');
-        }
+        if(!$user->isActive || $this->isOwner) exit;
+
+        $form->form([
+            'special' => 'user',
+            'do' => 'save',
+            'context' => 'person',
+            'return' => 'play/person',
+            'id' => $this->id
+        ]);
+        $form->submit(false, 'Save this person');
     }
 
     private function expertisePurchase($list, $personList, $maximumExpertiseValue) {
@@ -1616,5 +1660,4 @@
             echo('</div>');
         }
     }
-
 }

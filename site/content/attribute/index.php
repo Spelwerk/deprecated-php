@@ -7,7 +7,8 @@ if(is_int($index)) {
 } else {
     $component->title('Attribute');
     $component->returnButton('/content');
+    $component->subtitle('You cannot create new attributes. They are automatically spawned by other content, or static for the system to fully work.');
+
     $system->listAttribute();
-    $component->p('You cannot create new attributes.');
 }
 ?>
