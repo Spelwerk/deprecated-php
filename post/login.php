@@ -3,12 +3,12 @@ require_once('../class/Post.php');
 
 $post = new Post();
 
-$post->data = ['secret' => $_GET['s']];
+$data = ['secret' => $_GET['s']];
 
-$post->userSet('user/login/verify');
+$post->curl->userSet('user/login/verify', $data);
 
 $post->redirect($post->returnBase);
 ?>
 
-<a href="<?php echo $post->returnFull; ?>"><?php echo $post->returnFull; ?></a>
+<a href="<?php echo $post->returnBase; ?>"><?php echo $post->returnBase; ?></a>
 

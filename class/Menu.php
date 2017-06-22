@@ -24,7 +24,10 @@ class Menu {
 
         $menuHome = new MenuList('Home');
         $menuHome->add('Home', '/');
-        $menuHome->add('About', '/about');
+        $menuHome->add('Play', '/play');
+        $menuHome->add('Content', '/content');
+        $menuHome->add('Login', '/user/login');
+        $menuHome->add('Logout', '/user/logout',true);
 
         $menuPlay = new MenuList('Play');
         $menuPlay->add('Play', '/play');

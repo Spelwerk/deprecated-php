@@ -1577,7 +1577,7 @@
     private function makeSavePersonButton() {
         global $form, $user;
 
-        if(!$user->isActive || $this->isOwner) exit;
+        if(!$user->isActive || $this->isOwner) return;
 
         $form->form([
             'special' => 'user',
@@ -1652,6 +1652,7 @@
 
     private function quickLinks() {
         global $component;
+
         if($this->isPlayable && $this->isCalculated && $this->isOwner) {
             echo('<div class="sw-l-quicklink">');
             $component->linkQuick($this->siteLink.'/edit/weapon','Weapon','/img/weapon.png');
