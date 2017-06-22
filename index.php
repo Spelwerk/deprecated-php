@@ -91,7 +91,7 @@ if(!isset($_COOKIE[$config_policy])) {
     </div>
 </footer>
 
-<div class="sw-js-modal sw-c-modal"> <!-- class: sw-is-hidden-->
+<div class="sw-js-modal sw-c-modal sw-is-hidden">
     <div class="sw-js-modal-title sw-c-modal__title">Title</div>
     <div class="sw-c-modal__content">
         <div class="sw-c-modal__body">
