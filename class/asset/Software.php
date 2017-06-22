@@ -4,7 +4,7 @@
     var $hacking, $hackingBonus;
 
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('software/id/'.$id)['data'][0]
@@ -18,7 +18,7 @@
         $this->price = $data['price'];
         $this->legal = $data['legal'];
 
-        $this->icon = 'http://cdn.spelwerk.com/file/e7a54531e7a664d7ac0b683017b30e46d4d856b0.png';
+        $this->icon = $system->defaultIcon['software'];
 
         $this->hacking = $data['hacking'];
         $this->hackingBonus = $data['hacking_bonus'];

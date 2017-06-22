@@ -19,8 +19,8 @@ class Menu {
         $this->addTab('Home', 'Home', '/img/tab-home.png');
         $this->addTab('Play', 'Play', '/img/tab-play.png');
         $this->addTab('Content', 'Content', '/img/tab-content.png');
-        $this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
         $this->addTab('User', 'User', '/img/tab-user.png');
+        //$this->addTab('Admin', 'Admin', '/img/tab-admin.png',true,true);
 
         $menuHome = new MenuList('Home');
         $menuHome->add('Home', '/');
@@ -35,8 +35,8 @@ class Menu {
         $menuContent->add('Content', '/content');
         $menuContent->add('About', '/content/about');
 
-        $menuAdmin = new MenuList('Admin', true, true);
-        $menuAdmin->add('Admin', '/admin',true,true);
+        //$menuAdmin = new MenuList('Admin', true, true);
+        //$menuAdmin->add('Admin', '/admin',true,true);
 
         $menuUser = new MenuList('User');
         if(!$user->isActive) {
@@ -48,7 +48,7 @@ class Menu {
             $menuUser->add('Logout', '/user/logout',true);
         }
 
-        $this->addList($menuAdmin);
+        //$this->addList($menuAdmin);
         $this->addList($menuContent);
         $this->addList($menuHome);
         $this->addList($menuPlay);

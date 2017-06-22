@@ -14,7 +14,7 @@
     var $loyalty, $loyaltyOccupation;
 
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('milestone/id/'.$id)['data'][0]
@@ -27,7 +27,7 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->icon = 'http://cdn.spelwerk.com/file/f0ba5d18c543b0a767832c0be49a96503fc8f75d.png';
+        $this->icon = $system->defaultIcon['milestone'];
 
         $this->background = $data['background_id'];
         $this->species = $data['species_id'];

@@ -117,7 +117,7 @@
     }
 
     public function put() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -370,7 +370,7 @@
     // POST
 
     public function postAttribute($cheat = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -421,7 +421,7 @@
     }
 
     public function postAugmentation($bionicId) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $system, $form, $component;
 
@@ -447,7 +447,7 @@
     }
 
     public function postBackground() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -471,7 +471,7 @@
     }
 
     public function postBionic() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $system, $form;
 
@@ -493,7 +493,7 @@
     }
 
     public function postDescription($creation = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $form, $component;
 
@@ -522,7 +522,7 @@
     }
 
     public function postDisease() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -545,7 +545,7 @@
     }
 
     public function postDoctrine($cheat = false, $creation = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $curl, $form;
 
@@ -602,7 +602,7 @@
     }
 
     public function postExpertise($cheat = false, $creation = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form, $system;
 
@@ -663,7 +663,7 @@
     }
 
     public function postFocus() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -684,7 +684,7 @@
     }
 
     public function postGift($cheat = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $system, $form;
 
@@ -727,7 +727,7 @@
     }
 
     public function postIdentity() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -747,7 +747,7 @@
     }
 
     public function postImperfection($cheat = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $system, $form;
 
@@ -790,7 +790,7 @@
     }
 
     public function postManifestation() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -810,7 +810,7 @@
     }
 
     public function postMilestone($cheat = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $system, $form;
 
@@ -848,7 +848,7 @@
     }
 
     public function postMoney() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $curl, $form;
 
@@ -874,7 +874,7 @@
     }
 
     public function postNature() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -894,7 +894,7 @@
     }
 
     public function postPower() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $curl, $form;
 
@@ -920,7 +920,7 @@
     }
 
     public function postProtection() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form, $system;
 
@@ -947,7 +947,7 @@
     }
 
     public function postSanity() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -970,7 +970,7 @@
     }
 
     public function postSkill($cheat = false, $creation = false) {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -1013,7 +1013,7 @@
     public function postSoftware() {} //todo
 
     public function postWeapon() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form, $system;
 
@@ -1040,7 +1040,7 @@
     }
 
     public function postWound() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -1065,7 +1065,7 @@
     // PUT
 
     public function putAmmunition() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -1086,7 +1086,7 @@
     }
 
     public function putExperience() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -1107,7 +1107,7 @@
     }
 
     public function putMoney() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 
@@ -1128,7 +1128,7 @@
     }
 
     public function putRations() {
-        if($this->isOwner) exit;
+        if(!$this->isOwner) exit;
 
         global $component, $form;
 

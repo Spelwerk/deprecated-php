@@ -4,7 +4,7 @@
     var $heal, $lethal;
 
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('disease/id/'.$id)['data'][0]
@@ -14,13 +14,13 @@
         $this->canon = $data['canon'];
         $this->popularity = $data['popularity'];
         $this->name = $data['name'];
-        $this->icon = 'http://cdn.spelwerk.com/file/cbc688bfcfe3cec3cdf30ea25e29b42ac68262aa.png';
+        $this->icon = $system->defaultIcon['disease']['icon'];
 
         $this->heal = isset($data['heal'])
             ? $data['heal']
             : null;
 
-        $this->healIcon = 'http://cdn.spelwerk.com/file/b61c98d02352d2329f931296be237fa5a8770d2d.png';
+        $this->healIcon = $system->defaultIcon['disease']['heal'];
 
         $this->double = isset($data['timestwo'])
             ? $data['timestwo']

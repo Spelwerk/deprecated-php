@@ -244,7 +244,7 @@ class Post {
             default: break;
 
             case 'post':
-                $this->userSet('user');
+                $result = $this->curl->userSet('user', $this->data);
                 break;
 
             case 'post--timeout':
@@ -260,7 +260,7 @@ class Post {
                 break;
 
             case 'login--password':
-                $this->userSet('user/login/password');
+                $result = $this->curl->userSet('user/login/password', $this->data);
                 break;
 
             case 'login--email':
@@ -268,11 +268,11 @@ class Post {
                 break;
 
             case 'login--verify':
-                $this->userSet('user/login/verify');
+                $result = $this->curl->userSet('user/login/verify', $this->data);
                 break;
 
             case 'logout':
-                $this->userUnset();
+                $this->curl->userUnset();
                 break;
 
             case 'email':
@@ -280,7 +280,7 @@ class Post {
                 break;
 
             case 'email--verify':
-                $this->userSet('user/email/verify');
+                $result = $this->curl->userSet('user/email/verify', $this->data);
                 break;
 
             case 'password':
@@ -321,50 +321,6 @@ class Post {
         $rID = isset($this->returnID) ? '#'.$this->returnID : null;
 
         return $rBase.$rStart.$postID.$rLast.$rID;
-    }
-
-    // USER
-
-    public function userSet($route) {
-        global $config_token;
-
-        $this->data += [
-            'os' => $this->getUserOS(),
-            'browser' => $this->getUserBrowser(),
-            'ip' => $this->getUserIP()
-        ];
-
-        $result = $this->curl->post($route, $this->data);
-
-        $token = isset($result['token'])
-            ? $result['token']
-            : null;
-
-        $userId = isset($result['id'])
-            ? $result['id']
-            : null;
-
-        $this->userUnset();
-
-        setcookie($config_token, $token, time() + (86400 * 30), "/");
-
-        return $userId;
-    }
-
-    public function userUnset() {
-        global $config_token;
-
-        unset($_COOKIE[$config_token]);
-
-        setcookie($config_token, '', time() - 3600, '/');
-
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
     }
 
     // TABLE
@@ -411,72 +367,5 @@ class Post {
                 $this->curl->post('person/id/'.$personId.'/augmentation', ['insert_id' => $value, 'bionic_id' => $bionicId]);
             }
         }
-    }
-
-    // USER AGENT
-
-    private function getUserOS() {
-        $os_platform = "Unknown OS Platform";
-
-        $os_array = [
-            '/windows nt 6.3/i'     =>  'Windows 8.1',
-            '/windows nt 6.2/i'     =>  'Windows 8',
-            '/windows nt 6.1/i'     =>  'Windows 7',
-            '/windows nt 6.0/i'     =>  'Windows Vista',
-            '/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
-            '/windows nt 5.1/i'     =>  'Windows XP',
-            '/windows xp/i'         =>  'Windows XP',
-            '/windows nt 5.0/i'     =>  'Windows 2000',
-            '/windows me/i'         =>  'Windows ME',
-            '/win98/i'              =>  'Windows 98',
-            '/win95/i'              =>  'Windows 95',
-            '/win16/i'              =>  'Windows 3.11',
-            '/macintosh|mac os x/i' =>  'Mac OS X',
-            '/mac_powerpc/i'        =>  'Mac OS 9',
-            '/linux/i'              =>  'Linux',
-            '/ubuntu/i'             =>  'Ubuntu',
-            '/iphone/i'             =>  'iPhone',
-            '/ipod/i'               =>  'iPod',
-            '/ipad/i'               =>  'iPad',
-            '/android/i'            =>  'Android',
-            '/blackberry/i'         =>  'BlackBerry',
-            '/webos/i'              =>  'Mobile'
-        ];
-
-        foreach($os_array as $regex => $value) {
-            if(preg_match($regex, $_SERVER['HTTP_USER_AGENT'])) {
-                $os_platform = $value;
-            }
-        }
-
-        return $os_platform;
-    }
-
-    private function getUserBrowser() {
-        $browser = "Unknown Browser";
-
-        $browser_array = [
-            '/msie/i'       =>  'Internet Explorer',
-            '/firefox/i'    =>  'Firefox',
-            '/safari/i'     =>  'Safari',
-            '/chrome/i'     =>  'Chrome',
-            '/opera/i'      =>  'Opera',
-            '/netscape/i'   =>  'Netscape',
-            '/maxthon/i'    =>  'Maxthon',
-            '/konqueror/i'  =>  'Konqueror',
-            '/mobile/i'     =>  'Handheld Browser'
-        ];
-
-        foreach($browser_array as $regex => $value) {
-            if(preg_match($regex, $_SERVER['HTTP_USER_AGENT'])) {
-                $browser = $value;
-            }
-        }
-
-        return $browser;
-    }
-
-    private function getUserIP() {
-        return $_SERVER['REMOTE_ADDR'];
     }
 }

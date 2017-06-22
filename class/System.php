@@ -49,7 +49,7 @@ class System {
         $this->user = $user->isActive;
         $this->admin = $user->isAdmin;
 
-        $this->defaults = $curl->get('system');
+        $this->defaults = $curl->get('system/defaults');
 
         $this->defaultAttributeId = $this->defaults['attribute']['id'];
         $this->defaultAttributeType = $this->defaults['attribute']['type'];

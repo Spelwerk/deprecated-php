@@ -6,7 +6,7 @@
     var $active;
 
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('augmentation/id/'.$id)['data'][0]
@@ -24,8 +24,7 @@
         $this->legal = $data['legal'];
         $this->weapon = $data['weapon_id'];
         $this->active = isset($data['active']) ? $data['active'] : false;
-
-        $this->icon = 'http://cdn.spelwerk.com/file/773d3d0695e7f5ef448ce7ea0fdcaab14f4e7f1d.png';
+        $this->icon = $system->defaultIcon['augmentation'];
 
         $this->siteLink = '/content/augmentation/'.$this->id;
     }

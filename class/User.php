@@ -6,19 +6,23 @@
     var $popularity;
 
     public function __construct() {
-        global $curl, $config_token;
+        global $curl;
 
-        $this->token = isset($_COOKIE[$config_token]) ? $_COOKIE[$config_token] : null;
+        $this->token = isset($_COOKIE[$curl->cookieName]) ? $_COOKIE[$curl->cookieName] : null;
 
         $result = isset($this->token)
             ? $curl->get('user/validate')
             : null;
 
+        $data = isset($result['user']) ? $result['user'] : null;
+
+        if($this->token && !$data) $curl->userUnset();
+
         $this->isActive = isset($this->token) ? true : false;
 
-        $this->id = intval($result['user']['id']);
-        $this->isAdmin = intval($result['user']['admin']);
-        $this->isVerified = intval($result['user']['verify']);
+        $this->id = intval($data['id']);
+        $this->isAdmin = intval($data['admin']);
+        $this->isVerified = intval($data['verify']);
     }
 
     // GET

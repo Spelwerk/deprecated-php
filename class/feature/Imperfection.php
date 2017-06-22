@@ -6,7 +6,7 @@
     var $manifestation;
 
     public function __construct($id = null, $array = null) {
-        global $curl;
+        global $curl, $system;
 
         $data = isset($id)
             ? $curl->get('imperfection/id/'.$id)['data'][0]
@@ -20,7 +20,7 @@
             ? $data['custom']
             : $data['description'];
 
-        $this->icon = 'http://cdn.spelwerk.com/file/013eb6b688b6f622e1794f5b5422cc089eb8f67d.png';
+        $this->icon = $system->defaultIcon['imperfection'];
 
         $this->species = $data['species_id'];
 

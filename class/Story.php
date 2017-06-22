@@ -23,28 +23,26 @@
     }
 
     public function put() {
-        if($this->isOwner) {
-            global $component, $form;
+        if(!$this->isOwner) exit;
 
-            $form->form([
-                'do' => 'put',
-                'context' => 'story',
-                'return' => 'content/focus',
-                'id' => $this->id
-            ]);
-            $component->wrapStart();
-            $form->varchar(true,'name','Name',null,null,$this->name);
-            $form->text(false,'description','Description',null,null,$this->description);
-            $form->text(false,'plot','Plot',null,null,$this->plot);
-            $component->wrapEnd();
-            $form->submit();
-        }
+        global $component, $form;
+
+        $form->form([
+            'do' => 'put',
+            'context' => 'story',
+            'return' => 'content/focus',
+            'id' => $this->id
+        ]);
+        $component->wrapStart();
+        $form->varchar(true,'name','Name',null,null,$this->name);
+        $form->text(false,'description','Description',null,null,$this->description);
+        $form->text(false,'plot','Plot',null,null,$this->plot);
+        $component->wrapEnd();
+        $form->submit();
     }
 
     public function view() {
         global $component;
-
-        $this->verifyUserOwnership();
 
         $component->sectionStart();
 
